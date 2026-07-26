@@ -1,0 +1,2 @@
+Unknown command: 'show_urls'
+Type 'manage.py help' for usage.

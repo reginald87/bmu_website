@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+    @page {
+        size: A4 portrait;
+        margin: 10mm 8mm;
+    }
+
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #333;
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+    .header {
+        text-align: center;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+    }
+
+    .header h1 {
+        font-size: 17px;
+        color: #1E1E1E;
+        margin: 0 0 2px;
+    }
+
+    .header h2 {
+        font-size: 11px;
+        color: #555;
+        margin: 0 0 2px;
+        font-weight: normal;
+    }
+
+    .header p {
+        font-size: 9px;
+        color: #666;
+        margin: 0;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: #1E1E1E;
+        margin: 8px 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* =========================
+       STUDENT INFO
+    ========================== */
+    .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+    }
+
+    .info-table td {
+        padding: 2px 4px;
+        border: none;
+        font-size: 10px;
+    }
+
+    .label {
+        font-weight: bold;
+        color: #555;
+        width: 95px;
+    }
+
+    .value {
+        color: #1E1E1E;
+    }
+
+    /* =========================
+       SEMESTER TITLE
+    ========================== */
+    .semester-title {
+        font-size: 10px;
+        font-weight: bold;
+        color: #1E1E1E;
+        margin: 8px 0 4px;
+        padding: 4px 6px;
+        background: #f0f0f0;
+        border-left: 3px solid #1E1E1E;
+    }
+
+    /* =========================
+       COURSES TABLE
+    ========================== */
+    table.courses {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 9px;
+        margin-bottom: 8px;
+    }
+
+    table.courses th {
+        background-color: #1E1E1E;
+        color: #fff;
+        padding: 5px 3px;
+        text-align: center;
+        font-size: 8px;
+        font-weight: bold;
+    }
+
+    table.courses td {
+        border: 1px solid #bbb;
+        padding: 4px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    table.courses td.left {
+        text-align: left;
+    }
+
+    table.courses tr:nth-child(even) td {
+        background-color: #f9f9f9;
+    }
+
+    .total-row td {
+        font-weight: bold;
+        background-color: #e8e8e8 !important;
+        border-top: 2px solid #999;
+    }
+
+    /* =========================
+       APPROVAL SECTION
+    ========================== */
+    .approval-section {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+    }
+
+    .approval-section td {
+        width: 25%;
+        text-align: center;
+        vertical-align: top;
+        padding: 8px;
+        border: none;
+    }
+
+    .approval-signature {
+        margin-top: 40px;
+        border-top: 1px solid #000;
+        padding-top: 4px;
+        font-size: 9px;
+        font-weight: bold;
+    }
+
+    .approval-date {
+        width: 65%;
+        margin: 15px auto 0 auto;
+        border-top: 1px solid #999;
+        padding-top: 3px;
+        font-size: 8px;
+    }
+
+    /* =========================
+       NOTICE
+    ========================== */
+    .notice {
+        font-size: 8px;
+        color: #777;
+        margin-top: 10px;
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 8px;
+        color: #999;
+        border-top: 1px solid #ddd;
+        padding-top: 3px;
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<div class="header">
+    {% if logo_data_uri %}
+        <img src="{{ logo_data_uri }}" width="55" height="55" alt="University Logo"><br>
+    {% endif %}
+
+    <h1>Bayelsa Medical University</h1>
+    <h2>P.M.B. 178, Yenagoa, Bayelsa State</h2>
+    <p>Email: info@bmu.edu.ng | Website: www.bmu.edu.ng</p>
+</div>
+
+<div class="title">
+    Course Registration Slip
+</div>
+
+<!-- =========================
+     STUDENT INFORMATION
+========================= -->
+
+<table class="info-table">
+    <tr>
+
+        <td style="width:70%;vertical-align:top;">
+
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                    <td class="label">Student Name:</td>
+                    <td class="value">{{ student.full_name }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Matric Number:</td>
+                    <td class="value">{{ student.matric_number|default:"—" }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Programme:</td>
+                    <td class="value">{{ student.program_name|default:"—" }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Level:</td>
+                    <td class="value">{{ student.current_level }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Academic Year:</td>
+                    <td class="value">{{ academic_year }}</td>
+                </tr>
+            </table>
+
+        </td>
+
+        <td style="width:30%;vertical-align:top;text-align:right;">
+
+            {% if student.photo_data_uri %}
+                <img
+                    src="{{ student.photo_data_uri }}"
+                    width="95"
+                    height="115"
+                    alt="Passport"
+                    style="border:1px solid #ccc;padding:2px;">
+            {% endif %}
+
+        </td>
+
+    </tr>
+</table>
+
+<!-- =========================
+     SEMESTERS
+========================= -->
+
+{% for sem in semesters %}
+
+<div class="semester-title">
+    {{ sem.registration.get_semester_display }} Semester
+</div>
+
+<table class="courses">
+
+    <thead>
+        <tr>
+            <th style="width:6%">S/N</th>
+            <th style="width:16%">Course Code</th>
+            <th style="width:60%">Course Title</th>
+            <th style="width:18%">Units</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for rc in sem.courses %}
+        <tr>
+
+            <td>{{ forloop.counter }}</td>
+
+            <td>{{ rc.course.code }}</td>
+
+            <td class="left">
+                {{ rc.course.title }}
+            </td>
+
+            <td>
+                {{ rc.course.credit_units }}
+            </td>
+
+        </tr>
+        {% empty %}
+
+        <tr>
+            <td colspan="4"
+                style="text-align:center;padding:12px;color:#999;">
+                No courses registered for this semester.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+        <tr class="total-row">
+
+            <td colspan="3"
+                style="text-align:right;padding-right:8px;">
+                Total Credit Units
+            </td>
+
+            <td>
+                {{ sem.total_credit_units }}
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+
+{% endfor %}
+
+<!-- =========================
+     NOTICE
+========================= -->
+
+<p class="notice">
+    This slip confirms course registration for the
+    {{ academic_year }} academic session.
+    Generated on {{ generated_date|date:"F d, Y" }}.
+</p>
+
+<!-- =========================
+     APPROVALS
+========================= -->
+
+<table class="approval-section">
+
+    <tr>
+
+        <td>
+            <div class="approval-signature">
+                Student Signature
+            </div>
+
+            <div class="approval-date">
+                Date
+            </div>
+        </td>
+
+        <td>
+            <div class="approval-signature">
+                Level Adviser
+            </div>
+
+            <div class="approval-date">
+                Date
+            </div>
+        </td>
+
+        <td>
+            <div class="approval-signature">
+                HOD Approval
+            </div>
+
+            <div class="approval-date">
+                Date
+            </div>
+        </td>
+
+        <td>
+            <div class="approval-signature">
+                Faculty Officer
+            </div>
+
+            <div class="approval-date">
+                Date
+            </div>
+        </td>
+
+    </tr>
+
+</table>
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<div class="footer">
+    Bayelsa Medical University &mdash;
+    Course Registration Slip &mdash;
+    {{ academic_year }}
+</div>
+
+</body>
+</html>

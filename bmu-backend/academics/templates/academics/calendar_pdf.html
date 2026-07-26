@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size: A4 landscape; margin: 20mm 15mm; }
+  body { font-family: Helvetica, Arial, sans-serif; color: #333; }
+  h1 { text-align: center; font-size: 22px; margin-bottom: 4px; }
+  .subtitle { text-align: center; font-size: 14px; color: #666; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { background-color: #1E1E1E; color: white; padding: 8px 6px; text-align: left; font-size: 12px; }
+  td { padding: 6px; border-bottom: 1px solid #ddd; vertical-align: top; }
+  tr:nth-child(even) td { background-color: #f9f9f9; }
+  .term-header td { background-color: #A51C30 !important; color: white; font-weight: bold; font-size: 13px; padding: 8px 6px; }
+  .badge { display: inline-block; padding: 2px 6px; font-size: 9px; border-radius: 2px; font-weight: bold; }
+  .badge-academic, .badge-registration { background-color: #dbeafe; color: #1e40af; }
+  .badge-exam { background-color: #fee2e2; color: #991b1b; }
+  .badge-holiday { background-color: #fef9c3; color: #854d0e; }
+  .badge-deadline { background-color: #f3e8ff; color: #6b21a8; }
+  .badge-resumption { background-color: #dcfce7; color: #166534; }
+  .badge-ceremony { background-color: #f3e8ff; color: #6b21a8; }
+  .footer { text-align: center; font-size: 10px; color: #999; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px; }
+  .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.04; font-size: 80px; font-weight: bold; color: #1E1E1E; }
+</style>
+</head>
+<body>
+<div class="watermark">BMU</div>
+<h1>Bayelsa Medical University</h1>
+<p class="subtitle">Academic Calendar — {{ academic_year }}</p>
+<table>
+<thead>
+<tr>
+  <th style="width:30%">Event</th>
+  <th style="width:12%">Type</th>
+  <th style="width:15%">Start Date</th>
+  <th style="width:15%">End Date</th>
+  <th style="width:28%">Description</th>
+</tr>
+</thead>
+<tbody>
+{% for term_name, events in grouped_events.items %}
+<tr class="term-header"><td colspan="5">{{ term_name }}</td></tr>
+{% for event in events %}
+<tr>
+  <td>{{ event.title }}</td>
+  <td><span class="badge badge-{{ event.event_type }}">{{ event.event_type_display }}</span></td>
+  <td>{{ event.start_date|date:"M d, Y" }}</td>
+  <td>{{ event.end_date|date:"M d, Y"|default:"—" }}</td>
+  <td>{{ event.description|default:"" }}</td>
+</tr>
+{% endfor %}
+{% endfor %}
+</tbody>
+</table>
+<p class="footer">Bayelsa Medical University — {{ academic_year }} Academic Calendar. Generated on {{ generated_date|date:"F d, Y" }}.</p>
+</body>
+</html>

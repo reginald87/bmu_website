@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard - BMU Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        .header {
+            background: #A51C30;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 24px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .conversation-list {
+            display: grid;
+            gap: 15px;
+        }
+        .conversation-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .conversation-info h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .conversation-info p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-active {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .status-agent_handling {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .btn-primary {
+            background: #A51C30;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #8a1828;
+        }
+        .btn-secondary {
+            background: #666;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #555;
+        }
+        .btn {
+            text-decoration: none;
+            display: inline-block;
+        }
+        .no-conversations {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Agent Dashboard</h1>
+        <span>Logged in as: {{ request.user.email }}</span>
+    </div>
+    
+    <div class="container">
+        <h2>Active Conversations</h2>
+        
+        {% if conversations %}
+            <div class="conversation-list">
+                {% for conversation in conversations %}
+                    <div class="conversation-card">
+                        <div class="conversation-info">
+                            <h3>
+                                {{ conversation.visitor_name|default:"Anonymous Visitor" }}
+                                {% if conversation.visitor_email %}
+                                    ({{ conversation.visitor_email }})
+                                {% endif %}
+                            </h3>
+                            <p>Session ID: {{ conversation.session_id }}</p>
+                            <p>Started: {{ conversation.created_at|date:"M d, Y H:i" }}</p>
+                            <p>Last updated: {{ conversation.updated_at|date:"M d, Y H:i" }}</p>
+                            <span class="status-badge status-{{ conversation.status }}">
+                                {% if conversation.status == 'active' %}
+                                    Bot Handling
+                                {% elif conversation.status == 'agent_handling' %}
+                                    Agent: {{ conversation.agent_assigned.get_full_name|default:conversation.agent_assigned.email }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="actions">
+                            {% if conversation.status == 'active' %}
+                                <a href="{% url 'chat:agent_chat' conversation.id %}" class="btn btn-primary">
+                                    Join Conversation
+                                </a>
+                            {% elif conversation.status == 'agent_handling' and conversation.agent_assigned == request.user %}
+                                <a href="{% url 'chat:agent_chat' conversation.id %}" class="btn btn-primary">
+                                    Continue Chat
+                                </a>
+                                <button class="btn btn-secondary" onclick="leaveConversation({{ conversation.id }})">
+                                    Leave Conversation
+                                </button>
+                            {% elif conversation.status == 'agent_handling' %}
+                                <span class="status-badge" style="background: #fff3cd; color: #856404;">
+                                    Handled by {{ conversation.agent_assigned.get_full_name|default:conversation.agent_assigned.email }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-conversations">
+                <h3>No active conversations</h3>
+                <p>Wait for visitors to start chatting.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        async function leaveConversation(conversationId) {
+            if (!confirm('Are you sure you want to leave this conversation?')) {
+                return;
+            }
+            try {
+                const response = await fetch(`/chat/agent/leave/${conversationId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Successfully left conversation!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error leaving conversation');
+            }
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Chat - BMU Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #A51C30;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .header h1 {
+            font-size: 20px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .visitor-info {
+            padding: 15px 20px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .visitor-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .visitor-info p {
+            color: #666;
+            font-size: 14px;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+        .message.visitor {
+            background: #e3f2fd;
+            color: #1976d2;
+            align-self: flex-start;
+        }
+        .message.agent {
+            background: #A51C30;
+            color: white;
+            align-self: flex-end;
+        }
+        .message.bot {
+            background: #f5f5f5;
+            color: #666;
+            align-self: flex-start;
+            border: 1px solid #e0e0e0;
+        }
+        .message.system {
+            background: #fff3cd;
+            color: #856404;
+            align-self: center;
+            font-size: 13px;
+            text-align: center;
+        }
+        .message-meta {
+            font-size: 11px;
+            margin-top: 5px;
+            opacity: 0.7;
+        }
+        .message-input {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .message-input textarea {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+            font-family: inherit;
+            font-size: 14px;
+            height: 60px;
+        }
+        .message-input textarea:focus {
+            outline: none;
+            border-color: #A51C30;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .btn-primary {
+            background: #A51C30;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #8a1828;
+        }
+        .btn-secondary {
+            background: #666;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #555;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .typing-indicator {
+            font-style: italic;
+            color: #999;
+            font-size: 13px;
+            padding: 10px 20px;
+        }
+        .connection-status {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+        .connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Agent Chat</h1>
+        <div class="header-actions">
+            <span id="connectionStatus" class="connection-status disconnected">Disconnected</span>
+            <button class="btn btn-secondary" onclick="goToDashboard()">Back to Dashboard</button>
+            <button class="btn btn-danger" onclick="endConversation()">End Conversation</button>
+        </div>
+    </div>
+    
+    <div class="chat-container">
+        <div class="visitor-info">
+            <h3>
+                {{ conversation.visitor_name|default:"Anonymous Visitor" }}
+                {% if conversation.visitor_email %}
+                    ({{ conversation.visitor_email }})
+                {% endif %}
+            </h3>
+            <p>Session ID: {{ conversation.session_id }}</p>
+            <p>Started: {{ conversation.created_at|date:"M d, Y H:i" }}</p>
+        </div>
+        
+        <div id="messages" class="messages">
+            <div class="empty-state">Loading messages...</div>
+        </div>
+        
+        <div id="typingIndicator" class="typing-indicator" style="display: none;"></div>
+        
+        <div class="message-input">
+            <textarea id="messageInput" placeholder="Type your message..." onkeydown="handleKeyDown(event)"></textarea>
+            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const conversationId = '{{ conversation.id }}';
+        const sessionId = '{{ conversation.session_id }}';
+        let socket = null;
+        let messages = [];
+
+        // Connect to WebSocket
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws/chat/${sessionId}/`;
+            
+            socket = new WebSocket(wsUrl);
+            
+            socket.onopen = function() {
+                document.getElementById('connectionStatus').className = 'connection-status connected';
+                document.getElementById('connectionStatus').textContent = 'Connected';
+                console.log('WebSocket connected');
+                
+                // Load existing messages
+                loadMessages();
+                
+                // Agent joins the conversation
+                socket.send(JSON.stringify({
+                    type: 'agent_join'
+                }));
+            };
+            
+            socket.onclose = function() {
+                document.getElementById('connectionStatus').className = 'connection-status disconnected';
+                document.getElementById('connectionStatus').textContent = 'Disconnected';
+                console.log('WebSocket disconnected');
+                
+                // Attempt to reconnect after 5 seconds
+                setTimeout(connectWebSocket, 5000);
+            };
+            
+            socket.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
+            
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                handleWebSocketMessage(data);
+            };
+        }
+
+        // Handle incoming WebSocket messages
+        function handleWebSocketMessage(data) {
+            switch(data.type) {
+                case 'new_message':
+                    addMessageToUI(data);
+                    break;
+                case 'typing':
+                    showTypingIndicator(data.role, data.is_typing);
+                    break;
+                case 'system_message':
+                    addSystemMessage(data.content);
+                    break;
+                case 'agent_joined':
+                    addSystemMessage(`${data.agent_name} has joined the conversation`);
+                    break;
+                case 'conversation_ended':
+                    addSystemMessage('Conversation has ended');
+                    disableChat();
+                    break;
+                case 'new_visitor_message':
+                    // Notification for new visitor message
+                    break;
+            }
+        }
+
+        // Load existing messages from server
+        async function loadMessages() {
+            try {
+                const response = await fetch(`/chat/conversation/${conversationId}/messages/`);
+                const data = await response.json();
+                
+                if (data.messages) {
+                    messages = data.messages;
+                    renderMessages();
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+
+        // Render all messages
+        function renderMessages() {
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = '';
+            
+            if (messages.length === 0) {
+                messagesContainer.innerHTML = '<div class="empty-state">No messages yet. Start the conversation!</div>';
+                return;
+            }
+            
+            messages.forEach(msg => {
+                addMessageToUI(msg);
+            });
+            
+            scrollToBottom();
+        }
+
+        // Add a single message to the UI
+        function addMessageToUI(msg) {
+            const messagesContainer = document.getElementById('messages');
+            
+            // Remove empty state if present
+            const emptyState = messagesContainer.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.role}`;
+            
+            const time = new Date(msg.created_at).toLocaleTimeString();
+            messageDiv.innerHTML = `
+                ${escapeHtml(msg.content)}
+                <div class="message-meta">${time}</div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Add system message
+        function addSystemMessage(content) {
+            const messagesContainer = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system';
+            messageDiv.textContent = content;
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Show/hide typing indicator
+        function showTypingIndicator(role, isTyping) {
+            const indicator = document.getElementById('typingIndicator');
+            if (isTyping) {
+                indicator.textContent = `${role === 'visitor' ? 'Visitor' : 'Agent'} is typing...`;
+                indicator.style.display = 'block';
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+
+        // Send message as agent
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+            
+            if (!content || !socket || socket.readyState !== WebSocket.OPEN) {
+                return;
+            }
+            
+            socket.send(JSON.stringify({
+                type: 'agent_message',
+                content: content
+            }));
+            
+            input.value = '';
+        }
+
+        // Handle Enter key in textarea
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Scroll to bottom of messages
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Go back to dashboard
+        function goToDashboard() {
+            window.location.href = '/chat/agent/dashboard/';
+        }
+
+        // End conversation
+        async function endConversation() {
+            if (!confirm('Are you sure you want to end this conversation?')) {
+                return;
+            }
+            
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    type: 'end_conversation'
+                }));
+            }
+        }
+
+        // Disable chat after conversation ends
+        function disableChat() {
+            const input = document.getElementById('messageInput');
+            const sendButton = document.querySelector('.message-input .btn-primary');
+            input.disabled = true;
+            sendButton.disabled = true;
+            input.placeholder = 'Conversation has ended';
+        }
+
+        // Initialize
+        connectWebSocket();
+    </script>
+</body>
+</html>

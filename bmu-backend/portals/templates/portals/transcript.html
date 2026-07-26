@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 15mm;
+    @frame watermark {
+      -pdf-frame-content: watermark_content;
+      left: 50mm; top: 100mm; width: 110mm; height: 80mm;
+    }
+  }
+  body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #222; }
+  #watermark_content {
+    color: #ddd; font-size: 60pt; font-weight: bold; text-align: center;
+    -pdf-rotate: -30; opacity: 0.15;
+  }
+  .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #A51C30; padding-bottom: 15px; }
+  .header img { height: 60px; }
+  .header h1 { font-size: 16pt; color: #1E1E1E; margin: 5px 0 2px; text-transform: uppercase; }
+  .header h2 { font-size: 12pt; color: #A51C30; margin: 2px 0; font-weight: normal; }
+  .header p { font-size: 9pt; color: #666; margin: 2px 0; }
+  .title { text-align: center; font-size: 14pt; font-weight: bold; color: #1E1E1E; margin: 15px 0; text-transform: uppercase; letter-spacing: 2px; }
+  .student-info { width: 100%; margin-bottom: 15px; border: 1px solid #ccc; padding: 8px; }
+  .student-info td { padding: 3px 8px; font-size: 9pt; }
+  .student-info .label { font-weight: bold; color: #555; width: 120px; }
+  table.courses { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 9pt; }
+  table.courses th { background: #1E1E1E; color: white; padding: 6px 4px; text-align: center; font-size: 8pt; text-transform: uppercase; }
+  table.courses td { padding: 4px; border-bottom: 1px solid #ddd; text-align: center; }
+  table.courses td.left { text-align: left; }
+  table.courses tr:nth-child(even) { background: #f9f9f9; }
+  .semester-header { background: #f0f0f0; padding: 6px 8px; margin-top: 12px; font-weight: bold; font-size: 10pt; border-left: 3px solid #A51C30; }
+  .gpa-row { text-align: right; font-weight: bold; padding: 4px 8px; font-size: 9pt; }
+  .summary { margin-top: 20px; border-top: 2px solid #1E1E1E; padding-top: 10px; }
+  .summary table { width: 100%; }
+  .summary td { padding: 3px 8px; font-size: 10pt; }
+  .summary .value { font-weight: bold; text-align: right; }
+  .footer { position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 7pt; color: #999; border-top: 1px solid #ccc; padding-top: 4px; }
+  .seal { text-align: center; margin-top: 20px; }
+  .seal .stamp { display: inline-block; border: 2px solid #A51C30; border-radius: 50%; width: 80px; height: 80px; line-height: 80px; font-size: 7pt; color: #A51C30; font-weight: bold; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div id="watermark_content">TRANSCRIPT</div>
+
+<div class="header">
+  <img src="{{ logo_data_uri }}" alt="BMU Logo">
+  <h1>Bayelsa Medical University</h1>
+  <h2>Office of the Registrar</h2>
+  <p>Yenagoa, Bayelsa State, Nigeria</p>
+</div>
+
+<div class="title">Academic Transcript</div>
+
+<table class="student-info">
+  <tr><td class="label">Student Name:</td><td>{{ student.full_name }}</td></tr>
+  <tr><td class="label">Matric Number:</td><td>{{ student.matric_number }}</td></tr>
+  <tr><td class="label">Programme:</td><td>{{ student.program.title|default:"" }}</td></tr>
+  <tr><td class="label">Entry Year:</td><td>{{ student.entry_year }}</td></tr>
+</table>
+
+{% for sem in semesters %}
+<div class="semester-header">{{ sem.session }} - {{ sem.semester }} Semester (Level {{ sem.level }})</div>
+<table class="courses">
+  <tr>
+    <th width="8%">S/N</th>
+    <th width="15%">Code</th>
+    <th width="35%">Course Title</th>
+    <th width="10%">Units</th>
+    <th width="12%">Score</th>
+    <th width="10%">Grade</th>
+    <th width="10%">GP</th>
+  </tr>
+  {% for sc in sem.courses %}
+  <tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ sc.course.code }}</td>
+    <td class="left">{{ sc.course.title }}</td>
+    <td>{{ sc.course.credit_units }}</td>
+    <td>{{ sc.total_score|floatformat:1|default:"-" }}</td>
+    <td>{{ sc.grade|default:"-" }}</td>
+    <td>{{ sc.grade_point|floatformat:2|default:"-" }}</td>
+  </tr>
+  {% endfor %}
+  <tr>
+    <td colspan="7" class="gpa-row">
+      GPA: {{ sem.gpa|floatformat:2 }} &nbsp;|&nbsp; CGPA: {{ sem.cgpa|floatformat:2 }}
+    </td>
+  </tr>
+</table>
+{% endfor %}
+
+<div class="summary">
+  <table>
+    <tr><td>Cumulative Grade Point Average (CGPA):</td><td class="value">{{ cgpa|floatformat:2 }}</td></tr>
+    <tr><td>Total Credit Units Earned:</td><td class="value">{{ total_units }}</td></tr>
+    <tr><td>Date Generated:</td><td class="value">{{ generated_date|date:"F d, Y" }}</td></tr>
+  </table>
+</div>
+
+<div class="seal">
+  <div class="stamp">Official Seal</div>
+  <p style="margin-top: 8px; font-size: 8pt; color: #888;">This transcript is computer-generated and valid without signature.</p>
+</div>
+
+<div class="footer">
+  Bayelsa Medical University, Yenagoa | www.bmu.edu.ng | Transcript generated on {{ generated_date|date:"Y-m-d" }}
+</div>
+
+</body>
+</html>
