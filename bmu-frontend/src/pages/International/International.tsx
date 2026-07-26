@@ -69,7 +69,7 @@ export const International = () => {
  return (
  <>
  <Helmet>
- <title>International - Bayelsa Medical University</title>
+ <title>International | Bayelsa Medical University</title>
  <meta name="description" content="Explore BMU's international partnerships, student exchange programs, and support for international students from around the world." />
  </Helmet>
 

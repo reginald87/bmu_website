@@ -81,7 +81,7 @@ const ApplicantLogin = () => {
   return (
     <div className="min-h-screen pt-[140px] bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] flex items-center justify-center p-4">
       <Helmet>
-        <title>Applicant Login - Bayelsa Medical University</title>
+        <title>Applicant Login | Bayelsa Medical University</title>
       </Helmet>
 
       <motion.div
@@ -456,7 +456,7 @@ const ApplicantDashboard = () => {
   return (
     <div className="min-h-screen pt-[140px] bg-gray-50">
       <Helmet>
-        <title>Applicant Dashboard - Bayelsa Medical University</title>
+        <title>Applicant Dashboard | Bayelsa Medical University</title>
       </Helmet>
 
       {/* Header */}

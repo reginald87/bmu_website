@@ -48,7 +48,7 @@ export const LeaderProfile = () => {
     return (
       <>
         <Helmet>
-          <title>Profile Not Found - Bayelsa Medical University</title>
+          <title>Profile Not Found | Bayelsa Medical University</title>
         </Helmet>
         <section className="pt-[140px] min-h-screen" style={{ backgroundColor: '#1E1E1E' }}>
           <div className="container-custom text-center py-20">

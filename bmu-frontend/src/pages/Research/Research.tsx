@@ -122,7 +122,7 @@ export const Research = () => {
   return (
     <>
       <Helmet>
-        <title>Research - Bayelsa Medical University</title>
+        <title>Research | Bayelsa Medical University</title>
         <meta name="description" content="Explore research at BMU: malaria, NCDs, maternal health, environmental health. 200+ publications, 6 research centers, global collaborations." />
       </Helmet>
 

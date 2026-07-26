@@ -63,7 +63,7 @@ export const Events = () => {
   return (
     <>
       <Helmet>
-        <title>Upcoming Events - Bayelsa Medical University</title>
+        <title>Upcoming Events | Bayelsa Medical University</title>
         <meta name="description" content="Discover upcoming conferences, workshops, ceremonies, and community events at Bayelsa Medical University." />
       </Helmet>
       <div className="min-h-screen bg-gray-50">

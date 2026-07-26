@@ -308,7 +308,7 @@ export const JobBoard = () => {
   return (
     <>
       <Helmet>
-        <title>Job Board | Careers at BMU</title>
+        <title>Job Board | Bayelsa Medical University</title>
         <meta name="description" content="Explore career opportunities at Bayelsa Medical University. Join our team of dedicated professionals in healthcare education." />
       </Helmet>
 

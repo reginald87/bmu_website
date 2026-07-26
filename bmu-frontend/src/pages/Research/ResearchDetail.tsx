@@ -142,7 +142,7 @@ export const ResearchDetail = () => {
  return (
  <>
  <Helmet>
- <title>{project.title} | BMU Research</title>
+ <title>{project.title} | Bayelsa Medical University</title>
  <meta name="description" content={project.description} />
  </Helmet>
 

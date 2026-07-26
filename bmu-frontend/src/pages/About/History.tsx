@@ -102,7 +102,7 @@ export const History = () => {
   return (
     <>
       <Helmet>
-        <title>Our History - Bayelsa Medical University</title>
+        <title>Our History | Bayelsa Medical University</title>
         <meta name="description" content="Explore the journey of Bayelsa Medical University from its establishment in 2018 to becoming a leading medical institution in Nigeria." />
       </Helmet>
 

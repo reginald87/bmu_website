@@ -47,7 +47,7 @@ export const AnalyticsDashboard = () => {
   return (
     <>
       <Helmet>
-        <title>Analytics Dashboard - Bayelsa Medical University</title>
+        <title>Analytics Dashboard | Bayelsa Medical University</title>
       </Helmet>
       <div>
           <div className="flex flex-wrap gap-4 mb-6">

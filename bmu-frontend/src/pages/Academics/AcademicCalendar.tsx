@@ -47,7 +47,7 @@ export const AcademicCalendar = () => {
  return (
  <>
  <Helmet>
- <title>Academic Calendar - Bayelsa Medical University</title>
+ <title>Academic Calendar | Bayelsa Medical University</title>
  <meta name="description" content="View the academic calendar for Bayelsa Medical University. Important dates for registration, examinations, holidays, and academic deadlines for the 2024/2025 session." />
  </Helmet>
 

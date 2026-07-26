@@ -44,7 +44,7 @@ export const InnovationCentre = () => {
  return (
  <>
  <Helmet>
- <title>Innovation & Technology Centre | BMU</title>
+ <title>Innovation & Technology Centre | Bayelsa Medical University</title>
  <meta name="description" content="Innovation & Technology Centre at BMU - Where healthcare meets technology" />
  </Helmet>
 

@@ -51,7 +51,7 @@ export const Community = () => {
   return (
     <>
       <Helmet>
-        <title>Community Outreach - Bayelsa Medical University</title>
+        <title>Community Outreach | Bayelsa Medical University</title>
         <meta name="description" content="BMU's community outreach programs including free medical camps, health education, and wellness initiatives serving the Niger Delta region." />
       </Helmet>
 

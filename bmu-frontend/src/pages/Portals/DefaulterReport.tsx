@@ -49,7 +49,7 @@ export const DefaulterReport = () => {
 
   return (
     <>
-      <Helmet><title>Defaulter Report - Bayelsa Medical University</title></Helmet>
+      <Helmet><title>Defaulter Report | Bayelsa Medical University</title></Helmet>
       <div>
           <div className="flex flex-wrap gap-4 mb-6">
             <div>

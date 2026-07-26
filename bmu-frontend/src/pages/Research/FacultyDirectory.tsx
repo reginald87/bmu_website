@@ -59,7 +59,7 @@ export const FacultyDirectory = () => {
   return (
     <>
       <Helmet>
-        <title>Faculty Directory - Bayelsa Medical University</title>
+        <title>Faculty Directory | Bayelsa Medical University</title>
         <meta name="description" content="Meet our distinguished faculty members at Bayelsa Medical University." />
       </Helmet>
 

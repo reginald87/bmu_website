@@ -56,7 +56,7 @@ export const About = () => {
   return (
     <>
       <Helmet>
-        <title>About Us - Bayelsa Medical University</title>
+        <title>About Us | Bayelsa Medical University</title>
         <meta name="description" content="Bayelsa Medical University (BMU) is a premier institution dedicated to excellence in healthcare education, research, and community service in Nigeria." />
       </Helmet>
 

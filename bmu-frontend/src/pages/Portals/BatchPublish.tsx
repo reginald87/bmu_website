@@ -40,7 +40,7 @@ export const BatchPublish = () => {
   return (
     <>
       <Helmet>
-        <title>Batch Publish Results - Bayelsa Medical University</title>
+        <title>Batch Publish Results | Bayelsa Medical University</title>
       </Helmet>
 
       <div>

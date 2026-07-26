@@ -85,7 +85,7 @@ export const Impact = () => {
  return (
  <>
  <Helmet>
- <title>Our Impact - Bayelsa Medical University</title>
+ <title>Our Impact | Bayelsa Medical University</title>
  <meta name="description" content="Discover how BMU is making a difference in healthcare, education, and community development across the Niger Delta and beyond." />
  </Helmet>
 

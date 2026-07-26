@@ -41,7 +41,7 @@ export const Gallery = () => {
   return (
     <>
       <Helmet>
-        <title>Gallery - Bayelsa Medical University</title>
+        <title>Gallery | Bayelsa Medical University</title>
         <meta name="description" content="Explore photos and videos from Bayelsa Medical University events, campus life, and academic activities." />
       </Helmet>
 

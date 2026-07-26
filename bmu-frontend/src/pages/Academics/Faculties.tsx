@@ -147,7 +147,7 @@ export const Faculties = () => {
   return (
     <>
       <Helmet>
-        <title>Faculties & Schools - Bayelsa Medical University</title>
+        <title>Faculties & Schools | Bayelsa Medical University</title>
         <meta name="description" content="Discover our world-class academic faculties dedicated to excellence in healthcare education." />
       </Helmet>
 

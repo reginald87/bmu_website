@@ -92,7 +92,7 @@ export const Admissions = () => {
   return (
     <>
       <Helmet>
-        <title>Admissions - Bayelsa Medical University</title>
+        <title>Admissions | Bayelsa Medical University</title>
         <meta name="description" content="Apply to Bayelsa Medical University. Learn about admission requirements, application process, important dates, and available programs." />
       </Helmet>
 

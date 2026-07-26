@@ -43,7 +43,7 @@ export const DeanDashboard = () => {
 
   return (
     <>
-      <Helmet><title>Dean Dashboard - Bayelsa Medical University</title></Helmet>
+      <Helmet><title>Dean Dashboard | Bayelsa Medical University</title></Helmet>
 
       <div className="mb-6">
         <h1 className="text-xl font-bold text-gray-900">{data?.faculty || 'Faculty'} Dashboard</h1>

@@ -16,7 +16,7 @@ export const ForeignLanguages = () => {
  return (
  <>
  <Helmet>
- <title>Institute of Foreign Languages | BMU</title>
+ <title>Institute of Foreign Languages | Bayelsa Medical University</title>
  <meta name="description" content="Institute of Foreign Languages at Bayelsa Medical University - Learn French, Spanish, German and more" />
  </Helmet>
 

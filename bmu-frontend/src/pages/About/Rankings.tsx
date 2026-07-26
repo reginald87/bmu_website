@@ -128,7 +128,7 @@ export const Rankings = () => {
   return (
     <>
       <Helmet>
-        <title>Rankings & Accreditations - Bayelsa Medical University</title>
+        <title>Rankings & Accreditations | Bayelsa Medical University</title>
         <meta name="description" content="Discover BMU's rankings, accreditations from NUC, MDCN, and other bodies, research achievements, and key performance metrics." />
       </Helmet>
 

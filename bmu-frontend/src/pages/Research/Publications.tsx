@@ -44,7 +44,7 @@ export const Publications = () => {
  return (
  <>
  <Helmet>
- <title>Publications - Bayelsa Medical University</title>
+ <title>Publications | Bayelsa Medical University</title>
  <meta name="description" content="Explore BMU's research publications in peer-reviewed journals, conferences, and books covering malaria, NCDs, environmental health, and medical education." />
  </Helmet>
 

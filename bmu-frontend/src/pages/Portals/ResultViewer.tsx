@@ -65,7 +65,7 @@ export const ResultViewer = () => {
   return (
     <>
       <Helmet>
-        <title>My Results - Bayelsa Medical University</title>
+        <title>My Results | Bayelsa Medical University</title>
       </Helmet>
 
       <div>

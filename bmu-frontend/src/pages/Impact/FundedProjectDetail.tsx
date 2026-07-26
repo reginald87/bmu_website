@@ -67,7 +67,7 @@ export const FundedProjectDetail = () => {
   return (
     <>
       <Helmet>
-        <title>{project.title} - Bayelsa Medical University</title>
+        <title>{project.title} | Bayelsa Medical University</title>
         <meta name="description" content={project.description.slice(0, 160)} />
       </Helmet>
 

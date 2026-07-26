@@ -51,7 +51,7 @@ export const UniversalLogin = () => {
   return (
     <>
       <Helmet>
-        <title>Login - Bayelsa Medical University</title>
+        <title>Login | Bayelsa Medical University</title>
         <meta name="description" content="Secure universal login for all BMU portals." />
       </Helmet>
 

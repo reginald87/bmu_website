@@ -75,7 +75,7 @@ export const VisionMission = () => {
   return (
     <>
       <Helmet>
-        <title>Vision & Mission - Bayelsa Medical University</title>
+        <title>Vision & Mission | Bayelsa Medical University</title>
         <meta name="description" content="Discover BMU's vision to be Africa's leading medical university and our mission to transform healthcare through education, research, and service." />
       </Helmet>
 

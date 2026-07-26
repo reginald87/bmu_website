@@ -62,7 +62,7 @@ export const Health = () => {
   return (
   <>
  <Helmet>
- <title>Health Initiatives - Bayelsa Medical University</title>
+ <title>Health Initiatives | Bayelsa Medical University</title>
  <meta name="description" content="BMU's health initiatives including maternal health, mental health programs, chronic disease management, and infectious disease control in the Niger Delta." />
  </Helmet>
 

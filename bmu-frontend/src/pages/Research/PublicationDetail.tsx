@@ -65,7 +65,7 @@ export const PublicationDetail = () => {
  return (
  <>
  <Helmet>
- <title>{publication.title} | BMU Research Publications</title>
+ <title>{publication.title} | Bayelsa Medical University</title>
  <meta name="description" content={publication.abstract?.substring(0, 160)} />
  </Helmet>
 

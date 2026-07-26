@@ -169,7 +169,7 @@ export const Staff = () => {
   return (
     <>
       <Helmet>
-        <title>Staff Directory - Bayelsa Medical University</title>
+        <title>Staff Directory | Bayelsa Medical University</title>
         <meta name="description" content="Meet our dedicated administrative and support staff at Bayelsa Medical University." />
       </Helmet>
 

@@ -193,7 +193,7 @@ export const CourseRegistration = () => {
   return (
     <>
       <Helmet>
-        <title>Course Registration - Bayelsa Medical University</title>
+        <title>Course Registration | Bayelsa Medical University</title>
       </Helmet>
 
       <div>

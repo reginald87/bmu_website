@@ -158,7 +158,7 @@ export const EventCalendar = () => {
  ];
 
  return (
-  <><Helmet><title>Event Calendar - Bayelsa Medical University</title><meta name="description"content="View all upcoming events at Bayelsa Medical University in calendar format."/></Helmet><div className="min-h-screen bg-gray-50">
+  <><Helmet><title>Event Calendar | Bayelsa Medical University</title><meta name="description"content="View all upcoming events at Bayelsa Medical University in calendar format."/></Helmet><div className="min-h-screen bg-gray-50">
   {/* Hero */}
   <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,

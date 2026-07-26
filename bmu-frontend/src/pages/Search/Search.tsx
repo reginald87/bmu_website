@@ -52,7 +52,7 @@ export const Search = () => {
   return (
     <>
       <Helmet>
-        <title>Search - Bayelsa Medical University</title>
+        <title>Search | Bayelsa Medical University</title>
         <meta name="description" content="Search for programs, news, events, and information about Bayelsa Medical University." />
       </Helmet>
 

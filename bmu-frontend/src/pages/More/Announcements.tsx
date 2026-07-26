@@ -31,7 +31,7 @@ export const SiteAnnouncements = () => {
   return (
     <>
       <Helmet>
-        <title>Announcements - Bayelsa Medical University</title>
+        <title>Announcements | Bayelsa Medical University</title>
         <meta name="description" content="Official announcements and advertisements from Bayelsa Medical University" />
       </Helmet>
 

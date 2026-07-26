@@ -25,7 +25,7 @@ export const CareerCentre = () => {
  return (
  <>
  <Helmet>
- <title>BMU Career Centre | BMU</title>
+ <title>Career Centre | Bayelsa Medical University</title>
  <meta name="description" content="BMU Career Centre - Your gateway to professional success in healthcare" />
  </Helmet>
 

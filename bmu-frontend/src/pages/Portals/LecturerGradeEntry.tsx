@@ -101,7 +101,7 @@ export const LecturerGradeEntry = () => {
   return (
     <>
       <Helmet>
-        <title>Grade Entry - Bayelsa Medical University</title>
+        <title>Grade Entry | Bayelsa Medical University</title>
       </Helmet>
 
       <div>

@@ -52,7 +52,7 @@ export const ResearchAndDevelopment = () => {
   return (
     <>
       <Helmet>
-        <title>Research & Development Center - Bayelsa Medical University</title>
+        <title>Research & Development Center | Bayelsa Medical University</title>
         <meta name="description" content={center.description} />
       </Helmet>
 

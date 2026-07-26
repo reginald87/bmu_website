@@ -124,7 +124,7 @@ export const FeePayment = () => {
 
   return (
     <>
-      <Helmet><title>Fee Payment - Bayelsa Medical University</title></Helmet>
+      <Helmet><title>Fee Payment | Bayelsa Medical University</title></Helmet>
       <div>
           <div className="flex flex-wrap gap-4 mb-6">
             <div>

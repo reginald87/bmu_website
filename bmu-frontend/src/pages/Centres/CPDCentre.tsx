@@ -48,7 +48,7 @@ export const CPDCentre = () => {
  return (
  <>
  <Helmet>
- <title>CPD Centre | BMU</title>
+ <title>CPD Centre | Bayelsa Medical University</title>
  <meta name="description" content="Continuing Professional Development Centre at BMU - Lifelong learning for healthcare professionals" />
  </Helmet>
 

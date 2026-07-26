@@ -109,7 +109,7 @@ export const InternationalStudents = () => {
  return (
   <>
   <Helmet>
-  <title>International Students - Bayelsa Medical University</title>
+  <title>International Students | Bayelsa Medical University</title>
   <meta name="description" content="Information for international students applying to BMU including admission requirements, support services, visa guidance, and campus life." />
   </Helmet>
 

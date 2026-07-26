@@ -228,7 +228,7 @@ export const AgentChat = () => {
   return (
     <>
       <Helmet>
-        <title>Agent Chat - Admin Portal - BMU</title>
+        <title>Agent Chat | Admin Portal | Bayelsa Medical University</title>
       </Helmet>
 
       <div className="flex h-[calc(100vh-73px-48px)] gap-0 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">

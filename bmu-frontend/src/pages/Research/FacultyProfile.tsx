@@ -57,7 +57,7 @@ export const FacultyProfile = () => {
     return (
       <>
         <Helmet>
-          <title>Faculty Not Found - Bayelsa Medical University</title>
+          <title>Faculty Not Found | Bayelsa Medical University</title>
         </Helmet>
         <div className="container-custom py-20 text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Faculty Member Not Found</h1>
@@ -74,7 +74,7 @@ export const FacultyProfile = () => {
   return (
     <>
       <Helmet>
-        <title>{faculty.first_name} {faculty.last_name} - Faculty Profile - Bayelsa Medical University</title>
+        <title>{faculty.first_name} {faculty.last_name} | Faculty Profile | Bayelsa Medical University</title>
         <meta name="description" content={`${faculty.position_display} at ${faculty.college || 'BMU'}. View profile, research, publications.`} />
       </Helmet>
 

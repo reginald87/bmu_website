@@ -77,7 +77,7 @@ export const AdminDashboard = () => {
   return (
     <>
       <Helmet>
-        <title>Admin Dashboard - Bayelsa Medical University</title>
+        <title>Admin Dashboard | Bayelsa Medical University</title>
       </Helmet>
 
       <div>

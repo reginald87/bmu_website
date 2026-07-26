@@ -200,7 +200,7 @@ export const DepartmentDetail = () => {
  return (
  <>
  <Helmet>
- <title>{department.name} - Bayelsa Medical University</title>
+ <title>{department.name} | Bayelsa Medical University</title>
  <meta name="description" content={department.description} />
  </Helmet>
 

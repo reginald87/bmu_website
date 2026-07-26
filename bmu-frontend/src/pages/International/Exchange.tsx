@@ -47,7 +47,7 @@ export const Exchange = () => {
  return (
   <>
   <Helmet>
-  <title>Student Exchange Programs - Bayelsa Medical University</title>
+  <title>Student Exchange Programs | Bayelsa Medical University</title>
   <meta name="description" content="Explore BMU's student exchange programs and study abroad opportunities with partner institutions worldwide." />
   </Helmet>
 

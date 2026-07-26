@@ -195,13 +195,13 @@ export const EventDetail = () => {
 
   if (isLoading) {
  return (
-  <><Helmet><title>Loading Event - Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><div className="w-16 h-16 border-4 border-gray-200 border-t-[#1E1E1E] rounded-full animate-spin mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Loading Event</h1><p className="text-gray-600">Please wait while we fetch the event details...</p></div></div></div></>
+  <><Helmet><title>Loading Event | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><div className="w-16 h-16 border-4 border-gray-200 border-t-[#1E1E1E] rounded-full animate-spin mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Loading Event</h1><p className="text-gray-600">Please wait while we fetch the event details...</p></div></div></div></>
  );
  }
 
  if (isError) {
  return (
-  <><Helmet><title>Error - Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Event</h1><p className="text-gray-600 mb-6">An error occurred while fetching the event. Please try again later.</p><Link
+  <><Helmet><title>Error | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Event</h1><p className="text-gray-600 mb-6">An error occurred while fetching the event. Please try again later.</p><Link
   to="/events" className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"><ChevronLeft className="w-5 h-5"/>
   Back to Events
   </Link></div></div></div></>
@@ -210,7 +210,7 @@ export const EventDetail = () => {
 
  if (!event) {
  return (
-  <><Helmet><title>Event Not Found - Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Event Not Found</h1><p className="text-gray-600 mb-6">The event you're looking for doesn't exist or has been removed.</p><Link
+  <><Helmet><title>Event Not Found | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Event Not Found</h1><p className="text-gray-600 mb-6">The event you're looking for doesn't exist or has been removed.</p><Link
   to="/events" className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"><ChevronLeft className="w-5 h-5"/>
   Back to Events
   </Link></div></div></div></>
@@ -218,7 +218,7 @@ export const EventDetail = () => {
  }
 
  return (
- <><Helmet><title>{event.title} - Bayelsa Medical University</title><meta name="description"content={event.description} /></Helmet><div className="min-h-screen bg-gray-50">
+ <><Helmet><title>{event.title} | Bayelsa Medical University</title><meta name="description"content={event.description} /></Helmet><div className="min-h-screen bg-gray-50">
  {/* Navigation Bar */}
  <div className="bg-white border-b sticky top-[140px] z-20"><div className="container-custom py-4"><div className="flex items-center justify-between"><button
   onClick={() => navigate(-1)}

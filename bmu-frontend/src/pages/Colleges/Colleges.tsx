@@ -111,7 +111,7 @@ export const Colleges = () => {
   return (
     <>
       <Helmet>
-        <title>Colleges & Schools - Bayelsa Medical University</title>
+        <title>Colleges & Schools | Bayelsa Medical University</title>
         <meta name="description" content="Explore BMU's academic colleges and schools." />
       </Helmet>
 

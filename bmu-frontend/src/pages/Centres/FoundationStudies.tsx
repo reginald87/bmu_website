@@ -36,7 +36,7 @@ export const FoundationStudies = () => {
  return (
  <>
  <Helmet>
- <title>Centre for Foundation Studies | BMU</title>
+ <title>Centre for Foundation Studies | Bayelsa Medical University</title>
  <meta name="description" content="Centre for Foundation Studies at BMU - Preparing students for success in medical education" />
  </Helmet>
 

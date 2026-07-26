@@ -124,7 +124,7 @@ export const ResultApproval = ({ stage }: Props) => {
   return (
     <>
       <Helmet>
-        <title>{config.title} - Bayelsa Medical University</title>
+        <title>{config.title} | Bayelsa Medical University</title>
       </Helmet>
 
       <div>

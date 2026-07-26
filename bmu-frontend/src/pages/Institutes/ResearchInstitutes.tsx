@@ -41,7 +41,7 @@ export const ResearchInstitutes = () => {
   return (
  <>
  <Helmet>
- <title>Research Institutes | BMU</title>
+ <title>Research Institutes | Bayelsa Medical University</title>
  <meta name="description" content="Research Institutes at Bayelsa Medical University - Advancing healthcare through research" />
  </Helmet>
 

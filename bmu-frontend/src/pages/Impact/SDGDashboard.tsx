@@ -295,7 +295,7 @@ export const SDGDashboard = () => {
  return (
  <>
  <Helmet>
- <title>SDG Impact Dashboard - Bayelsa Medical University</title>
+ <title>SDG Impact Dashboard | Bayelsa Medical University</title>
  <meta name="description" content="Track BMU's real-time contributions to UN Sustainable Development Goals. Interactive dashboard with live metrics, charts, and impact data for THE Impact Rankings." />
  </Helmet>
 

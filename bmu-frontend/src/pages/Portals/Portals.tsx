@@ -99,7 +99,7 @@ export const Portals = () => {
   return (
     <>
       <Helmet>
-        <title>Portals - Bayelsa Medical University</title>
+        <title>Portals | Bayelsa Medical University</title>
         <meta name="description" content="Access BMU portals for applicants, students, alumni, and healthcare professionals." />
       </Helmet>
 

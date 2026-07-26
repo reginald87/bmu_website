@@ -92,7 +92,7 @@ export const Governance = () => {
   return (
     <>
       <Helmet>
-        <title>Governance - Bayelsa Medical University</title>
+        <title>Governance | Bayelsa Medical University</title>
         <meta name="description" content="Learn about BMU's governance structure including the University Council, Senate, and key administrative bodies ensuring transparent and effective leadership." />
       </Helmet>
 

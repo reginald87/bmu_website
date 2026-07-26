@@ -376,7 +376,7 @@ export const FacultyDetail = () => {
   return (
     <>
       <Helmet>
-        <title>{faculty.name} - Bayelsa Medical University</title>
+        <title>{faculty.name} | Bayelsa Medical University</title>
         <meta name="description" content={faculty.description} />
       </Helmet>
 

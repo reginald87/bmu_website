@@ -64,7 +64,7 @@ export const AlumniPortal = () => {
     return (
       <>
         <Helmet>
-          <title>Alumni Login - Bayelsa Medical University</title>
+          <title>Alumni Login | Bayelsa Medical University</title>
           <meta name="description" content="Login to BMU Alumni Portal to connect with fellow graduates and access alumni resources." />
         </Helmet>
 
@@ -149,7 +149,7 @@ export const AlumniPortal = () => {
   return (
     <>
       <Helmet>
-        <title>Alumni Portal - Bayelsa Medical University</title>
+        <title>Alumni Portal | Bayelsa Medical University</title>
         <meta name="description" content="BMU Alumni Portal - Connect with fellow graduates, access career resources, and stay involved with your alma mater." />
       </Helmet>
 

@@ -79,7 +79,7 @@ export const Contact = () => {
   return (
     <>
       <Helmet>
-        <title>Contact Us - Bayelsa Medical University</title>
+        <title>Contact Us | Bayelsa Medical University</title>
         <meta name="description" content="Get in touch with Bayelsa Medical University. Find our campus location, phone numbers, email addresses, and office hours." />
       </Helmet>
 

@@ -262,7 +262,7 @@ export const CollegeDetail = () => {
   return (
     <>
       <Helmet>
-        <title>{college.name} - Bayelsa Medical University</title>
+        <title>{college.name} | Bayelsa Medical University</title>
         <meta name="description" content={college.description} />
       </Helmet>
 

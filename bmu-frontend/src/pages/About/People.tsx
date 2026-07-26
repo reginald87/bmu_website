@@ -9,7 +9,7 @@ export const People = () => {
  return (
  <>
  <Helmet>
- <title>People - Bayelsa Medical University</title>
+ <title>People | Bayelsa Medical University</title>
  <meta name="description" content="Meet the people of Bayelsa Medical University - our leadership, faculty, and staff dedicated to healthcare excellence." />
  </Helmet>
 

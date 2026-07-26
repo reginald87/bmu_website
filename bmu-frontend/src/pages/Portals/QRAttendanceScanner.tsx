@@ -63,7 +63,7 @@ export const QRAttendanceScanner = () => {
 
   return (
     <>
-      <Helmet><title>QR Attendance - Bayelsa Medical University</title></Helmet>
+      <Helmet><title>QR Attendance | Bayelsa Medical University</title></Helmet>
       <div>
           <div className="max-w-md mx-auto">
             <div className="bg-white p-6 shadow-sm border border-gray-100 text-center">

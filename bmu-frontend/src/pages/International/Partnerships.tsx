@@ -48,7 +48,7 @@ export const Partnerships = () => {
   return (
   <>
   <Helmet>
-  <title>Global Partnerships - Bayelsa Medical University</title>
+  <title>Global Partnerships | Bayelsa Medical University</title>
   <meta name="description" content="BMU's strategic partnerships with leading universities and institutions worldwide for research, education, and academic exchange." />
   </Helmet>
 

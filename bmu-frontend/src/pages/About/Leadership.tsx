@@ -30,7 +30,7 @@ export function Leadership() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet>
-        <title>Leadership - Bayelsa Medical University</title>
+        <title>Leadership | Bayelsa Medical University</title>
         <meta name="description" content="Meet the leadership team of Bayelsa Medical University" />
       </Helmet>
 

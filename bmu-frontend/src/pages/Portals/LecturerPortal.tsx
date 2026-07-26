@@ -51,7 +51,7 @@ export const LecturerPortal = () => {
   return (
       <div>
         <Helmet>
-          <title>Lecturer Portal - Bayelsa Medical University</title>
+          <title>Lecturer Portal | Bayelsa Medical University</title>
         </Helmet>
         {/* Lecturer Info Bar */}
         <div className="bg-white border-b mb-6">

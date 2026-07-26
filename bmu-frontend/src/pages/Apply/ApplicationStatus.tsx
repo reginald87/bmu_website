@@ -58,7 +58,7 @@ export const ApplicationStatus = () => {
   return (
     <>
       <Helmet>
-        <title>Application Status - Bayelsa Medical University</title>
+        <title>Application Status | Bayelsa Medical University</title>
         <meta name="description" content="Check the status of your BMU application. Track your application progress from submission to final decision." />
       </Helmet>
 

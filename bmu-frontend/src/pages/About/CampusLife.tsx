@@ -101,7 +101,7 @@ export const CampusLife = () => {
   return (
     <>
       <Helmet>
-        <title>Campus Life - Bayelsa Medical University</title>
+        <title>Campus Life | Bayelsa Medical University</title>
         <meta name="description" content="Experience vibrant campus life at BMU with world-class residential, dining, wellness, and recreational facilities designed for student success." />
       </Helmet>
 

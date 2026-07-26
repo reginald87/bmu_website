@@ -63,7 +63,7 @@ export const Sustainability = () => {
   return (
     <>
       <Helmet>
-        <title>Sustainability - Bayelsa Medical University</title>
+        <title>Sustainability | Bayelsa Medical University</title>
         <meta name="description" content="BMU's sustainability initiatives including renewable energy, water conservation, waste management, and carbon neutrality roadmap." />
       </Helmet>
 

@@ -50,7 +50,7 @@ export const Library = () => {
 	return (
 	<>
  <Helmet>
- <title>Library - Bayelsa Medical University</title>
+ <title>Library | Bayelsa Medical University</title>
  <meta name="description" content="Explore BMU's modern library with extensive print and digital collections, study spaces, research databases, and 24/7 digital access." />
  </Helmet>
 

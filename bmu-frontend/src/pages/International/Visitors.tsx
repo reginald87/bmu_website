@@ -97,7 +97,7 @@ export const Visitors = () => {
  return (
  <>
  <Helmet>
- <title>Visitors & Delegations - Bayelsa Medical University</title>
+ <title>Visitors & Delegations | Bayelsa Medical University</title>
  <meta name="description" content="Information for international visitors, academic delegations, and visiting scholars planning to visit Bayelsa Medical University." />
  </Helmet>
 

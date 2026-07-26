@@ -285,7 +285,7 @@ export const CollegeDetail = () => {
 	return (
 		<>
  <Helmet>
- <title>College Not Found - Bayelsa Medical University</title>
+ <title>College Not Found | Bayelsa Medical University</title>
  </Helmet>
  <div className="container-custom py-20 text-center">
  <h1 className="text-headline text-gray-900 mb-4">College Not Found</h1>
@@ -303,7 +303,7 @@ export const CollegeDetail = () => {
  return (
  <>
  <Helmet>
- <title>{college.name} - Bayelsa Medical University</title>
+ <title>{college.name} | Bayelsa Medical University</title>
  <meta name="description" content={`${college.fullName} at Bayelsa Medical University. Explore programs, faculty, facilities, and admission requirements.`} />
  </Helmet>
 

@@ -905,7 +905,7 @@ export const ApplicationPortal = () => {
   return (
     <>
       <Helmet>
-        <title>Application Portal - Bayelsa Medical University</title>
+        <title>Application Portal | Bayelsa Medical University</title>
         <meta name="description" content="Complete your application to Bayelsa Medical University. Multi-step application form for undergraduate, postgraduate, and professional programs." />
       </Helmet>
 

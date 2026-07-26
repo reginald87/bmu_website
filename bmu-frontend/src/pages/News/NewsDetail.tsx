@@ -198,7 +198,7 @@ export const NewsDetail = () => {
  return (
  <>
  <Helmet>
- <title>Loading... - Bayelsa Medical University</title>
+ <title>Loading... | Bayelsa Medical University</title>
  </Helmet>
  <div className="min-h-screen bg-gray-50 pt-[140px]">
  <div className="container-custom py-16">
@@ -214,7 +214,7 @@ export const NewsDetail = () => {
 
  if (!article) {
  return (
- <><Helmet><title>Article Not Found - Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Article Not Found</h1><p className="text-gray-600 mb-6">The article you're looking for doesn't exist or has been removed.</p><Link
+ <><Helmet><title>Article Not Found | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Article Not Found</h1><p className="text-gray-600 mb-6">The article you're looking for doesn't exist or has been removed.</p><Link
  to="/news" className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"><ChevronLeft className="w-5 h-5"/>
  Back to News
  </Link></div></div></div></>
@@ -224,7 +224,7 @@ export const NewsDetail = () => {
  const typeConfig = typeLabels[article.type];
 
  return (
- <><Helmet><title>{article.title} - Bayelsa Medical University</title><meta name="description"content={article.excerpt} /><meta property="og:title"content={article.title} /><meta property="og:description"content={article.excerpt} /></Helmet><div className="min-h-screen bg-gray-50 pt-[140px]">
+ <><Helmet><title>{article.title} | Bayelsa Medical University</title><meta name="description"content={article.excerpt} /><meta property="og:title"content={article.title} /><meta property="og:description"content={article.excerpt} /></Helmet><div className="min-h-screen bg-gray-50 pt-[140px]">
  {/* Navigation Bar */}
  <div className="bg-white border-b sticky top-[140px] z-20"><div className="container-custom py-4"><div className="flex items-center justify-between"><button
  onClick={() => navigate(-1)}

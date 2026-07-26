@@ -69,7 +69,7 @@ export const ResearchFunding = () => {
  return (
  <>
  <Helmet>
- <title>Research Funding - Bayelsa Medical University</title>
+ <title>Research Funding | Bayelsa Medical University</title>
  <meta name="description" content="Explore research funding opportunities, grants, and partnerships at BMU. Apply for internal and external research funding to advance medical knowledge." />
  </Helmet>
 

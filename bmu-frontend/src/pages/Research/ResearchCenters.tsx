@@ -47,7 +47,7 @@ export const ResearchCenters = () => {
   return (
     <>
       <Helmet>
-        <title>Research Centers - Bayelsa Medical University</title>
+        <title>Research Centers | Bayelsa Medical University</title>
         <meta name="description" content="Explore BMU's specialized research centers focusing on malaria, non-communicable diseases, maternal health, infectious diseases, and environmental health in the Niger Delta." />
       </Helmet>
 

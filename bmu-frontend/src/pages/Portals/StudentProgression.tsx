@@ -37,7 +37,7 @@ export const StudentProgression = () => {
 
   return (
     <>
-      <Helmet><title>Academic Progression - Bayelsa Medical University</title></Helmet>
+      <Helmet><title>Academic Progression | Bayelsa Medical University</title></Helmet>
       <div>
           {isLoading ? (
             <div className="flex justify-center py-20">

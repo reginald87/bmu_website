@@ -518,7 +518,7 @@ export const CPDPlatform = () => {
   return (
     <>
       <Helmet>
-        <title>CPD Platform - Bayelsa Medical University</title>
+        <title>CPD Platform | Bayelsa Medical University</title>
         <meta name="description" content="Continuing Professional Development platform for healthcare professionals. Access accredited courses and earn CME credits." />
       </Helmet>
 

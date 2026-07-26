@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowUp, Newspaper, Calendar, ExternalLink, GraduationCap } from 'lucide-react';
@@ -151,6 +152,9 @@ export const Home = () => {
 
   return (
     <div className="pb-16 lg:pb-0">
+      <Helmet>
+        <title>Bayelsa Medical University | Advancing Medical Education</title>
+      </Helmet>
       <StickySectionNav sections={navSections} activeSection={activeSection} />
       <MobileQuickBar />
       <ScrollToTop />

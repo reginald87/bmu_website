@@ -78,7 +78,7 @@ export const Collaborations = () => {
   return (
   <>
   <Helmet>
-  <title>Research Collaborations - Bayelsa Medical University</title>
+  <title>Research Collaborations | Bayelsa Medical University</title>
   <meta name="description" content="Explore BMU's partnerships with international institutions, UN agencies, teaching hospitals, and research organizations advancing healthcare in the Niger Delta." />
   </Helmet>
 

@@ -159,7 +159,7 @@ export const ProgramDetail = () => {
  return (
   <>
   <Helmet>
-  <title>{program.name} ({program.degree}) - Bayelsa Medical University</title>
+  <title>{program.name} ({program.degree}) | Bayelsa Medical University</title>
   <meta name="description" content={`${program.description} Apply for ${program.degree} in ${program.name} at Bayelsa Medical University.`} />
   </Helmet>
 
