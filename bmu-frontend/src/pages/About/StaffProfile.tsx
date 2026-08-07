@@ -77,7 +77,7 @@ export const StaffProfile = () => {
                   {staff.employment_type && (
                     <div className="flex items-center gap-2">
                       <span className="text-white/90">•</span>
-                      <span className="text-white/90">{staff.employment_type_display || staff.employment_type}</span>
+                      <span className="text-white/90">{staff.employment_type}</span>
                     </div>
                   )}
                   {staff.office_location && (

@@ -47,10 +47,11 @@ const fallbackAlumni: Alumni[] = [
   },
 ];
 
-export const AlumniAchievements = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: Record<string, unknown> }> }) => {
+export const AlumniAchievements = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
   const { t } = useTranslation();
 
-  const notableAlumni = (homeSections?.find(s => s.section_key === 'alumni')?.data as any[] || fallbackAlumni);
+  const notableAlumni = (homeSections?.find(s => s.section_key === 'alumni_notable')?.data as any[] || fallbackAlumni);
+  const alumniStat = (homeSections?.find(s => s.section_key === 'alumni_stat')?.data as any[] || [{ value: '2,500+', label: 'Active Alumni Network' }])[0];
 
   return (
     <section className="py-20 bg-white">
@@ -151,8 +152,8 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
                 <Users className="w-8 h-8 text-[#A51C30]" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#1E1E1E]">2,500+</p>
-                <p className="text-gray-600">Active Alumni Network</p>
+                <p className="text-2xl font-bold text-[#1E1E1E]">{alumniStat?.value || '2,500+'}</p>
+                <p className="text-gray-600">{alumniStat?.label || 'Active Alumni Network'}</p>
               </div>
             </div>
 

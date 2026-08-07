@@ -9,10 +9,7 @@ import {
 	FlaskConical,
 	ArrowLeft,
 	GraduationCap,
-	Users,
 	BookOpen,
-	Award,
-	Clock,
 	MapPin,
 	Mail,
 	Phone

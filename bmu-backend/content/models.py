@@ -1827,3 +1827,51 @@ class InstitutePage(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class MediaAsset(models.Model):
+    """Reusable media upload for CMS content (page sections, quick links, etc.)"""
+
+    title = models.CharField(max_length=200, blank=True, help_text="Optional label to identify this asset")
+    image = models.ImageField(upload_to='media-library/', help_text="Upload an image from your computer")
+    alt_text = models.CharField(max_length=300, blank=True, help_text="Accessible description of the image")
+
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Media Asset"
+        verbose_name_plural = "Media Assets"
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return self.title or f"Media Asset #{self.pk}"
+
+    def url(self):
+        return self.image.url
+
+    def file_size_kb(self):
+        if self.image:
+            try:
+                return round(self.image.size / 1024, 1)
+            except (OSError, ValueError):
+                return 0
+        return 0
+
+
+class ContactInfo(models.Model):
+    """General university contact details shown in the footer and contact page (singleton)"""
+
+    address = models.CharField(max_length=300, blank=True, help_text="Full campus address")
+    phone = models.CharField(max_length=100, blank=True, help_text="Main switchboard phone number")
+    email = models.EmailField(blank=True, help_text="Primary contact email")
+    emergency_label = models.CharField(max_length=100, blank=True, default='Emergency',
+                                       help_text="Label for the emergency contact (e.g. Security)")
+    emergency_phone = models.CharField(max_length=100, blank=True, help_text="Emergency / after-hours phone number")
+    office_hours = models.CharField(max_length=200, blank=True, help_text="Office hours, e.g. Mon-Fri 8AM - 5PM")
+
+    class Meta:
+        verbose_name = "Contact Info"
+        verbose_name_plural = "Contact Info"
+
+    def __str__(self):
+        return "University Contact Information"

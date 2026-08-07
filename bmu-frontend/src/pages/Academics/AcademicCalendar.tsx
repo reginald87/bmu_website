@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, GraduationCap, Bell, AlertCircle, BookOpen, Loader2 } from 'lucide-react';
 import { useAcademicCalendar, useDeadlines } from '../../services/apiHooks';
-import type { AcademicEventData, DeadlineData } from '../../services/api';
+import type { AcademicEventData } from '../../services/mockData';
 
 const deadlineIconMap: Record<string, React.ElementType> = {
   BookOpen, Clock, Calendar, GraduationCap, Bell, AlertCircle,

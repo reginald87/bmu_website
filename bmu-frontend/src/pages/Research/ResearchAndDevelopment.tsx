@@ -14,7 +14,6 @@ import {
   Phone,
   MapPin,
   Calendar,
-  ArrowRight,
   Users,
 } from 'lucide-react';
 import { useResearchCenters } from '../../services/apiHooks';

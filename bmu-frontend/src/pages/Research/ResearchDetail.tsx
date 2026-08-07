@@ -4,11 +4,8 @@ import { motion } from 'framer-motion';
 import { 
  Microscope, 
  ArrowLeft, 
- Calendar, 
- Users, 
  Award,
  ExternalLink,
- FlaskConical,
  Target,
  TrendingUp,
  DollarSign,

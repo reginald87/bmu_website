@@ -30,7 +30,6 @@ import type {
   PaymentVerifyResponse,
   FundingOrganizationData,
   FundedProjectData,
-  SearchResultData,
   SearchResponseData,
   ExchangeProgramData,
   StudentSupportServiceData,
@@ -40,6 +39,7 @@ import type {
   CampusContactInfoData,
   CampusImageData,
   CampusVideoData,
+  ContactInfoData,
   JobPostingData,
   CPDCourseData,
   ImpactProgramData,
@@ -53,6 +53,14 @@ import type {
   VisionMissionPageData,
   GovernancePageData,
   AnnouncementData,
+  FundingStatsData,
+  AcademicEventData,
+  AdmissionRequirementData,
+  ImportantDateData,
+  BookData,
+  DigitalResourceData,
+  ApplicationData,
+  GalleryImageData,
 } from './mockData';
 import {
   mockEvents,
@@ -63,7 +71,9 @@ import {
   mockCampusContactInfo,
   mockCampusImages,
   mockCampusVideo,
+  mockContactInfo,
   mockApplications,
+  mockPartners,
 } from './mockData';
 import {
   mockPrograms,
@@ -562,7 +572,7 @@ export const fetchImpactPrograms = async (programType?: string): Promise<ImpactP
 
 export const fetchPublicationById = async (id: string): Promise<PublicationData | null> => {
   const all = await fetchPublications();
-  return all.find((p: PublicationData) => p.slug === id || String(p.id) === id) || null;
+  return all.find((p: PublicationData) => String(p.id) === id) || null;
 };
 
 export const fetchSearchResults = async (query: string, limit: number = 20): Promise<SearchResponseData> => {
@@ -628,7 +638,7 @@ export const uploadApplicationDocument = async (
   return response.data;
 };
 
-export const checkApplicationStatus = async (applicationId: string): Promise<ApplicationData> => {
+export const checkApplicationStatus = async (applicationId: string): Promise<ApplicationData | null> => {
   return fetchWithFallback(
     `/public/applications/${applicationId}/status`,
     () => mockApplications.find(a => a.id === applicationId) || null,
@@ -1025,6 +1035,19 @@ export const fetchCampusContact = async (): Promise<CampusContactInfoData | null
   return mockCampusContactInfo;
 };
 
+export const fetchContactInfo = async (): Promise<ContactInfoData | null> => {
+  try {
+    const response = await apiClient.get('/public/contact-info');
+    const data = response.data;
+    if (data && typeof data === 'object' && data.id) {
+      return data;
+    }
+  } catch {
+    // fall through to mock
+  }
+  return mockContactInfo;
+};
+
 export const fetchCampusImages = async (): Promise<CampusImageData[]> => {
   try {
     const response = await apiClient.get('/public/campus-images');
@@ -1131,7 +1154,7 @@ export interface PageSectionData {
   content_type: string;
   title: string;
   subtitle: string;
-  data: Record<string, unknown>;
+  data: any;
   display_order: number;
 }
 

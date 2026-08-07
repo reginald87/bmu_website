@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 import {
-  MessageCircle, Send, Search, Users, Clock, CheckCircle,
-  PhoneOff, RefreshCw, Wifi, WifiOff, ChevronRight, X,
+  MessageCircle, Send, Search,
+  PhoneOff, RefreshCw, Wifi, WifiOff, ChevronRight,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { chatAdminApi, type ChatConversation, type ChatConversationDetail } from '../../services/api';
@@ -69,7 +69,7 @@ export const AgentChat = () => {
     return () => clearInterval(interval);
   }, [loadConversations]);
 
-  const connectToConversation = useCallback((convId: number, sessionId: string) => {
+  const connectToConversation = useCallback((_convId: number, sessionId: string) => {
     if (wsRef.current) {
       wsRef.current.close();
     }

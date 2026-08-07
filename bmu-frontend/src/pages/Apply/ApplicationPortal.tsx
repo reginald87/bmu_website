@@ -11,12 +11,11 @@ import {
   CreditCard,
   Search,
   Upload,
-  ArrowRight,
   Phone,
   Mail,
   Loader2
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { validatePersonalInfo, validateAcademicInfo, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
 import { uploadApplicationDocument } from '../../services/api';
@@ -335,13 +334,21 @@ const DEGREE_GRADES = [
 ];
 
 // Step 4: Academic Info
+interface AcademicRecordForm {
+  institution: string;
+  qualification: string;
+  gradYear: string;
+  grade: string;
+  subjects: { subject: string; grade: string }[];
+}
+
 const AcademicInfoStep = ({ 
   data, 
   onChange,
   errors,
   touched 
 }: { 
-  data: any[], 
+  data: AcademicRecordForm[], 
   onChange: (field: string, value: any) => void,
   errors: ValidationError[],
   touched: Record<string, boolean>
@@ -776,7 +783,7 @@ export const ApplicationPortal = () => {
 
   useEffect(() => {
     if (user && (user.first_name || user.last_name || user.email || user.phone)) {
-      setFormData(prev => ({
+      setFormData((prev: typeof formData) => ({
         ...prev,
         personal: {
           ...prev.personal,
@@ -849,7 +856,7 @@ export const ApplicationPortal = () => {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const academicRecordsPayload = formData.academicRecords.map(r => ({
+      const academicRecordsPayload = formData.academicRecords.map((r: AcademicRecordForm) => ({
         institution: r.institution,
         qualification: r.qualification,
         year_of_completion: parseInt(r.gradYear),
@@ -997,7 +1004,7 @@ export const ApplicationPortal = () => {
                 {currentStep === 4 && (
                   <AcademicInfoStep 
                     data={formData.academicRecords}
-                    onChange={(field, value) => {
+                    onChange={(_field, value) => {
                       setFormData({ 
                         ...formData, 
                         academicRecords: value 

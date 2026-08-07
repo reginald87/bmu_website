@@ -3,13 +3,10 @@ import { motion } from 'framer-motion';
 import {
  Users,
  FileText,
- Home,
- DollarSign,
  Plane,
  CheckCircle,
  ArrowRight,
  GraduationCap,
- Calendar,
  MapPin,
  Phone,
  Mail,

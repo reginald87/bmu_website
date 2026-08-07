@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Calendar, DollarSign, User, Building2, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchFundedProjectById } from '../../services/api';
-import type { FundedProjectData } from '../../services/mockData';
 
 const statusConfig: Record<string, { color: string; icon: React.ElementType; label: string }> = {
   ongoing: { color: '#2563EB', icon: Clock, label: 'Ongoing' },

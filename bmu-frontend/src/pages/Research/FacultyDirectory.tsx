@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Mail, BookOpen, ArrowRight, Filter } from 'lucide-react';
+import { Search, ArrowRight, Filter } from 'lucide-react';
 import { useFaculty } from '../../services/apiHooks';
 
 interface FacultyMember {

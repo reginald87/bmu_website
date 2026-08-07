@@ -189,6 +189,7 @@ def seed_page_sections(apps, schema_editor):
             {'name': 'International Relations', 'email': 'international@bmu.edu.ng', 'phone': '+234 803 123 4570'},
             {'name': 'Human Resources', 'email': 'hr@bmu.edu.ng', 'phone': '+234 803 123 4571'},
             {'name': 'Public Relations', 'email': 'pro@bmu.edu.ng', 'phone': '+234 803 123 4572'},
+            {'name': 'Webmaster', 'email': 'webmaster@bmu.edu.ng', 'phone': '+234 803 123 4573'},
         ], 2),
         ('contact', 'map_coords', 'custom', '', '', [
             {'lat': 4.9279, 'lng': 6.2673},

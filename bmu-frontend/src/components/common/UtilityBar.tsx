@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Search, ExternalLink } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
-import { useUtilityLinks } from '../../services/apiHooks';
+import { useMenuItems } from '../../services/apiHooks';
 
 export const UtilityBar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: externalLinks = [] } = useUtilityLinks();
+  const { data: utilityMenuItems = [] } = useMenuItems('utility');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,16 +26,15 @@ export const UtilityBar = () => {
       <div className="container-custom">
         <div className="flex items-center justify-between h-9">
           <div className="flex items-center gap-0">
-            {externalLinks.map((link) => (
+            {utilityMenuItems.map((item) => (
               <a
-                key={link.id}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                key={item.id}
+                href={item.url}
+                target={item.is_external ? '_blank' : undefined}
+                rel={item.is_external ? 'noopener noreferrer' : undefined}
                 className="flex items-center gap-1 px-3 py-1 text-gray-300 hover:text-white hover:bg-white/10 transition-colors border-r border-white/10 last:border-r-0"
               >
-                {link.label}
-                <ExternalLink className="w-3 h-3" />
+                {item.label}
               </a>
             ))}
           </div>

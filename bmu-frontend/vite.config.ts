@@ -13,6 +13,10 @@ export default defineConfig({
         target: API_TARGET,
         changeOrigin: true,
       },
+      '/admin': {
+        target: API_TARGET,
+        changeOrigin: true,
+      },
       '/media': {
         target: API_TARGET,
         changeOrigin: true,

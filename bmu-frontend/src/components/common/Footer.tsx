@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useContactInfo } from '../../services/apiHooks';
 
 const colors = {
  primary: '#A51C30',
@@ -9,6 +10,7 @@ const colors = {
 
 export const Footer = () => {
  const { t } = useTranslation();
+ const { data: contact } = useContactInfo();
  const currentYear = new Date().getFullYear();
 
  const quickLinks = [
@@ -17,6 +19,7 @@ export const Footer = () => {
  { to: '/research', label: t('nav.research') },
  { to: '/colleges', label: t('nav.colleges') },
  { to: '/apply', label: t('nav.apply') },
+  { to: '/contact', label: t('footer.contactUs') },
  ];
 
  const resources = [
@@ -28,11 +31,11 @@ export const Footer = () => {
  ];
 
  const contactInfo = {
- address: t('footer.address'),
- phone: t('footer.phone'),
- email: t('footer.email'),
- emergency: t('footer.emergency'),
- emergencyNumber: t('footer.emergencyNumber'),
+ address: contact?.address || t('footer.address'),
+ phone: contact?.phone || t('footer.phone'),
+ email: contact?.email || t('footer.email'),
+ emergency: contact?.emergency_label || t('footer.emergency'),
+ emergencyNumber: contact?.emergency_phone || t('footer.emergencyNumber'),
  };
 
  const socialLinks = [

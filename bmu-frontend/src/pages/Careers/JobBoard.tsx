@@ -28,7 +28,7 @@ const formatSalary = (min: number | null, max: number | null) => {
   const fmt = (n: number) => '₦' + n.toLocaleString('en-US');
   if (min !== null && max !== null) return `${fmt(min)} - ${fmt(max)}/year`;
   if (min !== null) return `From ${fmt(min)}/year`;
-  return `Up to ${fmt(max)}/year`;
+  return `Up to ${fmt(max as number)}/year`;
 };
 
 const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null; isOpen: boolean; onClose: () => void }) => {

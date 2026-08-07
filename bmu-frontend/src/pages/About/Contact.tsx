@@ -62,7 +62,21 @@ export const Contact = () => {
       details: ['Monday - Friday', '8:00 AM - 5:00 PM WAT'],
     },
   ];
-  const contactInfo = (sections?.find(s => s.section_key === 'contact_info')?.data as any[] || fallbackContactInfo);
+  const rawContactInfo = (sections?.find(s => s.section_key === 'contact_info')?.data as any[] || fallbackContactInfo);
+  const iconByTitle: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+    'Main Campus': MapPin,
+    'Address': MapPin,
+    'Location': MapPin,
+    'Phone': Phone,
+    'Hotline': Phone,
+    'Email': Mail,
+    'Office Hours': Clock,
+    'Hours': Clock,
+  };
+  const contactInfo: { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; title: string; details: string[] }[] = rawContactInfo.map((item) => ({
+    ...item,
+    icon: item.icon || iconByTitle[item.title] || MapPin,
+  }));
 
   const fallbackDepartments = [
     { name: 'Admissions Office', email: 'admissions@bmu.edu.ng', phone: '+234 803 123 4567' },
@@ -71,10 +85,14 @@ export const Contact = () => {
     { name: 'International Relations', email: 'international@bmu.edu.ng', phone: '+234 803 123 4570' },
     { name: 'Human Resources', email: 'hr@bmu.edu.ng', phone: '+234 803 123 4571' },
     { name: 'Public Relations', email: 'pro@bmu.edu.ng', phone: '+234 803 123 4572' },
+    { name: 'Webmaster', email: 'webmaster@bmu.edu.ng', phone: '+234 803 123 4573' },
   ];
-  const departmentContacts = (sections?.find(s => s.section_key === 'departments')?.data as any[] || fallbackDepartments);
+  const departmentContacts = (sections?.find(s => s.section_key === 'department_contacts')?.data as any[] || fallbackDepartments);
 
-  const mapCenter: [number, number] = DEFAULT_COORDS;
+  const mapData = sections?.find(s => s.section_key === 'map_coords')?.data as any[] | undefined;
+  const mapCenter: [number, number] = mapData?.[0]?.lat && mapData?.[0]?.lng
+    ? [Number(mapData[0].lat), Number(mapData[0].lng)]
+    : DEFAULT_COORDS;
 
   return (
     <>
@@ -258,7 +276,7 @@ export const Contact = () => {
       <section className="py-12" style={{ backgroundColor: '#f8f9fa' }}>
         <div className="container-custom">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Find Us</h2>
-          <div className="aspect-video overflow-hidden border border-gray-200" style={{ minHeight: '400px' }}>
+          <div className="relative z-0 isolate aspect-video overflow-hidden border border-gray-200" style={{ minHeight: '400px' }}>
             <MapContainer
               center={mapCenter}
               zoom={15}

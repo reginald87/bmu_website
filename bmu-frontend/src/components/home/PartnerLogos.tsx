@@ -21,13 +21,13 @@ function randomColor(i: number): string {
   return colors[i % colors.length];
 }
 
-export const PartnerLogos = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: Record<string, unknown> }> }) => {
+export const PartnerLogos = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
   const { t } = useTranslation();
   const { data: apiPartners } = usePartners();
 
   const partnerData = (homeSections?.find(s => s.section_key === 'partners')?.data as any[] || fallbackPartners);
 
-  const partners = apiPartners && apiPartners.length > 0
+  const partners: { name: string; abbr: string; color: string; icon?: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; logoUrl: string | null; description: string }[] = apiPartners && apiPartners.length > 0
     ? apiPartners.map((p, i) => ({
         name: p.name,
         abbr: abbr(p.name),

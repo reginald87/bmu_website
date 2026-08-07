@@ -18,7 +18,22 @@ import {
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
 
-const fallbackNews = [
+interface NewsArticle {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  type: string;
+  author: string;
+  date: string;
+  readTime: string;
+  image: string;
+  featured: boolean;
+  tags: string[];
+}
+
+const fallbackNews: NewsArticle[] = [
   {
     id: 1,
     slug: 'bmu-hosts-international-medical-conference-2024',
@@ -162,14 +177,14 @@ export const News = () => {
         const response = await apiClient.get('/public/news');
         const items = response.data?.items || response.data;
         if (Array.isArray(items) && items.length > 0) {
-          return items.map((item: Record<string, unknown>) => ({
-            id: item.id,
-            slug: item.slug,
-            title: item.title,
-            excerpt: item.excerpt,
-            category: (item as any).category_display || item.category,
+          return items.map((item: Record<string, unknown>): NewsArticle => ({
+            id: Number(item.id),
+            slug: String(item.slug || ''),
+            title: String(item.title || ''),
+            excerpt: String(item.excerpt || ''),
+            category: (item as any).category_display || String(item.category || ''),
             type: (item as any).type || 'news',
-            author: item.author,
+            author: String(item.author || ''),
             date: (item as any).published_at ? (item as any).published_at.split('T')[0] : '',
             readTime: '3 min',
             image: (item as any).featured_image || '',

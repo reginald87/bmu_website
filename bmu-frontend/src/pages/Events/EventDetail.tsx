@@ -15,8 +15,6 @@ import {
   CheckCircle,
   Mail,
   Phone,
-  Globe,
-  ArrowRight,
   Bookmark,
   Download,
   CreditCard

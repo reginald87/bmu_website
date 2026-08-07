@@ -1,8 +1,24 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, CheckCircle, AlertCircle, Loader2, CreditCard, ArrowLeft } from 'lucide-react';
+import { X, CheckCircle, AlertCircle, Loader2, CreditCard, ArrowLeft } from 'lucide-react';
 import { useEventRegistration, useInitializePayment, useVerifyPayment } from '../../services/apiHooks';
 import type { EventData } from '../../services/mockData';
+
+declare global {
+  interface Window {
+    PaystackPop?: {
+      setup: (options: {
+        key: string;
+        email: string;
+        amount: number;
+        currency: string;
+        ref: string;
+        callback: (response: { reference: string }) => void;
+        onClose: () => void;
+      }) => void;
+    };
+  }
+}
 
 interface Props {
   event: EventData;

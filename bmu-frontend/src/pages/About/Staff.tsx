@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Mail, Phone, MapPin, Building2, Briefcase, ExternalLink, BadgeCheck, Calendar } from 'lucide-react';
+import { Search, Mail, Phone, MapPin, Building2, Briefcase, ExternalLink, Calendar } from 'lucide-react';
 import { useNonAcademicStaff } from '../../services/apiHooks';
 
 const employmentTypeColors: Record<string, string> = {
@@ -11,125 +11,6 @@ const employmentTypeColors: Record<string, string> = {
   contract: 'bg-blue-100 text-blue-800',
   intern: 'bg-purple-100 text-purple-800',
 };
-
-interface StaffMember {
-  id: string;
-  name: string;
-  title: string;
-  department: string;
-  division: string;
-  email: string;
-  phone: string;
-  office: string;
-  bio: string;
-  responsibilities: string[];
-  image?: string;
-}
-
-const fallbackStaff: StaffMember[] = [
-  {
-    id: '1',
-    name: 'Mr. James Okon',
-    title: 'Director of Student Affairs',
-    department: 'Student Services',
-    division: 'Administration',
-    email: 'j.okon@bmu.edu.ng',
-    phone: '+234 803 222 0001',
-    office: 'Admin Block, Room 301',
-    bio: 'Mr. Okon has over 15 years of experience in student services and administration. He oversees all student welfare programs, counseling services, and student governance support.',
-    responsibilities: [
-      'Student welfare and counseling',
-      'Student governance support',
-      'Disciplinary matters',
-      'Student activities coordination'
-    ]
-  },
-  {
-    id: '2',
-    name: 'Mrs. Grace Ebi',
-    title: 'Registrar',
-    department: 'Academic Affairs',
-    division: 'Administration',
-    email: 'registrar@bmu.edu.ng',
-    phone: '+234 803 222 0002',
-    office: 'Senate Building, Room 105',
-    bio: 'Mrs. Ebi manages all academic records, student registrations, and transcript processing. She ensures compliance with academic regulations and standards.',
-    responsibilities: [
-      'Academic records management',
-      'Student registration',
-      'Transcript processing',
-      'Academic policy compliance'
-    ]
-  },
-  {
-    id: '3',
-    name: 'Mr. Michael Douglas',
-    title: 'Director of Finance',
-    department: 'Finance & Accounts',
-    division: 'Administration',
-    email: 'finance@bmu.edu.ng',
-    phone: '+234 803 222 0003',
-    office: 'Finance Block, Room 201',
-    bio: 'Mr. Douglas oversees all financial operations including budgeting, payroll, and financial reporting. He ensures transparency and accountability in university finances.',
-    responsibilities: [
-      'Budget planning and management',
-      'Financial reporting',
-      'Payroll administration',
-      'Grants and funding management'
-    ]
-  },
-  {
-    id: '4',
-    name: 'Mrs. Sarah Ibe',
-    title: 'Director of HR',
-    department: 'Human Resources',
-    division: 'Administration',
-    email: 'hr@bmu.edu.ng',
-    phone: '+234 803 222 0004',
-    office: 'Admin Block, Room 205',
-    bio: 'Mrs. Ibe leads all human resource functions including recruitment, staff development, and employee relations. She is committed to building a world-class workforce.',
-    responsibilities: [
-      'Staff recruitment and onboarding',
-      'Performance management',
-      'Training and development',
-      'Employee relations'
-    ]
-  },
-  {
-    id: '5',
-    name: 'Mr. Emmanuel Akpan',
-    title: 'Chief Librarian',
-    department: 'University Library',
-    division: 'Academic Support',
-    email: 'library@bmu.edu.ng',
-    phone: '+234 803 222 0005',
-    office: 'Main Library, Floor 2',
-    bio: 'Mr. Akpan manages the university library system including digital resources, archives, and information services. He champions information literacy across campus.',
-    responsibilities: [
-      'Library resource management',
-      'Digital library services',
-      'Information literacy programs',
-      'Archives and special collections'
-    ]
-  },
-  {
-    id: '6',
-    name: 'Mrs. Blessing Peters',
-    title: 'Director of ICT',
-    department: 'Information Technology',
-    division: 'Academic Support',
-    email: 'ict@bmu.edu.ng',
-    phone: '+234 803 222 0006',
-    office: 'ICT Center, Room 101',
-    bio: 'Mrs. Peters leads the university IT infrastructure, e-learning platforms, and digital transformation initiatives. She ensures seamless technology integration.',
-    responsibilities: [
-      'IT infrastructure management',
-      'E-learning platform support',
-      'Network security',
-      'Digital transformation'
-    ]
-  },
-];
 
 export const Staff = () => {
   const { data: apiStaff, isLoading } = useNonAcademicStaff();
@@ -145,7 +26,7 @@ export const Staff = () => {
   }, [allStaff]);
 
   const departments = useMemo(() => {
-    const set = new Set(allStaff.map(s => s.department_name).filter(Boolean));
+    const set = new Set(allStaff.map(s => s.department_name).filter((d): d is string => !!d));
     return ['All Departments', ...Array.from(set)];
   }, [allStaff]);
 
@@ -295,7 +176,7 @@ export const Staff = () => {
                   <div className="absolute top-2 right-2 flex gap-1">
                     {staff.employment_type && (
                       <span className={`px-2 py-0.5 text-[10px] font-medium rounded ${employmentTypeColors[staff.employment_type] || 'bg-gray-100 text-gray-700'}`}>
-                        {staff.employment_type_display || staff.employment_type}
+                        {staff.employment_type}
                       </span>
                     )}
                   </div>

@@ -10,7 +10,6 @@ import {
   LogOut,
   CheckCircle,
   Download,
-  Star,
   Search,
   Filter,
   Mail,

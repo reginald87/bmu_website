@@ -271,7 +271,7 @@ export const Navbar = () => {
       >
         <div className="container-custom">
           <ul className="flex items-center justify-between" role="menubar">
-            {(useDynamic ? mainNavItems : navOrder.map((key) => ({ key, ...megaGroups[key] }))).map((item) => {
+            {(useDynamic ? mainNavItems : navOrder.map((key) => ({ ...megaGroups[key], key }))).map((item) => {
               const key = useDynamic ? item.key : item.key;
               const isActive = activeDropdown === key;
               const label = useDynamic ? (item as DynamicMegaGroup).label : t((item as any).labelKey);
@@ -336,12 +336,12 @@ export const Navbar = () => {
       >
         <div className="container-custom py-6 h-full overflow-y-auto">
           <div className="space-y-2">
-            {(useDynamic ? dynamicGroups : navOrder.map((key) => ({ key, ...megaGroups[key] }))).map((item) => {
+            {(useDynamic ? dynamicGroups : navOrder.map((key) => ({ ...megaGroups[key], key }))).map((item) => {
               const key = useDynamic ? item.key : item.key;
               const isOpen = openMobileGroup === key;
               const label = useDynamic ? (item as DynamicMegaGroup).label : t((item as any).labelKey);
               const url = useDynamic ? (item as DynamicMegaGroup).url : (item as any).to;
-              const title = useDynamic ? `${item.label}` : t((item as any).titleKey);
+              const title = useDynamic ? `${(item as any).label}` : t((item as any).titleKey);
               const allLinks = useDynamic
                 ? [...(item as DynamicMegaGroup).column1.links, ...(item as DynamicMegaGroup).column2.links]
                 : [];

@@ -40,10 +40,10 @@ export const Faculty = () => {
     return allFaculty.filter(f => {
       const q = searchTerm.toLowerCase();
       const matchesSearch = !searchTerm ||
-        f.full_name.toLowerCase().includes(q) ||
+        `${f.firstName} ${f.lastName}`.toLowerCase().includes(q) ||
         f.department?.toLowerCase().includes(q) ||
         f.college?.toLowerCase().includes(q) ||
-        f.position_display.toLowerCase().includes(q);
+        f.position.toLowerCase().includes(q);
       const matchesCollege = collegeFilter === 'All Colleges' || f.college === collegeFilter;
       const matchesDepartment = departmentFilter === 'All Departments' || f.department === departmentFilter;
       return matchesSearch && matchesCollege && matchesDepartment;
@@ -171,12 +171,12 @@ export const Faculty = () => {
                     <div className={`h-24 bg-gradient-to-r ${positionGradients[faculty.position] || 'from-[#1E1E1E] to-[#A51C30]'} relative`}>
                       <div className="absolute -bottom-10 left-6">
                         <div className="w-20 h-20 bg-white p-1">
-                          {faculty.profile_image ? (
-                            <img src={faculty.profile_image} alt={faculty.full_name} className="w-full h-full object-cover" />
+                          {faculty.profileImage ? (
+                            <img src={faculty.profileImage} alt={`${faculty.firstName} ${faculty.lastName}`} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                               <span className="text-2xl font-bold text-gray-400">
-                                {faculty.full_name.split(' ').map(n => n[0]).join('')}
+                                {faculty.firstName.charAt(0)}{faculty.lastName.charAt(0)}
                               </span>
                             </div>
                           )}
@@ -194,7 +194,7 @@ export const Faculty = () => {
                     <div className="mb-4">
                       <Link to={`/academics/faculty/${faculty.id}`}>
                         <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#1E1E1E] transition-colors">
-                          {faculty.full_name}
+                          {faculty.firstName} {faculty.lastName}
                         </h3>
                       </Link>
                       <p className="text-sm font-medium" style={{ color: '#A51C30' }}>{faculty.title}</p>
@@ -207,9 +207,9 @@ export const Faculty = () => {
                     )}
 
                     {/* Research interests as tags */}
-                    {faculty.research_interests && (
+                    {faculty.researchInterests && (
                       <div className="flex flex-wrap gap-1.5 mb-4">
-                        {faculty.research_interests.split(',').slice(0, 3).map((interest, i) => (
+                        {faculty.researchInterests.split(',').slice(0, 3).map((interest, i) => (
                           <span
                             key={i}
                             className="px-2 py-1 text-xs"
@@ -227,10 +227,10 @@ export const Faculty = () => {
                         <BookOpen className="w-4 h-4" />
                         <span>{faculty.citations} citations</span>
                       </div>
-                      {faculty.h_index > 0 && (
+                      {faculty.hIndex > 0 && (
                         <div className="flex items-center gap-1">
                           <Quote className="w-4 h-4" />
-                          <span>h-index: {faculty.h_index}</span>
+                          <span>h-index: {faculty.hIndex}</span>
                         </div>
                       )}
                     </div>

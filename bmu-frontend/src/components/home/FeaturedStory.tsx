@@ -1,24 +1,25 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Heart, GraduationCap, Microscope } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { getLucideIcon } from '../../lib/icons';
 
-export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: Record<string, unknown> }> }) => {
+export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
   const { t } = useTranslation();
 
   const fallbackHighlights = [
     {
-      icon: GraduationCap,
+      icon: 'GraduationCap',
       stat: '15,000+',
       label: 'Students Enrolled',
     },
     {
-      icon: Microscope,
+      icon: 'Microscope',
       stat: '500+',
       label: 'Research Publications',
     },
     {
-      icon: Heart,
+      icon: 'Heart',
       stat: '98%',
       label: 'Graduate Employment Rate',
     },
@@ -69,20 +70,23 @@ export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ s
             transition={{ duration: 0.6, delay: 0.2 }}
             className="grid grid-cols-1 sm:grid-cols-3 gap-6"
           >
-            {highlights.map((item) => (
-              <div
-                key={item.label}
-                className="bg-gray-50 p-6 text-center hover:bg-[#A51C30] group transition-colors duration-300"
-              >
-                <item.icon className="w-8 h-8 text-[#A51C30] group-hover:text-white mx-auto mb-3 transition-colors" />
-                <div className="text-3xl font-bold text-[#1E1E1E] group-hover:text-white transition-colors">
-                  {item.stat}
-                </div>
-                <div className="text-sm text-gray-500 group-hover:text-white/80 mt-1 transition-colors">
-                  {item.label}
-                </div>
-              </div>
-            ))}
+            {highlights.map((item) => {
+                const Icon = getLucideIcon(item.icon as string);
+                return (
+                  <div
+                    key={item.label}
+                    className="bg-gray-50 p-6 text-center hover:bg-[#A51C30] group transition-colors duration-300"
+                  >
+                    <Icon className="w-8 h-8 text-[#A51C30] group-hover:text-white mx-auto mb-3 transition-colors" />
+                    <div className="text-3xl font-bold text-[#1E1E1E] group-hover:text-white transition-colors">
+                      {item.stat}
+                    </div>
+                    <div className="text-sm text-gray-500 group-hover:text-white/80 mt-1 transition-colors">
+                      {item.label}
+                    </div>
+                  </div>
+                );
+              })}
           </motion.div>
         </div>
       </div>

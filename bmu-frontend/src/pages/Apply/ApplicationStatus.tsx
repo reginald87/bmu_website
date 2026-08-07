@@ -10,8 +10,6 @@ import {
   AlertCircle,
   ArrowRight,
   Download,
-  RefreshCw,
-  Calendar,
   Mail,
   Phone,
   Loader2

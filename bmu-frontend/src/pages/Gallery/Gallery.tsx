@@ -10,7 +10,7 @@ export const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const { data: images = [], isLoading, error } = useGalleryImages();
 
-  const categories = ['all', ...new Set(images.filter(img => img.category).map(img => img.category))];
+  const categories = ['all', ...Array.from(new Set(images.filter(img => img.category).map(img => img.category) as string[]))];
 
   const filteredImages = selectedCategory === 'all'
     ? images

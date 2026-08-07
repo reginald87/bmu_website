@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django import forms
+from django.utils.html import format_html
 from .models import (
     NewsItem, Event, PageContent, Testimonial, Partner, FAQ, ContactEnquiry,
     PublicDocument, GalleryImage, HeroSlide, SDG, ImpactProgram,
@@ -11,7 +13,8 @@ from .models import (
     VisionMissionPage, VisionMissionPillar, VisionMissionValue,
     GovernancePage, GovernanceBody, GovernanceCommittee, GovernancePolicy,
     Announcement, MenuItem, UtilityLink,
-    PageSection, PortalDefinition, CentrePage, ArchivedContent, InstitutePage,
+    PageSection, PortalDefinition, CentrePage, ArchivedContent, InstitutePage, MediaAsset,
+    ContactInfo,
 )
 
 
@@ -295,6 +298,16 @@ class CampusContactInfoAdmin(admin.ModelAdmin):
     list_display = ['address', 'phone', 'email', 'office_hours']
 
 
+@admin.register(ContactInfo)
+class ContactInfoAdmin(admin.ModelAdmin):
+    list_display = ['address', 'phone', 'email', 'emergency_phone']
+
+    def has_add_permission(self, request):
+        if ContactInfo.objects.exists():
+            return False
+        return super().has_add_permission(request)
+
+
 @admin.register(CampusImage)
 class CampusImageAdmin(admin.ModelAdmin):
     list_display = ['title', 'caption', 'display_order', 'is_active']
@@ -483,6 +496,76 @@ class PageSectionAdmin(admin.ModelAdmin):
     list_filter = ['page_key', 'content_type', 'is_active']
     search_fields = ['page_key', 'section_key', 'title']
     list_editable = ['display_order', 'is_active']
+    readonly_fields = ['media_library_hint']
+    fieldsets = (
+        (None, {
+            'fields': ('page_key', 'section_key', 'content_type', 'title', 'subtitle'),
+        }),
+        ('Content Data (JSON)', {
+            'fields': ('data', 'media_library_hint'),
+            'description': (
+                'For image fields (e.g. quick_links "image"), upload a file in the '
+                'Media Library, then paste the returned URL into the JSON below.'
+            ),
+        }),
+        ('Publishing', {
+            'fields': ('display_order', 'is_active'),
+        }),
+    )
+
+    def media_library_hint(self, obj):
+        return format_html(
+            '<p style="padding:10px;background:#f6f6f6;border:1px solid #eee;font-size:12px;">'
+            'Tip: Use the <a href="/admin/content/mediaasset/" target="_blank">Media Library</a> '
+            'to upload images from your computer and get a URL to paste into the data JSON.'
+            '</p>'
+        )
+
+    media_library_hint.short_description = 'Uploading images'
+
+
+@admin.register(MediaAsset)
+class MediaAssetAdmin(admin.ModelAdmin):
+    list_display = ['title', 'image', 'preview', 'copy_url', 'file_size_kb', 'uploaded_at']
+    list_filter = ['uploaded_at']
+    search_fields = ['title', 'alt_text']
+    readonly_fields = ['preview', 'copy_url', 'uploaded_at', 'file_size_kb']
+
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'image', 'alt_text'),
+        }),
+        ('Use in content', {
+            'fields': ('copy_url',),
+            'description': (
+                'Copy the URL below and paste it into the "image" field of a '
+                'PageSection data JSON (e.g. quick_links cards).'
+            ),
+        }),
+        ('Metadata', {
+            'fields': ('preview', 'file_size_kb', 'uploaded_at'),
+        }),
+    )
+
+    def preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<a href="{}" target="_blank"><img src="{}" style="max-height:120px;border:1px solid #ddd;"/></a>',
+                obj.image.url, obj.image.url
+            )
+        return '-'
+
+    preview.short_description = 'Preview'
+
+    def copy_url(self, obj):
+        if obj.image:
+            return format_html(
+                '<input readonly value="{}" style="width:100%;max-width:420px;font-family:monospace;padding:6px 8px;border:1px solid #ccc;border-radius:3px;box-sizing:border-box;"/>',
+                obj.image.url
+            )
+        return '-'
+
+    copy_url.short_description = 'Image URL'
 
 
 @admin.register(PortalDefinition)

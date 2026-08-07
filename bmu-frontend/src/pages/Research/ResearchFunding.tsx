@@ -223,7 +223,7 @@ export const ResearchFunding = () => {
  </tr>
  </thead>
  <tbody className="divide-y divide-gray-100">
-  {pastGrants.map((grant, index) => (
+   {pastGrants.map((grant) => (
   <tr key={grant.id} className="hover:bg-gray-50">
   <td className="px-6 py-4 text-sm text-gray-900 font-medium">{grant.title}</td>
   <td className="px-6 py-4 text-sm text-gray-600">{grant.principal_investigator || '-'}</td>

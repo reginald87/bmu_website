@@ -92,13 +92,13 @@ export const CPDCentre = () => {
  <section>
  <h2 className="text-2xl font-bold mb-6" style={{ color: '#1E1E1E' }}>CPD Programs</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- {cpdPrograms.map((category) => (
+ {cpdPrograms.map((category: any) => (
  <div key={category.category} className="card p-6">
  <h3 className="font-bold text-lg mb-4" style={{ color: '#00a651' }}>
  {category.category}
  </h3>
  <ul className="space-y-2">
- {category.courses.map((course) => (
+ {category.courses.map((course: any) => (
  <li key={course} className="text-gray-600 text-sm flex items-start gap-2">
  <span style={{ color: '#00a651' }}>•</span>
  {course}

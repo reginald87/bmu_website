@@ -1441,6 +1441,26 @@ export interface CampusContactInfoData {
   office_hours: string | null;
 }
 
+export interface ContactInfoData {
+  id: number;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  emergency_label: string | null;
+  emergency_phone: string | null;
+  office_hours: string | null;
+}
+
+export const mockContactInfo: ContactInfoData = {
+  id: 1,
+  address: 'PMB 130, Yenagoa, Bayelsa State, Nigeria',
+  phone: '+234 (0) 123 456 7890',
+  email: 'info@bmu.edu.ng',
+  emergency_label: 'Emergency',
+  emergency_phone: '+234 (0) 999 888 7777',
+  office_hours: 'Monday - Friday: 8:00 AM - 5:00 PM WAT',
+};
+
 export interface PeopleStatsData {
   leadership_count: number;
   faculty_count: number;

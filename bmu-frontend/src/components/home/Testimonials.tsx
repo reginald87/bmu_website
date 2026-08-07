@@ -10,7 +10,7 @@ const fallbackTestimonials: TestimonialData[] = [
   { id: 3, name: 'Mr. Emmanuel Douglas', role: 'MPH Candidate', quote: 'The public health program at BMU has given me the tools to make a real difference in community health.', photo_url: null },
 ];
 
-export const Testimonials = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: Record<string, unknown> }> }) => {
+export const Testimonials = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
   const { t } = useTranslation();
   const { data: apiData, isLoading } = useTestimonials();
   const [activeIndex, setActiveIndex] = useState(0);

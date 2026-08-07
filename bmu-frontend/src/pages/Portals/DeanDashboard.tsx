@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link, Navigate } from 'react-router-dom';
 import {
   BookOpen, Users, UserCheck, ChevronRight,
-  CheckSquare, BarChart3, Building, AlertCircle, Globe
+  CheckSquare, BarChart3, Building, AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiClient } from '../../services/api';

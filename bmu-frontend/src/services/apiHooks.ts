@@ -48,6 +48,7 @@ import {
   fetchCampusContact,
   fetchCampusImages,
   fetchCampusVideo,
+  fetchContactInfo,
   fetchJobs,
   fetchCPDCourses,
   fetchImpactPrograms,
@@ -91,7 +92,7 @@ export function useHomeStats() {
 export function useNews() {
   return useQuery({
     queryKey: ['news'],
-    queryFn: fetchNews,
+    queryFn: () => fetchNews(),
     staleTime: 10 * 60 * 1000,
   });
 }
@@ -107,7 +108,7 @@ export function useNewsBySlug(slug: string) {
 export function useEvents() {
   return useQuery({
     queryKey: ['events'],
-    queryFn: fetchEvents,
+    queryFn: () => fetchEvents(),
     staleTime: 10 * 60 * 1000,
   });
 }
@@ -131,7 +132,7 @@ export function useColleges() {
 export function useFaculty() {
   return useQuery({
     queryKey: ['faculty'],
-    queryFn: fetchFaculty,
+    queryFn: () => fetchFaculty(),
     staleTime: 10 * 60 * 1000,
   });
 }
@@ -155,7 +156,7 @@ export function useFaculties() {
 export function usePrograms() {
   return useQuery({
     queryKey: ['programs'],
-    queryFn: fetchPrograms,
+    queryFn: () => fetchPrograms(),
     staleTime: 10 * 60 * 1000,
   });
 }
@@ -243,7 +244,7 @@ export function usePartners() {
 export function useNonAcademicStaff() {
   return useQuery({
     queryKey: ['nonAcademicStaff'],
-    queryFn: fetchNonAcademicStaff,
+    queryFn: () => fetchNonAcademicStaff(),
     staleTime: 10 * 60 * 1000,
   });
 }
@@ -380,7 +381,7 @@ export function useSubmitGrantApplication() {
 export function useKeyMetrics() {
   return useQuery({
     queryKey: ['keyMetrics'],
-    queryFn: fetchKeyMetrics,
+    queryFn: () => fetchKeyMetrics(),
     staleTime: 10 * 60 * 1000,
   });
 }
@@ -396,7 +397,7 @@ export function useFundingOrganizations() {
 export function useFundedProjects() {
   return useQuery({
     queryKey: ['fundedProjects'],
-    queryFn: fetchFundedProjects,
+    queryFn: () => fetchFundedProjects(),
     staleTime: 10 * 60 * 1000,
   });
 }
@@ -554,6 +555,14 @@ export function useCampusContact() {
   return useQuery({
     queryKey: ['campusContact'],
     queryFn: fetchCampusContact,
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useContactInfo() {
+  return useQuery({
+    queryKey: ['contactInfo'],
+    queryFn: fetchContactInfo,
     staleTime: 10 * 60 * 1000,
   });
 }

@@ -1,27 +1,21 @@
 ﻿import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
  Archive,
  Search,
  Calendar,
  FileText,
  Newspaper,
- Users,
- GraduationCap,
  ChevronRight,
  ExternalLink,
- Filter,
  Clock,
  Download,
- ChevronLeft,
  BookOpen,
  Building2,
  Briefcase,
- MessageSquare,
- Trash2,
- RotateCcw
+ MessageSquare
 } from 'lucide-react';
 import { useArchivedContent } from '../../services/apiHooks';
 

@@ -18,7 +18,6 @@ import {
   Plus,
   Mail,
   Phone,
-  MapPin,
   GraduationCap,
   ArrowRight,
   Edit3,
@@ -809,7 +808,7 @@ const ApplicantDashboard = () => {
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-4">Application Steps</h4>
                         <div className="space-y-4">
-                          {application?.steps.map((step, index) => (
+                          {application?.steps.map((step: any, index: number) => (
                             <div key={index} className="flex items-start gap-4">
                               <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${ step.status === 'completed' ? 'bg-green-100 text-green-600' : step.status === 'in_progress' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400' }`}>
                                 {step.status === 'completed' ? <CheckCircle className="w-5 h-5" /> :
@@ -850,7 +849,7 @@ const ApplicantDashboard = () => {
                       </button>
                     </div>
                     <div className="space-y-3">
-                    {application?.documents.map((doc, index) => (
+                    {application?.documents.map((doc: any, index: number) => (
                         <div key={index} className="flex items-center justify-between p-4 bg-gray-50">
                           <div className="flex items-center gap-3">
                             <div className={`w-10 h-10 flex items-center justify-center ${ doc.status === 'verified' ? 'bg-green-100' : doc.status === 'under_review' ? 'bg-yellow-100' : 'bg-gray-100' }`}>
@@ -904,7 +903,7 @@ const ApplicantDashboard = () => {
 
                 {activeTab === 'messages' && (
                   <div className="space-y-4">
-                    {application?.messages.map((message) => (
+                    {application?.messages.map((message: any) => (
                       <div key={message.id} className={`p-4 ${ message.type === 'success' ? 'bg-green-50 border border-green-200' : message.type === 'action' ? 'bg-yellow-50 border border-yellow-200' : 'bg-blue-50 border border-blue-200' }`}>
                         <div className="flex items-start gap-3">
                           <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 ${ message.type === 'success' ? 'bg-green-100 text-green-600' : message.type === 'action' ? 'bg-yellow-100 text-yellow-600' : 'bg-blue-100 text-blue-600' }`}>

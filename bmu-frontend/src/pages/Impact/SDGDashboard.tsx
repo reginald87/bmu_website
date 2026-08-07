@@ -171,7 +171,7 @@ const ImpactMap = () => {
  />
  
  {/* Location markers */}
- {outreachLocations.map((location, idx) => (
+ {outreachLocations.map((location) => (
  <g key={location.name}>
  <circle
  cx={location.coordinates.x}

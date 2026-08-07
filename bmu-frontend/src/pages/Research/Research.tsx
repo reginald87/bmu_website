@@ -67,11 +67,10 @@ export const Research = () => {
 
   const totalPublications = centers?.reduce((s, c) => s + (c.total_publications || 0), 0) ?? 0;
   const totalActiveStudies = centers?.reduce((s, c) => s + (c.ongoing_projects_count || 0), 0) ?? 0;
-  const centerCount = centers?.length ?? 0;
   const researcherCount = faculty?.length ?? 0;
 
   const totalFunding = fundedProjects?.reduce((s, p) => {
-    const amt = typeof p.amount === 'string' ? parseFloat(p.amount.replace(/[^0-9.]/g, '')) : (p.amount || 0);
+    const amt = p.amount || 0;
     return s + amt;
   }, 0) ?? 0;
 
@@ -104,7 +103,7 @@ export const Research = () => {
 
   const researchAreas = (centers ?? []).map(c => {
     const slug = c.slug.toLowerCase();
-    let Icon = Microscope;
+    let Icon: React.ElementType = Microscope;
     for (const [key, icon] of Object.entries(areaIconMap)) {
       if (slug.includes(key)) { Icon = icon; break; }
     }

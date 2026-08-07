@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { 
  Globe, 
  Users, 
- BookOpen, 
  Plane,
  Building,
  MapPin,

@@ -1,21 +1,5 @@
-"""Seed menu items and utility links from existing hardcoded data."""
+"""Seed menu items from existing hardcoded data."""
 from django.db import migrations
-
-
-def seed_utility_links(apps, schema_editor):
-    UtilityLink = apps.get_model('content', 'UtilityLink')
-    links = [
-        {'label': 'Student Portal', 'url': 'https://portal.bmu.edu.ng', 'display_order': 1},
-        {'label': 'Staff Portal', 'url': 'https://staff.bmu.edu.ng', 'display_order': 2},
-        {'label': 'Applicant Portal', 'url': 'https://applicant.bmu.edu.ng', 'display_order': 3},
-        {'label': 'E-Library', 'url': 'https://library.bmu.edu.ng', 'display_order': 4},
-        {'label': 'Webmail', 'url': 'https://mail.bmu.edu.ng', 'display_order': 5},
-    ]
-    for link in links:
-        UtilityLink.objects.get_or_create(
-            url=link['url'],
-            defaults={'label': link['label'], 'display_order': link['display_order'], 'is_active': True},
-        )
 
 
 def seed_menu_items(apps, schema_editor):
@@ -167,6 +151,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(seed_utility_links, migrations.RunPython.noop),
         migrations.RunPython(seed_menu_items, migrations.RunPython.noop),
     ]

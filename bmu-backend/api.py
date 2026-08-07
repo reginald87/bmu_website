@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.http import FileResponse, Http404
 from django.db.models import Count, Q, Sum, Avg
 from django.utils import timezone
-from typing import List, Optional
+from typing import Any, List, Optional
 from datetime import datetime, date
 from decimal import Decimal
 from django.conf import settings
@@ -54,6 +54,7 @@ from content.models import (
     AboutPage, HistoryPage, VisionMissionPage, GovernancePage,
     Announcement, MenuItem, UtilityLink,
     PageSection, PortalDefinition, CentrePage, ArchivedContent, InstitutePage,
+    MediaAsset, ContactInfo,
 )
 from research.models import ResearchAndDevelopment, Publication, ResearchGrant, GrantApplication
 from careers.models import JobPosting
@@ -856,6 +857,16 @@ class CampusContactInfoSchema(Schema):
     address: Optional[str] = None
     phone: Optional[str] = None
     email: Optional[str] = None
+    office_hours: Optional[str] = None
+
+
+class ContactInfoSchema(Schema):
+    id: int
+    address: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    emergency_label: Optional[str] = None
+    emergency_phone: Optional[str] = None
     office_hours: Optional[str] = None
 
 
@@ -1901,7 +1912,7 @@ class PageSectionSchema(Schema):
     content_type: str
     title: str
     subtitle: str
-    data: dict
+    data: Any
     display_order: int
 
 
@@ -2106,6 +2117,22 @@ class FundedProjectSchema(Schema):
     image: Optional[str] = None
     completion_date: Optional[str] = None
     gallery_images: List[FundedProjectImageSchema] = []
+
+    @staticmethod
+    def resolve_organization_name(obj):
+        return obj.organization.acronym or obj.organization.name
+
+    @staticmethod
+    def resolve_gallery_images(obj):
+        images = obj.gallery_images.all() if hasattr(obj.gallery_images, 'all') else obj.gallery_images
+        return [
+            FundedProjectImageSchema(image=img.image.url, caption=img.caption, order=img.order)
+            for img in images
+        ]
+
+    @staticmethod
+    def resolve_completion_date(obj):
+        return obj.completion_date.isoformat() if obj.completion_date else None
 
 
 @public_router.get("/funding-organizations", response=List[FundingOrganizationSchema])
@@ -2403,6 +2430,12 @@ def get_campus_contact(request):
     if not obj:
         raise Http404("No campus contact info found")
     return obj
+
+
+@public_router.get("/contact-info", response=Optional[ContactInfoSchema])
+def get_contact_info(request):
+    """Get the general university contact details used by the footer"""
+    return ContactInfo.objects.first()
 
 
 @public_router.get("/campus-images", response=List[CampusImageSchema])

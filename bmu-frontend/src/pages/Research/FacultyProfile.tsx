@@ -37,7 +37,7 @@ interface FacultyData {
 
 export const FacultyProfile = () => {
   const { id } = useParams<{ id: string }>();
-  const raw = useFacultyById(id ? parseInt(id) : undefined);
+  const raw = useFacultyById(id ? parseInt(id) : 0);
   const { data: _faculty, isLoading } = raw;
 
   const faculty = _faculty as unknown as FacultyData | undefined;

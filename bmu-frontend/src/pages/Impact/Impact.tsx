@@ -4,15 +4,13 @@ import { motion } from 'framer-motion';
 import { 
  Globe, 
  Users, 
- Leaf, 
  Heart, 
  Target,
  ArrowRight,
  TrendingUp,
  GraduationCap,
  HeartPulse,
- TreePine,
- Building
+ TreePine
 } from 'lucide-react';
 import { usePageSections } from '../../services/apiHooks';
 
