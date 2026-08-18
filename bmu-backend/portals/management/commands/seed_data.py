@@ -8,7 +8,7 @@ from portals.models import (
     ProgressionRecord, AttendanceSession, AttendanceRecord, HostelAllocation,
     FeeType, FeeStructure, FeeStructureItem,
 )
-from content.models import NewsItem, Event, PageContentSimple, Testimonial, Partner, ContactEnquiry, PublicDocument, FundingOrganization, FundedProject, AboutPage, AboutStat, AboutCoreValue, HistoryPage, TimelineEvent, VisionMissionPage, VisionMissionPillar, VisionMissionValue, GovernancePage, GovernanceBody, GovernanceCommittee, GovernancePolicy, PageSection
+from content.models import NewsItem, Event, PageContentSimple, Testimonial, Partner, ContactEnquiry, PublicDocument, FundingOrganization, FundedProject, AboutPage, AboutStat, AboutCoreValue, HistoryPage, TimelineEvent, VisionMissionPage, VisionMissionPillar, VisionMissionValue, GovernancePage, GovernanceBody, GovernanceCommittee, GovernancePolicy, PageSection, MenuItem
 from academics.models import College, FacultyUnit, Department, Program, Course, SDGMetric, Leadership, CourseSchedule
 from admissions.models import Application, AcademicRecord
 from library.models import Book, BookCategory, BookLoan, DigitalResource
@@ -1394,6 +1394,21 @@ class Command(BaseCommand):
                     date_label=d['date_label'],
                     display_order=d['display_order'],
                     is_featured=d['is_featured'],
+                ),
+            )
+
+        # Add Public Documents to navbar menu (About mega menu)
+        about_parent = MenuItem.objects.filter(label='About', parent__isnull=True, location='navbar').first()
+        if about_parent:
+            MenuItem.objects.get_or_create(
+                label='Public Documents',
+                parent=about_parent,
+                defaults=dict(
+                    url='/about/documents',
+                    location='navbar',
+                    column=2,
+                    display_order=11,
+                    is_active=True,
                 ),
             )
 
