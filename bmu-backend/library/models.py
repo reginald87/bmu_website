@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 
 class LibraryService(models.Model):
@@ -86,8 +87,8 @@ class BookCategory(models.Model):
 
 
 class Book(models.Model):
-    """Library books and resources - info only, no circulation tracking"""
-    
+    """Library books and resources with circulation tracking"""
+
     RESOURCE_TYPE_CHOICES = [
         ('book', 'Book'),
         ('ebook', 'E-Book'),
@@ -120,6 +121,10 @@ class Book(models.Model):
     call_number = models.CharField(max_length=100, blank=True, help_text="Library classification number")
     shelf_location = models.CharField(max_length=200, blank=True)
     
+    # Availability / circulation
+    total_copies = models.PositiveIntegerField(default=1, help_text="Total physical copies owned")
+    available_copies = models.PositiveIntegerField(default=1, help_text="Copies currently on the shelf")
+    
     # Description
     description = models.TextField(blank=True)
     keywords = models.CharField(max_length=500, blank=True)
@@ -133,6 +138,50 @@ class Book(models.Model):
     
     def __str__(self):
         return self.title[:80]
+
+    @property
+    def is_available(self) -> bool:
+        return self.available_copies > 0
+
+    @property
+    def category_names(self) -> list:
+        return list(self.categories.values_list('name', flat=True))
+
+
+class BookLoan(models.Model):
+    """Circulation record: a student borrowing a physical copy of a book"""
+
+    STATUS_CHOICES = [
+        ('requested', 'Requested'),
+        ('borrowed', 'Borrowed'),
+        ('returned', 'Returned'),
+        ('overdue', 'Overdue'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    LOAN_DAYS = 14
+    MAX_RENEWALS = 2
+    RENEW_DAYS = 7
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='loans')
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                related_name='book_loans')
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='requested')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    loaned_at = models.DateTimeField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
+    returned_at = models.DateTimeField(null=True, blank=True)
+    renewed_count = models.PositiveIntegerField(default=0)
+    notes = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        verbose_name = "Book Loan"
+        verbose_name_plural = "Book Loans"
+        ordering = ['-requested_at']
+
+    def __str__(self):
+        return f"{self.student.full_name} - {self.book.title} ({self.get_status_display()})"
 
 
 class DigitalResource(models.Model):

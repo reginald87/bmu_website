@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     GradingScale, StudentResult, StudentFeePayment, CPDCourse, CPDEnrollment,
     StudentCourse, Registration, RegistrationCourse,
-    ProgressionRecord, AttendanceSession, AttendanceRecord,
+    ProgressionRecord, AttendanceSession, AttendanceRecord, HostelAllocation,
     FeeType, FeeStructure, FeeStructureItem, ScholarshipRecord,
 )
 
@@ -122,6 +122,14 @@ class RegistrationCourseAdmin(admin.ModelAdmin):
     list_filter = ['approval_status', 'is_compulsory']
     search_fields = ['registration__student__email', 'course__code', 'course__title']
     raw_id_fields = ['registration', 'course', 'approved_by']
+
+
+@admin.register(HostelAllocation)
+class HostelAllocationAdmin(admin.ModelAdmin):
+    list_display = ['student', 'hostel_name', 'room_number', 'session', 'status', 'requested_at']
+    list_filter = ['status', 'session']
+    search_fields = ['student__email', 'hostel_name']
+    raw_id_fields = ['student']
 
 
 

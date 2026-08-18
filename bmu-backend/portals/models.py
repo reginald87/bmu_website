@@ -633,3 +633,33 @@ class StudentCourse(models.Model):
 
     def __str__(self):
         return f"{self.student.full_name} - {self.course.code} ({self.session})"
+
+
+class HostelAllocation(models.Model):
+    """Student hostel accommodation request/allocation"""
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('allocated', 'Allocated'),
+        ('rejected', 'Rejected'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                related_name='hostel_allocations')
+    session = models.CharField(max_length=50, help_text="e.g., 2025/2026")
+    hostel_name = models.CharField(max_length=200)
+    room_number = models.CharField(max_length=20, blank=True)
+    bed_space = models.CharField(max_length=20, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    allocated_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Hostel Allocation"
+        verbose_name_plural = "Hostel Allocations"
+        ordering = ['-requested_at']
+
+    def __str__(self):
+        return f"{self.student.full_name} - {self.hostel_name} ({self.get_status_display()})"

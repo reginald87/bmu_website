@@ -49,8 +49,10 @@ export const FeePayment = () => {
   const [payments, setPayments] = useState<FeePayment[]>([]);
   const [gateway, setGateway] = useState('paystack');
   const [installment, setInstallment] = useState('full');
-  const [session, setSession] = useState('2024/2025');
-  const [semester, setSemester] = useState('First');
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const [session, setSession] = useState(now.getMonth() < 8 ? `${currentYear - 1}/${currentYear}` : `${currentYear}/${currentYear + 1}`);
+  const [semester, setSemester] = useState(now.getMonth() < 8 ? 'First' : 'Second');
   const [isLoading, setIsLoading] = useState(true);
   const [paying, setPaying] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);

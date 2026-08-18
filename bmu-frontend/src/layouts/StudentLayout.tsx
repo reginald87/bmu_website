@@ -15,9 +15,9 @@ const navItems = [
   { label: 'Progression', icon: TrendingUp, link: '/portals/student/progression' },
   { label: 'Attendance', icon: ScanQrCode, link: '/portals/student/attendance' },
   { label: 'Fee Payment', icon: Wallet, link: '/portals/student/fees' },
-  { label: 'Hostel', icon: Home, link: '#' },
-  { label: 'Clearance', icon: ShieldCheck, link: '#' },
-  { label: 'Profile', icon: UserCircle, link: '#' },
+  { label: 'Hostel', icon: Home, link: '/portals/student/hostel' },
+  { label: 'Clearance', icon: ShieldCheck, link: '/portals/student/clearance' },
+  { label: 'Profile', icon: UserCircle, link: '/portals/student/profile' },
 ];
 
 export const StudentLayout = () => {

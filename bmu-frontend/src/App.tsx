@@ -128,6 +128,9 @@ const AgentChat = lazyNamed('AgentChat', () => import('./pages/Portals/AgentChat
 const StudentProgression = lazyNamed('StudentProgression', () => import('./pages/Portals/StudentProgression'));
 const QRAttendanceScanner = lazyNamed('QRAttendanceScanner', () => import('./pages/Portals/QRAttendanceScanner'));
 const FeePayment = lazyNamed('FeePayment', () => import('./pages/Portals/FeePayment'));
+const StudentProfile = lazyNamed('StudentProfile', () => import('./pages/Portals/StudentProfile'));
+const StudentClearance = lazyNamed('StudentClearance', () => import('./pages/Portals/StudentClearance'));
+const StudentHostel = lazyNamed('StudentHostel', () => import('./pages/Portals/StudentHostel'));
 const DefaulterReport = lazyNamed('DefaulterReport', () => import('./pages/Portals/DefaulterReport'));
 const HODDashboard = lazyNamed('HODDashboard', () => import('./pages/Portals/HODDashboard'));
 const DeanDashboard = lazyNamed('DeanDashboard', () => import('./pages/Portals/DeanDashboard'));
@@ -294,6 +297,9 @@ function App() {
                       <Route path="progression" element={<StudentProgression />} />
                       <Route path="attendance" element={<QRAttendanceScanner />} />
                       <Route path="fees" element={<FeePayment />} />
+                      <Route path="profile" element={<StudentProfile />} />
+                      <Route path="clearance" element={<StudentClearance />} />
+                      <Route path="hostel" element={<StudentHostel />} />
                     </Route>
 
                     <Route path="*" element={<NotFound />} />

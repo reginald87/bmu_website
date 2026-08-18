@@ -2333,15 +2333,18 @@ export interface BookData {
   resource_type: string;
   publication_year: number | null;
   description: string;
+  total_copies: number;
+  available_copies: number;
+  categories: string[];
 }
 
 export const mockBooks: BookData[] = [
-  { id: 1, title: 'Principles of Internal Medicine', authors: 'Harrison et al.', isbn: '978-0-07-180215-3', resource_type: 'reference', publication_year: 2022, description: 'Comprehensive guide to internal medicine covering diagnosis and treatment.' },
-  { id: 2, title: 'Gray\'s Anatomy for Students', authors: 'Drake, Vogl, Mitchell', isbn: '978-0-323-39304-1', resource_type: 'textbook', publication_year: 2023, description: 'Essential anatomy textbook with clinical correlations.' },
-  { id: 3, title: 'Robbins Basic Pathology', authors: 'Kumar, Abbas, Aster', isbn: '978-0-323-35317-5', resource_type: 'textbook', publication_year: 2021, description: 'Foundational pathology textbook for medical students.' },
-  { id: 4, title: 'Oxford Handbook of Clinical Medicine', authors: 'Longmore et al.', isbn: '978-0-19-880840-0', resource_type: 'handbook', publication_year: 2023, description: 'Portable clinical reference for medical practice.' },
-  { id: 5, title: 'Nelson Textbook of Pediatrics', authors: 'Kliegman et al.', isbn: '978-0-323-67352-5', resource_type: 'textbook', publication_year: 2024, description: 'Comprehensive pediatric medicine reference.' },
-  { id: 6, title: 'Williams Gynecology', authors: 'Hoffman et al.', isbn: '978-0-07-184898-4', resource_type: 'reference', publication_year: 2022, description: 'Clinical gynecology reference for practitioners.' },
+  { id: 1, title: 'Principles of Internal Medicine', authors: 'Harrison et al.', isbn: '978-0-07-180215-3', resource_type: 'reference', publication_year: 2022, description: 'Comprehensive guide to internal medicine covering diagnosis and treatment.', total_copies: 4, available_copies: 4, categories: ['Medical Textbooks'] },
+  { id: 2, title: 'Gray\'s Anatomy for Students', authors: 'Drake, Vogl, Mitchell', isbn: '978-0-323-39304-1', resource_type: 'textbook', publication_year: 2023, description: 'Essential anatomy textbook with clinical correlations.', total_copies: 6, available_copies: 5, categories: ['Medical Textbooks'] },
+  { id: 3, title: 'Robbins Basic Pathology', authors: 'Kumar, Abbas, Aster', isbn: '978-0-323-35317-5', resource_type: 'textbook', publication_year: 2021, description: 'Foundational pathology textbook for medical students.', total_copies: 4, available_copies: 4, categories: ['Medical Textbooks'] },
+  { id: 4, title: 'Oxford Handbook of Clinical Medicine', authors: 'Longmore et al.', isbn: '978-0-19-880840-0', resource_type: 'handbook', publication_year: 2023, description: 'Portable clinical reference for medical practice.', total_copies: 5, available_copies: 5, categories: ['Medical Textbooks'] },
+  { id: 5, title: 'Nelson Textbook of Pediatrics', authors: 'Kliegman et al.', isbn: '978-0-323-67352-5', resource_type: 'textbook', publication_year: 2024, description: 'Comprehensive pediatric medicine reference.', total_copies: 3, available_copies: 3, categories: ['Medical Textbooks'] },
+  { id: 6, title: 'Williams Gynecology', authors: 'Hoffman et al.', isbn: '978-0-07-184898-4', resource_type: 'reference', publication_year: 2022, description: 'Clinical gynecology reference for practitioners.', total_copies: 3, available_copies: 3, categories: ['Medical Textbooks'] },
 ];
 
 export interface DigitalResourceData {

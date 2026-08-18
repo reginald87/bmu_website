@@ -18,6 +18,8 @@ import {
   Award,
   Lock,
   AlertCircle,
+  X,
+  CheckCircle2,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
@@ -30,6 +32,15 @@ interface AlumniDashboardData {
   sections: Array<{ title: string; description: string; count: string | null; icon: ComponentType<{ className?: string }> }>;
 }
 
+const SECTION_ICONS: Record<string, ComponentType<{ className?: string }>> = {
+  'Alumni Directory': Users,
+  'Job Board': Briefcase,
+  Mentorship: Heart,
+  Events: Calendar,
+  Transcripts: FileText,
+  'Give Back': Award,
+};
+
 export const AlumniPortal = () => {
   const { isAuthenticated, user, login, logout } = useAuth();
   const [email, setEmail] = useState('');
@@ -37,6 +48,11 @@ export const AlumniPortal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [dashboard, setDashboard] = useState<AlumniDashboardData | null>(null);
+  const [showDonate, setShowDonate] = useState(false);
+  const [donationAmount, setDonationAmount] = useState('');
+  const [donationPurpose, setDonationPurpose] = useState('General Fund');
+  const [isDonating, setIsDonating] = useState(false);
+  const [donationMsg, setDonationMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
     if (isAuthenticated && user?.role === 'alumni') {
@@ -45,6 +61,30 @@ export const AlumniPortal = () => {
         .catch(() => setDashboard(null));
     }
   }, [isAuthenticated, user]);
+
+  const handleDonate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setDonationMsg(null);
+    setIsDonating(true);
+    try {
+      const res = await apiClient.post('/auth/alumni/donate', {
+        amount: Number(donationAmount),
+        purpose: donationPurpose,
+        is_anonymous: false,
+      });
+      if (res.data?.error) {
+        setDonationMsg({ type: 'error', text: res.data.error });
+      } else {
+        setDonationMsg({ type: 'success', text: `${res.data?.message || 'Thank you!'} Reference: ${res.data?.reference || ''}` });
+        setDonationAmount('');
+      }
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { error?: string; detail?: string } } };
+      setDonationMsg({ type: 'error', text: e?.response?.data?.error || e?.response?.data?.detail || 'Unable to process donation' });
+    } finally {
+      setIsDonating(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,13 +271,15 @@ export const AlumniPortal = () => {
                     { title: 'Events', description: 'Reunions & networking', count: '12', icon: Calendar },
                     { title: 'Transcripts', description: 'Request documents', count: null, icon: FileText },
                     { title: 'Give Back', description: 'Support your alma mater', count: null, icon: Award }
-                  ]).map((section) => (
+                  ]).map((section) => {
+                    const Icon = SECTION_ICONS[section.title] || Users;
+                    return (
                     <button
                       key={section.title}
                       className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 transition text-left group"
                     >
                       <div className="w-10 h-10 bg-[#1E1E1E]/10 flex items-center justify-center group-hover:bg-[#1E1E1E]/20 transition">
-                        {section.icon ? <section.icon className="w-5 h-5 text-[#1E1E1E]" /> : <Users className="w-5 h-5 text-[#1E1E1E]" />}
+                        <Icon className="w-5 h-5 text-[#1E1E1E]" />
                       </div>
                       <div className="flex-1">
                         <div className="font-medium text-gray-900">{section.title}</div>
@@ -249,7 +291,8 @@ export const AlumniPortal = () => {
                         </span>
                       )}
                     </button>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -349,7 +392,10 @@ export const AlumniPortal = () => {
                 <Award className="w-8 h-8 mb-3" />
                 <h3 className="font-bold text-lg mb-2">Give Back to BMU</h3>
                 <p className="text-sm text-white/80 mb-4">Support the next generation of healthcare professionals through mentorship, donations, or career opportunities.</p>
-                <button className="w-full py-2 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition">
+                <button
+                  onClick={() => setShowDonate(true)}
+                  className="w-full py-2 bg-[#A51C30] text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+                >
                   Get Involved
                 </button>
               </div>
@@ -391,6 +437,66 @@ export const AlumniPortal = () => {
           </div>
         </div>
       </div>
+
+      {/* Donation Modal */}
+      {showDonate && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowDonate(false)}>
+          <div className="bg-white w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Award className="w-6 h-6 text-white" />
+                <h3 className="font-bold text-white">Give Back to BMU</h3>
+              </div>
+              <button onClick={() => setShowDonate(false)} className="p-1 hover:bg-white/10 transition text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleDonate} className="p-6 space-y-5">
+              {donationMsg && (
+                <div className={`p-3 flex items-start gap-2 text-sm ${donationMsg.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                  {donationMsg.type === 'success' ? <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5" /> : <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />}
+                  {donationMsg.text}
+                </div>
+              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-800 mb-2">Donation Amount (₦)</label>
+                <input
+                  type="number"
+                  min="1000"
+                  step="100"
+                  required
+                  value={donationAmount}
+                  onChange={(e) => setDonationAmount(e.target.value)}
+                  placeholder="e.g. 50000"
+                  className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#A51C30] focus:border-transparent outline-none transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-800 mb-2">Purpose</label>
+                <select
+                  value={donationPurpose}
+                  onChange={(e) => setDonationPurpose(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#A51C30] focus:border-transparent outline-none transition"
+                >
+                  <option>General Fund</option>
+                  <option>ASAA Endowment Fund</option>
+                  <option>Scholarship Fund</option>
+                  <option>Library Development</option>
+                  <option>Research Support</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                disabled={isDonating}
+                className="w-full py-3 bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
+              >
+                {isDonating ? 'Processing...' : 'Donate'}
+              </button>
+              <p className="text-xs text-gray-500 text-center">Secure payment. A payment reference will be issued on completion.</p>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 };

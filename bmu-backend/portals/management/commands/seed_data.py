@@ -3,13 +3,18 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from accounts.models import Notification
 from accounts.alumni_models import AlumniProfile, AlumniEvent, AlumniDonation
-from portals.models import StudentResult, StudentFeePayment, StudentCourse
+from portals.models import (
+    StudentResult, StudentFeePayment, StudentCourse, Registration, RegistrationCourse,
+    ProgressionRecord, AttendanceSession, AttendanceRecord, HostelAllocation,
+    FeeType, FeeStructure, FeeStructureItem,
+)
 from content.models import NewsItem, Event, PageContentSimple, Testimonial, Partner, ContactEnquiry, PublicDocument, FundingOrganization, FundedProject, AboutPage, AboutStat, AboutCoreValue, HistoryPage, TimelineEvent, VisionMissionPage, VisionMissionPillar, VisionMissionValue, GovernancePage, GovernanceBody, GovernanceCommittee, GovernancePolicy, PageSection
-from academics.models import College, FacultyUnit, Department, Program, Course, SDGMetric, Leadership
+from academics.models import College, FacultyUnit, Department, Program, Course, SDGMetric, Leadership, CourseSchedule
 from admissions.models import Application, AcademicRecord
-from library.models import Book, BookCategory, DigitalResource
+from library.models import Book, BookCategory, BookLoan, DigitalResource
 from research.models import Publication
 from academics.models import Faculty
+from accounts.models import StudentProfile
 from datetime import date, timedelta
 import random
 
@@ -35,21 +40,21 @@ class Command(BaseCommand):
             email='student@bmu.edu.ng',
             defaults=dict(username='student', role='student', is_email_verified=True),
         )
-        if _:
-            student.set_password('student123')
-            student.first_name = 'John'
-            student.last_name = 'Doe'
-            student.save()
+        student.set_password('student123')
+        student.first_name = 'John'
+        student.last_name = 'Doe'
+        student.is_email_verified = True
+        student.save()
 
         alumni_user, _ = User.objects.get_or_create(
             email='alumni@bmu.edu.ng',
             defaults=dict(username='alumni', role='alumni', is_email_verified=True),
         )
-        if _:
-            alumni_user.set_password('alumni123')
-            alumni_user.first_name = 'Sarah'
-            alumni_user.last_name = 'Johnson'
-            alumni_user.save()
+        alumni_user.set_password('alumni123')
+        alumni_user.first_name = 'Sarah'
+        alumni_user.last_name = 'Johnson'
+        alumni_user.is_email_verified = True
+        alumni_user.save()
 
         faculty_user, _ = User.objects.get_or_create(
             email='faculty@bmu.edu.ng',
@@ -542,20 +547,81 @@ class Command(BaseCommand):
             code='MED101',
             defaults=dict(
                 title='Human Anatomy I', credit_units=4, department=dept, level=100,
+                semester='first', course_type='core',
                 description='Introduction to human anatomy'
             )
         )
-        Course.objects.get_or_create(
+        med102, _ = Course.objects.get_or_create(
             code='MED102',
             defaults=dict(
                 title='Physiology I', credit_units=3, department=dept, level=100,
+                semester='first', course_type='core',
                 description='Introduction to human physiology'
             )
         )
+        course.programs.add(program)
+        med102.programs.add(program)
 
-        # (All colleges/faculties/departments/programs are created in the academic structure section above.
-        #  The previous placeholder colleges — School of Allied Health Sciences, School of Nursing and
-        #  Institute of Public Health — have been replaced by the real BMU faculties.)
+        # Student program + profile (so portal registration/fees/clearance all work)
+        student.program = program
+        student.student_id = 'BMU/2021/0001'
+        student.enrollment_year = 2021
+        student.phone = '08034567890'
+        student.address = '14 Peace Avenue, Kpansia'
+        student.city = 'Yenagoa'
+        student.state = 'Bayelsa'
+        student.save()
+
+        StudentProfile.objects.update_or_create(
+            user=student,
+            defaults=dict(
+                matric_number='BMU/2021/0001',
+                admission_date=date(2021, 1, 4),
+                admission_type='utme', entry_mode='regular',
+                current_level=200, current_semester='first',
+                state_of_origin='Bayelsa', lga_of_origin='Yenagoa', nationality='Nigerian',
+                nok_full_name='Mrs. Grace Doe', nok_relationship='mother',
+                nok_phone='08023456789', nok_email='grace.doe@example.com',
+                nok_address='14 Peace Avenue, Kpansia, Yenagoa',
+            ),
+        )
+
+        # Level 200 first-semester courses for the current registration session
+        course_objs = {'MED101': course, 'MED102': med102}
+        courses_200 = [
+            dict(code='MED201', title='Human Anatomy II', credit_units=4),
+            dict(code='MED202', title='Physiology II', credit_units=3),
+            dict(code='MED203', title='Medical Biochemistry I', credit_units=3),
+            dict(code='MED204', title='Microbiology & Immunology I', credit_units=3),
+            dict(code='MED205', title='Public Health & Community Medicine I', credit_units=2),
+        ]
+        for c in courses_200:
+            obj, _ = Course.objects.get_or_create(
+                code=c['code'],
+                defaults=dict(
+                    title=c['title'], credit_units=c['credit_units'], department=dept,
+                    level=200, semester='first', course_type='core',
+                    description=f'{c["title"]} (200 Level, First Semester)',
+                ),
+            )
+            obj.programs.add(program)
+            course_objs[c['code']] = obj
+
+        course_objs['MED201'].prerequisites.add(course)
+        course_objs['MED202'].prerequisites.add(med102)
+
+        sched_data = [
+            ('MED201', 'monday', dtime(9, 0), dtime(11, 0), 'Anatomy Theatre'),
+            ('MED202', 'tuesday', dtime(9, 0), dtime(11, 0), 'Lecture Hall B'),
+            ('MED203', 'wednesday', dtime(9, 0), dtime(11, 0), 'Biochemistry Laboratory'),
+            ('MED204', 'thursday', dtime(9, 0), dtime(11, 0), 'Lecture Hall A'),
+            ('MED205', 'friday', dtime(9, 0), dtime(11, 0), 'Lecture Hall C'),
+        ]
+        for code, day, st, et, venue in sched_data:
+            CourseSchedule.objects.get_or_create(
+                course=course_objs[code], day=day, start_time=st, end_time=et,
+                defaults=dict(venue=venue),
+            )
 
         StudentResult.objects.get_or_create(
             student=student, session='2024/2025', semester='First',
@@ -570,18 +636,89 @@ class Command(BaseCommand):
 
         for fee in [
             dict(payment_reference='PAY-2024-001', session='2024/2025', semester='First',
-                 amount=350000, status='completed'),
+                 amount=350000, status='completed', payment_method='bank_deposit'),
             dict(payment_reference='PAY-2024-002', session='2024/2025', semester='First',
-                 amount=100000, status='pending'),
+                 amount=100000, status='pending', payment_method='remita'),
         ]:
             StudentFeePayment.objects.filter(student=student, payment_reference=fee['payment_reference']).delete()
             StudentFeePayment.objects.create(student=student, **fee)
+
+        # Current-session fee structure (indigene rate) + completed payment so the
+        # student is fee-clear for the current registration cycle.
+        fs_2026, fs_created = FeeStructure.objects.get_or_create(
+            session='2025/2026', level=200, program=None, semester='', is_indigene=True,
+            defaults=dict(total_amount=125000, max_installments=2, is_active=True),
+        )
+        if fs_created:
+            for i, (code, amount) in enumerate([
+                ('TUITION-200', 90000), ('LAB', 10000), ('LIBRARY', 5000),
+                ('ICT', 10000), ('DEV-LEVY', 10000),
+            ]):
+                ft = FeeType.objects.filter(code=code).first()
+                if ft:
+                    FeeStructureItem.objects.get_or_create(
+                        fee_structure=fs_2026, fee_type=ft, defaults=dict(amount=amount, sort_order=i),
+                    )
+        StudentFeePayment.objects.filter(
+            student=student, payment_reference='PAY-2026-001',
+        ).delete()
+        StudentFeePayment.objects.create(
+            student=student, fee_structure=fs_2026, installment='full',
+            session='2025/2026', semester='First',
+            amount=125000, amount_paid=125000, status='completed',
+            payment_method='bank_deposit', payment_reference='PAY-2026-001',
+            paid_at=timezone.now() - timedelta(days=10),
+        )
 
         StudentCourse.objects.get_or_create(
             student=student, course=course, session='2024/2025', semester='First',
             defaults=dict(total_score=78.5, grade='A', attendance_percentage=95.0),
         )
 
+        # Completed registration for the PREVIOUS session, so the student can open a
+        # fresh draft for the current one.
+        Registration.objects.filter(student=student, academic_year='2025/2026').delete()
+        prev_reg, _ = Registration.objects.get_or_create(
+            student=student, academic_year='2024/2025', semester='first',
+            defaults=dict(level=100, status='registered', total_credit_units=7,
+                          registered_at=timezone.now() - timedelta(days=210)),
+        )
+        if _:
+            prev_reg.status = 'registered'
+            prev_reg.registered_at = timezone.now() - timedelta(days=210)
+            prev_reg.save()
+        for c in (course, med102):
+            RegistrationCourse.objects.get_or_create(
+                registration=prev_reg, course=c,
+                defaults=dict(is_compulsory=True, approval_status='approved'),
+            )
+
+        # Attendance sessions + records so the scanner and attendance page show data
+        att_sessions = [
+            dict(course_obj=course_objs['MED201'], days_ago=21, token='attn-med201-1'),
+            dict(course_obj=course_objs['MED201'], days_ago=14, token='attn-med201-2'),
+            dict(course_obj=course_objs['MED202'], days_ago=10, token='attn-med202-1'),
+        ]
+        AttendanceSession.objects.filter(qr_code_token__in=[s['token'] for s in att_sessions]).delete()
+        for s in att_sessions:
+            sess = AttendanceSession.objects.create(
+                course=s['course_obj'],
+                session_date=today - timedelta(days=s['days_ago']),
+                start_time=dtime(9, 0), end_time=dtime(11, 0),
+                qr_code_token=s['token'], is_active=True, created_by=faculty_user,
+            )
+            AttendanceRecord.objects.get_or_create(session=sess, student=student)
+
+        # Enrolled courses for the current session (drives the attendance summary)
+        for code in ('MED201', 'MED202', 'MED203', 'MED204', 'MED205'):
+            StudentCourse.objects.get_or_create(
+                student=student, course=course_objs[code], session='2025/2026', semester='First',
+                defaults=dict(attendance_percentage=87.0, approval_status='approved'),
+            )
+
+        # ------------------------------------------------------------------
+        # Alumni: real profiles, future events, and a sample donation
+        # ------------------------------------------------------------------
         AlumniProfile.objects.update_or_create(
             user=alumni_user,
             defaults=dict(
@@ -589,25 +726,72 @@ class Command(BaseCommand):
                 program=program,
                 current_employer='Federal Medical Centre, Yenagoa',
                 job_title='Medical Officer', career_status='employed',
-                allow_networking=True,
+                allow_networking=True, is_mentor=True,
+                professional_summary='Medical Officer at FMC Yenagoa with a passion for public health and mentorship.',
             ),
         )
 
-        AlumniEvent.objects.get_or_create(
+        extra_alumni = [
+            dict(email='chioma@bmu.edu.ng', username='chioma', first='Chioma', last='Nwosu',
+                 grad_year=2016, employer='World Health Organization', job='Public Health Director'),
+            dict(email='james@bmu.edu.ng', username='james', first='James', last='Peters',
+                 grad_year=2017, employer='National Institute of Medical Research', job='Medical Researcher'),
+            dict(email='ebi@bmu.edu.ng', username='ebi', first='Ebiowei', last='Tombra',
+                 grad_year=2015, employer='Niger Delta University Teaching Hospital', job='Consultant Physician'),
+        ]
+        for a in extra_alumni:
+            u, _ = User.objects.get_or_create(
+                email=a['email'],
+                defaults=dict(username=a['username'], role='alumni', is_email_verified=True),
+            )
+            u.set_password('alumni123')
+            u.first_name = a['first']
+            u.last_name = a['last']
+            u.save()
+            AlumniProfile.objects.update_or_create(
+                user=u,
+                defaults=dict(
+                    graduation_year=a['grad_year'],
+                    program=program,
+                    current_employer=a['employer'],
+                    job_title=a['job'], career_status='employed',
+                    allow_networking=True,
+                    professional_summary=f'{a["job"]} at {a["employer"]}.',
+                ),
+            )
+
+        AlumniEvent.objects.update_or_create(
             title='Class of 2019 Reunion',
             defaults=dict(
-                description='Five-year reunion for the class of 2019',
-                event_date=today + timedelta(days=60),
+                description='Five-year reunion for the class of 2019 - reconnect with classmates and lecturers.',
+                event_date=timezone.now() + timedelta(days=60),
                 location='BMU Campus', event_type='reunion',
             ),
         )
-        AlumniEvent.objects.get_or_create(
+        AlumniEvent.objects.update_or_create(
             title='Healthcare Leaders Networking',
             defaults=dict(
-                description='Networking event for healthcare professionals',
-                event_date=today + timedelta(days=30),
-                location='Lagos', event_type='networking', is_virtual=True,
+                description='Virtual networking event for healthcare professionals.',
+                event_date=timezone.now() + timedelta(days=30),
+                location='Online', event_type='networking', is_virtual=True,
+                virtual_link='https://meet.bmu.edu.ng/alumni-networking',
             ),
+        )
+        AlumniEvent.objects.update_or_create(
+            title='Alumni Homecoming & ASAA Reunion',
+            defaults=dict(
+                description='Annual alumni homecoming and Medical Students Association of Nigeria alumni reunion.',
+                event_date=timezone.now() + timedelta(days=90),
+                location='BMU Campus, Yenagoa', event_type='homecoming',
+            ),
+        )
+
+        AlumniDonation.objects.filter(payment_reference='DON-SEED-001').delete()
+        AlumniDonation.objects.create(
+            donor=AlumniProfile.objects.get(user=alumni_user),
+            amount=50000, currency='NGN', purpose='ASAA Endowment Fund',
+            payment_method='card', payment_reference='DON-SEED-001',
+            donated_at=timezone.now() - timedelta(days=20),
         )
 
         application, _ = Application.objects.update_or_create(
@@ -654,7 +838,7 @@ class Command(BaseCommand):
         cat, _ = BookCategory.objects.get_or_create(
             code='MED', defaults=dict(name='Medical Textbooks'),
         )
-        Book.objects.get_or_create(
+        grays, _ = Book.objects.update_or_create(
             isbn='9780323393041',
             defaults=dict(
                 title='Gray Anatomy for Students',
@@ -662,9 +846,10 @@ class Command(BaseCommand):
                 resource_type='book',
                 publisher='Elsevier', publication_year=2020,
                 description='Comprehensive anatomy textbook for medical students',
+                total_copies=6, available_copies=5,
             ),
         )
-        harrison, _ = Book.objects.get_or_create(
+        harrison, _ = Book.objects.update_or_create(
             isbn='9781264268504',
             defaults=dict(
                 title='Harrison Principles of Internal Medicine',
@@ -672,9 +857,30 @@ class Command(BaseCommand):
                 resource_type='book',
                 publisher='McGraw Hill', publication_year=2022,
                 description='Leading textbook on internal medicine',
+                total_copies=4, available_copies=4,
             ),
         )
         harrison.categories.add(cat)
+        grays.categories.add(cat)
+        for b in Book.objects.filter(title__in=[
+            'Library and Information Services to the Rural Community',
+            'Introduction to Library and Society',
+            'Demystifying Reference Services',
+            'Information Literacy: Text for Students',
+        ]):
+            b.total_copies = 2
+            b.available_copies = 2
+            b.save(update_fields=['total_copies', 'available_copies'])
+
+        # Sample borrowed loan so the "My Loans" panel has data
+        BookLoan.objects.filter(
+            student=student, book=grays, status='borrowed',
+        ).delete()
+        BookLoan.objects.create(
+            book=grays, student=student, status='borrowed',
+            loaned_at=timezone.now() - timedelta(days=5),
+            due_date=today + timedelta(days=9),
+        )
 
         DigitalResource.objects.get_or_create(
             name='PubMed Central',

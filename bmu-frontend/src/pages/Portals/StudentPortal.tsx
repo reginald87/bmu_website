@@ -27,9 +27,9 @@ const defaultPortalLinks = [
   { title: 'Progression', description: 'View academic progression status', link: '/portals/student/progression' },
   { title: 'Attendance', description: 'Scan QR code to mark attendance', link: '/portals/student/attendance' },
   { title: 'Fee Payment', description: 'Pay tuition and other fees', link: '/portals/student/fees' },
-  { title: 'Hostel', description: 'Apply for accommodation', link: '#' },
-  { title: 'Clearance', description: 'Complete semester clearance', link: '#' },
-  { title: 'Profile', description: 'Update personal information', link: '#' }
+  { title: 'Hostel', description: 'Apply for accommodation', link: '/portals/student/hostel' },
+  { title: 'Clearance', description: 'Complete semester clearance', link: '/portals/student/clearance' },
+  { title: 'Profile', description: 'Update personal information', link: '/portals/student/profile' }
 ];
 
 export const StudentPortal = () => {

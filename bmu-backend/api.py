@@ -512,6 +512,9 @@ class BookSchema(Schema):
     resource_type: str
     publication_year: Optional[int] = None
     description: str
+    total_copies: int
+    available_copies: int
+    categories: List[str] = Field(None, alias="category_names")
 
 
 class DigitalResourceSchema(Schema):
@@ -4905,50 +4908,89 @@ def dean_finalize_registration(request, data: RegistrationActionInput):
 
 
 class AlumniDashboardSchema(Schema):
-    profile: Optional[AlumniProfileSchema] = None
-    upcoming_events: List[dict] = []
-    donation_stats: dict = {}
-    recent_activities: List[dict] = []
+    profile: Optional[dict] = None
+    updates: List[dict] = []
+    events: List[dict] = []
+    featured: List[dict] = []
+    sections: List[dict] = []
     networking_suggestions: List[dict] = []
 
 
 @auth_router.get("/alumni/dashboard", response=AlumniDashboardSchema)
 def alumni_dashboard(request):
     """Get alumni dashboard data"""
-    if request.user.role != 'alumni':
-        from accounts.alumni_models import AlumniProfile
-        profile = AlumniProfile.objects.filter(user=request.user).first()
-        return {'profile': profile}
-
     from accounts.alumni_models import AlumniProfile, AlumniEvent, AlumniDonation
     from django.utils import timezone
-    
-    profile = AlumniProfile.objects.filter(user=request.user).first()
-    
+
+    profile = AlumniProfile.objects.filter(user=request.user).select_related('user', 'program').first()
+
     upcoming = AlumniEvent.objects.filter(event_date__gte=timezone.now()).order_by('event_date')[:5]
-    
-    donations = AlumniDonation.objects.filter(donor=request.user)
+    recent = AlumniEvent.objects.order_by('-event_date')[:3]
+
+    donations = AlumniDonation.objects.filter(donor=profile)
     total_donated = sum(d.amount for d in donations)
-    
-    # Other alumni for networking
+
     other_alumni = AlumniProfile.objects.exclude(user=request.user).filter(
         allow_networking=True
     ).select_related('user')[:10]
 
-    return {
-        'profile': profile,
-        'upcoming_events': [{
-            'id': e.id,
+    profile_dict = None
+    if profile:
+        profile_dict = {
+            'grad_year': str(profile.graduation_year) if profile.graduation_year else None,
+            'program': profile.program.title if profile.program else None,
+            'current_role': profile.job_title or None,
+            'organization': profile.current_employer or None,
+            'location': 'Bayelsa, Nigeria',
+            'bio': profile.professional_summary or '',
+            'phone': request.user.phone or '',
+        }
+
+    updates = []
+    if other_alumni.exists():
+        updates.append({
+            'title': 'Mentorship network expanded - new connections available',
+            'date': 'Just now',
+            'type': 'mentorship',
+        })
+    for e in recent:
+        updates.append({
             'title': e.title,
-            'event_date': e.event_date.isoformat() if e.event_date else None,
-            'location': e.location,
-            'event_type': e.event_type,
-        } for e in upcoming],
-        'donation_stats': {
-            'total_donated': float(total_donated),
-            'donation_count': donations.count(),
-        },
-        'recent_activities': [],
+            'date': e.event_date.strftime('%b %d, %Y'),
+            'type': 'event',
+        })
+
+    events = [{
+        'title': e.title,
+        'date': e.event_date.strftime('%B %d, %Y'),
+        'location': e.location or 'BMU Campus',
+        'type': e.get_event_type_display(),
+    } for e in upcoming]
+
+    featured = [{
+        'name': ap.user.full_name,
+        'role': ap.job_title or 'Alumnus',
+        'organization': ap.current_employer or 'BMU Alumnus',
+        'year': str(ap.graduation_year),
+    } for ap in other_alumni]
+
+    alumni_count = AlumniProfile.objects.count()
+    sections = [
+        {'title': 'Alumni Directory', 'description': 'Connect with fellow graduates', 'count': str(alumni_count)},
+        {'title': 'Events', 'description': 'Reunions & networking', 'count': str(AlumniEvent.objects.count())},
+        {'title': 'Mentorship', 'description': 'Give back to students',
+         'count': str(AlumniProfile.objects.filter(is_mentor=True).count()) if AlumniProfile.objects.filter(is_mentor=True).exists() else None},
+        {'title': 'Job Board', 'description': 'Career opportunities', 'count': None},
+        {'title': 'Transcripts', 'description': 'Request documents', 'count': None},
+        {'title': 'Give Back', 'description': 'Support your alma mater', 'count': None},
+    ]
+
+    return {
+        'profile': profile_dict,
+        'updates': updates,
+        'events': events,
+        'featured': featured,
+        'sections': sections,
         'networking_suggestions': [{
             'id': ap.user.id,
             'full_name': ap.user.full_name,
@@ -4958,6 +5000,68 @@ def alumni_dashboard(request):
             'profile_image': ap.user.profile_image.url if ap.user.profile_image else None,
         } for ap in other_alumni],
     }
+
+
+class DonationCreateSchema(Schema):
+    amount: float
+    purpose: Optional[str] = 'General Fund'
+    category: Optional[str] = None
+    is_anonymous: bool = False
+
+
+@auth_router.post("/alumni/donate")
+def alumni_donate(request, data: DonationCreateSchema):
+    """Record an alumni donation (mock payment gateway in DEBUG)."""
+    from accounts.alumni_models import AlumniProfile, AlumniDonation
+    import secrets
+
+    if request.user.role != 'alumni':
+        return {"error": "Only alumni can donate"}
+
+    profile = AlumniProfile.objects.filter(user=request.user).first()
+    if not profile:
+        return {"error": "Alumni profile not found"}
+
+    if data.amount <= 0:
+        return {"error": "Enter a valid donation amount"}
+
+    purpose = (data.purpose or '').strip() or 'General Fund'
+
+    donation = AlumniDonation.objects.create(
+        donor=profile,
+        amount=data.amount,
+        currency='NGN',
+        purpose=purpose,
+        is_anonymous=data.is_anonymous,
+        payment_method='card',
+        payment_reference=f'DON-{secrets.token_hex(4).upper()}',
+    )
+
+    return {
+        "message": "Thank you for your donation!",
+        "donation_id": donation.id,
+        "amount": float(donation.amount),
+        "reference": donation.payment_reference,
+    }
+
+
+@auth_router.get("/alumni/donations")
+def alumni_donations(request):
+    """List the current alumni user's donations."""
+    from accounts.alumni_models import AlumniProfile, AlumniDonation
+    profile = AlumniProfile.objects.filter(user=request.user).first()
+    if not profile:
+        return []
+    donations = AlumniDonation.objects.filter(donor=profile).select_related('donor', 'donor__user')
+    return [{
+        'id': d.id,
+        'amount': float(d.amount),
+        'currency': d.currency,
+        'purpose': d.purpose or '',
+        'is_anonymous': d.is_anonymous,
+        'payment_reference': d.payment_reference,
+        'donated_at': d.donated_at.isoformat(),
+    } for d in donations]
 
 
 @auth_router.get("/alumni/events", response=List[dict])
@@ -4976,6 +5080,331 @@ def alumni_events(request):
         'is_virtual': e.is_virtual,
         'virtual_link': e.virtual_link,
     } for e in events]
+
+
+# ═══════════════════════════════════════════════════════════════
+# LIBRARY CIRCULATION
+# ═══════════════════════════════════════════════════════════════
+
+
+class BookLoanSchema(Schema):
+    id: int
+    book_id: int
+    book_title: str
+    authors: str
+    status: str
+    status_display: str
+    requested_at: datetime
+    loaned_at: Optional[datetime] = None
+    due_date: Optional[date] = None
+    returned_at: Optional[datetime] = None
+    renewed_count: int = 0
+    is_overdue: bool = False
+
+
+@auth_router.get("/library/my-loans", response=List[BookLoanSchema])
+def my_book_loans(request):
+    """List the current user's book loans"""
+    from library.models import BookLoan
+    from django.utils import timezone
+    loans = BookLoan.objects.filter(student=request.user).select_related('book')[:50]
+    result = []
+    for loan in loans:
+        overdue = (
+            loan.status == 'borrowed'
+            and loan.due_date is not None
+            and loan.due_date < timezone.now().date()
+        )
+        result.append({
+            'id': loan.id,
+            'book_id': loan.book_id,
+            'book_title': loan.book.title,
+            'authors': loan.book.authors,
+            'status': loan.status,
+            'status_display': loan.get_status_display(),
+            'requested_at': loan.requested_at,
+            'loaned_at': loan.loaned_at,
+            'due_date': loan.due_date,
+            'returned_at': loan.returned_at,
+            'renewed_count': loan.renewed_count,
+            'is_overdue': overdue,
+        })
+    return result
+
+
+@auth_router.post("/library/books/{book_id}/borrow")
+def borrow_book(request, book_id: int):
+    """Borrow a library book (creates a checkout record)"""
+    if request.user.role not in ('student', 'alumni', 'staff', 'faculty'):
+        return {"error": "Only students and staff can borrow books"}
+    from library.models import Book, BookLoan
+    from django.utils import timezone
+
+    book = get_object_or_404(Book, id=book_id)
+
+    active = BookLoan.objects.filter(
+        student=request.user, book=book, status__in=['requested', 'borrowed'],
+    ).first()
+    if active:
+        return {"error": f"You already have a loan for '{book.title}'", "loan_id": active.id}
+
+    if book.available_copies <= 0:
+        return {"error": f"'{book.title}' is currently unavailable - all copies are on loan"}
+
+    book.available_copies -= 1
+    book.save(update_fields=['available_copies'])
+
+    loan = BookLoan.objects.create(
+        book=book,
+        student=request.user,
+        status='borrowed',
+        loaned_at=timezone.now(),
+        due_date=timezone.now().date() + timezone.timedelta(days=BookLoan.LOAN_DAYS),
+    )
+    return {
+        "message": f"'{book.title}' checked out successfully",
+        "loan_id": loan.id,
+        "due_date": loan.due_date.isoformat(),
+    }
+
+
+@auth_router.post("/library/loans/{loan_id}/return")
+def return_book(request, loan_id: int):
+    """Return a borrowed book"""
+    from library.models import BookLoan
+    from django.utils import timezone
+    loan = get_object_or_404(BookLoan, id=loan_id, student=request.user)
+    if loan.status not in ('borrowed', 'overdue'):
+        return {"error": "Loan is not in an active borrowed state"}
+
+    loan.status = 'returned'
+    loan.returned_at = timezone.now()
+    loan.save(update_fields=['status', 'returned_at'])
+
+    loan.book.available_copies = min(loan.book.available_copies + 1, loan.book.total_copies)
+    loan.book.save(update_fields=['available_copies'])
+
+    return {"message": f"'{loan.book.title}' returned successfully", "loan_id": loan.id}
+
+
+@auth_router.post("/library/loans/{loan_id}/renew")
+def renew_book(request, loan_id: int):
+    """Renew a borrowed book"""
+    from library.models import BookLoan
+    from django.utils import timezone
+    loan = get_object_or_404(BookLoan, id=loan_id, student=request.user)
+    if loan.status not in ('borrowed', 'overdue'):
+        return {"error": "Loan is not in an active borrowed state"}
+    if loan.renewed_count >= BookLoan.MAX_RENEWALS:
+        return {"error": "Maximum renewals reached for this book"}
+
+    new_due = (loan.due_date or timezone.now().date()) + timezone.timedelta(days=BookLoan.RENEW_DAYS)
+    loan.due_date = new_due
+    loan.renewed_count += 1
+    loan.status = 'borrowed'
+    loan.save(update_fields=['due_date', 'renewed_count', 'status'])
+
+    return {
+        "message": f"Loan renewed; new due date {new_due}",
+        "due_date": new_due.isoformat(),
+        "renewed_count": loan.renewed_count,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════
+# STUDENT PROFILE / CLEARANCE / HOSTEL
+# ═══════════════════════════════════════════════════════════════
+
+
+class StudentProfileUpdate(Schema):
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    state_of_origin: Optional[str] = None
+    lga_of_origin: Optional[str] = None
+    nationality: Optional[str] = None
+    nok_full_name: Optional[str] = None
+    nok_relationship: Optional[str] = None
+    nok_phone: Optional[str] = None
+    nok_email: Optional[str] = None
+    nok_address: Optional[str] = None
+
+
+@auth_router.get("/student/profile")
+def get_student_profile(request):
+    """Get the authenticated student's profile data."""
+    if request.user.role != 'student':
+        return {"error": "Only students can access this endpoint"}
+    from accounts.models import StudentProfile
+    profile = StudentProfile.objects.filter(user=request.user).first()
+    return {
+        'user': {
+            'full_name': request.user.full_name,
+            'email': request.user.email,
+            'phone': request.user.phone or '',
+            'student_id': request.user.student_id or '',
+            'program': request.user.program.title if request.user.program else '',
+            'address': request.user.address or '',
+            'city': request.user.city or '',
+            'state': request.user.state or '',
+            'profile_image': request.user.profile_image.url if request.user.profile_image else None,
+        },
+        'profile': {
+            'matric_number': profile.matric_number if profile else '',
+            'current_level': profile.current_level if profile else 100,
+            'current_semester': profile.current_semester if profile else 'first',
+            'admission_type': profile.admission_type if profile else '',
+            'entry_mode': profile.entry_mode if profile else '',
+            'admission_date': profile.admission_date.isoformat() if profile and profile.admission_date else None,
+            'state_of_origin': profile.state_of_origin if profile else '',
+            'lga_of_origin': profile.lga_of_origin if profile else '',
+            'nationality': profile.nationality if profile else '',
+            'nok_full_name': profile.nok_full_name if profile else '',
+            'nok_relationship': profile.nok_relationship if profile else '',
+            'nok_phone': profile.nok_phone if profile else '',
+            'nok_email': profile.nok_email if profile else '',
+            'nok_address': profile.nok_address if profile else '',
+        },
+    }
+
+
+@auth_router.put("/student/profile")
+def update_student_profile(request, data: StudentProfileUpdate):
+    """Update the authenticated student's profile data."""
+    if request.user.role != 'student':
+        return {"error": "Only students can access this endpoint"}
+    from accounts.models import StudentProfile
+
+    profile, _ = StudentProfile.objects.get_or_create(user=request.user, defaults={'current_level': 100})
+
+    payload = data.model_dump(exclude_unset=True)
+
+    if 'phone' in payload and payload.get('phone') is not None:
+        request.user.phone = payload['phone']
+    for f in ('address', 'city', 'state'):
+        if f in payload and payload.get(f) is not None:
+            setattr(request.user, f, payload[f])
+    if any(f in payload for f in ('address', 'city', 'state')) or 'phone' in payload:
+        request.user.save()
+
+    for f in ('state_of_origin', 'lga_of_origin', 'nationality',
+              'nok_full_name', 'nok_relationship', 'nok_phone', 'nok_email', 'nok_address'):
+        if f in payload and payload.get(f) is not None:
+            setattr(profile, f, payload[f])
+    profile.save()
+
+    return {"message": "Profile updated successfully"}
+
+
+@auth_router.get("/student/clearance")
+def student_clearance(request):
+    """Compute the student's graduation/session clearance checklist from live data."""
+    from django.utils import timezone
+    from portals.services import FeeService
+    from accounts.models import StudentProfile
+
+    now = timezone.now()
+    academic_year = f"{now.year - 1}/{now.year}" if now.month < 9 else f"{now.year}/{now.year + 1}"
+    semester = 'first' if now.month < 9 else 'second'
+
+    profile = StudentProfile.objects.filter(user=request.user).first()
+    from portals.models import Registration, StudentResult
+    from library.models import BookLoan
+
+    reg = Registration.objects.filter(student=request.user, academic_year=academic_year, semester=semester).first()
+    results = StudentResult.objects.filter(student=request.user, is_published=True).exists()
+    fees_clear = FeeService.is_fee_clear(request.user, academic_year, semester)
+    active_loans = BookLoan.objects.filter(student=request.user, status__in=['borrowed', 'overdue']).exists()
+
+    def item(title, done, detail):
+        return {'title': title, 'status': 'complete' if done else 'pending', 'detail': detail}
+
+    items = [
+        item('Student Profile Completed', bool(profile and profile.matric_number),
+             f"Matric: {profile.matric_number if profile and profile.matric_number else 'Not set'}"),
+        item('Fees Cleared', fees_clear, f"{academic_year} {semester} semester"),
+        item('Course Registration', bool(reg and reg.status in ('submitted', 'advisor_approved', 'hod_approved', 'dean_approved', 'registered')),
+             f"{reg.get_status_display() if reg else 'No registration for current session'}"),
+        item('Results Published', results, 'At least one published result found'),
+        item('Library Records Clear', not active_loans, 'No overdue or active book loans'),
+    ]
+
+    return {
+        'academic_year': academic_year,
+        'semester': semester,
+        'completed': sum(1 for i in items if i['status'] == 'complete'),
+        'total': len(items),
+        'items': items,
+    }
+
+
+@auth_router.get("/student/hostel")
+def student_hostel(request):
+    """Get the student's hostel allocation for the current session."""
+    from django.utils import timezone
+    from portals.models import HostelAllocation
+    now = timezone.now()
+    academic_year = f"{now.year - 1}/{now.year}" if now.month < 9 else f"{now.year}/{now.year + 1}"
+    allocation = HostelAllocation.objects.filter(
+        student=request.user, session=academic_year,
+    ).first()
+    return {
+        'session': academic_year,
+        'allocation': {
+            'id': allocation.id,
+            'hostel_name': allocation.hostel_name,
+            'room_number': allocation.room_number,
+            'bed_space': allocation.bed_space,
+            'status': allocation.status,
+            'status_display': allocation.get_status_display(),
+            'requested_at': allocation.requested_at.isoformat(),
+            'allocated_at': allocation.allocated_at.isoformat() if allocation.allocated_at else None,
+        } if allocation else None,
+    }
+
+
+class HostelRequestInput(Schema):
+    hostel_name: str
+
+
+@auth_router.post("/student/hostel/request")
+def request_hostel(request, data: HostelRequestInput):
+    """Request hostel accommodation for the current session."""
+    from django.utils import timezone
+    from portals.models import HostelAllocation
+    now = timezone.now()
+    academic_year = f"{now.year - 1}/{now.year}" if now.month < 9 else f"{now.year}/{now.year + 1}"
+
+    existing = HostelAllocation.objects.filter(
+        student=request.user, session=academic_year, status__in=['pending', 'allocated'],
+    ).first()
+    if existing:
+        return {"error": f"You already have a {existing.get_status_display().lower()} hostel request", "id": existing.id}
+
+    allocation = HostelAllocation.objects.create(
+        student=request.user,
+        session=academic_year,
+        hostel_name=data.hostel_name.strip(),
+        status='pending',
+    )
+    return {
+        "message": "Hostel request submitted successfully",
+        "id": allocation.id,
+        "status": allocation.status,
+    }
+
+
+@auth_router.post("/student/hostel/{allocation_id}/cancel")
+def cancel_hostel(request, allocation_id: int):
+    """Cancel a pending hostel request."""
+    from portals.models import HostelAllocation
+    allocation = get_object_or_404(HostelAllocation, id=allocation_id, student=request.user)
+    if allocation.status != 'pending':
+        return {"error": "Only pending requests can be cancelled"}
+    allocation.status = 'cancelled'
+    allocation.save(update_fields=['status'])
+    return {"message": "Hostel request cancelled"}
 
 
 class CPDEnrollmentCreateSchema(Schema):
@@ -5850,6 +6279,8 @@ def student_attendance(request, session: str, semester: str):
         return []
     from portals.models import AttendanceSession, AttendanceRecord
     from django.db.models import Count, Q
+
+    semester = semester.capitalize()
 
     course_attendance = (AttendanceSession.objects.filter(
         course__enrolled_students__student=request.user,
