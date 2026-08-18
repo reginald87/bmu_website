@@ -10,7 +10,7 @@ import {
   Shield,
   Lock
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { usePortalDefinitions } from '../../services/apiHooks';
 
 const iconMap: Record<string, React.ElementType> = {

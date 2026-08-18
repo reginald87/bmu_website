@@ -2,8 +2,22 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 import { ArrowUp, ArrowRight, AlertTriangle, XCircle, CheckCircle, TrendingUp, Award, BookOpen } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
+
+interface ProgressionData {
+  decision: string;
+  reason?: string;
+  gpa?: number;
+  cgpa?: number;
+  carryover_units?: number;
+  total_units?: number;
+  session?: string;
+  from_level?: number | string;
+  to_level?: number | string;
+  matric_number?: string;
+  is_reviewed?: boolean;
+}
 
 const decisionIcons: Record<string, React.ReactNode> = {
   promoted: <ArrowUp className="w-8 h-8 text-green-600" />,
@@ -21,7 +35,7 @@ const decisionColors: Record<string, string> = {
 
 export const StudentProgression = () => {
   const { isAuthenticated, user } = useAuth();
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<ProgressionData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

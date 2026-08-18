@@ -7,7 +7,7 @@ import {
   Plus, Trash2, CheckCircle, AlertCircle, Loader2, Search,
   Send, Download, Clock, Ban
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { registrationApi, type AvailableCourse, type CurrentRegistration } from '../../services/api';
 
 const STATUS_COLORS: Record<string, string> = {

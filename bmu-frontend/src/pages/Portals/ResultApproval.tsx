@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import {
   Loader2, CheckCircle, XCircle
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { approvalApi, type PendingResult } from '../../services/api';
 
 interface ApprovalConfig {
@@ -88,7 +88,11 @@ export const ResultApproval = ({ stage }: Props) => {
   const toggleSelect = (id: number) => {
     setSelected(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   };

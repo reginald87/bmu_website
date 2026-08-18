@@ -125,7 +125,7 @@ const MobileQuickBar = () => {
 export const Home = () => {
   const { t } = useTranslation();
   const { data: homeSections } = usePageSections('home');
-  const navSections = (homeSections?.find(s => s.section_key === 'nav_sections')?.data as any[] || fallbackSections);
+  const navSections = (homeSections?.find(s => s.section_key === 'nav_sections')?.data as typeof fallbackSections || fallbackSections);
   const activeSection = useScrollSpy(navSections.map((s) => s.id));
 
   const { data: stats, isLoading: statsLoading } = useQuery({

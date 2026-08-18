@@ -16,7 +16,7 @@ import {
   Lock,
   Loader2,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { useCPDCourses } from '../../services/apiHooks';
 
 // Mock CPD user data
@@ -247,7 +247,7 @@ const CPDDashboard = () => {
             {['overview', 'courses', 'certificates'].map((tab) => (
               <button
                 key={tab}
-                onClick={() => setActiveTab(tab as any)}
+                onClick={() => setActiveTab(tab as 'overview' | 'courses' | 'certificates')}
                 className={`px-6 py-4 text-sm font-medium capitalize border-b-2 transition ${ activeTab === tab ? 'border-[#1E1E1E] text-[#1E1E1E]' : 'border-transparent text-gray-800 hover:text-gray-900' }`}
               >
                 {tab}

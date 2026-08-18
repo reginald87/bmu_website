@@ -11,10 +11,18 @@ import {
   Users,
   BookOpen,
   Clock,
-  Loader2
+  Loader2,
+  type LucideIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAdmissionRequirements, useImportantDates, usePageSections } from '../../services/apiHooks';
+
+interface ApplicationStep {
+  step: number;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+}
 
 const fallbackSteps = [
   {
@@ -59,7 +67,7 @@ export const Admissions = () => {
   const { data: requirements, isLoading: reqLoading } = useAdmissionRequirements();
   const { data: importantDates, isLoading: datesLoading } = useImportantDates();
   const { data: sections } = usePageSections('admissions');
-  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as any[] || fallbackSteps);
+  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as ApplicationStep[] || fallbackSteps);
 
   const undergradReqs = requirements?.filter(r => r.category === 'undergraduate') ?? [];
   const postgradReqs = requirements?.filter(r => r.category === 'postgraduate') ?? [];

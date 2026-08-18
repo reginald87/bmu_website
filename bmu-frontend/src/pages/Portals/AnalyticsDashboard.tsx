@@ -3,42 +3,83 @@ import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { Users, TrendingUp, BookOpen, Award } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 const COLORS = ['#A51C30', '#1E1E1E', '#4A90D9', '#50C878', '#F5A623', '#D0021B'];
 
+interface StatusDistributionItem {
+  academic_status: string;
+  count: number;
+}
+
+interface ProgressionDistributionItem {
+  decision: string;
+  count: number;
+}
+
+interface AnalyticsOverview {
+  total_students: number;
+  total_results: number;
+  average_gpa: number;
+  average_cgpa: number;
+  status_distribution?: StatusDistributionItem[];
+  progression_distribution?: ProgressionDistributionItem[];
+}
+
+interface ProgramPerformance {
+  degree: string;
+  program: string;
+  student_count: number;
+  avg_cgpa: number;
+  avg_gpa: number;
+}
+
+interface GradeDistribution {
+  grade: string;
+  count: number;
+}
+
+interface GradePieDatum {
+  name: string;
+  value: number;
+}
+
 export const AnalyticsDashboard = () => {
   const { isAuthenticated, user } = useAuth();
   const [session, setSession] = useState('2024/2025');
-  const [overview, setOverview] = useState<any>(null);
-  const [programPerf, setProgramPerf] = useState<any[]>([]);
-  const [gradeDist, setGradeDist] = useState<any[]>([]);
+  const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
+  const [programPerf, setProgramPerf] = useState<ProgramPerformance[]>([]);
+  const [gradeDist, setGradeDist] = useState<GradeDistribution[]>([]);
   const [semester, setSemester] = useState('First');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    setIsLoading(true);
-    Promise.all([
-      apiClient.get(`/auth/admin/analytics/overview?session=${session}`),
-      apiClient.get(`/auth/admin/analytics/program-performance?session=${session}`),
-      apiClient.get(`/auth/admin/analytics/grade-distribution?session=${session}&semester=${semester}`),
-    ])
-      .then(([o, p, g]) => {
+    void (async () => {
+      setIsLoading(true);
+      try {
+        const [o, p, g] = await Promise.all([
+          apiClient.get(`/auth/admin/analytics/overview?session=${session}`),
+          apiClient.get(`/auth/admin/analytics/program-performance?session=${session}`),
+          apiClient.get(`/auth/admin/analytics/grade-distribution?session=${session}&semester=${semester}`),
+        ]);
         setOverview(o.data);
         setProgramPerf(p.data);
         setGradeDist(g.data);
-      })
-      .catch(() => {})
-      .finally(() => setIsLoading(false));
-  }, [session, semester]);
+      } catch {
+        // ignore
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [session, semester, isAuthenticated]);
 
   if (!isAuthenticated || !['admin', 'staff', 'faculty'].includes(user?.role || '')) {
     return <Navigate to="/portals" replace />;
   }
 
-  const gradeCounts = gradeDist.reduce((acc: Record<string, number>, curr: any) => {
+  const gradeCounts = gradeDist.reduce((acc: Record<string, number>, curr: GradeDistribution) => {
     acc[curr.grade] = (acc[curr.grade] || 0) + curr.count;
     return acc;
   }, {} as Record<string, number>);
@@ -124,7 +165,7 @@ export const AnalyticsDashboard = () => {
                     <p className="text-sm text-gray-400 text-center py-8">No data available</p>
                   )}
                   <div className="mt-3 space-y-2">
-                    {programPerf.map((p: any, i: number) => (
+                    {programPerf.map((p: ProgramPerformance, i: number) => (
                       <div key={i} className="flex justify-between text-sm py-1 border-b border-gray-50">
                         <span className="font-medium text-gray-700">{p.program} ({p.degree})</span>
                         <span className="text-gray-500">{p.student_count} students · CGPA {p.avg_cgpa}</span>
@@ -139,7 +180,7 @@ export const AnalyticsDashboard = () => {
                     <ResponsiveContainer width="100%" height={300}>
                       <PieChart>
                         <Pie data={gradePieData} cx="50%" cy="50%" outerRadius={100} label={({ name, value }) => `${name}: ${value}`}>
-                          {gradePieData.map((_: any, i: number) => (
+                          {gradePieData.map((_: GradePieDatum, i: number) => (
                             <Cell key={i} fill={COLORS[i % COLORS.length]} />
                           ))}
                         </Pie>
@@ -158,7 +199,7 @@ export const AnalyticsDashboard = () => {
                   <div className="bg-white p-6 shadow-sm border border-gray-100">
                     <h2 className="font-bold text-gray-900 mb-4">Academic Status Distribution</h2>
                     <div className="space-y-3">
-                      {overview.status_distribution?.map((s: any, i: number) => (
+                      {overview.status_distribution?.map((s: StatusDistributionItem, i: number) => (
                         <div key={i} className="flex items-center justify-between">
                           <span className="text-sm font-medium text-gray-700 capitalize">{s.academic_status || 'Unknown'}</span>
                           <div className="flex items-center gap-2">
@@ -178,12 +219,12 @@ export const AnalyticsDashboard = () => {
                   <div className="bg-white p-6 shadow-sm border border-gray-100">
                     <h2 className="font-bold text-gray-900 mb-4">Progression Decisions</h2>
                     <div className="space-y-3">
-                      {overview.progression_distribution?.map((p: any, i: number) => (
+                      {overview.progression_distribution?.map((p: ProgressionDistributionItem, i: number) => (
                         <div key={i} className="flex items-center justify-between">
                           <span className="text-sm font-medium text-gray-700 capitalize">{p.decision}</span>
                           <div className="flex items-center gap-2">
                             <div className="w-32 bg-gray-100 h-2 rounded">
-                              <div className="bg-[#1E1E1E] h-2 rounded" style={{ width: `${(p.count / Math.max(...overview.progression_distribution.map((x: any) => x.count))) * 100}%` }} />
+                              <div className="bg-[#1E1E1E] h-2 rounded" style={{ width: `${(p.count / Math.max(...overview.progression_distribution.map((x: ProgressionDistributionItem) => x.count))) * 100}%` }} />
                             </div>
                             <span className="text-sm text-gray-500 w-8 text-right">{p.count}</span>
                           </div>

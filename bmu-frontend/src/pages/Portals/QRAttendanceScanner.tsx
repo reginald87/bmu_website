@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 import { Camera, X, CheckCircle, AlertCircle } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 export const QRAttendanceScanner = () => {
@@ -37,13 +37,14 @@ export const QRAttendanceScanner = () => {
           try {
             const res = await apiClient.post(`/auth/attendance/scan/${token}`);
             setResult({ success: true, message: res.data.message || 'Attendance recorded successfully!' });
-          } catch (err: any) {
-            setResult({ success: false, message: err.response?.data?.error || err.response?.data?.detail || 'Failed to record attendance' });
+          } catch (err) {
+            const e = err as { response?: { data?: { error?: string; detail?: string } } };
+            setResult({ success: false, message: e.response?.data?.error || e.response?.data?.detail || 'Failed to record attendance' });
           }
         },
         () => {}
       );
-    } catch (err) {
+    } catch {
       setScanning(false);
       setResult({ success: false, message: 'Camera access denied or not available' });
     }

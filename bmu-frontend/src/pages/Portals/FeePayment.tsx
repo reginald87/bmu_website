@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 import { CreditCard, DollarSign, CheckCircle, AlertCircle, Loader, Wallet } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 interface FeeStructureItem {
@@ -68,7 +68,7 @@ export const FeePayment = () => {
       })
       .catch(() => {})
       .finally(() => setIsLoading(false));
-  }, [session, semester]);
+  }, [session, semester, isAuthenticated, user?.role]);
 
   const handlePay = async () => {
     setPaying(true);
@@ -93,8 +93,9 @@ export const FeePayment = () => {
       }
       const fsRes = await apiClient.get(`/auth/student/fee-status?session=${session}&semester=${semester}`);
       setFeeStatus(fsRes.data);
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.response?.data?.error || err.response?.data?.detail || 'Payment failed' });
+    } catch (err) {
+      const e = err as { response?: { data?: { error?: string; detail?: string } } };
+      setMessage({ type: 'error', text: e.response?.data?.error || e.response?.data?.detail || 'Payment failed' });
     } finally {
       setPaying(false);
     }
@@ -109,8 +110,9 @@ export const FeePayment = () => {
       setMessage({ type: 'success', text: 'Payment verified successfully!' });
       const fsRes = await apiClient.get(`/auth/student/fee-status?session=${session}&semester=${semester}`);
       setFeeStatus(fsRes.data);
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.response?.data?.error || 'Verification failed' });
+    } catch (err) {
+      const e = err as { response?: { data?: { error?: string } } };
+      setMessage({ type: 'error', text: e.response?.data?.error || 'Verification failed' });
     }
   };
 

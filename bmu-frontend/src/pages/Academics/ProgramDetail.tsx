@@ -26,6 +26,35 @@ import {
  Loader2
 } from 'lucide-react';
 import { useProgramBySlug } from '../../services/apiHooks';
+import { type Program as ApiProgram, mockProgramDetails } from '../../services/mockData';
+
+interface ProgramAccreditation {
+  body_name: string;
+  body_acronym?: string;
+}
+
+interface ProgramCurriculumYear {
+  year_label: string;
+  courses: { name: string }[];
+}
+
+interface ProgramDetailSource extends ApiProgram {
+  degree?: string;
+  description?: string;
+  overview?: string;
+  career_opportunities?: string;
+  icon?: string;
+  color?: string;
+  category?: string;
+  level?: string;
+  tuition_per_year_local?: number;
+  tuition_fee_local?: number;
+  intake?: string;
+  accreditations?: ProgramAccreditation[];
+  curriculum_years?: ProgramCurriculumYear[];
+  facilities?: { name: string }[];
+  highlights?: { text: string }[];
+}
 
 interface Program {
  id: string;
@@ -54,80 +83,29 @@ const iconMap: Record<string, React.ElementType> = {
  Stethoscope, Heart, Microscope, Scan, Brain, Activity, Globe, Bone, BookOpen, Award,
 };
 
-const transformDetail = (src: any): Program => ({
- id: src.slug,
- name: src.title,
- degree: src.degree || '',
- duration: src.duration,
- description: src.description || '',
- longDescription: src.overview || src.description || '',
- requirements: (src.requirements || '').split('.').filter(Boolean).map((r: string) => r.trim()),
- careerPaths: (src.career_opportunities || '').split(',').filter(Boolean).map((c: string) => c.trim()),
- icon: iconMap[src.icon] || Stethoscope,
- color: src.color || '#1E1E1E',
- category: (src.category === 'postgraduate' || src.level === 'masters' || src.level === 'phd') ? 'postgraduate' : 'undergraduate',
- tuition: src.tuition_per_year_local ? `₦${Number(src.tuition_per_year_local).toLocaleString()} per session` : src.tuition_fee_local ? `₦${Number(src.tuition_fee_local).toLocaleString()}` : 'Contact for fees',
- intake: src.intake || 'September/October',
- accreditation: (src.accreditations || []).map((a: any) => a.body_name + (a.body_acronym ? ` (${a.body_acronym})` : '')),
- curriculum: (src.curriculum_years || []).map((y: any) => ({ year: y.year_label, courses: (y.courses || []).map((c: any) => c.name) })),
- facilities: (src.facilities || []).map((f: any) => f.name),
- highlights: (src.highlights || []).map((h: any) => h.text),
+const transformDetail = (src: ProgramDetailSource): Program => ({
+  id: src.slug,
+  name: src.title,
+  degree: src.degree || '',
+  duration: src.duration,
+  description: src.description || '',
+  longDescription: src.overview || src.description || '',
+  requirements: (src.requirements || '').split('.').filter(Boolean).map((r: string) => r.trim()),
+  careerPaths: (src.career_opportunities || '').split(',').filter(Boolean).map((c: string) => c.trim()),
+  icon: iconMap[src.icon || ''] || Stethoscope,
+  color: src.color || '#1E1E1E',
+  category: (src.category === 'postgraduate' || src.level === 'masters' || src.level === 'phd') ? 'postgraduate' : 'undergraduate',
+  tuition: src.tuition_per_year_local ? `₦${Number(src.tuition_per_year_local).toLocaleString()} per session` : src.tuition_fee_local ? `₦${Number(src.tuition_fee_local).toLocaleString()}` : 'Contact for fees',
+  intake: src.intake || 'September/October',
+  accreditation: (src.accreditations || []).map((a) => a.body_name + (a.body_acronym ? ` (${a.body_acronym})` : '')),
+  curriculum: (src.curriculum_years || []).map((y) => ({ year: y.year_label, courses: (y.courses || []).map((c) => c.name) })),
+  facilities: (src.facilities || []).map((f) => f.name),
+  highlights: (src.highlights || []).map((h) => h.text),
 });
 
-const fallbackPrograms: Record<string, Program> = {
- 'mbbs-medicine-surgery': {
-  id: 'mbbs-medicine-surgery', name: 'Medicine and Surgery', degree: 'MBBS', duration: '6 years',
-  description: 'Comprehensive medical training combining pre-clinical sciences with extensive clinical rotations.',
-  longDescription: 'The MBBS program at Bayelsa Medical University is designed to produce competent, compassionate, and ethical medical professionals.',
-  requirements: ["5 O'Level credits including English, Maths, Biology, Chemistry, Physics", 'UTME score of 200+', 'Post-UTME screening'],
-  careerPaths: ['Medical Doctor', 'Surgeon', 'Medical Researcher', 'Public Health Officer'],
-  icon: Stethoscope, color: '#1E1E1E', category: 'undergraduate',
-  tuition: '₦2,500,000 per session', intake: 'September/October',
-  accreditation: ['Medical and Dental Council of Nigeria (MDCN)', 'National Universities Commission (NUC)'],
-  curriculum: [
-   { year: 'Year 1 (Pre-Med)', courses: ['General Chemistry', 'Physics', 'Biology', 'Anatomy Introduction'] },
-   { year: 'Year 2 (Anatomy & Physiology)', courses: ['Human Anatomy I & II', 'Physiology I & II', 'Biochemistry', 'Histology'] },
-   { year: 'Year 3 (Pathology)', courses: ['General Pathology', 'Microbiology', 'Pharmacology I', 'Community Medicine'] },
-   { year: 'Year 4-6 (Clinical)', courses: ['Internal Medicine', 'Surgery', 'Obstetrics & Gynecology', 'Pediatrics'] },
-  ],
-  facilities: ['Modern Anatomy Lab', 'Clinical Skills Center', 'Simulation Lab', 'University Teaching Hospital'],
-  highlights: ['International exchange opportunities', 'Research internships', 'Clinical rotations abroad'],
- },
- 'bsc-radiography': {
-  id: 'bsc-radiography', name: 'Radiography', degree: 'BSc', duration: '5 years',
-  description: 'Professional training in medical imaging including X-ray, CT, MRI, and ultrasound.',
-  longDescription: 'This program provides comprehensive education in medical imaging technologies.',
-  requirements: ["5 O'Level credits including English, Maths, Biology, Chemistry, Physics", 'UTME score of 180+', 'Physical fitness assessment'],
-  careerPaths: ['Radiographer', 'MRI Technologist', 'Radiation Therapist', 'Imaging Specialist'],
-  icon: Scan, color: '#1E1E1E', category: 'undergraduate',
-  tuition: '₦2,000,000 per session', intake: 'September/October',
-  accreditation: ['Radiographers Registration Board of Nigeria (RRBN)', 'NUC'],
-  curriculum: [
-   { year: 'Year 1', courses: ['Physics for Radiography', 'Anatomy', 'Physiology', 'Patient Care'] },
-   { year: 'Year 2', courses: ['Radiation Physics', 'Radiographic Techniques', 'Image Processing', 'Radiation Protection'] },
-   { year: 'Year 3', courses: ['CT & MRI Imaging', 'Ultrasound Basics', 'Nuclear Medicine', 'Sectional Anatomy'] },
-   { year: 'Year 4-5', courses: ['Advanced Imaging', 'Radiation Therapy', 'PACS & Informatics', 'Clinical Internship'] },
-  ],
-  facilities: ['Digital X-Ray Suite', 'CT/MRI Center', 'Ultrasound Lab'],
-  highlights: ['State-of-the-art imaging equipment', 'Clinical rotations in major hospitals', 'Radiation safety certification'],
- },
- 'msc-public-health': {
-  id: 'msc-public-health', name: 'Public Health', degree: 'MSc', duration: '2 years',
-  description: 'Advanced training in public health leadership, epidemiology, and health policy.',
-  longDescription: 'The MSc Public Health program prepares professionals for leadership roles in public health.',
-  requirements: ['First degree in health or related field', 'Minimum Second Class Lower', 'Relevant work experience'],
-  careerPaths: ['Public Health Director', 'Health Policy Advisor', 'Research Coordinator', 'NGO Leader'],
-  icon: Globe, color: '#A51C30', category: 'postgraduate',
-  tuition: '₦3,500,000 total', intake: 'January/September',
-  accreditation: ['Public Health Society of Nigeria', 'NUC'],
-  curriculum: [
-   { year: 'Year 1', courses: ['Advanced Epidemiology', 'Biostatistics II', 'Health Systems Analysis', 'Research Design'] },
-   { year: 'Year 2', courses: ['Program Evaluation', 'Health Economics', 'Policy Analysis', 'Dissertation'] },
-  ],
-  facilities: ['Graduate Research Center', 'Health Policy Institute'],
-  highlights: ['Research mentorship', 'International faculty', 'Policy engagement opportunities'],
- },
-};
+const fallbackPrograms: Record<string, Program> = Object.fromEntries(
+ Object.entries(mockProgramDetails).map(([slug, src]) => [slug, transformDetail(src as ProgramDetailSource)])
+);
 
 export const ProgramDetail = () => {
  const { slug } = useParams<{ slug: string }>();

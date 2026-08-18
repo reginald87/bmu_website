@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 from accounts.models import Notification
 from accounts.alumni_models import AlumniProfile, AlumniEvent, AlumniDonation
 from portals.models import StudentResult, StudentFeePayment, StudentCourse
-from content.models import NewsItem, Event, PageContentSimple, Testimonial, Partner, ContactEnquiry, PublicDocument, FundingOrganization, FundedProject, AboutPage, AboutStat, AboutCoreValue, HistoryPage, TimelineEvent, VisionMissionPage, VisionMissionPillar, VisionMissionValue, GovernancePage, GovernanceBody, GovernanceCommittee, GovernancePolicy
+from content.models import NewsItem, Event, PageContentSimple, Testimonial, Partner, ContactEnquiry, PublicDocument, FundingOrganization, FundedProject, AboutPage, AboutStat, AboutCoreValue, HistoryPage, TimelineEvent, VisionMissionPage, VisionMissionPillar, VisionMissionValue, GovernancePage, GovernanceBody, GovernanceCommittee, GovernancePolicy, PageSection
 from academics.models import College, FacultyUnit, Department, Program, Course, SDGMetric, Leadership
-from admissions.models import Application
+from admissions.models import Application, AcademicRecord
 from library.models import Book, BookCategory, DigitalResource
 from research.models import Publication
 from academics.models import Faculty
@@ -81,21 +81,16 @@ class Command(BaseCommand):
             applicant_user.last_name = 'Brown'
             applicant_user.save()
 
-        Notification.objects.create(
-            user=student, title='Course Registration Open',
-            message='Registration for 2024/2025 second semester is now open',
-            type='info'
-        )
-        Notification.objects.create(
-            user=student, title='Exam Timetable Released',
-            message='Second semester examination timetable is now available',
-            type='success'
-        )
-        Notification.objects.create(
-            user=student, title='Fee Payment Reminder',
-            message='Please complete your tuition payment before deadline',
-            type='warning'
-        )
+        for notif in [
+            dict(title='Course Registration Open',
+                 message='Registration for 2024/2025 second semester is now open', type='info'),
+            dict(title='Exam Timetable Released',
+                 message='Second semester examination timetable is now available', type='success'),
+            dict(title='Fee Payment Reminder',
+                 message='Please complete your tuition payment before deadline', type='warning'),
+        ]:
+            Notification.objects.filter(user=student, title=notif['title']).delete()
+            Notification.objects.create(user=student, **notif)
 
         today = date.today()
         from datetime import time as dtime
@@ -153,118 +148,324 @@ class Command(BaseCommand):
             },
         )
 
-        college, created = College.objects.get_or_create(
-            slug='college-of-medical-sciences',
-            defaults={
-                'name': 'College of Medical Sciences',
-                'description': 'The College of Medical Sciences is the flagship academic division of Bayelsa Medical University, offering comprehensive medical and health sciences education.',
-                'established_year': 2018,
-                'faculty_count': 3,
-                'student_count': 120,
-                'faculty_members_count': 15,
-                'primary_color': '#1E1E1E',
-                'secondary_color': '#A51C30',
-                'overview_content': 'The College of Medical Sciences provides world-class medical education and research opportunities. Our programs are designed to produce competent, compassionate healthcare professionals who will serve the community and advance medical knowledge.',
-                'mission_statement': 'To advance medical education and research through innovative teaching, cutting-edge research, and community service, producing competent and compassionate healthcare professionals.',
-                'vision_statement': 'To be a leading center of medical excellence in Africa, recognized for our contributions to healthcare delivery, medical research, and community development.',
-                'provost_display_name': 'Prof. Emmanuel Ekanem',
-                'director_display_name': 'Dr. Grace Ebi',
-                'icon_name': 'GraduationCap',
-            },
-        )
-        if not created:
-            college.name = 'College of Medical Sciences'
-            college.description = 'The College of Medical Sciences is the flagship academic division of Bayelsa Medical University, offering comprehensive medical and health sciences education.'
-            college.established_year = 2018
-            college.faculty_count = 3
-            college.student_count = 120
-            college.faculty_members_count = 15
-            college.primary_color = '#1E1E1E'
-            college.secondary_color = '#A51C30'
-            college.overview_content = 'The College of Medical Sciences provides world-class medical education and research opportunities. Our programs are designed to produce competent, compassionate healthcare professionals who will serve the community and advance medical knowledge.'
-            college.mission_statement = 'To advance medical education and research through innovative teaching, cutting-edge research, and community service, producing competent and compassionate healthcare professionals.'
-            college.vision_statement = 'To be a leading center of medical excellence in Africa, recognized for our contributions to healthcare delivery, medical research, and community development.'
-            college.provost_display_name = 'Prof. Emmanuel Ekanem'
-            college.director_display_name = 'Dr. Grace Ebi'
-            college.icon_name = 'GraduationCap'
-            college.save()
-        faculty_unit, created = FacultyUnit.objects.get_or_create(
-            slug='faculty-of-basic-medical-sciences',
-            defaults={
-                'name': 'Faculty of Basic Medical Sciences',
-                'college': college,
-                'code': 'FBMS',
-                'description': 'The Faculty of Basic Medical Sciences provides foundational training in the basic sciences that underpin medical practice, including anatomy, physiology, biochemistry, and pharmacology.',
-                'mission_statement': 'To provide excellence in basic medical sciences education and research, laying the foundation for competent medical professionals.',
-                'vision_statement': 'To be a leading centre for basic medical sciences education and research in Africa.',
-                'dean_display_name': 'Prof. Godwin Ikorite',
-                'department_count': 1,
-                'staff_count': 10,
-                'student_count': 120,
-            },
-        )
-        if not created:
-            faculty_unit.name = 'Faculty of Basic Medical Sciences'
-            faculty_unit.code = 'FBMS'
-            faculty_unit.description = 'The Faculty of Basic Medical Sciences provides foundational training in the basic sciences that underpin medical practice, including anatomy, physiology, biochemistry, and pharmacology.'
-            faculty_unit.mission_statement = 'To provide excellence in basic medical sciences education and research, laying the foundation for competent medical professionals.'
-            faculty_unit.vision_statement = 'To be a leading centre for basic medical sciences education and research in Africa.'
-            faculty_unit.dean_display_name = 'Prof. Godwin Ikorite'
-            faculty_unit.department_count = 1
-            faculty_unit.staff_count = 10
-            faculty_unit.student_count = 120
-            faculty_unit.save()
+        # ------------------------------------------------------------------
+        # Academic structure — real BMU organization
+        # BMU has a single College (College of Medicine) housing the Faculty of
+        # Clinical Sciences and the Faculty of Basic Medical Sciences. The other
+        # five faculties (Basic Clinical Sciences, Dentistry, Health Sciences,
+        # Pharmaceutical Sciences, Science) are standalone faculties with their
+        # own departments. Together they hold 25 departments and 24 undergraduate
+        # programs, harvested from bmu.edu.ng (structure of this app is unchanged).
+        # ------------------------------------------------------------------
 
-        dept, created = Department.objects.get_or_create(
-            slug='department-of-medicine',
-            defaults={
-                'name': 'Department of Medicine',
-                'faculty': faculty_unit,
-                'code': 'MED',
-                'description': 'The Department of Medicine offers comprehensive training in internal medicine, preparing students for careers in clinical practice and medical research.',
-                'hod_display_name': 'Prof. John Ebieri',
-                'staff_count': 8,
-                'student_count': 60,
-            },
-        )
-        if not created:
-            dept.name = 'Department of Medicine'
-            dept.code = 'MED'
-            dept.description = 'The Department of Medicine offers comprehensive training in internal medicine, preparing students for careers in clinical practice and medical research.'
-            dept.hod_display_name = 'Prof. John Ebieri'
-            dept.staff_count = 8
-            dept.student_count = 60
-            dept.save()
-        program, updated = Program.objects.get_or_create(
-            slug='mbbs-medicine-surgery',
-            defaults={
-                'title': 'MBBS Medicine and Surgery',
-                'department': dept, 'college': college,
-                'level': 'undergraduate', 'category': 'undergraduate',
-                'duration': '6 years',
-                'degree': 'MBBS',
-                'description': 'A comprehensive six-year program that trains students in all aspects of medicine and surgery, producing competent medical doctors ready for residency training.',
-                'requirements': 'Five O-level credits in Biology, Chemistry, Physics, Mathematics, and English.',
-                'career_opportunities': 'Medical Doctor, Surgeon, Public Health Specialist, Medical Researcher, Hospital Administrator',
-                'color': '#0b27ac', 'icon': 'Stethoscope',
-                'application_fee_local': 2500, 'application_fee_intl': 50,
-                'tuition_per_year_local': 500000, 'tuition_per_year_intl': 8500,
-            },
-        )
-        if not updated:
-            program.title = 'MBBS Medicine and Surgery'
-            program.degree = 'MBBS'
-            program.duration = '6 years'
-            program.description = 'A comprehensive six-year program that trains students in all aspects of medicine and surgery, producing competent medical doctors ready for residency training.'
-            program.requirements = 'Five O-level credits in Biology, Chemistry, Physics, Mathematics, and English.'
-            program.career_opportunities = 'Medical Doctor, Surgeon, Public Health Specialist, Medical Researcher, Hospital Administrator'
-            program.color = '#0b27ac'
-            program.icon = 'Stethoscope'
-            program.application_fee_local = 2500
-            program.application_fee_intl = 50
-            program.tuition_per_year_local = 500000
-            program.tuition_per_year_intl = 8500
-            program.save()
+        def _upsert(model, slug, defaults):
+            obj, created = model.objects.get_or_create(slug=slug, defaults=defaults)
+            if not created:
+                for key, val in defaults.items():
+                    setattr(obj, key, val)
+                obj.save()
+            return obj
+
+        college_defs = [
+            dict(slug='college-of-medicine', name='College of Medicine',
+                 provost='Prof. Philip Eyimina',
+                 description='The College of Medicine is the flagship college of Bayelsa Medical University, housing the Faculty of Clinical Sciences and the Faculty of Basic Medical Sciences. The University\'s other faculties — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — operate as standalone faculties with their own departments.',
+                 overview='The College of Medicine provides the academic home for the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences, which together deliver the foundational and clinical training of the University\'s medical doctors. The remaining faculties of Bayelsa Medical University — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — are standalone faculties, each with its own departments and programmes.',
+                 mission='To deliver excellent teaching, research and community service in the basic and clinical medical sciences.',
+                 vision='To be a leading centre for medical education and research in West Africa.',
+                 established_year=2018, students=970, staff=108,
+                 color='#1E1E1E', color2='#A51C30', icon='GraduationCap'),
+        ]
+
+        # Faculties within the College of Medicine vs standalone faculties
+        college_faculty_slugs = {'basic-medical-sciences', 'clinical-sciences'}
+
+        faculty_defs = [
+            dict(slug='basic-medical-sciences', name='Basic Medical Sciences', code='FBMS', under_college=True,
+                 dean='Dr. Theodore Allison',
+                 description='The Faculty of Basic Medical Sciences provides foundational training in the medical sciences — human anatomy, human physiology and biochemistry — that underpin every clinical discipline at the University.',
+                 mission='To deliver excellent teaching and research in the basic medical sciences, producing graduates with a deep understanding of the scientific foundations of medicine.',
+                 vision='To be a leading centre for basic medical sciences education and research in West Africa.',
+                 students=420, staff=48),
+            dict(slug='basic-clinical-sciences', name='Basic Clinical Sciences', code='FBCS',
+                 dean='Dr. Frederick Allison',
+                 description='The Faculty of Basic Clinical Sciences houses the foundational clinical disciplines such as anatomical pathology that bridge the basic sciences and bedside clinical practice.',
+                 mission='To provide rigorous education in the basic clinical sciences that connects scientific knowledge with patient care.',
+                 vision='To be a leading faculty of basic clinical sciences in Nigeria.',
+                 students=60, staff=12),
+            dict(slug='clinical-sciences', name='Clinical Sciences', code='FCLS', under_college=True,
+                 dean='Prof. Isaac J. Abasi',
+                 description='The Faculty of Clinical Sciences trains future medical doctors through the six-year Medicine and Surgery (MBBS) programme, combining classroom instruction with supervised hospital training.',
+                 mission='To produce competent, compassionate and professionally ethical medical doctors through rigorous clinical training and research.',
+                 vision='To be a foremost faculty of clinical sciences producing doctors of international repute.',
+                 students=550, staff=60),
+            dict(slug='dentistry', name='Dentistry', code='FDEN',
+                 dean='',
+                 description='The Faculty of Dentistry offers the six-year Bachelor of Dental Surgery (BDS) programme, training dental surgeons in the prevention, diagnosis and treatment of oral and maxillofacial diseases.',
+                 mission='To train competent and ethical dental surgeons who advance oral health care in Nigeria.',
+                 vision='To be a leading faculty of dentistry known for excellence in oral health education.',
+                 students=150, staff=20),
+            dict(slug='health-sciences', name='Health Sciences', code='FHSS',
+                 dean='Dr. (Mrs) Gift Cornelius Timighe',
+                 description='The Faculty of Health Sciences is the largest faculty, offering professional programmes in nursing science, medical laboratory science, physiotherapy, optometry, public health, radiography and other health professions.',
+                 mission='To produce highly skilled, ethical and patient-centred health professionals through quality education and clinical practice.',
+                 vision='To be a leading faculty of health sciences in Nigeria and beyond.',
+                 students=1600, staff=140),
+            dict(slug='pharmaceutical-sciences', name='Pharmaceutical Sciences', code='FPHS',
+                 dean='Prof. Ebiowei S. F. Orubu',
+                 description='The Faculty of Pharmaceutical Sciences trains pharmacists through the six-year Doctor of Pharmacy (Pharm.D) programme, covering drug discovery, pharmaceutical formulation, clinical pharmacy and pharmacy practice.',
+                 mission='To educate competent pharmacists who will advance safe, effective and accessible pharmaceutical care.',
+                 vision='To be a centre of excellence in pharmaceutical education and research.',
+                 students=220, staff=25),
+            dict(slug='science', name='Science', code='FSCI',
+                 dean='Prof. Iniobong Reuben Inyang',
+                 description='The Faculty of Science offers undergraduate programmes in the biological, physical and mathematical sciences, including biology, chemistry, computer science, microbiology, physics with electronics, statistics and mathematics.',
+                 mission='To provide rigorous scientific education and research that supports innovation and national development.',
+                 vision='To be a leading faculty of science known for academic excellence and impactful research.',
+                 students=900, staff=85),
+        ]
+
+        department_defs = [
+            dict(slug='anatomical-pathology', name='Anatomical Pathology', code='ANP', faculty='basic-clinical-sciences',
+                 description='Study of the structural and functional changes caused by disease, forming the basis of clinical diagnosis.'),
+            dict(slug='biochemistry', name='Biochemistry', code='BCH', faculty='basic-medical-sciences',
+                 description='The study of the chemical processes within and relating to living organisms, essential to understanding health and disease.'),
+            dict(slug='human-anatomy', name='Human Anatomy', code='ANA', faculty='basic-medical-sciences',
+                 description='The study of the structure of the human body, providing the foundation for clinical practice.'),
+            dict(slug='human-physiology', name='Human Physiology', code='PSL', faculty='basic-medical-sciences',
+                 description='The study of how the human body functions, from cells to organ systems.'),
+            dict(slug='medicine-surgery', name='Medicine & Surgery', code='MES', faculty='clinical-sciences',
+                 description='The flagship department training medical doctors through the MBBS programme with comprehensive clinical education.'),
+            dict(slug='dental-surgery', name='Dental Surgery', code='DTS', faculty='dentistry',
+                 description='Training dental surgeons in the prevention, diagnosis and treatment of oral diseases.'),
+            dict(slug='community-health', name='Community Health', code='CMH', faculty='health-sciences',
+                 description='Training community health professionals to deliver primary healthcare and promote public health at community level.'),
+            dict(slug='dental-technology', name='Dental Technology', code='DTL', faculty='health-sciences',
+                 description='Training dental technologists in the design and fabrication of dental prostheses and appliances.'),
+            dict(slug='health-care-administration-and-hospital-management', name='Health Care Administration and Hospital Management', code='HCA', faculty='health-sciences',
+                 description='Preparing health administrators to manage hospitals and health services efficiently and effectively.'),
+            dict(slug='health-information-management', name='Health Information Management', code='HIM', faculty='health-sciences',
+                 description='Training professionals in the management of health information, medical records and health informatics.'),
+            dict(slug='human-nutrition-and-dietetics', name='Human Nutrition and Dietetics', code='HND', faculty='health-sciences',
+                 description='Training nutritionists and dietitians to promote health through diet and manage nutrition-related diseases.'),
+            dict(slug='medical-laboratory-science', name='Medical Laboratory Science', code='MLS', faculty='health-sciences',
+                 description='Training medical laboratory scientists in diagnostic testing for disease prevention, diagnosis and treatment.'),
+            dict(slug='nursing-science', name='Nursing Science', code='NUR', faculty='health-sciences',
+                 description='Training professional nurses in evidence-based, compassionate patient care across all healthcare settings.'),
+            dict(slug='optometry', name='Optometry', code='OPT', faculty='health-sciences',
+                 description='Training optometrists in the examination, diagnosis and management of visual and eye health disorders.'),
+            dict(slug='physiotherapy', name='Physiotherapy', code='PHT', faculty='health-sciences',
+                 description='Training physiotherapists to restore function and mobility through physical therapy and rehabilitation.'),
+            dict(slug='public-health', name='Public Health', code='PUB', faculty='health-sciences',
+                 description='Training public health professionals in disease prevention, health promotion and population health.'),
+            dict(slug='radiography-and-radiation-science', name='Radiography and Radiation Science', code='RAD', faculty='health-sciences',
+                 description='Training radiographers in medical imaging and radiation sciences for diagnostic and therapeutic purposes.'),
+            dict(slug='pharmacy', name='Pharmacy', code='PHA', faculty='pharmaceutical-sciences',
+                 description='Training pharmacists in drug formulation, dispensing and clinical pharmacy through the Pharm.D programme.'),
+            dict(slug='biology', name='Biology', code='BIO', faculty='science',
+                 description='The study of living organisms, their structure, function, growth and evolution.'),
+            dict(slug='chemistry', name='Chemistry', code='CHM', faculty='science',
+                 description='The study of the composition, structure and properties of matter and the changes it undergoes.'),
+            dict(slug='computer-science', name='Computer Science', code='CSE', faculty='science',
+                 description='The study of computation, algorithms, programming and information systems.'),
+            dict(slug='mathematics', name='Mathematics', code='MTH', faculty='science',
+                 description='The study of quantity, structure, space and change through abstract reasoning.'),
+            dict(slug='microbiology', name='Microbiology', code='MCB', faculty='science',
+                 description='The study of microorganisms and their applications in health, industry and the environment.'),
+            dict(slug='physics-with-electronics', name='Physics with Electronics', code='PHY', faculty='science',
+                 description='The study of matter, energy and their interactions, with emphasis on electronics and instrumentation.'),
+            dict(slug='statistics', name='Statistics', code='STA', faculty='science',
+                 description='The science of collecting, analysing and interpreting data to inform decision-making.'),
+        ]
+
+        program_defs = [
+            dict(slug='mbbs', title='Medicine and Surgery', degree='MBBS', duration='6 years',
+                 dept='medicine-surgery', college='clinical-sciences', icon='Stethoscope', color='#1E1E1E', tuition=500000,
+                 description='A comprehensive six-year programme that trains students in all aspects of medicine and surgery, producing competent medical doctors ready for residency training.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Medical Doctor, Surgeon, Public Health Specialist, Medical Researcher, Hospital Administrator'),
+            dict(slug='bnsc-nursing-science', title='Nursing Science', degree='B.NSc', duration='5 years',
+                 dept='nursing-science', college='health-sciences', icon='Heart', color='#A51C30', tuition=350000,
+                 description='A five-year professional nursing programme that prepares students for registered nursing practice across all healthcare settings.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Registered Nurse, Nurse Practitioner, Nurse Educator, Public Health Nurse, Healthcare Administrator'),
+            dict(slug='bmls-medical-laboratory-science', title='Medical Laboratory Science', degree='BMLS', duration='5 years',
+                 dept='medical-laboratory-science', college='health-sciences', icon='Microscope', color='#A51C30', tuition=350000,
+                 description='A five-year programme training students in diagnostic laboratory science including clinical chemistry, haematology and microbiology.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Medical Laboratory Scientist, Research Scientist, Laboratory Manager, Infection Control Specialist'),
+            dict(slug='bsc-radiography-and-radiation-science', title='Radiography and Radiation Science', degree='BSc', duration='4 years',
+                 dept='radiography-and-radiation-science', college='health-sciences', icon='Scan', color='#A51C30', tuition=350000,
+                 description='A four-year programme in medical imaging and radiation science, covering X-ray, ultrasound, CT and MRI for diagnosis and therapy.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Radiographer, Radiation Therapist, Imaging Specialist, Healthcare Administrator'),
+            dict(slug='bsc-physiotherapy', title='Physiotherapy', degree='BSc', duration='5 years',
+                 dept='physiotherapy', college='health-sciences', icon='Activity', color='#A51C30', tuition=350000,
+                 description='A five-year programme training physiotherapists to help patients recover function and mobility after injury or illness.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Physiotherapist, Sports Therapist, Rehabilitation Specialist, Clinical Educator'),
+            dict(slug='bsc-optometry', title='Optometry', degree='BSc', duration='6 years',
+                 dept='optometry', college='health-sciences', icon='Scan', color='#A51C30', tuition=350000,
+                 description='A six-year programme training optometrists in the examination, diagnosis and management of eye and vision disorders.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Optometrist, Vision Researcher, Optical Centre Manager, Public Eye Health Specialist'),
+            dict(slug='bsc-public-health', title='Public Health', degree='BSc', duration='4 years',
+                 dept='public-health', college='health-sciences', icon='Globe', color='#A51C30', tuition=350000,
+                 description='A four-year programme in population health, disease prevention, health promotion and health policy.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Public Health Officer, Health Educator, Epidemiologist, Policy Analyst, NGO Program Manager'),
+            dict(slug='bsc-community-health-science', title='Community Health Science', degree='BSc', duration='5 years',
+                 dept='community-health', college='health-sciences', icon='Globe', color='#A51C30', tuition=350000,
+                 description='A five-year programme training community health practitioners for primary healthcare delivery at community level.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Community Health Practitioner, Primary Healthcare Coordinator, Health Extension Specialist'),
+            dict(slug='bsc-dental-technology', title='Dental Technology', degree='BSc', duration='4 years',
+                 dept='dental-technology', college='health-sciences', icon='Bone', color='#A51C30', tuition=350000,
+                 description='A four-year programme training dental technologists in the design, fabrication and repair of dental prostheses and appliances.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Dental Technologist, Dental Laboratory Manager, Prosthodontic Technician'),
+            dict(slug='bsc-health-care-administration-and-hospital-management', title='Health Care Administration and Hospital Management', degree='BSc', duration='4 years',
+                 dept='health-care-administration-and-hospital-management', college='health-sciences', icon='Heart', color='#A51C30', tuition=350000,
+                 description='A four-year programme preparing health managers and administrators to lead hospitals and health services efficiently.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Hospital Administrator, Health Services Manager, Health Policy Analyst, Medical Records Director'),
+            dict(slug='bsc-health-information-management', title='Health Information Management', degree='BSc', duration='5 years',
+                 dept='health-information-management', college='health-sciences', icon='Globe', color='#A51C30', tuition=350000,
+                 description='A five-year programme in the management of health data, medical records and health information systems.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Health Information Manager, Medical Records Officer, Health Informatics Specialist, Data Analyst'),
+            dict(slug='bsc-human-nutrition-and-dietetics', title='Human Nutrition and Dietetics', degree='BSc', duration='4 years',
+                 dept='human-nutrition-and-dietetics', college='health-sciences', icon='Heart', color='#A51C30', tuition=350000,
+                 description='A four-year programme training nutritionists and dietitians in the science of nutrition and therapeutic dietetics.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Dietitian, Nutritionist, Public Health Nutritionist, Food Service Manager'),
+            dict(slug='doctor-of-pharmacy', title='Pharmacy', degree='Pharm.D', duration='6 years',
+                 dept='pharmacy', college='pharmaceutical-sciences', icon='Award', color='#1E1E1E', tuition=500000,
+                 description='A six-year Doctor of Pharmacy programme covering pharmaceutical sciences, clinical pharmacy and professional pharmacy practice.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Pharmacist, Clinical Pharmacist, Pharmaceutical Researcher, Drug Regulatory Affairs Officer'),
+            dict(slug='bds-dentistry', title='Dentistry', degree='BDS', duration='6 years',
+                 dept='dental-surgery', college='dentistry', icon='Stethoscope', color='#1E1E1E', tuition=500000,
+                 description='A six-year Bachelor of Dental Surgery programme training dental surgeons in oral health care and maxillofacial surgery.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Dental Surgeon, Oral Health Specialist, Dental Public Health Officer, Dental Researcher'),
+            dict(slug='bsc-human-anatomy', title='Human Anatomy', degree='BSc', duration='4 years',
+                 dept='human-anatomy', college='basic-medical-sciences', icon='Bone', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme focused on the structure of the human body, providing foundations for medical and health sciences careers.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Anatomist, Medical Illustrator, Forensic Scientist, Research Assistant, Lecturer'),
+            dict(slug='bsc-human-physiology', title='Human Physiology', degree='BSc', duration='4 years',
+                 dept='human-physiology', college='basic-medical-sciences', icon='Brain', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in the study of body functions and regulatory mechanisms for research and academic careers.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Physiologist, Research Scientist, Lecturer, Pharmaceutical Researcher'),
+            dict(slug='bsc-biochemistry', title='Biochemistry', degree='BSc', duration='4 years',
+                 dept='biochemistry', college='basic-medical-sciences', icon='Microscope', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in the chemistry of life, covering metabolic processes, molecular biology and clinical biochemistry.',
+                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Biochemist, Research Scientist, Laboratory Analyst, Pharmaceutical Researcher, Quality Control Officer'),
+            dict(slug='bsc-biology', title='Biology', degree='BSc', duration='4 years',
+                 dept='biology', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in the biological sciences covering the structure, function and diversity of living organisms.',
+                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Biologist, Research Scientist, Environmental Officer, Science Educator, Lab Technician'),
+            dict(slug='bsc-chemistry', title='Chemistry', degree='BSc', duration='4 years',
+                 dept='chemistry', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in the composition, structure and properties of matter and the reactions that transform it.',
+                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Chemist, Analytical Chemist, Quality Control Analyst, Industrial Chemist, Science Educator'),
+            dict(slug='bsc-computer-science', title='Computer Science', degree='BSc', duration='4 years',
+                 dept='computer-science', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in computing, covering algorithms, programming, software development and information systems.',
+                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Software Developer, Systems Analyst, IT Consultant, Data Scientist, Network Administrator'),
+            dict(slug='bsc-mathematics', title='Mathematics', degree='BSc', duration='4 years',
+                 dept='mathematics', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in pure and applied mathematics, developing strong analytical and problem-solving skills.',
+                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Mathematician, Statistician, Actuary, Data Analyst, Mathematics Educator'),
+            dict(slug='bsc-microbiology', title='Microbiology', degree='BSc', duration='4 years',
+                 dept='microbiology', college='science', icon='Microscope', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in the study of microorganisms and their roles in health, disease, industry and the environment.',
+                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Microbiologist, Laboratory Scientist, Quality Control Analyst, Food Safety Officer, Research Scientist'),
+            dict(slug='bsc-physics-with-electronics', title='Physics with Electronics', degree='BSc', duration='4 years',
+                 dept='physics-with-electronics', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in physics with emphasis on electronics, instrumentation and applied technology.',
+                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Physicist, Electronics Engineer, Instrumentation Specialist, Research Scientist, ICT Officer'),
+            dict(slug='bsc-statistics', title='Statistics', degree='BSc', duration='4 years',
+                 dept='statistics', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 description='A four-year programme in the collection, analysis and interpretation of data for informed decision-making.',
+                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 career='Statistician, Data Analyst, Biostatistician, Survey Methodologist, Actuarial Analyst'),
+        ]
+
+        keep_college_slugs = [d['slug'] for d in college_defs]
+        keep_faculty_slugs = [f'faculty-of-{f["slug"]}' for f in faculty_defs]
+        keep_department_slugs = [d['slug'] for d in department_defs]
+        keep_program_slugs = [p['slug'] for p in program_defs]
+
+        # Remove stale placeholder academic records (structure is superseded by the real BMU organization)
+        Program.objects.exclude(slug__in=keep_program_slugs).delete()
+        Department.objects.exclude(slug__in=keep_department_slugs).delete()
+        FacultyUnit.objects.exclude(slug__in=keep_faculty_slugs).delete()
+        College.objects.exclude(slug__in=keep_college_slugs).delete()
+
+        colleges = {}
+        faculties = {}
+        college_faculty_count = sum(1 for f in faculty_defs if f.get('under_college'))
+        for c in college_defs:
+            college = _upsert(College, c['slug'], dict(
+                name=c['name'], description=c['description'],
+                established_year=c['established_year'],
+                faculty_count=college_faculty_count, student_count=c['students'],
+                faculty_members_count=c['staff'],
+                primary_color=c['color'], secondary_color=c['color2'],
+                overview_content=c['overview'], mission_statement=c['mission'],
+                vision_statement=c['vision'],
+                provost_display_name=c['provost'], icon_name=c['icon'],
+            ))
+            colleges[c['slug']] = college
+
+        for f in faculty_defs:
+            faculties[f['slug']] = _upsert(FacultyUnit, f'faculty-of-{f["slug"]}', dict(
+                name=f'Faculty of {f["name"]}',
+                college=college if f.get('under_college') else None, code=f['code'],
+                description=f['description'], mission_statement=f['mission'],
+                vision_statement=f['vision'], dean_display_name=f['dean'],
+                student_count=f['students'], staff_count=f['staff'],
+            ))
+
+        departments = {}
+        for d in department_defs:
+            departments[d['slug']] = _upsert(Department, d['slug'], dict(
+                name=d['name'], faculty=faculties[d['faculty']], code=d['code'],
+                description=d['description'], staff_count=5, student_count=50,
+            ))
+
+        for slug, faculty in faculties.items():
+            faculty.department_count = Department.objects.filter(faculty=faculty, is_active=True).count()
+            faculty.save()
+
+        programs = {}
+        for p in program_defs:
+            programs[p['slug']] = _upsert(Program, p['slug'], dict(
+                title=p['title'], department=departments[p['dept']],
+                college=college,
+                level='undergraduate', category='undergraduate',
+                degree=p['degree'], duration=p['duration'],
+                description=p['description'], requirements=p['requirements'],
+                career_opportunities=p['career'],
+                color=p['color'], icon=p['icon'],
+                application_fee_local=2500, application_fee_intl=50,
+                tuition_per_year_local=p['tuition'], tuition_per_year_intl=6000,
+            ))
+
+        # Convenience references used by the seeds below (alumni, applications, courses, faculty members)
+        college = colleges['college-of-medicine']
+        dept = departments['medicine-surgery']
+        program = programs['mbbs']
 
         course, _ = Course.objects.get_or_create(
             code='MED101',
@@ -281,64 +482,9 @@ class Command(BaseCommand):
             )
         )
 
-        # --- Additional Colleges ---
-        allied_college, _ = College.objects.get_or_create(
-            slug='school-of-allied-health-sciences',
-            defaults={
-                'name': 'School of Allied Health Sciences',
-                'description': 'Training professionals in medical laboratory science, radiography, physiotherapy, and allied health disciplines.',
-                'established_year': 2019,
-                'faculty_count': 2,
-                'student_count': 80,
-                'faculty_members_count': 12,
-                'primary_color': '#A51C30',
-                'secondary_color': '#1E1E1E',
-                'overview_content': 'The School of Allied Health Sciences provides comprehensive training in various allied health disciplines, producing skilled professionals for the healthcare sector.',
-                'mission_statement': 'To produce highly skilled allied health professionals through quality education, practical training, and research.',
-                'vision_statement': 'To be a leading institution for allied health sciences education in Nigeria.',
-                'provost_display_name': 'Dr. Grace Ebi',
-                'director_display_name': '',
-                'icon_name': 'Microscope',
-            },
-        )
-        nursing_college, _ = College.objects.get_or_create(
-            slug='school-of-nursing',
-            defaults={
-                'name': 'School of Nursing',
-                'description': 'Producing compassionate and competent nursing professionals through rigorous training and clinical practice.',
-                'established_year': 2018,
-                'faculty_count': 2,
-                'student_count': 60,
-                'faculty_members_count': 10,
-                'primary_color': '#1E1E1E',
-                'secondary_color': '#A51C30',
-                'overview_content': 'The School of Nursing offers comprehensive nursing education programs designed to produce competent, compassionate nurses who will provide quality healthcare services.',
-                'mission_statement': 'To educate and train competent nursing professionals who will provide compassionate, evidence-based care.',
-                'vision_statement': 'To be a centre of excellence in nursing education and practice.',
-                'provost_display_name': 'Prof. Helen Douglas',
-                'director_display_name': '',
-                'icon_name': 'HeartPulse',
-            },
-        )
-        public_health_college, _ = College.objects.get_or_create(
-            slug='institute-of-public-health',
-            defaults={
-                'name': 'Institute of Public Health',
-                'description': 'Focusing on population health, epidemiology, health policy, and community health interventions.',
-                'established_year': 2020,
-                'faculty_count': 2,
-                'student_count': 40,
-                'faculty_members_count': 8,
-                'primary_color': '#A51C30',
-                'secondary_color': '#1E1E1E',
-                'overview_content': 'The Institute of Public Health addresses population health challenges through education, research, and community engagement.',
-                'mission_statement': 'To advance public health through innovative education, research, and community service.',
-                'vision_statement': 'To be a leading public health institution in Africa.',
-                'provost_display_name': 'Prof. Chioma Amadi',
-                'director_display_name': '',
-                'icon_name': 'Activity',
-            },
-        )
+        # (All colleges/faculties/departments/programs are created in the academic structure section above.
+        #  The previous placeholder colleges — School of Allied Health Sciences, School of Nursing and
+        #  Institute of Public Health — have been replaced by the real BMU faculties.)
 
         StudentResult.objects.get_or_create(
             student=student, session='2024/2025', semester='First',
@@ -351,157 +497,137 @@ class Command(BaseCommand):
                           academic_status='very_good', is_published=True),
         )
 
-        StudentFeePayment.objects.create(
-            student=student, fee_type='tuition',
-            amount=350000, status='completed',
-            payment_reference='PAY-2024-001',
-        )
-        StudentFeePayment.objects.create(
-            student=student, fee_type='accommodation',
-            amount=100000, status='pending',
-            payment_reference='PAY-2024-002',
-        )
+        for fee in [
+            dict(payment_reference='PAY-2024-001', session='2024/2025', semester='First',
+                 amount=350000, status='completed'),
+            dict(payment_reference='PAY-2024-002', session='2024/2025', semester='First',
+                 amount=100000, status='pending'),
+        ]:
+            StudentFeePayment.objects.filter(student=student, payment_reference=fee['payment_reference']).delete()
+            StudentFeePayment.objects.create(student=student, **fee)
 
         StudentCourse.objects.get_or_create(
             student=student, course=course, session='2024/2025', semester='First',
             defaults=dict(total_score=78.5, grade='A', attendance_percentage=95.0),
         )
 
-        AlumniProfile.objects.create(
-            user=alumni_user, graduation_year=2019,
-            program=program,
-            current_employer='Federal Medical Centre, Yenagoa',
-            job_title='Medical Officer', career_status='employed',
-            allow_networking=True,
+        AlumniProfile.objects.update_or_create(
+            user=alumni_user,
+            defaults=dict(
+                graduation_year=2019,
+                program=program,
+                current_employer='Federal Medical Centre, Yenagoa',
+                job_title='Medical Officer', career_status='employed',
+                allow_networking=True,
+            ),
         )
 
-        AlumniEvent.objects.create(
+        AlumniEvent.objects.get_or_create(
             title='Class of 2019 Reunion',
-            description='Five-year reunion for the class of 2019',
-            event_date=today + timedelta(days=60),
-            location='BMU Campus', event_type='reunion',
+            defaults=dict(
+                description='Five-year reunion for the class of 2019',
+                event_date=today + timedelta(days=60),
+                location='BMU Campus', event_type='reunion',
+            ),
         )
-        AlumniEvent.objects.create(
+        AlumniEvent.objects.get_or_create(
             title='Healthcare Leaders Networking',
-            description='Networking event for healthcare professionals',
-            event_date=today + timedelta(days=30),
-            location='Lagos', event_type='networking', is_virtual=True,
+            defaults=dict(
+                description='Networking event for healthcare professionals',
+                event_date=today + timedelta(days=30),
+                location='Lagos', event_type='networking', is_virtual=True,
+            ),
         )
 
-        Application.objects.create(
-            applicant=applicant_user, first_name='Michael', last_name='Brown',
-            email='applicant@bmu.edu.ng', phone='08012345678',
-            date_of_birth=date(2000, 5, 15), gender='male',
-            address='123 Main Street, Yenagoa, Bayelsa State',
-            student_type='LOCAL', program=program,
-            previous_institution='Government Secondary School, Yenagoa',
-            qualification='ssce', year_of_graduation=2018, grade='pass',
-            status='under_review', payment_currency='NGN',
-            progress_percentage=60,
-            submitted_at=timezone.now() - timedelta(days=5),
+        application, _ = Application.objects.update_or_create(
+            applicant=applicant_user, program=program,
+            defaults=dict(
+                first_name='Michael', last_name='Brown',
+                email='applicant@bmu.edu.ng', phone='08012345678',
+                date_of_birth=date(2000, 5, 15), gender='male',
+                address='123 Main Street, Yenagoa, Bayelsa State',
+                student_type='LOCAL',
+                previous_institution='Government Secondary School, Yenagoa',
+                status='under_review', payment_currency='NGN',
+                progress_percentage=60,
+                submitted_at=timezone.now() - timedelta(days=5),
+            ),
+        )
+        AcademicRecord.objects.update_or_create(
+            application=application, type='ssce',
+            institution_name='Government Secondary School, Yenagoa',
+            defaults=dict(
+                year_of_completion=2018,
+                subjects=[
+                    {'subject': 'English Language', 'grade': 'B2'},
+                    {'subject': 'Mathematics', 'grade': 'B2'},
+                    {'subject': 'Biology', 'grade': 'B2'},
+                    {'subject': 'Chemistry', 'grade': 'B3'},
+                    {'subject': 'Physics', 'grade': 'B2'},
+                ],
+                status='pending',
+            ),
         )
 
-        ContactEnquiry.objects.create(
+        ContactEnquiry.objects.get_or_create(
             name='Parent Inquiry', email='parent@example.com',
-            subject='admission', message='When does the next admission cycle begin?',
+            subject='admissions',
+            defaults=dict(message='When does the next admission cycle begin?'),
         )
-        ContactEnquiry.objects.create(
+        ContactEnquiry.objects.get_or_create(
             name='Research Partner', email='researcher@example.com',
-            subject='partnership', message='Interested in collaborating on medical research.',
+            subject='partnership',
+            defaults=dict(message='Interested in collaborating on medical research.'),
         )
 
-        cat = BookCategory.objects.create(name='Medical Textbooks', code='MED')
-        Book.objects.create(
-            title='Gray Anatomy for Students',
-            authors='Richard Drake, A. Wayne Vogl, Adam W. M. Mitchell',
-            isbn='9780323393041', resource_type='book',
-            publisher='Elsevier', publication_year=2020,
-            description='Comprehensive anatomy textbook for medical students',
+        cat, _ = BookCategory.objects.get_or_create(
+            code='MED', defaults=dict(name='Medical Textbooks'),
         )
-        Book.objects.create(
-            title='Harrison Principles of Internal Medicine',
-            authors='J. Larry Jameson et al.',
-            isbn='9781264268504', resource_type='book',
-            publisher='McGraw Hill', publication_year=2022,
-            description='Leading textbook on internal medicine',
-        ).categories.add(cat)
+        Book.objects.get_or_create(
+            isbn='9780323393041',
+            defaults=dict(
+                title='Gray Anatomy for Students',
+                authors='Richard Drake, A. Wayne Vogl, Adam W. M. Mitchell',
+                resource_type='book',
+                publisher='Elsevier', publication_year=2020,
+                description='Comprehensive anatomy textbook for medical students',
+            ),
+        )
+        harrison, _ = Book.objects.get_or_create(
+            isbn='9781264268504',
+            defaults=dict(
+                title='Harrison Principles of Internal Medicine',
+                authors='J. Larry Jameson et al.',
+                resource_type='book',
+                publisher='McGraw Hill', publication_year=2022,
+                description='Leading textbook on internal medicine',
+            ),
+        )
+        harrison.categories.add(cat)
 
-        DigitalResource.objects.create(
-            name='PubMed Central', description='Free full-text archive of biomedical literature',
-            resource_type='database', url='https://www.ncbi.nlm.nih.gov/pmc/',
-            requires_login=False, is_active=True,
+        DigitalResource.objects.get_or_create(
+            name='PubMed Central',
+            defaults=dict(
+                description='Free full-text archive of biomedical literature',
+                resource_type='database', url='https://www.ncbi.nlm.nih.gov/pmc/',
+                requires_login=False, is_active=True,
+            ),
         )
-        DigitalResource.objects.create(
-            name='BMU Institutional Repository', description='Research outputs from BMU',
-            resource_type='repository', url='https://repository.bmu.edu.ng/',
-            requires_login=True, is_active=True,
+        DigitalResource.objects.get_or_create(
+            name='BMU Institutional Repository',
+            defaults=dict(
+                description='Research outputs from BMU',
+                resource_type='repository', url='https://repository.bmu.edu.ng/',
+                requires_login=True, is_active=True,
+            ),
         )
 
-        # --- Additional Programs ---
-        extra_programs = [
-            # School of Allied Health Sciences
-            dict(slug='bmls-medical-laboratory-science', title='BMLS Medical Laboratory Science', college=allied_college, level='undergraduate', category='undergraduate', degree='BMLS', duration='5 years', icon='Microscope', color='#A51C30',
-                 description='A comprehensive program training students in medical laboratory diagnostics, including hematology, microbiology, and clinical chemistry.',
-                 requirements='Five O-level credits in Biology, Chemistry, Physics, Mathematics, and English.',
-                 career_opportunities='Medical Laboratory Scientist, Research Scientist, Lab Manager, Infection Control Specialist',
-                 application_fee_local=2500, application_fee_intl=50, tuition_per_year_local=350000, tuition_per_year_intl=6000),
-            dict(slug='bsc-radiography', title='BSc Radiography', college=allied_college, level='undergraduate', category='undergraduate', degree='BSc', duration='5 years', icon='Scan', color='#A51C30',
-                 description='Training students in medical imaging techniques including X-ray, ultrasound, CT scan, and MRI for diagnostic purposes.',
-                 requirements='Five O-level credits in Biology, Chemistry, Physics, Mathematics, and English.',
-                 career_opportunities='Radiographer, Ultrasound Technician, CT/MRI Technologist, Healthcare Administrator',
-                 application_fee_local=2500, application_fee_intl=50, tuition_per_year_local=350000, tuition_per_year_intl=6000),
-            dict(slug='bsc-physiotherapy', title='BSc Physiotherapy', college=allied_college, level='undergraduate', category='undergraduate', degree='BSc', duration='5 years', icon='Activity', color='#A51C30',
-                 description='Training students in physical therapy techniques to help patients recover from injuries and improve mobility.',
-                 requirements='Five O-level credits in Biology, Chemistry, Physics, Mathematics, and English.',
-                 career_opportunities='Physiotherapist, Sports Therapist, Rehabilitation Specialist, Clinic Owner',
-                 application_fee_local=2500, application_fee_intl=50, tuition_per_year_local=350000, tuition_per_year_intl=6000),
-            # School of Nursing
-            dict(slug='bnsc-nursing-science', title='B.NSc Nursing Science', college=nursing_college, level='undergraduate', category='undergraduate', degree='B.NSc', duration='5 years', icon='HeartPulse', color='#1E1E1E',
-                 description='A comprehensive nursing program that prepares students for professional nursing practice across all healthcare settings.',
-                 requirements='Five O-level credits in Biology, Chemistry, Physics, Mathematics, and English.',
-                 career_opportunities='Registered Nurse, Nurse Educator, Nurse Administrator, Public Health Nurse',
-                 application_fee_local=2500, application_fee_intl=50, tuition_per_year_local=300000, tuition_per_year_intl=5500),
-            dict(slug='msc-nursing', title='MSc Nursing', college=nursing_college, level='masters', category='postgraduate', degree='MSc', duration='2 years', icon='BookOpen', color='#1E1E1E',
-                 description='Advanced nursing education for registered nurses seeking specialization and leadership roles.',
-                 requirements='B.NSc degree with at least Second Class Upper division. Registered Nurse with current practicing license.',
-                 career_opportunities='Nurse Specialist, Nurse Educator, Clinical Researcher, Healthcare Administrator',
-                 application_fee_local=5000, application_fee_intl=100, tuition_per_year_local=400000, tuition_per_year_intl=7000),
-            # Institute of Public Health
-            dict(slug='msc-public-health', title='MSc Public Health', college=public_health_college, level='masters', category='postgraduate', degree='MSc', duration='2 years', icon='Globe', color='#A51C30',
-                 description='Advanced training in public health practice, epidemiology, health policy, and community health intervention.',
-                 requirements='Bachelor\'s degree in health-related field with at least Second Class Upper division.',
-                 career_opportunities='Public Health Specialist, Epidemiologist, Health Policy Analyst, NGO Program Manager',
-                 application_fee_local=5000, application_fee_intl=100, tuition_per_year_local=500000, tuition_per_year_intl=8500),
-            dict(slug='phd-public-health', title='PhD Public Health', college=public_health_college, level='phd', category='postgraduate', degree='PhD', duration='3 years', icon='Award', color='#A51C30',
-                 description='Doctoral program for advanced research in public health, preparing academic and research leaders.',
-                 requirements='Master\'s degree in Public Health or related field with research thesis component.',
-                 career_opportunities='University Professor, Senior Researcher, Public Health Director, Policy Advisor',
-                 application_fee_local=10000, application_fee_intl=150, tuition_per_year_local=600000, tuition_per_year_intl=10000),
-            # College of Medical Sciences - additional programs
-            dict(slug='bsc-human-anatomy', title='BSc Human Anatomy', college=college, level='undergraduate', category='undergraduate', degree='BSc', duration='4 years', icon='Bone', color='#1E1E1E',
-                 description='A program focused on the structure of the human body, providing foundational knowledge for medical and health sciences careers.',
-                 requirements='Five O-level credits in Biology, Chemistry, Physics, Mathematics, and English.',
-                 career_opportunities='Anatomist, Medical Illustrator, Forensic Scientist, Research Assistant',
-                 application_fee_local=2500, application_fee_intl=50, tuition_per_year_local=300000, tuition_per_year_intl=5500),
-            dict(slug='msc-physiology', title='MSc Physiology', college=college, level='masters', category='postgraduate', degree='MSc', duration='2 years', icon='Brain', color='#1E1E1E',
-                 description='Advanced study of body functions and regulatory mechanisms for research and academic careers.',
-                 requirements='Bachelor\'s degree in Physiology or related biomedical science with Second Class Upper division.',
-                 career_opportunities='Physiologist, Research Scientist, Lecturer, Pharmaceutical Researcher',
-                 application_fee_local=5000, application_fee_intl=100, tuition_per_year_local=400000, tuition_per_year_intl=7000),
-        ]
-        for prog in extra_programs:
-            p, created = Program.objects.get_or_create(
-                slug=prog.pop('slug'),
-                defaults=prog,
-            )
-            if not created:
-                for key, val in prog.items():
-                    setattr(p, key, val)
-                p.save()
+        # (All 24 real BMU undergraduate programs are created in the academic structure section above.
+        #  The previous placeholder programs, including the fake postgraduate MSc/PhD entries, have been removed.)
 
         # Seed Faculty members
         from academics.models import Faculty as FacultyModel
-        dept_medicine = Department.objects.filter(name='Department of Medicine').first()
+        dept_medicine = departments['medicine-surgery']
         faculty_data = [
             dict(first_name='Emeka', last_name='Okafor', title='Prof.', email='emeka.okafor@bmu.edu.ng',
                  college=college, department=dept_medicine, position='professor',
@@ -512,15 +638,15 @@ class Command(BaseCommand):
                  research_interests='Non-Communicable Diseases, Cardiovascular Health',
                  bio='Senior Lecturer specializing in NCD epidemiology and prevention.', citations=680, h_index=15, i10_index=22),
             dict(first_name='Godwin', last_name='Samuel', title='Dr.', email='godwin.samuel@bmu.edu.ng',
-                 college=allied_college, department=None, position='lecturer',
+                 college=college, department=departments['medical-laboratory-science'], position='lecturer',
                  research_interests='Medical Laboratory Science, Clinical Chemistry',
                  bio='Lecturer in Medical Laboratory Science with expertise in clinical diagnostics.', citations=320, h_index=10, i10_index=14),
             dict(first_name='Nkechi', last_name='Okonkwo', title='Prof.', email='nkechi.okonkwo@bmu.edu.ng',
-                 college=nursing_college, department=None, position='professor',
+                 college=college, department=departments['nursing-science'], position='professor',
                  research_interests='Nursing Education, Maternal Health, Community Health',
                  bio='Professor of Nursing with extensive experience in maternal and child health.', citations=890, h_index=18, i10_index=28),
             dict(first_name='Chidi', last_name='Eze', title='Dr.', email='chidi.eze@bmu.edu.ng',
-                 college=public_health_college, department=None, position='senior_lecturer',
+                 college=college, department=departments['public-health'], position='senior_lecturer',
                  research_interests='Environmental Health, Climate Change, Water Sanitation',
                  bio='Senior Lecturer in Public Health focusing on environmental determinants of health.', citations=520, h_index=12, i10_index=18),
         ]
@@ -690,30 +816,172 @@ class Command(BaseCommand):
 
         # Leadership
         leaders_data = [
-            dict(first_name='Dimie', last_name='Ogoina', title='Prof.', position='vc', specific_title='Vice Chancellor', biography='Professor Dimie brings over 25 years of experience in medical education and healthcare administration. Former MD the Niger Delta University Teaching Hospital, he has published extensively in public health and health systems research.', qualifications='MBBS, FWACS, PhD', email='vc@bmu.edu.ng', phone='+234 803 111 0001', display_order=1),
-            dict(first_name='Ligha Aloysius', last_name='Ebi', title='Prof.', position='dvc_academic', specific_title='Deputy Vice Chancellor - Academic', biography='Professor Ligha Aloysius Ebi is a renowned professor of Nursing with expertise in curriculum development and quality assurance in health professions education.', qualifications='PhD Nursing, MSc Health Education', email='dvc.academic@bmu.edu.ng', phone='+234 803 111 0002', display_order=2),
-            dict(first_name='Godwill Abraham', last_name='Ziriki', title='Prof.', position='dvc_admin', specific_title='Deputy Vice Chancellor, Sampou Campus', biography='Professor Godwill Abraham Ziriki oversees the administrative operations of the Sampou Campus. With expertise in Physics, he has successfully managed the Sampou Campus of the University effectively.', qualifications='MBBS, MPH, MBA', email='dvc.admin@bmu.edu.ng', phone='+234 803 111 0003', display_order=3),
-            dict(first_name='Felicia Eyimuze', last_name='Akusu', title='Dr.', position='registrar', specific_title='Registrar', biography='Dr. Felicia manages the university\'s governance and administrative records. She brings expertise in academic policy and regulatory compliance.', qualifications='PhD Educational Administration', email='registrar@bmu.edu.ng', phone='+234 803 111 0004', display_order=4),
-            dict(first_name='David', last_name='Alagoa', title='Mr.', position='bursar', specific_title='Bursar', biography='Mr. Alagoa oversees all financial operations of the university. With over 15 years of experience in educational institution finance, he ensures prudent resource management.', qualifications='MBA (Finance), ACA', email='bursar@bmu.edu.ng', phone='+234 803 111 0021', display_order=5),
-            dict(first_name='Blessing', last_name='Ayibatari', title='Mrs.', position='librarian', specific_title='University Librarian', biography='Mrs. Ayibatari manages the university library system and digital resources. She has transformed BMU\'s library into a modern information center.', qualifications='MLS, MA (Information Science)', email='librarian@bmu.edu.ng', phone='+234 803 111 0022', display_order=6),
-            dict(first_name='Tonye', last_name='Oweifa', title='Engr.', position='director', specific_title='Director of Works', biography='Engr. Tonye manages the university\'s physical infrastructure development and maintenance, ensuring a safe and conducive environment for learning.', qualifications='B.Eng (Civil), MNSE', email='director.works@bmu.edu.ng', phone='+234 803 111 0023', display_order=7),
-            dict(first_name='John', last_name='Okonkwo', title='Prof.', position='dean', specific_title='Dean, College of Medicine', biography='Professor Okonkwo is an experienced internist with over 20 years of clinical and teaching experience. He leads the College of Medicine with a focus on producing competent physicians.', qualifications='MBBS, PhD (Internal Medicine)', email='dean.medicine@bmu.edu.ng', phone='+234 803 111 0011', display_order=8),
-            dict(first_name='Grace', last_name='Ebi', title='Dr.', position='dean', specific_title='Dean, School of Allied Health Sciences', biography='Dr. Ebi brings extensive experience in public health and laboratory medicine. She oversees programs in medical laboratory science, radiography, and other allied health disciplines.', qualifications='MBBS, MPH, MSc (Medical Laboratory Science)', email='dean.alliedhealth@bmu.edu.ng', phone='+234 803 111 0012', display_order=9),
-            dict(first_name='Helen', last_name='Douglas', title='Prof.', position='dean', specific_title='Dean, School of Nursing', biography='Professor Douglas serves dual roles as DVC Academic and Dean of Nursing. She is a renowned nursing educator with expertise in curriculum development.', qualifications='PhD Nursing, MSc Health Education', email='dean.nursing@bmu.edu.ng', phone='+234 803 111 0002', display_order=10),
-            dict(first_name='Michael', last_name='Ogu', title='Prof.', position='dean', specific_title='Dean, School of Postgraduate Studies', biography='Professor Ogu manages postgraduate programs at BMU, ensuring high standards for advanced degrees and research supervision.', qualifications='MBBS, MPH, MBA', email='dean.postgraduate@bmu.edu.ng', phone='+234 803 111 0003', display_order=11),
-            dict(first_name='Esther', last_name='Friday', title='Dr.', position='dean', specific_title='Dean, School of Basic Medical Sciences', biography='Dr. Esther leads the School of Basic Medical Sciences, overseeing foundational science education for all health professional programs.', qualifications='MBBS, PhD (Anatomy)', email='dean.basicmed@bmu.edu.ng', phone='+234 803 111 0014', display_order=12),
-            dict(first_name='Solomon', last_name='Briggs', title='Dr.', position='dean', specific_title='Dean, School of Public Health', biography='Dr. Briggs leads the School of Public Health, focusing on community health education, epidemiology training, and health policy research.', qualifications='MBBS, MPH, DrPH', email='dean.publichealth@bmu.edu.ng', phone='+234 803 111 0015', display_order=13),
+            dict(first_name='Dimie', last_name='Ogoina', title='Prof.', position='vc',
+                 specific_title='Vice Chancellor',
+                 biography=(
+                     'Professor Dimie Ogoina is the Vice-Chancellor of Bayelsa Medical University (BMU), having assumed office on 2nd October 2024. '
+                     'An internationally acclaimed physician-scientist and infectious diseases specialist, he is the second substantive Vice-Chancellor of the University, succeeding the pioneer Vice-Chancellor, Professor Ebitimitula Nicholas Etebu.\n\n'
+                     'Professor Ogoina is globally renowned for his pioneering work on mpox (monkeypox). In 2017, he diagnosed and managed Nigeria\'s first mpox case and was the first scientist in the world to report evidence of the potential sexual transmission of the virus. In recognition of this and his wider contributions to global health, he was named one of Nature\'s Top 10 Scientists (2022) and listed among TIME\'s 100 Most Influential People in the World (2023). He served as Chair of the World Health Organization (WHO) Emergency Committee on Mpox and is consistently ranked among Stanford University\'s World Top 2% Scientists.\n\n'
+                     'Prior to his appointment as Vice-Chancellor, he served as Chief Medical Director of the Niger Delta University Teaching Hospital and as Acting Provost of the College of Health Sciences, Niger Delta University.'
+                 ),
+                 qualifications='MBBS, FMCP, FWACP, FIDSA, FACP',
+                 research_interests='Infectious diseases, Mpox, Global health governance, Health systems',
+                 achievements=(
+                     'Named one of Nature\'s Top 10 Scientists (2022)\n'
+                     'Listed among TIME\'s 100 Most Influential People in the World (2023)\n'
+                     'Consistently ranked among Stanford University\'s World Top 2% Scientists\n'
+                     'Chair, WHO Emergency Committee on Mpox\n'
+                     'Authored over 100 peer-reviewed publications'
+                 ),
+                 display_order=1),
+            dict(first_name='Ligha Aloysius', last_name='Ebi', title='Prof.', position='dvc_academic',
+                 specific_title='Deputy Vice Chancellor (Administration & Academics)',
+                 biography=(
+                     'Professor Ligha Aloysius Ebi is an accomplished physician, academic, and administrator with over two decades of teaching, research, and clinical experience. '
+                     'Trained as a medical doctor at the University of Ibadan, he advanced his studies with a Master\'s degree in Anatomy (University of Lagos), a PhD in Anatomy (University of Port Harcourt), and a Doctor of Medicine in Radiology (University of Central Nicaragua). He is a Board-Certified Radiologist by the Philippine College of Radiology, Manila.\n\n'
+                     'He rose through the academic ranks to become Professor of Anatomy in 2017 and has served in key leadership roles including Acting Dean of the Faculty of Basic Medical Sciences and Acting Provost at Niger Delta University. In 2024, he was appointed Deputy Vice-Chancellor (Administration & Academics) of Bayelsa Medical University, where he continues to shape institutional policy, curriculum, and research development.\n\n'
+                     'His research spans radiological anatomy, histology, reproductive biology, and medical education, with publications in local and global journals. He delivered the 58th Inaugural Lecture of Niger Delta University (2024) on congenital malformations.'
+                 ),
+                 qualifications='MBBS, MSc, MD, PhD, FPCR',
+                 research_interests='Radiological anatomy, Histology, Reproductive biology, Medical education',
+                 achievements=(
+                     'Professor of Anatomy (2017)\n'
+                     'Deputy Vice-Chancellor (Administration & Academics), BMU (2024)\n'
+                     'Over 40 publications in peer-reviewed journals\n'
+                     'Delivered the 58th Inaugural Lecture of Niger Delta University (2024)'
+                 ),
+                 display_order=2),
+            dict(first_name='Godwill Abraham', last_name='Ziriki', title='Prof.', position='dvc_admin',
+                 specific_title='Deputy Vice Chancellor, Sampou Campus',
+                 biography='Professor Godwill Abraham Ziriki is the Deputy Vice Chancellor in charge of the Sampou Campus of Bayelsa Medical University. He holds a Ph.D., M.Sc., and B.Sc. in Physics.',
+                 qualifications='PhD, M.Sc, B.Sc',
+                 research_interests='',
+                 display_order=3),
+            dict(first_name='Felicia Eyimuze', last_name='Akusu', title='Dr.', position='registrar',
+                 specific_title='Registrar/Secretary to Council',
+                 biography=(
+                     'Dr. Mrs. Felicia Eyimuze Akusu is the 2nd substantive Registrar of Bayelsa Medical University (BMU). She earned a B.Sc. in Business Education from the Rivers State University of Science and Technology (RSUST), a Master\'s degree in Educational Planning and Management, and a Ph.D. in Educational Management from Niger Delta University.\n\n'
+                     'She has rendered over twenty-nine years of dedicated service in tertiary education administration, serving as Secretary, Member, and Chairperson of several committees and panels across universities. She is an active member of the Association of Nigerian Universities Professional Administrators (ANUPA) and the Nigerian Institute of Management (NIM).'
+                 ),
+                 qualifications='PhD (Educational Management), M.Sc (Educational Planning & Management), B.Sc (Business Education)',
+                 research_interests='Educational management, University administration, Governance',
+                 achievements=(
+                     '29+ years of service in tertiary education administration\n'
+                     '2nd substantive Registrar of Bayelsa Medical University\n'
+                     'Member, ANUPA and NIM'
+                 ),
+                 display_order=4),
+            dict(first_name='Ebipuado Saware', last_name='Ombu', title='Mr.', position='bursar',
+                 specific_title='The Bursar',
+                 biography='Mr. Ebipuado Saware Ombu is the Bursar of Bayelsa Medical University. He is a chartered accountant and served as Chairman of the Institute of Chartered Accountants of Nigeria (ICAN), Bayelsa State Chapter.',
+                 qualifications='B.Sc., M.Sc., ACA',
+                 research_interests='',
+                 achievements='Former Chairman, ICAN Bayelsa State Chapter',
+                 display_order=5),
+            dict(first_name='Abraham I. T.', last_name='Etebu', title='Dr.', position='librarian',
+                 specific_title='University Librarian',
+                 biography=(
+                     'Dr. Abraham Inetimitula Tabor Etebu is an accomplished Associate Professor of Library and Information Science. He holds a B.Sc (Ed) in Library Science and an M.Sc in Library and Information Science from Delta State University, and a Ph.D. in Library and Information Science from the University of Nigeria, Nsukka. He is a Certified Librarian of Nigeria (CLN), accredited by the Librarians Registration Council of Nigeria (LRCN).\n\n'
+                     'His areas of specialization include Readers Services (Circulation and Reference Services), Information Literacy, Attitude Studies, and Rural Information Services. He is the author of several notable publications, including Library and Information Services to the Rural Community and Information Literacy: Text for Students.'
+                 ),
+                 qualifications='B.Sc (Ed), M.Sc, Ph.D, CLN',
+                 research_interests='Readers services, Information literacy, Rural information services',
+                 achievements=(
+                     'Associate Professor of Library and Information Science\n'
+                     'Certified Librarian of Nigeria (CLN)\n'
+                     'Former Chairman, Nigerian Library Association (NLA), Bayelsa State Chapter'
+                 ),
+                 display_order=6),
+            dict(first_name='Tarila', last_name='Tebepah', title='Prof.', position='other',
+                 specific_title='Pro-Chancellor/Chairman of Council',
+                 biography='Prof. Tarila Tebepah is a surgeon, Professor of Ophthalmology, scholar and an Administrator. He served as Chairman of the Niger Delta Development Commission (NDDC), Commissioner for Health, Bayelsa State, Secretary of the People\'s Democratic Party (PDP), Bayelsa State, and Trustee of the Tertiary Education Trust Fund (TETFund).',
+                 qualifications='Professor of Ophthalmology',
+                 research_interests='',
+                 achievements=(
+                     'Former Chairman, Niger Delta Development Commission (NDDC)\n'
+                     'Former Commissioner for Health, Bayelsa State\n'
+                     'Former Secretary, PDP Bayelsa State\n'
+                     'Former Trustee, Tertiary Education Trust Fund (TETFund)'
+                 ),
+                 display_order=7),
+            dict(first_name='Frederick', last_name='Allison', title='Dr.', position='dean',
+                 specific_title='Dean, Faculty of Basic Clinical Sciences',
+                 biography=(
+                     'Dr. Frederick Allison is a distinguished Consultant Chemical Pathologist and Senior Lecturer at the Faculty of Basic Clinical Sciences, where he also serves as the Dean of the Faculty. '
+                     'He completed his medical education at the University of Calabar and achieved his specialist qualification from the National Postgraduate Medical College of Nigeria. He has made significant contributions to his field through numerous scholarly articles and presentations delivered at both local and international conferences.'
+                 ),
+                 qualifications='MBBS, FMCP',
+                 research_interests='Chemical pathology, Clinical biochemistry',
+                 achievements='Dean, Faculty of Basic Clinical Sciences\nConsultant Chemical Pathologist',
+                 display_order=8),
+            dict(first_name='Theodore', last_name='Allison', title='Dr.', position='dean',
+                 specific_title='Ag. Dean, Faculty of Basic Medical Sciences',
+                 biography='Dr. Theodore Allison is the Acting Dean of the Faculty of Basic Medical Sciences at Bayelsa Medical University, where he provides academic and administrative leadership for the foundational medical science programmes.',
+                 qualifications='',
+                 research_interests='',
+                 display_order=9),
+            dict(first_name='Gift Cornelius', last_name='Timighe', title='Dr.', position='dean',
+                 specific_title='Dean, Faculty of Health Sciences',
+                 biography='Dr. (Mrs) Gift Cornelius Timighe is the Dean of the Faculty of Health Sciences at Bayelsa Medical University, with expertise in Nursing and Midwifery.',
+                 qualifications='',
+                 research_interests='Nursing and Midwifery',
+                 display_order=10),
+            dict(first_name='Ebiowei S. F.', last_name='Orubu', title='Prof.', position='dean',
+                 specific_title='Dean, Faculty of Pharmaceutical Sciences',
+                 biography='Professor Ebiowei S. F. Orubu is the Dean of the Faculty of Pharmaceutical Sciences at Bayelsa Medical University.',
+                 qualifications='',
+                 research_interests='Pharmaceutical Sciences',
+                 display_order=11),
+            dict(first_name='Iniobong Reuben', last_name='Inyang', title='Prof.', position='dean',
+                 specific_title='Dean, Faculty of Science',
+                 biography='Professor Iniobong Reuben Inyang is the Dean of the Faculty of Science at Bayelsa Medical University.',
+                 qualifications='',
+                 research_interests='',
+                 display_order=12),
+            dict(first_name='Isaac J.', last_name='Abasi', title='Prof.', position='dean',
+                 specific_title='Dean, Faculty of Clinical Sciences',
+                 biography='Professor Isaac J. Abasi is the Dean of the Faculty of Clinical Sciences at Bayelsa Medical University, with expertise in Obstetrics and Gynaecology.',
+                 qualifications='',
+                 research_interests='Obstetrics and Gynaecology',
+                 display_order=13),
+            dict(first_name='Philip', last_name='Eyimina', title='Prof.', position='other',
+                 specific_title='Provost, College of Medicine',
+                 biography='Professor Philip Eyimina is the Provost of the College of Medicine at Bayelsa Medical University, with expertise in Brachial Plexus, Cytogenetics, and Neuroanatomy.',
+                 qualifications='',
+                 research_interests='Brachial Plexus, Cytogenetics, Neuroanatomy',
+                 display_order=14),
+            dict(first_name='Marie-Thérèse', last_name='Teibowei', title='Dr.', position='hod',
+                 specific_title='Special Assistant to the Vice-Chancellor, Public Relations Officer',
+                 biography=(
+                     'Dr. Marie-Thérèse Teibowei is the Special Assistant to the Vice-Chancellor, Public Relations Officer, and Senior Lecturer at Bayelsa Medical University (BMU). '
+                     'She is a multilingual scholar with expertise in Biomedical Translation, French, Strategic Communication, and International Studies, holding a Ph.D. in French & International Studies, an M.A. in Translation (English and French), and a B.Sc. in Journalism, Mass Communication and Gender Studies.\n\n'
+                     'She facilitated the establishment of the International Institute of Tourism and Hospitality (2015), established Nigeria\'s first Institute of Foreign Languages and Biomedical Translation (2019\u20132023), and was part of the pioneer management team that set up Bayelsa Medical University.'
+                 ),
+                 qualifications='PhD (French & International Studies), M.A. (Translation), B.Sc. (Journalism)',
+                 research_interests='Biomedical translation, Strategic communication, International studies',
+                 achievements=(
+                     'Established Nigeria\'s first Institute of Foreign Languages and Biomedical Translation\n'
+                     'Part of the pioneer management team of BMU\n'
+                     'Represented BMU at the United Nations Climate Conferences'
+                 ),
+                 display_order=15),
         ]
+        current_leader_names = {(ld['first_name'], ld['last_name']) for ld in leaders_data}
+        for leader in Leadership.objects.all():
+            if (leader.first_name, leader.last_name) not in current_leader_names:
+                leader.delete()
         for ld in leaders_data:
-            Leadership.objects.get_or_create(
+            Leadership.objects.update_or_create(
                 first_name=ld['first_name'],
                 last_name=ld['last_name'],
                 defaults=dict(
                     title=ld.get('title', ''),
                     position=ld['position'],
                     specific_title=ld.get('specific_title', ''),
-                    biography=ld['biography'],
+                    biography=ld.get('biography', ''),
                     qualifications=ld.get('qualifications', ''),
+                    research_interests=ld.get('research_interests', ''),
+                    achievements=ld.get('achievements', ''),
                     email=ld.get('email'),
                     phone=ld.get('phone'),
                     display_order=ld['display_order'],
@@ -913,86 +1181,119 @@ class Command(BaseCommand):
         # ====================================================================
         # Seed About Page
         # ====================================================================
-        about_page, _ = AboutPage.objects.get_or_create(
+        about_page, _ = AboutPage.objects.update_or_create(
             pk=1,
             defaults=dict(
                 hero_title='About Bayelsa Medical University',
-                hero_content='Nigeria\'s premier institution for healthcare education, dedicated to training the next generation of medical professionals and advancing health outcomes in the Niger Delta region.',
-                about_main_title='Our Mission & Vision',
-                about_main_content='',
-                meta_description='Bayelsa Medical University (BMU) is a premier institution dedicated to excellence in healthcare education, research, and community service in Nigeria.',
+                hero_content='Bayelsa Medical University is a beacon of excellence in medical education, research, and compassionate care, committed to developing the next generation of healthcare leaders and innovators.',
+                about_main_title='About the Bayelsa Medical University',
+                about_main_content='BMU is a specialised medical university established to raise crops of professionally competent personnel in the multi-disciplinary study of medicine and allied medical sciences that are capable of identifying health needs and challenges of society and proffering solutions to such issues for the well-being of mankind.',
+                mission_content='BMU advances healthcare through quality education, evidence-based research, and compassionate service. We train competent professionals, foster innovation, and partner with communities to improve health outcomes locally and globally.',
+                vision_content='To be a leading African medical university recognized globally for excellence in health education, research, innovation, and community impact.',
+                why_choose=[
+                    dict(icon_name='FlaskConical', title='Cutting-Edge Learning, Real-World Impact', description='At Bayelsa Medical University, our modern labs, world-class faculty, and hands-on training prepare students to lead in healthcare, science, and research \u2014 right from the heart of the Niger Delta.'),
+                    dict(icon_name='Heart', title='Excellence Rooted in Purpose', description='We don\'t just teach medicine \u2014 we nurture purpose. BMU offers a student-centered education that empowers you to serve, innovate, and make a lasting difference in your community and beyond.'),
+                    dict(icon_name='BadgeCheck', title='Affordable Quality, Global Standards', description='BMU combines affordability with international best practices, giving you access to quality education, clinical exposure, and global career opportunities \u2014 all within a supportive learning environment.'),
+                    dict(icon_name='Award', title='Academic Excellence', description='At BMU, academic excellence isn\'t just a goal \u2014 it\'s our culture. With experienced faculty, rigorous programs, and a commitment to innovation, we equip students to excel locally and compete globally.'),
+                ],
+                meta_description='BMU is a specialised medical university established to raise crops of professionally competent personnel in the multi-disciplinary study of medicine and allied medical sciences.',
             )
         )
         stats_data = [
-            dict(value='2018', label='Founded', suffix='', order=1),
-            dict(value='6', label='Colleges & Schools', suffix='', order=2),
-            dict(value='50+', label='Degree Programs', suffix='', order=3),
-            dict(value='3,500+', label='Students', suffix='', order=4),
+            dict(value='2019', label='Established', suffix='', order=1),
+            dict(value='2,148', label='Students', suffix='', order=2),
+            dict(value='7', label='Faculties', suffix='', order=3),
+            dict(value='25', label='Departments', suffix='', order=4),
         ]
+        about_page.stats.all().delete()
         for s in stats_data:
-            AboutStat.objects.get_or_create(page=about_page, label=s['label'], defaults=s)
+            AboutStat.objects.create(page=about_page, **s)
         core_values_data = [
-            dict(icon_name='Award', title='Excellence', description='We pursue the highest standards in teaching, research, and healthcare delivery.', order=1),
-            dict(icon_name='Heart', title='Compassion', description='We put patients and communities at the center of everything we do.', order=2),
-            dict(icon_name='Lightbulb', title='Innovation', description='We embrace new ideas and technologies to advance medical science.', order=3),
-            dict(icon_name='Globe', title='Impact', description='We are committed to improving health outcomes in the Niger Delta and beyond.', order=4),
+            dict(icon_name='HeartHandshake', title='Service', description='We believe that delivering excellent service to humanity is also serving God.', order=1),
+            dict(icon_name='Shield', title='Integrity', description='We are committed to upholding the truth and intellectual honesty in all our endeavors.', order=2),
+            dict(icon_name='Heart', title='Compassion', description='We show kindness and care towards our students, staff, and patients.', order=3),
+            dict(icon_name='Target', title='Dedication', description='We are dedicated to engaging in innovative medical science practices that will translate into improved quality of life for people.', order=4),
+            dict(icon_name='ClipboardCheck', title='Accountability', description='We are accountable for all our everyday decisions and actions to our institution, stakeholders, and society in general.', order=5),
+            dict(icon_name='Users', title='Collaboration', description='We value teamwork and support for each other in every way possible to achieve the University\'s purpose.', order=6),
+            dict(icon_name='Sparkles', title='Passion', description='We demonstrate uncommon enthusiasm and commitment to our work, students, staff, and patients.', order=7),
         ]
+        about_page.core_values.all().delete()
         for v in core_values_data:
-            AboutCoreValue.objects.get_or_create(page=about_page, title=v['title'], defaults=v)
+            AboutCoreValue.objects.create(page=about_page, **v)
 
         # ====================================================================
         # Seed History Page
         # ====================================================================
-        history_page, _ = HistoryPage.objects.get_or_create(
+        history_page, _ = HistoryPage.objects.update_or_create(
             pk=1,
             defaults=dict(
-                hero_content='From visionary beginnings in 2018 to becoming Nigeria\'s premier destination for healthcare education - the remarkable journey of Bayelsa Medical University.',
-                meta_description='Explore the journey of Bayelsa Medical University from its establishment in 2018 to becoming a leading medical institution in Nigeria.',
+                hero_content='Bayelsa Medical University (BMU) was established to address critical healthcare manpower shortages in the Niger Delta region and Nigeria at large, growing into one of Nigeria\'s fastest-growing medical universities.',
+                meta_description='Explore the journey of Bayelsa Medical University from its establishment to becoming one of Nigeria\'s fastest-growing medical universities.',
+                intro_title='About the Bayelsa Medical University',
+                intro_content=(
+                    'Bayelsa Medical University (BMU) was established in 2019 by the Bayelsa State Government under the leadership of His Excellency, Governor Henry Seriake Dickson, as part of a strategic vision to address critical healthcare manpower shortages in the Niger Delta region and Nigeria at large. The institution was conceived to be a world-class, technology-driven medical university that would produce highly skilled doctors, dentists, pharmacists, and allied health professionals to improve healthcare delivery in Nigeria.\n\n'
+                    'BMU is a specialised medical university established to raise crops of professionally competent personnel in the multi-disciplinary study of medicine and allied medical sciences that are capable of identifying health needs and challenges of society and proffering solutions to such issues for the well-being of mankind. It began with two pioneer faculties: Basic Medical Sciences (Anatomy, Physiology, Biochemistry) and Clinical Sciences (MBBS programme), with Prof. Ebitimitula Nicholas Etebu appointed as the pioneer Vice-Chancellor.\n\n'
+                    'Today, BMU is one of Nigeria\'s fastest-growing medical universities, known for technology-enhanced learning (AI, VR, and simulation-based training), strong clinical exposure (early patient interaction from Year 3), research focus (tropical diseases, public health, and medical innovation), and state government support ensuring sustainable growth.'
+                ),
+                intro_image_caption='BMU Campus Development',
+                stat_1_value='2,148',
+                stat_1_label='Students',
+                stat_2_value='7',
+                stat_2_label='Faculties',
+                stat_3_value='25',
+                stat_3_label='Departments',
+                future_title='Looking Ahead',
+                future_content='Plans for postgraduate medical programmes (Residencies, MSc, PhD), the ongoing establishment of a satellite campus at Sampou, Kolokuma/Opokuma Local Government Area, and increased collaborations with global medical institutions.',
+                future_quote='"Together, we are not just building a university. We are building a legacy of excellence, innovation, and impact." \u2014 Professor Dimie Ogoina, Vice-Chancellor',
             )
         )
+        history_page.timeline_events.all().delete()
         timeline_data = [
-            dict(year='2018', title='Foundation Established', description='Bayelsa Medical University was established by the Bayelsa State Government under the administration of Governor Henry Seriake Dickson, recognizing the critical need for quality medical education in the Niger Delta region.', icon_name='Building2', order=1),
-            dict(year='2019', title='First Academic Session Begins', description='BMU admitted its first cohort of students into the MBBS program and the School of Nursing, marking the beginning of academic activities at the Permanent Site in Yenagoa.', icon_name='GraduationCap', order=2),
-            dict(year='2020', title='NUC Accreditation', description='Received full accreditation from the National Universities Commission (NUC) for all undergraduate programs, validating the quality of our academic standards and facilities.', icon_name='Award', order=3),
-            dict(year='2021', title='Teaching Hospital Partnership', description='Established formal partnership with the Federal Medical Centre, Yenagoa, providing students with hands-on clinical training and expanding community healthcare services.', icon_name='Users', order=4),
-            dict(year='2022', title='Research Centers Launch', description='Launched the Center for Malaria Research and Center for Non-Communicable Diseases, positioning BMU as a leader in regional health research.', icon_name='Globe', order=5),
-            dict(year='2023', title='Postgraduate Programs', description='Introduced Master of Public Health (MPH) and other postgraduate programs, expanding access to advanced medical education in the region.', icon_name='Calendar', order=6),
-            dict(year='2024', title='International Recognition', description='BMU achieved recognition from the World Health Organization and established partnerships with international institutions for student exchange and research collaboration.', icon_name='Award', order=7),
-            dict(year='2025', title='Campus Expansion', description='Completed Phase II of campus development, including new research laboratories, a 500-seat auditorium, and expanded student accommodation facilities.', icon_name='Building2', order=8),
+            dict(year='2018', title='Establishment', description='BMU was established via the Bayelsa Medical University Law enacted by the Bayelsa State House of Assembly, beginning with two pioneer faculties: Basic Medical Sciences and Clinical Sciences (MBBS programme).', icon_name='Building2', order=1),
+            dict(year='2019', title='University Founded', description='BMU admitted its first students with foundational programs in Medicine and Nursing to address regional healthcare needs, and secured full accreditation from the National Universities Commission (NUC) for its MBBS programme.', icon_name='GraduationCap', order=2),
+            dict(year='2021', title='Expansion and Growth', description='The university expanded to include new faculties such as Pharmaceutical Sciences, Dentistry, Health Sciences, and Sciences, alongside accelerated development of the permanent campus along Imgbi Road.', icon_name='Award', order=3),
+            dict(year='2023', title='Campus Expansion', description='Opened a state-of-the-art teaching hospital and advanced research laboratories, including VR/AR-equipped medical simulation labs, modern lecture halls, and student hostels.', icon_name='Building2', order=4),
+            dict(year='2024', title='Academic Growth', description='Launched the postgraduate school and several new specialty programs, attracting international students and further strengthening research capacity.', icon_name='GraduationCap', order=5),
+            dict(year='2025', title='Global Recognition', description='Forged key partnerships with leading global universities and established a high-fidelity simulation lab, positioning BMU among Nigeria\'s fastest-growing medical universities.', icon_name='Globe', order=6),
         ]
         for t in timeline_data:
-            TimelineEvent.objects.get_or_create(page=history_page, title=t['title'], defaults=t)
+            TimelineEvent.objects.create(page=history_page, **t)
 
         # ====================================================================
         # Seed Vision & Mission Page
         # ====================================================================
-        vision_page, _ = VisionMissionPage.objects.get_or_create(
+        vision_page, _ = VisionMissionPage.objects.update_or_create(
             pk=1,
             defaults=dict(
-                hero_content='Guided by a compelling vision and driven by a transformative mission, we are shaping the future of healthcare in Africa.',
-                mission_content='To provide world-class education in medical and health sciences, conduct cutting-edge research addressing regional health challenges, and deliver compassionate healthcare services that improve the quality of life for communities in the Niger Delta and beyond.',
-                vision_content='To be the leading medical university in Africa, recognized globally for excellence in healthcare education, research innovation, and community health transformation. We aspire to be the institution of choice for aspiring medical professionals across the continent.',
-                meta_description='Discover BMU\'s vision to be Africa\'s leading medical university and our mission to transform healthcare through education, research, and service.',
+                hero_content='Bayelsa Medical University advances healthcare through quality education, evidence-based research, and compassionate service, guided by a compelling vision and a transformative mission.',
+                mission_content='BMU advances healthcare through quality education, evidence-based research, and compassionate service. We train competent professionals, foster innovation, and partner with communities to improve health outcomes locally and globally.',
+                vision_content='To be a leading African medical university recognized globally for excellence in health education, research, innovation, and community impact.',
+                meta_description='Discover BMU\'s vision to be a leading African medical university and our mission to advance healthcare through quality education, evidence-based research, and compassionate service.',
             )
         )
+        vision_page.strategic_pillars.all().delete()
         pillars_data = [
-            dict(icon_name='Lightbulb', title='Excellence in Education', description='Delivering world-class medical education through innovative teaching methods, modern facilities, and experienced faculty.', order=1),
-            dict(icon_name='Heart', title='Compassionate Care', description='Instilling values of empathy and patient-centered care in every graduate who serves our communities.', order=2),
-            dict(icon_name='Compass', title='Research Innovation', description='Advancing medical knowledge through cutting-edge research addressing regional and global health challenges.', order=3),
-            dict(icon_name='Target', title='Community Impact', description='Transforming healthcare delivery in the Niger Delta through service, outreach, and partnership.', order=4),
+            dict(icon_name='Award', title='Academic Excellence', description='Strengthening quality assurance, curriculum innovation, faculty development, and student engagement to deliver teaching and assessment aligned with global best practices.', order=1),
+            dict(icon_name='Leaf', title='Sustainability', description='Ensuring long-term financial and environmental sustainability through diversified revenue streams, entrepreneurship, and the integration of green technologies such as solar energy and energy-efficient systems.', order=2),
+            dict(icon_name='Users', title='Partnerships & Engagement', description='Building strong collaborations with local, national, and international institutions, and deepening community outreach to directly address the health needs of Bayelsa State, the Niger Delta, and beyond.', order=3),
+            dict(icon_name='Lightbulb', title='Innovation & Technology', description='Integrating advanced technologies \u2014 Artificial Intelligence (AI), Virtual Reality (VR), the Internet of Things (IoT), and telemedicine \u2014 into education, research, and administration.', order=4),
+            dict(icon_name='Microscope', title='Research Excellence', description='Establishing Centers of Excellence and a Global Research Incubator and Accelerator Hub to nurture high-impact research, attract international scholars, and reward outstanding academic and scientific achievement.', order=5),
+            dict(icon_name='HeartHandshake', title='Empowerment & Welfare', description='Creating a supportive and safe environment that prioritizes the welfare, career development, and mentorship of students and staff, fostering a community that is motivated, proud, and committed to excellence.', order=6),
         ]
         for p in pillars_data:
-            VisionMissionPillar.objects.get_or_create(page=vision_page, title=p['title'], defaults=p)
+            VisionMissionPillar.objects.create(page=vision_page, **p)
+        vision_page.core_values.all().delete()
         vm_values_data = [
-            dict(title='Integrity', description='Upholding the highest ethical standards in all our dealings', order=1),
-            dict(title='Excellence', description='Pursuing the highest quality in education, research, and service', order=2),
-            dict(title='Innovation', description='Embracing new ideas and technologies to advance healthcare', order=3),
-            dict(title='Compassion', description='Putting patients and communities first in everything we do', order=4),
-            dict(title='Collaboration', description='Working together across disciplines and with our communities', order=5),
-            dict(title='Accountability', description='Taking responsibility for our actions and their outcomes', order=6),
+            dict(title='Service', description='We believe that delivering excellent service to humanity is also serving God.', order=1),
+            dict(title='Integrity', description='We are committed to upholding the truth and intellectual honesty in all our endeavors.', order=2),
+            dict(title='Compassion', description='We show kindness and care towards our students, staff, and patients.', order=3),
+            dict(title='Dedication', description='We are dedicated to engaging in innovative medical science practices that will translate into improved quality of life for people.', order=4),
+            dict(title='Accountability', description='We are accountable for all our everyday decisions and actions to our institution, stakeholders, and society in general.', order=5),
+            dict(title='Collaboration', description='We value teamwork and support for each other in every way possible to achieve the University\'s purpose.', order=6),
+            dict(title='Passion', description='We demonstrate uncommon enthusiasm and commitment to our work, students, staff, and patients.', order=7),
         ]
         for v in vm_values_data:
-            VisionMissionValue.objects.get_or_create(page=vision_page, title=v['title'], defaults=v)
+            VisionMissionValue.objects.create(page=vision_page, **v)
 
         # ====================================================================
         # Seed Governance Page
@@ -1031,3 +1332,43 @@ class Command(BaseCommand):
         ]
         for p in policies_data:
             GovernancePolicy.objects.get_or_create(page=gov_page, title=p['title'], defaults=p)
+
+        # ====================================================================
+        # Refresh Academics overview page sections (single college + 7 faculties)
+        # ====================================================================
+        PageSection.objects.update_or_create(
+            page_key='academics', section_key='academic_units',
+            defaults=dict(
+                content_type='cards',
+                title='Academic Units',
+                subtitle='',
+                display_order=1,
+                is_active=True,
+                data=[
+                    dict(name='College of Medicine', programs='MBBS, B.Sc Anatomy, B.Sc Physiology, B.Sc Biochemistry', link='/colleges/college-of-medicine', color='#1E1E1E', icon='GraduationCap'),
+                    dict(name='Faculty of Basic Medical Sciences', programs='B.Sc Anatomy, B.Sc Physiology, B.Sc Biochemistry', link='/academics/faculties/faculty-of-basic-medical-sciences', color='#1E1E1E', icon='Microscope'),
+                    dict(name='Faculty of Clinical Sciences', programs='MBBS Medicine & Surgery', link='/academics/faculties/faculty-of-clinical-sciences', color='#1E1E1E', icon='Stethoscope'),
+                    dict(name='Faculty of Basic Clinical Sciences', programs='Anatomical Pathology', link='/academics/faculties/faculty-of-basic-clinical-sciences', color='#1E1E1E', icon='Activity', standalone=True),
+                    dict(name='Faculty of Dentistry', programs='BDS Dental Surgery', link='/academics/faculties/faculty-of-dentistry', color='#1E1E1E', icon='Stethoscope', standalone=True),
+                    dict(name='Faculty of Health Sciences', programs='B.NSc Nursing, BMLS, Radiography, Physiotherapy, Optometry, Public Health', link='/academics/faculties/faculty-of-health-sciences', color='#A51C30', icon='HeartPulse', standalone=True),
+                    dict(name='Faculty of Pharmaceutical Sciences', programs='Pharm.D Pharmacy', link='/academics/faculties/faculty-of-pharmaceutical-sciences', color='#1E1E1E', icon='Award', standalone=True),
+                    dict(name='Faculty of Science', programs='B.Sc Biology, Chemistry, Microbiology, Physics, Mathematics, Statistics, Computer Science', link='/academics/faculties/faculty-of-science', color='#1E1E1E', icon='FlaskConical', standalone=True),
+                ],
+            ),
+        )
+        PageSection.objects.update_or_create(
+            page_key='academics', section_key='stats',
+            defaults=dict(
+                content_type='stats',
+                title='',
+                subtitle='',
+                display_order=3,
+                is_active=True,
+                data=[
+                    dict(value='24', label='Degree Programs'),
+                    dict(value='7', label='Faculties'),
+                    dict(value='25', label='Departments'),
+                    dict(value='3,900', label='Students'),
+                ],
+            ),
+        )

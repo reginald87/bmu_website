@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { validatePersonalInfo, validateAcademicInfo, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
 import { uploadApplicationDocument } from '../../services/api';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 
 // Step configuration
 const STEPS = [

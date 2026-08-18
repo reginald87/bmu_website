@@ -31,60 +31,31 @@ const standaloneColor = '#1E1E1E';
 
 const fallbackColleges: CollegeGroup[] = [
   {
-    id: 1, name: 'College of Medicine', slug: 'medicine',
+    id: 1, name: 'College of Medicine', slug: 'college-of-medicine',
     color: '#1E1E1E',
     faculties: [
-      { id: 1, name: 'Basic Medical Sciences', slug: 'basic-medical-sciences', code: 'BMS', description: 'Foundation medical sciences including anatomy, physiology, and biochemistry.', department_count: 6, college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Prof. Godwin Ikorite', is_standalone: false },
-      { id: 2, name: 'Clinical Sciences', slug: 'clinical-sciences', code: 'CLS', description: 'Clinical training and patient care education.', department_count: 8, college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Dr. Jane Owei', is_standalone: false },
-      { id: 3, name: 'Community Medicine', slug: 'community-medicine', code: 'COM', description: 'Public health and community healthcare education.', department_count: 4, college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Prof. Michael Ogu', is_standalone: false },
-    ]
-  },
-  {
-    id: 2, name: 'School of Allied Health Sciences', slug: 'allied-health',
-    color: '#A51C30',
-    faculties: [
-      { id: 4, name: 'Medical Laboratory Science', slug: 'medical-lab-science', code: 'MLS', description: 'Training medical laboratory scientists.', department_count: 4, college_id: 2, college_name: 'School of Allied Health Sciences', college_slug: 'allied-health', leadership_name: 'Dr. Richard Peters', is_standalone: false },
-      { id: 5, name: 'Radiography', slug: 'radiography', code: 'RAD', description: 'Training radiographers and imaging specialists.', department_count: 3, college_id: 2, college_name: 'School of Allied Health Sciences', college_slug: 'allied-health', leadership_name: 'Dr. Sarah Wodi', is_standalone: false },
-      { id: 6, name: 'Physiotherapy', slug: 'physiotherapy', code: 'PHT', description: 'Training physiotherapists.', department_count: 2, college_id: 2, college_name: 'School of Allied Health Sciences', college_slug: 'allied-health', leadership_name: 'Dr. Ebi Robinson', is_standalone: false },
-    ]
-  },
-  {
-    id: 3, name: 'School of Nursing', slug: 'nursing',
-    color: '#1E1E1E',
-    faculties: [
-      { id: 7, name: 'Nursing', slug: 'nursing-dept', code: 'NUR', description: 'Training professional nurses.', department_count: 4, college_id: 3, college_name: 'School of Nursing', college_slug: 'nursing', leadership_name: 'Prof. Helen Douglas', is_standalone: false },
-      { id: 8, name: 'Midwifery', slug: 'midwifery', code: 'MID', description: 'Training skilled midwives.', department_count: 2, college_id: 3, college_name: 'School of Nursing', college_slug: 'nursing', leadership_name: 'Dr. Faith George', is_standalone: false },
-    ]
-  },
-  {
-    id: 5, name: 'Institute of Public Health', slug: 'public-health',
-    color: '#A51C30',
-    faculties: [
-      { id: 10, name: 'Epidemiology', slug: 'epidemiology', code: 'EPI', description: 'Study of disease patterns and population health.', department_count: 3, college_id: 5, college_name: 'Institute of Public Health', college_slug: 'public-health', leadership_name: 'Prof. Chioma Amadi', is_standalone: false },
-      { id: 11, name: 'Health Policy', slug: 'health-policy', code: 'HPL', description: 'Health policy and management education.', department_count: 3, college_id: 5, college_name: 'Institute of Public Health', college_slug: 'public-health', leadership_name: 'Dr. Emmanuel Akpan', is_standalone: false },
-      { id: 12, name: 'Biostatistics', slug: 'biostatistics', code: 'BIO', description: 'Statistical methods for health research.', department_count: 2, college_id: 5, college_name: 'Institute of Public Health', college_slug: 'public-health', leadership_name: 'Dr. Ngozi Eze', is_standalone: false },
+      { id: 1, name: 'Faculty of Basic Medical Sciences', slug: 'faculty-of-basic-medical-sciences', code: 'FBMS', description: 'Foundational medical sciences — human anatomy, human physiology and biochemistry.', department_count: 3, college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: 'Dr. Theodore Allison', is_standalone: false },
+      { id: 2, name: 'Faculty of Clinical Sciences', slug: 'faculty-of-clinical-sciences', code: 'FCLS', description: 'Clinical education culminating in the six-year MBBS degree.', department_count: 1, college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: 'Prof. Isaac J. Abasi', is_standalone: false },
     ]
   },
 ];
 
 const fallbackStandalone: FacultyData[] = [
-  { id: 14, name: 'Science', slug: 'science', code: 'SCI', description: 'Faculty of Science offering undergraduate and postgraduate programs in biological, physical, and mathematical sciences.', department_count: 4, college_id: null, college_name: null, college_slug: null, leadership_name: 'Prof. Samuel Abasi', is_standalone: true },
-  { id: 9, name: 'Postgraduate Programs', slug: 'postgraduate-programs', code: 'PGS', description: 'Advanced degrees and research training.', department_count: 0, college_id: null, college_name: null, college_slug: null, leadership_name: 'Prof. Michael Ogu', is_standalone: true },
-  { id: 13, name: 'Professional Development', slug: 'professional-development', code: 'CPD', description: 'Lifelong learning for healthcare professionals.', department_count: 0, college_id: null, college_name: null, college_slug: null, leadership_name: 'Dr. Peter Iruo', is_standalone: true },
+  { id: 3, name: 'Faculty of Basic Clinical Sciences', slug: 'faculty-of-basic-clinical-sciences', code: 'FBCS', description: 'Basic clinical disciplines including anatomical pathology.', department_count: 1, college_id: null, college_name: null, college_slug: null, leadership_name: 'Dr. Frederick Allison', is_standalone: true },
+  { id: 4, name: 'Faculty of Dentistry', slug: 'faculty-of-dentistry', code: 'FDEN', description: 'Six-year BDS programme in oral and maxillofacial care.', department_count: 1, college_id: null, college_name: null, college_slug: null, leadership_name: '', is_standalone: true },
+  { id: 5, name: 'Faculty of Health Sciences', slug: 'faculty-of-health-sciences', code: 'FHSS', description: 'Eleven departments delivering professional health programmes.', department_count: 11, college_id: null, college_name: null, college_slug: null, leadership_name: 'Dr. (Mrs) Gift Cornelius Timighe', is_standalone: true },
+  { id: 6, name: 'Faculty of Pharmaceutical Sciences', slug: 'faculty-of-pharmaceutical-sciences', code: 'FPHS', description: 'Six-year Doctor of Pharmacy (Pharm.D) programme.', department_count: 1, college_id: null, college_name: null, college_slug: null, leadership_name: 'Prof. Ebiowei S. F. Orubu', is_standalone: true },
+  { id: 7, name: 'Faculty of Science', slug: 'faculty-of-science', code: 'FSCI', description: 'Seven departments in the biological, physical and mathematical sciences.', department_count: 7, college_id: null, college_name: null, college_slug: null, leadership_name: 'Prof. Iniobong Reuben Inyang', is_standalone: true },
 ];
 
 const iconMap: { [key: string]: React.ElementType } = {
-  'Basic Medical Sciences': Microscope,
-  'Clinical Sciences': Stethoscope,
-  'Community Medicine': Users,
-  'Medical Laboratory Science': Microscope,
-  'Radiography': Activity,
-  'Physiotherapy': HeartPulse,
-  'Nursing': HeartPulse,
-  'Midwifery': HeartPulse,
-  'Epidemiology': Activity,
-  'Health Policy': BookOpen,
-  'Biostatistics': Activity,
+  'Faculty of Basic Medical Sciences': Microscope,
+  'Faculty of Basic Clinical Sciences': Activity,
+  'Faculty of Clinical Sciences': Stethoscope,
+  'Faculty of Dentistry': Stethoscope,
+  'Faculty of Health Sciences': HeartPulse,
+  'Faculty of Pharmaceutical Sciences': BookOpen,
+  'Faculty of Science': BookOpen,
 };
 
 export const Faculties = () => {
@@ -346,8 +317,8 @@ export const Faculties = () => {
             {[
               { value: groupedByCollege.length.toString(), label: 'Colleges & Schools', icon: Building2 },
               { value: totalFaculties.toString(), label: 'Faculties', icon: GraduationCap },
-              { value: '200+', label: 'Faculty Members', icon: Users },
-              { value: '50+', label: 'Degree Programs', icon: BookOpen },
+              { value: '390', label: 'Faculty Members', icon: Users },
+              { value: '24', label: 'Degree Programs', icon: BookOpen },
             ].map((stat, index) => (
               <motion.div
                 key={index}

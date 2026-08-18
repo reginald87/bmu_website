@@ -2,49 +2,105 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
- GraduationCap, 
- BookOpen, 
- Calendar, 
- Building2, 
- Users, 
- ArrowRight,
- Award,
- Microscope,
- Stethoscope,
- FlaskConical,
- Heart
+  GraduationCap, 
+  BookOpen, 
+  Calendar, 
+  Building2, 
+  Users, 
+  ArrowRight,
+  Award,
+  Microscope,
+  Stethoscope,
+  FlaskConical,
+  HeartPulse,
+  Activity,
+  type LucideIcon
 } from 'lucide-react';
 import { usePageSections } from '../../services/apiHooks';
+
+interface AcademicUnit {
+  name: string;
+  programs: string;
+  icon: LucideIcon;
+  color: string;
+  link: string;
+  standalone?: boolean;
+}
+
+interface QuickLink {
+  title: string;
+  desc: string;
+  icon: LucideIcon;
+  link: string;
+}
+
+interface Stat {
+  value: string;
+  label: string;
+}
 
 const fallbackUnits = [
  {
  name: 'College of Medicine',
- programs: 'MBBS, B.Sc Anatomy, B.Sc Physiology',
- icon: Stethoscope,
+ programs: 'MBBS, B.Sc Anatomy, B.Sc Physiology, B.Sc Biochemistry',
+ icon: GraduationCap,
  color: '#1E1E1E',
- link: '/colleges/medicine'
+ link: '/colleges/college-of-medicine'
  },
  {
- name: 'School of Nursing',
- programs: 'B.NSc Nursing, Post-Basic Nursing',
- icon: Heart,
- color: '#A51C30',
- link: '/colleges/nursing'
- },
- {
- name: 'School of Allied Health',
- programs: 'BMLS, Radiography, Physiotherapy',
+ name: 'Faculty of Basic Medical Sciences',
+ programs: 'B.Sc Anatomy, B.Sc Physiology, B.Sc Biochemistry',
  icon: Microscope,
- color: '#A51C30',
- link: '/colleges/allied-health'
- },
- {
- name: 'Institute of Public Health',
- programs: 'B.Sc Public Health, MPH, DrPH',
- icon: FlaskConical,
  color: '#1E1E1E',
- link: '/colleges/pharmacy'
- }
+ link: '/academics/faculties/faculty-of-basic-medical-sciences'
+ },
+{
+  name: 'Faculty of Basic Clinical Sciences',
+  programs: 'Anatomical Pathology',
+  icon: Activity,
+  color: '#1E1E1E',
+  link: '/academics/faculties/faculty-of-basic-clinical-sciences',
+  standalone: true
+  },
+  {
+  name: 'Faculty of Clinical Sciences',
+  programs: 'MBBS Medicine & Surgery',
+  icon: Stethoscope,
+  color: '#1E1E1E',
+  link: '/academics/faculties/faculty-of-clinical-sciences'
+  },
+  {
+  name: 'Faculty of Dentistry',
+  programs: 'BDS Dental Surgery',
+  icon: Stethoscope,
+  color: '#1E1E1E',
+  link: '/academics/faculties/faculty-of-dentistry',
+  standalone: true
+  },
+  {
+  name: 'Faculty of Health Sciences',
+  programs: 'B.NSc Nursing, BMLS, Radiography, Physiotherapy, Optometry, Public Health',
+  icon: HeartPulse,
+  color: '#A51C30',
+  link: '/academics/faculties/faculty-of-health-sciences',
+  standalone: true
+  },
+  {
+  name: 'Faculty of Pharmaceutical Sciences',
+  programs: 'Pharm.D Pharmacy',
+  icon: Award,
+  color: '#1E1E1E',
+  link: '/academics/faculties/faculty-of-pharmaceutical-sciences',
+  standalone: true
+  },
+  {
+  name: 'Faculty of Science',
+  programs: 'B.Sc Biology, Chemistry, Microbiology, Physics, Mathematics, Statistics, Computer Science',
+  icon: FlaskConical,
+  color: '#1E1E1E',
+  link: '/academics/faculties/faculty-of-science',
+  standalone: true
+  }
 ];
 
 const fallbackQuickLinks = [
@@ -57,17 +113,50 @@ const fallbackQuickLinks = [
 ];
 
 const fallbackStats = [
- { value: '50+', label: 'Degree Programs' },
- { value: '6', label: 'Academic Units' },
- { value: '200+', label: 'Faculty Members' },
- { value: '5000+', label: 'Students Enrolled' }
+ { value: '24', label: 'Degree Programs' },
+ { value: '7', label: 'Faculties' },
+ { value: '25', label: 'Departments' },
+ { value: '3,900', label: 'Students' }
 ];
 
 export const Academics = () => {
  const { data: sections } = usePageSections('academics');
- const academicUnits = (sections?.find(s => s.section_key === 'academic_units')?.data as any[] || fallbackUnits);
- const quickLinks = (sections?.find(s => s.section_key === 'quick_links')?.data as any[] || fallbackQuickLinks);
- const stats = (sections?.find(s => s.section_key === 'stats')?.data as any[] || fallbackStats);
+  const academicUnits = (sections?.find(s => s.section_key === 'academic_units')?.data as AcademicUnit[] || fallbackUnits);
+  const collegeUnits = academicUnits.filter(u => !u.standalone);
+  const standaloneUnits = academicUnits.filter(u => u.standalone);
+  const quickLinks = (sections?.find(s => s.section_key === 'quick_links')?.data as QuickLink[] || fallbackQuickLinks);
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as Stat[] || fallbackStats);
+
+  const renderUnitCard = (unit: AcademicUnit, index: number) => (
+    <motion.div
+      key={unit.name}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+    >
+      <Link
+        to={unit.link}
+        className="block bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
+      >
+        <div className="flex items-start gap-4">
+          <div
+            className="w-14 h-14 flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: `${unit.color}15` }}
+          >
+            <unit.icon className="w-7 h-7" style={{ color: unit.color }} />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-title text-gray-900 mb-1">{unit.name}</h3>
+            <p className="text-body text-gray-600">{unit.programs}</p>
+            <div className="mt-3 flex items-center gap-1 text-sm font-medium" style={{ color: unit.color }}>
+              Learn More <ArrowRight className="w-4 h-4" />
+            </div>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
 
  return (
  <>
@@ -122,50 +211,35 @@ export const Academics = () => {
  </div>
  </section>
 
- {/* Academic Units */}
- <section className="py-20" style={{ backgroundColor: '#f8f9fa' }}>
- <div className="container-custom">
- <div className="text-center mb-12">
- <h2 className="text-headline text-gray-900 mb-4">Academic Units</h2>
- <p className="text-lead text-gray-600 max-w-2xl mx-auto">
- Specialized schools and institutes offering comprehensive healthcare education
- </p>
- </div>
+{/* Academic Units */}
+  <section className="py-20" style={{ backgroundColor: '#f8f9fa' }}>
+  <div className="container-custom">
+  <div className="text-center mb-12">
+  <h2 className="text-headline text-gray-900 mb-4">Academic Units</h2>
+  <p className="text-lead text-gray-600 max-w-2xl mx-auto">
+  The College of Medicine houses the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences, while the University's other faculties operate as standalone units with their own departments.
+  </p>
+  </div>
 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- {academicUnits.map((unit, index) => (
- <motion.div
- key={unit.name}
- initial={{ opacity: 0, y: 20 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ delay: index * 0.1 }}
- >
- <Link 
- to={unit.link}
- className="block bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
- >
- <div className="flex items-start gap-4">
- <div 
- className="w-14 h-14 flex items-center justify-center flex-shrink-0"
- style={{ backgroundColor: `${unit.color}15` }}
- >
- <unit.icon className="w-7 h-7" style={{ color: unit.color }} />
- </div>
- <div className="flex-1">
- <h3 className="text-title text-gray-900 mb-1">{unit.name}</h3>
- <p className="text-body text-gray-600">{unit.programs}</p>
- <div className="mt-3 flex items-center gap-1 text-sm font-medium" style={{ color: unit.color }}>
- Learn More <ArrowRight className="w-4 h-4" />
- </div>
- </div>
- </div>
- </Link>
- </motion.div>
- ))}
- </div>
- </div>
- </section>
+  {collegeUnits.length > 0 && (
+  <>
+  <h3 className="text-title text-gray-900 mb-6">Within the College of Medicine</h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+  {collegeUnits.map((unit, index) => renderUnitCard(unit, index))}
+  </div>
+  </>
+  )}
+
+  {standaloneUnits.length > 0 && (
+  <>
+  <h3 className="text-title text-gray-900 mb-6">Standalone Faculties</h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  {standaloneUnits.map((unit, index) => renderUnitCard(unit, index))}
+  </div>
+  </>
+  )}
+  </div>
+  </section>
 
  {/* Quick Links */}
  <section className="py-20">

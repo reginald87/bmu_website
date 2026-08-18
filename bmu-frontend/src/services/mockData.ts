@@ -51,6 +51,15 @@ export interface College {
   courses?: string[];
   iconName?: string;
   previewImage?: string;
+  faculties?: Array<{
+    id: number;
+    name: string;
+    slug: string;
+    code: string;
+    description: string;
+    department_count: number;
+    dean_name?: string;
+  }>;
 }
 
 export interface SDGMetric {
@@ -105,97 +114,792 @@ export interface ResearchCenter {
 
 export const mockPrograms = {
  undergraduate: [
- {
- id: 1,
- title: "Bachelor of Medicine, Bachelor of Surgery (MBBS)",
- slug: "mbbs",
- duration: "6 years",
- requirements: "5 credits in WAEC/NECO including English, Math, Biology, Chemistry, Physics",
- applicationFee: { local: 10000, intl: 50 },
- tuitionPerYear: { local: 500000, intl: 8500 },
- college: "College of Medicine",
- department: "Clinical Sciences"
- },
- {
- id: 2,
- title: "Bachelor of Nursing Science (B.NSc)",
- slug: "nursing",
- duration: "5 years",
- requirements: "5 credits including English, Math, Biology, Chemistry, Physics",
- applicationFee: { local: 10000, intl: 50 },
- tuitionPerYear: { local: 400000, intl: 6000 },
- college: "School of Nursing",
- department: "Nursing"
- },
- {
- id: 3,
- title: "Bachelor of Medical Laboratory Science (BMLS)",
- slug: "medical-lab-science",
- duration: "5 years",
- requirements: "5 credits including English, Math, Biology, Chemistry, Physics",
- applicationFee: { local: 10000, intl: 50 },
- tuitionPerYear: { local: 400000, intl: 6000 },
- college: "School of Allied Health",
- department: "Medical Laboratory Science"
- },
- {
- id: 4,
- title: "Bachelor of Public Health (BPH)",
- slug: "public-health",
- duration: "4 years",
- requirements: "5 credits including English, Math, Biology, Chemistry",
- applicationFee: { local: 10000, intl: 50 },
- tuitionPerYear: { local: 350000, intl: 5000 },
- college: "Institute of Public Health",
- department: "Public Health"
- }
+  {
+   id: 1,
+   title: "Medicine and Surgery",
+   slug: "mbbs",
+   duration: "6 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 500000, intl: 6000 },
+   college: "Clinical Sciences",
+   department: "Medicine & Surgery"
+  },
+  {
+   id: 2,
+   title: "Nursing Science",
+   slug: "bnsc-nursing-science",
+   duration: "5 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Nursing Science"
+  },
+  {
+   id: 3,
+   title: "Medical Laboratory Science",
+   slug: "bmls-medical-laboratory-science",
+   duration: "5 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Medical Laboratory Science"
+  },
+  {
+   id: 4,
+   title: "Radiography and Radiation Science",
+   slug: "bsc-radiography-and-radiation-science",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Radiography and Radiation Science"
+  },
+  {
+   id: 5,
+   title: "Physiotherapy",
+   slug: "bsc-physiotherapy",
+   duration: "5 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Physiotherapy"
+  },
+  {
+   id: 6,
+   title: "Optometry",
+   slug: "bsc-optometry",
+   duration: "6 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Optometry"
+  },
+  {
+   id: 7,
+   title: "Public Health",
+   slug: "bsc-public-health",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Public Health"
+  },
+  {
+   id: 8,
+   title: "Community Health Science",
+   slug: "bsc-community-health-science",
+   duration: "5 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Community Health"
+  },
+  {
+   id: 9,
+   title: "Dental Technology",
+   slug: "bsc-dental-technology",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Dental Technology"
+  },
+  {
+   id: 10,
+   title: "Health Care Administration and Hospital Management",
+   slug: "bsc-health-care-administration-and-hospital-management",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Health Care Administration and Hospital Management"
+  },
+  {
+   id: 11,
+   title: "Health Information Management",
+   slug: "bsc-health-information-management",
+   duration: "5 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Health Information Management"
+  },
+  {
+   id: 12,
+   title: "Human Nutrition and Dietetics",
+   slug: "bsc-human-nutrition-and-dietetics",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 350000, intl: 6000 },
+   college: "Health Sciences",
+   department: "Human Nutrition and Dietetics"
+  },
+  {
+   id: 13,
+   title: "Pharmacy",
+   slug: "doctor-of-pharmacy",
+   duration: "6 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 500000, intl: 6000 },
+   college: "Pharmaceutical Sciences",
+   department: "Pharmacy"
+  },
+  {
+   id: 14,
+   title: "Dentistry",
+   slug: "bds-dentistry",
+   duration: "6 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 500000, intl: 6000 },
+   college: "Dentistry",
+   department: "Dental Surgery"
+  },
+  {
+   id: 15,
+   title: "Human Anatomy",
+   slug: "bsc-human-anatomy",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Basic Medical Sciences",
+   department: "Human Anatomy"
+  },
+  {
+   id: 16,
+   title: "Human Physiology",
+   slug: "bsc-human-physiology",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Basic Medical Sciences",
+   department: "Human Physiology"
+  },
+  {
+   id: 17,
+   title: "Biochemistry",
+   slug: "bsc-biochemistry",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Basic Medical Sciences",
+   department: "Biochemistry"
+  },
+  {
+   id: 18,
+   title: "Biology",
+   slug: "bsc-biology",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Science",
+   department: "Biology"
+  },
+  {
+   id: 19,
+   title: "Chemistry",
+   slug: "bsc-chemistry",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Science",
+   department: "Chemistry"
+  },
+  {
+   id: 20,
+   title: "Computer Science",
+   slug: "bsc-computer-science",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Science",
+   department: "Computer Science"
+  },
+  {
+   id: 21,
+   title: "Mathematics",
+   slug: "bsc-mathematics",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Science",
+   department: "Mathematics"
+  },
+  {
+   id: 22,
+   title: "Microbiology",
+   slug: "bsc-microbiology",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Science",
+   department: "Microbiology"
+  },
+  {
+   id: 23,
+   title: "Physics with Electronics",
+   slug: "bsc-physics-with-electronics",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Science",
+   department: "Physics with Electronics"
+  },
+  {
+   id: 24,
+   title: "Statistics",
+   slug: "bsc-statistics",
+   duration: "4 years",
+   requirements: "Five O'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.",
+   applicationFee: { local: 2500, intl: 50 },
+   tuitionPerYear: { local: 300000, intl: 6000 },
+   college: "Science",
+   department: "Statistics"
+  }
  ],
- masters: [
- {
- id: 5,
- title: "Master of Public Health (MPH)",
- slug: "mph",
- duration: "2 years",
- requirements: "Bachelor's degree in related field, minimum 2nd class lower",
- applicationFee: { local: 15000, intl: 75 },
- tuitionPerYear: { local: 600000, intl: 5000 },
- college: "Institute of Public Health"
+ masters: [],
+ phd: [],
+ certificate: []
+};
+
+export interface ProgramDetailEntry {
+ id: number;
+ title: string;
+ slug: string;
+ duration: string;
+ requirements: string;
+ applicationFee: { local: number; intl: number };
+ degree: string;
+ description: string;
+ overview: string;
+ career_opportunities: string;
+ icon: string;
+ color: string;
+ category: string;
+ level: string;
+ college: string;
+ department: string;
+ intake: string;
+ accreditations: { body_name: string }[];
+ curriculum_years: { year_label: string; courses: { name: string }[] }[];
+ facilities: { name: string }[];
+ highlights: { text: string }[];
+}
+
+export const mockProgramDetails: Record<string, ProgramDetailEntry> = {
+ 'mbbs': {
+  id: 1, title: 'Medicine and Surgery', slug: 'mbbs', duration: '6 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'MBBS',
+  description: 'A comprehensive six-year programme that trains students in all aspects of medicine and surgery, producing competent medical doctors ready for residency training.',
+  overview: 'The flagship MBBS programme at Bayelsa Medical University combines rigorous pre-clinical sciences with extensive clinical rotations, early patient contact and simulation-based training to produce competent, compassionate and ethical medical doctors.',
+  career_opportunities: 'Medical Doctor, Surgeon, Public Health Specialist, Medical Researcher, Hospital Administrator',
+  icon: 'Stethoscope', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Medicine & Surgery', intake: 'September/October',
+  accreditations: [{ body_name: 'Medical and Dental Council of Nigeria (MDCN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Pre-Med)', courses: [{ name: 'General Chemistry' }, { name: 'Physics' }, { name: 'Biology' }, { name: 'Introduction to Health Professions' }] },
+   { year_label: 'Year 2 (Basic Medical Sciences)', courses: [{ name: 'Human Anatomy' }, { name: 'Human Physiology' }, { name: 'Biochemistry' }, { name: 'Histology' }] },
+   { year_label: 'Year 3 (Para-Clinical)', courses: [{ name: 'General Pathology' }, { name: 'Medical Microbiology' }, { name: 'Pharmacology' }, { name: 'Community Medicine' }] },
+   { year_label: 'Year 4 (Clinical)', courses: [{ name: 'Internal Medicine' }, { name: 'Surgery' }, { name: 'Paediatrics' }, { name: 'Obstetrics & Gynaecology' }] },
+   { year_label: 'Year 5 (Clinical Rotations)', courses: [{ name: 'Psychiatry' }, { name: 'Ophthalmology' }, { name: 'Otorhinolaryngology' }, { name: 'Radiology' }] },
+   { year_label: 'Year 6 (Final Clinical)', courses: [{ name: 'Family Medicine' }, { name: 'Anaesthesia' }, { name: 'Elective Rotations' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'University Teaching Hospital' }, { name: 'Clinical Skills Laboratory' }, { name: 'Simulation Centre' }, { name: 'Anatomy Dissection Laboratory' }],
+  highlights: [{ text: 'Early clinical exposure from Year 3' }, { text: 'Simulation-based training' }, { text: 'Community health postings' }],
  },
- {
- id: 6,
- title: "MSc Medical Microbiology",
- slug: "msc-microbiology",
- duration: "2 years",
- requirements: "Bachelor's in Microbiology or related field",
- applicationFee: { local: 15000, intl: 75 },
- tuitionPerYear: { local: 600000, intl: 5000 },
- college: "College of Medicine"
- }
- ],
- phd: [
- {
- id: 7,
- title: "PhD Public Health",
- slug: "phd-public-health",
- duration: "3-5 years",
- requirements: "Master's degree in Public Health or related, research proposal",
- applicationFee: { local: 20000, intl: 100 },
- tuitionPerYear: { local: 800000, intl: 4500 },
- college: "Institute of Public Health"
- }
- ],
- certificate: [
- {
- id: 8,
- title: "Certificate in Health Research Methods",
- slug: "cert-health-research",
- duration: "3 months",
- requirements: "Bachelor's degree or relevant experience",
- applicationFee: { local: 5000, intl: 25 },
- tuitionFee: { local: 150000, intl: 1000 },
- college: "CPD"
- }
- ]
+ 'bnsc-nursing-science': {
+  id: 2, title: 'Nursing Science', slug: 'bnsc-nursing-science', duration: '5 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'B.NSc',
+  description: 'A five-year professional nursing programme that prepares students for registered nursing practice across all healthcare settings.',
+  overview: 'This professional nursing programme combines theoretical foundations with extensive clinical placements, equipping graduates with the knowledge, skills and compassion required for registered nursing practice across all healthcare settings.',
+  career_opportunities: 'Registered Nurse, Nurse Practitioner, Nurse Educator, Public Health Nurse, Healthcare Administrator',
+  icon: 'Heart', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Nursing Science', intake: 'September/October',
+  accreditations: [{ body_name: 'Nursing and Midwifery Council of Nigeria (NMCN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Human Anatomy' }, { name: 'Human Physiology' }, { name: 'Psychology' }, { name: 'Sociology' }] },
+   { year_label: 'Year 2 (Fundamentals)', courses: [{ name: 'Fundamentals of Nursing' }, { name: 'Microbiology' }, { name: 'Biochemistry' }, { name: 'Health Assessment' }] },
+   { year_label: 'Year 3 (Clinical Nursing)', courses: [{ name: 'Medical-Surgical Nursing' }, { name: 'Maternal & Child Health' }, { name: 'Pharmacology' }, { name: 'Community Health Nursing' }] },
+   { year_label: 'Year 4 (Specialty)', courses: [{ name: 'Paediatric Nursing' }, { name: 'Mental Health Nursing' }, { name: 'Research Methods' }, { name: 'Nursing Leadership' }] },
+   { year_label: 'Year 5 (Internship)', courses: [{ name: 'Clinical Postings' }, { name: 'Community Postings' }, { name: 'Midwifery Rotation' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Nursing Skills Laboratory' }, { name: 'Teaching Hospital Postings' }, { name: 'Simulation Centre' }],
+  highlights: [{ text: 'Clinical placements at teaching hospital' }, { text: 'Skills lab simulation' }, { text: 'Leadership development' }],
+ },
+ 'bmls-medical-laboratory-science': {
+  id: 3, title: 'Medical Laboratory Science', slug: 'bmls-medical-laboratory-science', duration: '5 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BMLS',
+  description: 'A five-year programme training students in diagnostic laboratory science including clinical chemistry, haematology and microbiology.',
+  overview: 'This programme trains medical laboratory scientists in the full range of diagnostic laboratory science, combining classroom theory with practical training in clinical chemistry, haematology, histopathology and microbiology.',
+  career_opportunities: 'Medical Laboratory Scientist, Research Scientist, Laboratory Manager, Infection Control Specialist',
+  icon: 'Microscope', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Medical Laboratory Science', intake: 'September/October',
+  accreditations: [{ body_name: 'Medical Laboratory Science Council of Nigeria (MLSCN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Biology' }, { name: 'General Chemistry' }, { name: 'Physics' }, { name: 'Mathematics' }] },
+   { year_label: 'Year 2 (Basic Sciences)', courses: [{ name: 'Human Anatomy' }, { name: 'Human Physiology' }, { name: 'Biochemistry' }, { name: 'Microbiology' }] },
+   { year_label: 'Year 3 (Core Laboratory)', courses: [{ name: 'Haematology & Blood Transfusion' }, { name: 'Chemical Pathology' }, { name: 'Histopathology' }, { name: 'Medical Microbiology' }] },
+   { year_label: 'Year 4 (Advanced)', courses: [{ name: 'Parasitology & Entomology' }, { name: 'Immunology' }, { name: 'Laboratory Management' }, { name: 'Research Methods' }] },
+   { year_label: 'Year 5 (Internship)', courses: [{ name: 'Clinical Laboratory Rotations' }, { name: 'Quality Assurance' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Diagnostic Laboratories' }, { name: 'Histopathology Laboratory' }, { name: 'Haematology Laboratory' }, { name: 'Molecular Laboratory' }],
+  highlights: [{ text: 'Accredited training laboratories' }, { text: 'Clinical internship placements' }, { text: 'Quality assurance training' }],
+ },
+ 'bsc-radiography-and-radiation-science': {
+  id: 4, title: 'Radiography and Radiation Science', slug: 'bsc-radiography-and-radiation-science', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in medical imaging and radiation science, covering X-ray, ultrasound, CT and MRI for diagnosis and therapy.',
+  overview: 'This programme trains radiographers and radiation scientists in medical imaging and radiation science, covering X-ray, ultrasound, computed tomography and MRI for both diagnostic and therapeutic applications.',
+  career_opportunities: 'Radiographer, Radiation Therapist, Imaging Specialist, Healthcare Administrator',
+  icon: 'Scan', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Radiography and Radiation Science', intake: 'September/October',
+  accreditations: [{ body_name: 'Radiographers Registration Board of Nigeria (RRBN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Physics' }, { name: 'Chemistry' }, { name: 'Biology' }, { name: 'Human Anatomy' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Radiation Physics' }, { name: 'Radiographic Techniques' }, { name: 'Human Physiology' }, { name: 'Patient Care' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Radiographic Anatomy' }, { name: 'Radiation Protection' }, { name: 'Digital Imaging' }, { name: 'Ultrasound' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'CT & MRI' }, { name: 'Radiation Therapy' }, { name: 'Nuclear Medicine' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'X-ray Suite' }, { name: 'CT/MRI Centre' }, { name: 'Ultrasound Laboratory' }, { name: 'Radiation Therapy Unit' }],
+  highlights: [{ text: 'Modern imaging equipment' }, { text: 'Radiation safety training' }, { text: 'Hospital imaging rotations' }],
+ },
+ 'bsc-physiotherapy': {
+  id: 5, title: 'Physiotherapy', slug: 'bsc-physiotherapy', duration: '5 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A five-year programme training physiotherapists to help patients recover function and mobility after injury or illness.',
+  overview: 'This programme trains physiotherapists in the assessment and rehabilitation of patients, restoring function and mobility after injury, illness or surgery through physical therapy and exercise science.',
+  career_opportunities: 'Physiotherapist, Sports Therapist, Rehabilitation Specialist, Clinical Educator',
+  icon: 'Activity', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Physiotherapy', intake: 'September/October',
+  accreditations: [{ body_name: 'Medical Rehabilitation Therapists Registration Board of Nigeria (MRTB)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Biology' }, { name: 'Chemistry' }, { name: 'Physics' }, { name: 'Human Anatomy' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Human Physiology' }, { name: 'Biomechanics' }, { name: 'Kinesiology' }, { name: 'Physiotherapy Fundamentals' }] },
+   { year_label: 'Year 3 (Clinical)', courses: [{ name: 'Electrotherapy' }, { name: 'Exercise Therapy' }, { name: 'Neurological Physiotherapy' }, { name: 'Musculoskeletal Physiotherapy' }] },
+   { year_label: 'Year 4 (Advanced)', courses: [{ name: 'Cardiopulmonary Physiotherapy' }, { name: 'Paediatric Physiotherapy' }, { name: 'Sports Physiotherapy' }, { name: 'Community Physiotherapy' }] },
+   { year_label: 'Year 5 (Internship)', courses: [{ name: 'Clinical Rotations' }, { name: 'Rehabilitation Practice' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Physiotherapy Clinic' }, { name: 'Electrotherapy Suite' }, { name: 'Rehabilitation Centre' }],
+  highlights: [{ text: 'Clinical rehabilitation training' }, { text: 'Sports therapy' }, { text: 'Community outreach' }],
+ },
+ 'bsc-optometry': {
+  id: 6, title: 'Optometry', slug: 'bsc-optometry', duration: '6 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A six-year programme training optometrists in the examination, diagnosis and management of eye and vision disorders.',
+  overview: 'This programme trains optometrists in the examination, diagnosis and non-surgical management of eye and vision disorders, combining optical science with extensive clinical refraction practice.',
+  career_opportunities: 'Optometrist, Vision Researcher, Optical Centre Manager, Public Eye Health Specialist',
+  icon: 'Scan', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Optometry', intake: 'September/October',
+  accreditations: [{ body_name: 'Optometrists and Dispensing Opticians Registration Board of Nigeria (ODORBN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Biology' }, { name: 'Chemistry' }, { name: 'Physics' }, { name: 'Mathematics' }] },
+   { year_label: 'Year 2 (Basic Vision Sciences)', courses: [{ name: 'Ocular Anatomy' }, { name: 'Visual Optics' }, { name: 'Human Physiology' }, { name: 'Biochemistry' }] },
+   { year_label: 'Year 3 (Para-Clinical)', courses: [{ name: 'Geometrical Optics' }, { name: 'Ophthalmic Optics' }, { name: 'Pharmacology' }, { name: 'General Pathology' }] },
+   { year_label: 'Year 4 (Clinical)', courses: [{ name: 'Optometric Practice I' }, { name: 'Contact Lenses' }, { name: 'Binocular Vision' }, { name: 'Low Vision' }] },
+   { year_label: 'Year 5 (Advanced Clinical)', courses: [{ name: 'Optometric Practice II' }, { name: 'Ocular Diseases' }, { name: 'Community Optometry' }, { name: 'Practice Management' }] },
+   { year_label: 'Year 6 (Internship)', courses: [{ name: 'Clinical Rotations' }, { name: 'Refraction Clinics' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Optometry Clinic' }, { name: 'Refraction Laboratory' }, { name: 'Contact Lens Laboratory' }],
+  highlights: [{ text: 'Clinical refraction training' }, { text: 'Contact lens fitting' }, { text: 'Community eye care outreach' }],
+ },
+ 'bsc-public-health': {
+  id: 7, title: 'Public Health', slug: 'bsc-public-health', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in population health, disease prevention, health promotion and health policy.',
+  overview: 'This programme prepares public health professionals in population health, disease prevention, health promotion and health policy, combining epidemiology, biostatistics and field practicum.',
+  career_opportunities: 'Public Health Officer, Health Educator, Epidemiologist, Policy Analyst, NGO Program Manager',
+  icon: 'Globe', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Public Health', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Biology' }, { name: 'Chemistry' }, { name: 'Sociology' }, { name: 'Introduction to Public Health' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Epidemiology' }, { name: 'Biostatistics' }, { name: 'Health Promotion' }, { name: 'Environmental Health' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Health Policy & Management' }, { name: 'Disease Control' }, { name: 'Health Economics' }, { name: 'Research Methods' }] },
+   { year_label: 'Year 4 (Practicum)', courses: [{ name: 'Field Epidemiology' }, { name: 'Community Health Posting' }, { name: 'Health Programme Evaluation' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Public Health Laboratory' }, { name: 'Community Health Centre' }],
+  highlights: [{ text: 'Field epidemiology postings' }, { text: 'Community-based projects' }, { text: 'Policy engagement' }],
+ },
+ 'bsc-community-health-science': {
+  id: 8, title: 'Community Health Science', slug: 'bsc-community-health-science', duration: '5 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A five-year programme training community health practitioners for primary healthcare delivery at community level.',
+  overview: 'This programme trains community health practitioners for primary healthcare delivery, combining public health theory with extensive community postings and primary healthcare centre experience.',
+  career_opportunities: 'Community Health Practitioner, Primary Healthcare Coordinator, Health Extension Specialist',
+  icon: 'Globe', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Community Health', intake: 'September/October',
+  accreditations: [{ body_name: 'Community Health Practitioners Registration Board of Nigeria (CHPRBN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Biology' }, { name: 'Chemistry' }, { name: 'Sociology' }, { name: 'Health Education' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Community Health Nursing' }, { name: 'Environmental Health' }, { name: 'Epidemiology' }, { name: 'Nutrition' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Primary Health Care' }, { name: 'Family Health' }, { name: 'Health Management' }, { name: 'Biostatistics' }] },
+   { year_label: 'Year 4 (Specialty)', courses: [{ name: 'Maternal & Child Health' }, { name: 'Communicable Disease Control' }, { name: 'Health Informatics' }, { name: 'Research Methods' }] },
+   { year_label: 'Year 5 (Internship)', courses: [{ name: 'Community Postings' }, { name: 'PHC Centre Rotations' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Community Health Centre' }, { name: 'Simulation Centre' }],
+  highlights: [{ text: 'Primary healthcare focus' }, { text: 'Community postings' }, { text: 'PHC centre training' }],
+ },
+ 'bsc-dental-technology': {
+  id: 9, title: 'Dental Technology', slug: 'bsc-dental-technology', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme training dental technologists in the design, fabrication and repair of dental prostheses and appliances.',
+  overview: 'This programme trains dental technologists in the design, fabrication and repair of dental prostheses and appliances, combining materials science with practical laboratory skills.',
+  career_opportunities: 'Dental Technologist, Dental Laboratory Manager, Prosthodontic Technician',
+  icon: 'Bone', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Dental Technology', intake: 'September/October',
+  accreditations: [{ body_name: 'Dental Technologists Registration Board of Nigeria (DTRBN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Biology' }, { name: 'Chemistry' }, { name: 'Physics' }, { name: 'Introduction to Dental Technology' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Dental Anatomy' }, { name: 'Dental Materials' }, { name: 'Dental Prosthetics' }, { name: 'Oral Biology' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Removable Prosthodontics' }, { name: 'Fixed Prosthodontics' }, { name: 'Orthodontic Appliances' }, { name: 'Dental Ceramics' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Maxillofacial Technology' }, { name: 'Laboratory Management' }, { name: 'Clinical Practice' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Dental Laboratory' }, { name: 'Prosthetics Laboratory' }, { name: 'Ceramics Unit' }],
+  highlights: [{ text: 'Hands-on fabrication' }, { text: 'Modern dental lab equipment' }, { text: 'Laboratory management training' }],
+ },
+ 'bsc-health-care-administration-and-hospital-management': {
+  id: 10, title: 'Health Care Administration and Hospital Management', slug: 'bsc-health-care-administration-and-hospital-management', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme preparing health managers and administrators to lead hospitals and health services efficiently.',
+  overview: 'This programme prepares health managers and administrators to lead hospitals and health services efficiently, covering health economics, hospital operations, policy and human resources management.',
+  career_opportunities: 'Hospital Administrator, Health Services Manager, Health Policy Analyst, Medical Records Director',
+  icon: 'Heart', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Health Care Administration and Hospital Management', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Introduction to Health Care Administration' }, { name: 'Economics' }, { name: 'Sociology' }, { name: 'Management Principles' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Hospital Operations' }, { name: 'Health Economics' }, { name: 'Health Information Systems' }, { name: 'Financial Management' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Health Policy & Law' }, { name: 'Human Resources Management' }, { name: 'Quality Assurance' }, { name: 'Strategic Management' }] },
+   { year_label: 'Year 4 (Practicum)', courses: [{ name: 'Health Facility Management' }, { name: 'Hospital Administration Internship' }, { name: 'Healthcare Marketing' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Management Training Centre' }, { name: 'Teaching Hospital Attachment' }],
+  highlights: [{ text: 'Hospital attachment' }, { text: 'Leadership development' }, { text: 'Policy analysis' }],
+ },
+ 'bsc-health-information-management': {
+  id: 11, title: 'Health Information Management', slug: 'bsc-health-information-management', duration: '5 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A five-year programme in the management of health data, medical records and health information systems.',
+  overview: 'This programme trains professionals in the management of health data, medical records and health information systems, combining health informatics, classification and coding with hospital practice.',
+  career_opportunities: 'Health Information Manager, Medical Records Officer, Health Informatics Specialist, Data Analyst',
+  icon: 'Globe', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Health Information Management', intake: 'September/October',
+  accreditations: [{ body_name: 'Health Records Officers Registration Board of Nigeria (HRORBN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Biology' }, { name: 'Mathematics' }, { name: 'Computing' }, { name: 'Introduction to Health Records' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Medical Terminology' }, { name: 'Health Records Management' }, { name: 'Biostatistics' }, { name: 'Health Informatics' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Health Information Systems' }, { name: 'Classification & Coding' }, { name: 'Data Management' }, { name: 'Health Law' }] },
+   { year_label: 'Year 4 (Specialty)', courses: [{ name: 'Electronic Health Records' }, { name: 'Health Data Analytics' }, { name: 'Research Methods' }, { name: 'Records Audit' }] },
+   { year_label: 'Year 5 (Internship)', courses: [{ name: 'Hospital Records Department Rotation' }, { name: 'Health Informatics Project' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Health Informatics Laboratory' }, { name: 'Records Management Centre' }],
+  highlights: [{ text: 'Digital health systems' }, { text: 'Medical coding training' }, { text: 'Hospital attachments' }],
+ },
+ 'bsc-human-nutrition-and-dietetics': {
+  id: 12, title: 'Human Nutrition and Dietetics', slug: 'bsc-human-nutrition-and-dietetics', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme training nutritionists and dietitians in the science of nutrition and therapeutic dietetics.',
+  overview: 'This programme trains nutritionists and dietitians in the science of nutrition and therapeutic dietetics, combining nutritional biochemistry, food science and clinical dietetics practice.',
+  career_opportunities: 'Dietitian, Nutritionist, Public Health Nutritionist, Food Service Manager',
+  icon: 'Heart', color: '#A51C30', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Human Nutrition and Dietetics', intake: 'September/October',
+  accreditations: [{ body_name: 'Dietitians Council of Nigeria (DCN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Biology' }, { name: 'Chemistry' }, { name: 'Human Physiology' }, { name: 'Introduction to Nutrition' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Nutritional Biochemistry' }, { name: 'Food Science' }, { name: 'Community Nutrition' }, { name: 'Nutrition Assessment' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Clinical Nutrition' }, { name: 'Diet Therapy' }, { name: 'Maternal & Child Nutrition' }, { name: 'Human Nutrition' }] },
+   { year_label: 'Year 4 (Practicum)', courses: [{ name: 'Therapeutic Dietetics' }, { name: 'Public Health Nutrition' }, { name: 'Dietetic Internship' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Nutrition Laboratory' }, { name: 'Dietetics Clinic' }],
+  highlights: [{ text: 'Clinical dietetics practice' }, { text: 'Community nutrition programmes' }, { text: 'Food science laboratories' }],
+ },
+ 'doctor-of-pharmacy': {
+  id: 13, title: 'Pharmacy', slug: 'doctor-of-pharmacy', duration: '6 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'Pharm.D',
+  description: 'A six-year Doctor of Pharmacy programme covering pharmaceutical sciences, clinical pharmacy and professional pharmacy practice.',
+  overview: 'The Doctor of Pharmacy programme covers pharmaceutical sciences, clinical pharmacy and professional practice, preparing graduates for patient-centred pharmacy care, drug regulation and pharmaceutical research.',
+  career_opportunities: 'Pharmacist, Clinical Pharmacist, Pharmaceutical Researcher, Drug Regulatory Affairs Officer',
+  icon: 'Award', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Pharmacy', intake: 'September/October',
+  accreditations: [{ body_name: 'Pharmacists Council of Nigeria (PCN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Chemistry' }, { name: 'Biology' }, { name: 'Physics' }, { name: 'Mathematics' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Pharmaceutical Chemistry' }, { name: 'Pharmacology I' }, { name: 'Human Anatomy' }, { name: 'Human Physiology' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Pharmacognosy' }, { name: 'Pharmaceutics' }, { name: 'Pharmacology II' }, { name: 'Biochemistry' }] },
+   { year_label: 'Year 4 (Clinical)', courses: [{ name: 'Clinical Pharmacy' }, { name: 'Pharmacokinetics' }, { name: 'Drug Delivery Systems' }, { name: 'Hospital Pharmacy' }] },
+   { year_label: 'Year 5 (Advanced Clinical)', courses: [{ name: 'Pharmacotherapy' }, { name: 'Pharmacy Practice' }, { name: 'Regulatory Affairs' }, { name: 'Research Methods' }] },
+   { year_label: 'Year 6 (Internship)', courses: [{ name: 'Clinical Rotations' }, { name: 'Community Pharmacy Practice' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Pharmacy Simulation Laboratory' }, { name: 'Drug Analysis Laboratory' }, { name: 'Teaching Hospital Pharmacy' }],
+  highlights: [{ text: 'Clinical pharmacy training' }, { text: 'Pharmaceutical research' }, { text: 'Regulatory affairs exposure' }],
+ },
+ 'bds-dentistry': {
+  id: 14, title: 'Dentistry', slug: 'bds-dentistry', duration: '6 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BDS',
+  description: 'A six-year Bachelor of Dental Surgery programme training dental surgeons in oral health care and maxillofacial surgery.',
+  overview: 'The Bachelor of Dental Surgery programme trains dental surgeons in the prevention, diagnosis and treatment of oral diseases, combining dental sciences with comprehensive clinical training in maxillofacial surgery.',
+  career_opportunities: 'Dental Surgeon, Oral Health Specialist, Dental Public Health Officer, Dental Researcher',
+  icon: 'Stethoscope', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Dental Surgery', intake: 'September/October',
+  accreditations: [{ body_name: 'Medical and Dental Council of Nigeria (MDCN)' }, { body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Pre-Med)', courses: [{ name: 'Human Anatomy' }, { name: 'Human Physiology' }, { name: 'Biochemistry' }, { name: 'Dental Anatomy' }] },
+   { year_label: 'Year 2 (Basic Sciences)', courses: [{ name: 'Oral Biology' }, { name: 'Dental Materials' }, { name: 'Microbiology' }, { name: 'Pathology' }] },
+   { year_label: 'Year 3 (Para-Clinical)', courses: [{ name: 'Oral Pathology' }, { name: 'Pharmacology' }, { name: 'Preventive Dentistry' }, { name: 'Community Dentistry' }] },
+   { year_label: 'Year 4-6 (Clinical)', courses: [{ name: 'Conservative Dentistry' }, { name: 'Periodontology' }, { name: 'Oral & Maxillofacial Surgery' }, { name: 'Orthodontics' }, { name: 'Prosthodontics' }, { name: 'Paediatric Dentistry' }] },
+  ],
+  facilities: [{ name: 'Dental Clinic' }, { name: 'Oral Surgery Suite' }, { name: 'Dental Radiology Unit' }, { name: 'Dental Laboratory' }],
+  highlights: [{ text: 'Hands-on clinical training' }, { text: 'Community dental outreach' }, { text: 'Modern dental equipment' }],
+ },
+ 'bsc-human-anatomy': {
+  id: 15, title: 'Human Anatomy', slug: 'bsc-human-anatomy', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme focused on the structure of the human body, providing foundations for medical and health sciences careers.',
+  overview: 'This programme provides comprehensive knowledge of the structure of the human body, combining gross anatomy, histology and embryology with laboratory dissection and research practice.',
+  career_opportunities: 'Anatomist, Medical Illustrator, Forensic Scientist, Research Assistant, Lecturer',
+  icon: 'Bone', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Human Anatomy', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Biology' }, { name: 'General Chemistry' }, { name: 'Physics' }, { name: 'Mathematics' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Gross Anatomy I' }, { name: 'Histology' }, { name: 'Embryology' }, { name: 'Human Physiology' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Neuroanatomy' }, { name: 'Regional Anatomy' }, { name: 'Anatomical Techniques' }, { name: 'Medical Ethics' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Applied Anatomy' }, { name: 'Clinical Anatomy' }, { name: 'Anatomy Teaching Practice' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Anatomy Dissection Laboratory' }, { name: 'Histology Laboratory' }, { name: 'Anatomy Museum' }],
+  highlights: [{ text: 'Cadaveric dissection' }, { text: 'Research opportunities' }, { text: 'Teaching practice' }],
+ },
+ 'bsc-human-physiology': {
+  id: 16, title: 'Human Physiology', slug: 'bsc-human-physiology', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in the study of body functions and regulatory mechanisms for research and academic careers.',
+  overview: 'This programme provides in-depth understanding of how the human body functions, from cellular mechanisms to integrated organ systems, preparing graduates for research, academic and clinical support careers.',
+  career_opportunities: 'Physiologist, Research Scientist, Lecturer, Pharmaceutical Researcher',
+  icon: 'Brain', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Human Physiology', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Biology' }, { name: 'General Chemistry' }, { name: 'Physics' }, { name: 'Mathematics' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Human Anatomy' }, { name: 'General Physiology' }, { name: 'Biochemistry' }, { name: 'Cell Biology' }] },
+   { year_label: 'Year 3 (Systems)', courses: [{ name: 'Cardiovascular Physiology' }, { name: 'Renal Physiology' }, { name: 'Neurophysiology' }, { name: 'Endocrine Physiology' }] },
+   { year_label: 'Year 4 (Advanced)', courses: [{ name: 'Exercise Physiology' }, { name: 'Clinical Physiology' }, { name: 'Physiological Techniques' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Physiology Laboratory' }, { name: 'Research Laboratory' }, { name: 'Animal House' }],
+  highlights: [{ text: 'Systems-based learning' }, { text: 'Laboratory research' }, { text: 'Research internships' }],
+ },
+ 'bsc-biochemistry': {
+  id: 17, title: 'Biochemistry', slug: 'bsc-biochemistry', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in the chemistry of life, covering metabolic processes, molecular biology and clinical biochemistry.',
+  overview: 'This programme explores the chemistry of life, covering metabolic processes, molecular biology and clinical biochemistry, preparing graduates for research, diagnostics and pharmaceutical careers.',
+  career_opportunities: 'Biochemist, Research Scientist, Laboratory Analyst, Pharmaceutical Researcher, Quality Control Officer',
+  icon: 'Microscope', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Biochemistry', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Biology' }, { name: 'General Chemistry' }, { name: 'Physics' }, { name: 'Mathematics' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Organic Chemistry' }, { name: 'General Biochemistry' }, { name: 'Human Physiology' }, { name: 'Genetics' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Enzymology' }, { name: 'Molecular Biology' }, { name: 'Metabolism' }, { name: 'Clinical Biochemistry' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Medical Biochemistry' }, { name: 'Biotechnology' }, { name: 'Quality Control' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Biochemistry Laboratory' }, { name: 'Molecular Biology Laboratory' }, { name: 'Instrumentation Laboratory' }],
+  highlights: [{ text: 'Molecular biology research' }, { text: 'Clinical biochemistry exposure' }, { text: 'Industry links' }],
+ },
+ 'bsc-biology': {
+  id: 18, title: 'Biology', slug: 'bsc-biology', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in the biological sciences covering the structure, function and diversity of living organisms.',
+  overview: 'This programme covers the structure, function and diversity of living organisms, combining botany, zoology, genetics and ecology with field and laboratory research experience.',
+  career_opportunities: 'Biologist, Research Scientist, Environmental Officer, Science Educator, Lab Technician',
+  icon: 'BookOpen', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Biology', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Biology' }, { name: 'General Chemistry' }, { name: 'Mathematics' }, { name: 'Physics' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Botany' }, { name: 'Zoology' }, { name: 'Genetics' }, { name: 'Ecology' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Microbiology' }, { name: 'Cell Biology' }, { name: 'Physiology' }, { name: 'Molecular Biology' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Biotechnology' }, { name: 'Environmental Biology' }, { name: 'Parasitology' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Biology Laboratory' }, { name: 'Microscopy Laboratory' }, { name: 'Botanical Garden' }],
+  highlights: [{ text: 'Field studies' }, { text: 'Laboratory research' }, { text: 'Environmental projects' }],
+ },
+ 'bsc-chemistry': {
+  id: 19, title: 'Chemistry', slug: 'bsc-chemistry', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in the composition, structure and properties of matter and the reactions that transform it.',
+  overview: 'This programme provides a thorough grounding in organic, inorganic, physical and analytical chemistry, preparing graduates for careers in research, industry and quality control.',
+  career_opportunities: 'Chemist, Analytical Chemist, Quality Control Analyst, Industrial Chemist, Science Educator',
+  icon: 'BookOpen', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Chemistry', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Chemistry' }, { name: 'Mathematics' }, { name: 'Physics' }, { name: 'Biology' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Organic Chemistry' }, { name: 'Physical Chemistry' }, { name: 'Inorganic Chemistry' }, { name: 'Analytical Chemistry' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Spectroscopy' }, { name: 'Thermodynamics' }, { name: 'Polymer Chemistry' }, { name: 'Industrial Chemistry' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Instrumental Analysis' }, { name: 'Medicinal Chemistry' }, { name: 'Quality Control' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Chemistry Laboratory' }, { name: 'Analytical Instrumentation Laboratory' }, { name: 'Research Laboratory' }],
+  highlights: [{ text: 'Instrumental analysis' }, { text: 'Industrial chemistry links' }, { text: 'Quality control training' }],
+ },
+ 'bsc-computer-science': {
+  id: 20, title: 'Computer Science', slug: 'bsc-computer-science', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in computing, covering algorithms, programming, software development and information systems.',
+  overview: 'This programme develops computing professionals through a curriculum covering algorithms, programming, data structures, software engineering and information systems, with growing emphasis on AI and data science.',
+  career_opportunities: 'Software Developer, Systems Analyst, IT Consultant, Data Scientist, Network Administrator',
+  icon: 'BookOpen', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Computer Science', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Computer Fundamentals' }, { name: 'Mathematics' }, { name: 'Programming Logic' }, { name: 'Communication Skills' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Data Structures' }, { name: 'Discrete Mathematics' }, { name: 'Object-Oriented Programming' }, { name: 'Digital Logic' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Operating Systems' }, { name: 'Databases' }, { name: 'Algorithms' }, { name: 'Computer Networks' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Software Engineering' }, { name: 'Artificial Intelligence' }, { name: 'Web & Mobile Development' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Computer Laboratory' }, { name: 'Software Development Laboratory' }, { name: 'AI Laboratory' }],
+  highlights: [{ text: 'Software development projects' }, { text: 'AI & data science exposure' }, { text: 'Industry internships' }],
+ },
+ 'bsc-mathematics': {
+  id: 21, title: 'Mathematics', slug: 'bsc-mathematics', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in pure and applied mathematics, developing strong analytical and problem-solving skills.',
+  overview: 'This programme develops strong analytical and problem-solving skills through pure and applied mathematics, including analysis, algebra, numerical methods and mathematical modelling.',
+  career_opportunities: 'Mathematician, Statistician, Actuary, Data Analyst, Mathematics Educator',
+  icon: 'BookOpen', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Mathematics', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Calculus' }, { name: 'Algebra' }, { name: 'Set Theory' }, { name: 'Mathematical Methods' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Real Analysis' }, { name: 'Linear Algebra' }, { name: 'Differential Equations' }, { name: 'Statistics' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Abstract Algebra' }, { name: 'Complex Analysis' }, { name: 'Numerical Analysis' }, { name: 'Mathematical Modelling' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Topology' }, { name: 'Operations Research' }, { name: 'Applied Mathematics' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Mathematics Laboratory' }, { name: 'Computer Laboratory' }],
+  highlights: [{ text: 'Analytical problem solving' }, { text: 'Data analysis skills' }, { text: 'Research mentorship' }],
+ },
+ 'bsc-microbiology': {
+  id: 22, title: 'Microbiology', slug: 'bsc-microbiology', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in the study of microorganisms and their roles in health, disease, industry and the environment.',
+  overview: 'This programme studies microorganisms and their roles in health, disease, industry and the environment, covering bacteriology, virology, mycology, immunology and biotechnology.',
+  career_opportunities: 'Microbiologist, Laboratory Scientist, Quality Control Analyst, Food Safety Officer, Research Scientist',
+  icon: 'Microscope', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Microbiology', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Biology' }, { name: 'General Chemistry' }, { name: 'Mathematics' }, { name: 'Physics' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'General Microbiology' }, { name: 'Biochemistry' }, { name: 'Genetics' }, { name: 'Bacteriology' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Virology' }, { name: 'Mycology' }, { name: 'Immunology' }, { name: 'Environmental Microbiology' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Medical Microbiology' }, { name: 'Food & Industrial Microbiology' }, { name: 'Biotechnology' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Microbiology Laboratory' }, { name: 'Culture Room' }, { name: 'Molecular Laboratory' }],
+  highlights: [{ text: 'Clinical microbiology training' }, { text: 'Industrial placements' }, { text: 'Laboratory skills' }],
+ },
+ 'bsc-physics-with-electronics': {
+  id: 23, title: 'Physics with Electronics', slug: 'bsc-physics-with-electronics', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in physics with emphasis on electronics, instrumentation and applied technology.',
+  overview: 'This programme combines physics with a strong emphasis on electronics, instrumentation and applied technology, preparing graduates for careers in research, engineering and ICT.',
+  career_opportunities: 'Physicist, Electronics Engineer, Instrumentation Specialist, Research Scientist, ICT Officer',
+  icon: 'BookOpen', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Physics with Electronics', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'General Physics' }, { name: 'Mathematics' }, { name: 'Chemistry' }, { name: 'Computer Fundamentals' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Mechanics & Waves' }, { name: 'Electricity & Magnetism' }, { name: 'Calculus' }, { name: 'Electronics I' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Quantum Physics' }, { name: 'Electromagnetism' }, { name: 'Digital Electronics' }, { name: 'Instrumentation' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Solid State Physics' }, { name: 'Microprocessors' }, { name: 'Applied Electronics' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Physics Laboratory' }, { name: 'Electronics Laboratory' }, { name: 'Instrumentation Laboratory' }],
+  highlights: [{ text: 'Instrumentation skills' }, { text: 'Electronics design' }, { text: 'Applied technology projects' }],
+ },
+ 'bsc-statistics': {
+  id: 24, title: 'Statistics', slug: 'bsc-statistics', duration: '4 years',
+  requirements: "Five O'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.",
+  applicationFee: { local: 2500, intl: 50 },
+  degree: 'BSc',
+  description: 'A four-year programme in the collection, analysis and interpretation of data for informed decision-making.',
+  overview: 'This programme trains statisticians in the collection, analysis and interpretation of data, with emphasis on biostatistics, probability, regression and statistical modelling for informed decision-making.',
+  career_opportunities: 'Statistician, Data Analyst, Biostatistician, Survey Methodologist, Actuarial Analyst',
+  icon: 'BookOpen', color: '#1E1E1E', category: 'undergraduate', level: 'undergraduate',
+  college: 'College of Medicine', department: 'Statistics', intake: 'September/October',
+  accreditations: [{ body_name: 'National Universities Commission (NUC)' }],
+  curriculum_years: [
+   { year_label: 'Year 1 (Foundation)', courses: [{ name: 'Calculus' }, { name: 'Algebra' }, { name: 'Introduction to Statistics' }, { name: 'Computing' }] },
+   { year_label: 'Year 2 (Core)', courses: [{ name: 'Probability' }, { name: 'Statistical Inference' }, { name: 'Regression Analysis' }, { name: 'Data Analysis' }] },
+   { year_label: 'Year 3 (Advanced)', courses: [{ name: 'Sampling Theory' }, { name: 'Biostatistics' }, { name: 'Econometrics' }, { name: 'Design of Experiments' }] },
+   { year_label: 'Year 4 (Specialisation)', courses: [{ name: 'Multivariate Analysis' }, { name: 'Time Series' }, { name: 'Statistical Modelling' }, { name: 'Research Project' }] },
+  ],
+  facilities: [{ name: 'Statistics Laboratory' }, { name: 'Computer Laboratory' }],
+  highlights: [{ text: 'Biostatistics skills' }, { text: 'Data analytics' }, { text: 'Research support' }],
+ },
 };
 
 export const mockFaculty: Faculty[] = [
@@ -245,94 +949,22 @@ export const mockColleges: College[] = [
  {
   id: 1,
   name: "College of Medicine",
-  slug: "medicine",
-  subdomain: "medicine.bmu.edu.ng",
-  description: "The College of Medicine is the flagship college of BMU, offering the MBBS program and training the next generation of physicians.",
-  deanName: "Prof. Emmanuel Ekanem",
+  slug: "college-of-medicine",
+  description: "The College of Medicine is the flagship college of Bayelsa Medical University, housing the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences. The University's other faculties — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — operate as standalone faculties with their own departments.",
   establishedYear: 2018,
-  facultyCount: 120,
-  studentCount: 850,
-  facultyMembersCount: 120,
-  departments: ["Basic Medical Sciences", "Clinical Sciences", "Community Medicine"],
-  programs: ["MBBS", "MSc Medical Microbiology", "PhD Anatomy"],
+  facultyCount: 2,
+  studentCount: 970,
+  facultyMembersCount: 108,
+  departments: ["Biochemistry", "Human Anatomy", "Human Physiology", "Medicine & Surgery"],
+  programs: ["Medicine and Surgery", "Human Anatomy", "Human Physiology", "Biochemistry"],
   primaryColor: "#1E1E1E",
-  secondaryColor: "#00a651",
+  secondaryColor: "#A51C30",
   iconName: "GraduationCap",
-  previewImage: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=600&q=80"
-  },
- {
-  id: 2,
-  name: "School of Allied Health Sciences",
-  slug: "allied-health",
-  description: "Training professionals in medical laboratory science, radiography, physiotherapy, and more.",
-  deanName: "Dr. Grace Ebi",
-  establishedYear: 2019,
-  facultyCount: 45,
-  studentCount: 600,
-  facultyMembersCount: 45,
-  departments: ["Medical Laboratory Science", "Radiography", "Physiotherapy"],
-  programs: ["BMLS", "BSc Radiography", "BSc Physiotherapy"],
-  iconName: "Microscope",
-  previewImage: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600&q=80"
-  },
- {
-  id: 3,
-  name: "School of Nursing",
-  slug: "nursing",
-  description: "Producing compassionate and competent nursing professionals.",
-  deanName: "Prof. Helen Douglas",
-  establishedYear: 2018,
-  facultyCount: 35,
-  studentCount: 450,
-  facultyMembersCount: 35,
-  departments: ["Nursing", "Midwifery"],
-  programs: ["B.NSc", "Post-RN", "MSc Nursing"],
-  iconName: "HeartPulse",
-  previewImage: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&q=80"
-  },
- {
-  id: 4,
-  name: "School of Postgraduate Studies",
-  slug: "postgraduate",
-  description: "Advanced training and research at master's and doctoral levels.",
-  deanName: "Prof. Michael Ogu",
-  establishedYear: 2020,
-  facultyCount: 80,
-  studentCount: 300,
-  facultyMembersCount: 80,
-  departments: ["All departments across colleges"],
-  programs: ["MPH", "MSc", "PhD"],
-  iconName: "BookOpen",
-  previewImage: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80"
-  },
- {
-  id: 5,
-  name: "Institute of Public Health",
-  slug: "public-health",
-  description: "Focusing on population health, epidemiology, and health policy.",
-  deanName: "Prof. Chioma Amadi",
-  establishedYear: 2020,
-  facultyCount: 25,
-  studentCount: 350,
-  facultyMembersCount: 25,
-  departments: ["Epidemiology", "Health Policy", "Biostatistics"],
-  programs: ["BPH", "MPH", "PhD Public Health"],
-  iconName: "Globe",
-  previewImage: "https://images.unsplash.com/photo-1576670159805-3817f06fae1e?w=600&q=80"
-  },
- {
-  id: 6,
-  name: "Continuing Professional Development (CPD)",
-  slug: "cpd",
-  description: "Lifelong learning for medical professionals.",
-  directorName: "Dr. Peter Iruo",
-  establishedYear: 2022,
-  departments: [],
-  programs: [],
-  courses: ["Health Research Methods", "Biostatistics", "Infection Control"],
-  iconName: "Library",
-  previewImage: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&q=80"
-  }
+  faculties: [
+   { id: 1, name: "Faculty of Basic Medical Sciences", slug: "faculty-of-basic-medical-sciences", code: "FBMS", description: "Foundational medical sciences — human anatomy, human physiology and biochemistry.", department_count: 3, dean_name: "Dr. Theodore Allison" },
+   { id: 2, name: "Faculty of Clinical Sciences", slug: "faculty-of-clinical-sciences", code: "FCLS", description: "Clinical education culminating in the six-year MBBS degree.", department_count: 1, dean_name: "Prof. Isaac J. Abasi" }
+  ]
+ }
 ];
 
 export const mockSDGMetrics: Record<string, SDGData> = {
@@ -761,19 +1393,21 @@ export interface LeadershipProfile {
 }
 
 export const mockLeadership: LeadershipProfile[] = [
-  { id: 1, full_name: 'Prof. Dimie Ogoina', position: 'vc', position_display: 'Vice Chancellor', specific_title: 'Vice Chancellor', biography: 'Professor Dimie brings over 25 years of experience in medical education and healthcare administration. Former MD the Niger Delta University Teaching Hospital, he has published extensively in public health and health systems research.', qualifications: 'MBBS, FWACS, PhD', research_interests: 'Infectious Disease Control, Public Health Policy, Health Systems Research', email: 'vc@bmu.edu.ng', phone: '+234 803 111 0001', photo: null, achievements: 'Established 3 new research centers at BMU\nSecured $2M in research grants\nPublished 50+ peer-reviewed articles', publications: [{ title: 'Health Systems Resilience in the Niger Delta', journal: 'African Journal of Public Health', year: 2023, citations: 15 }, { title: 'Medical Education Reform in Nigeria', journal: 'Medical Education International', year: 2022, citations: 28 }] },
-  { id: 2, full_name: 'Prof. Ligha Aloysius Ebi', position: 'dvc_academic', position_display: 'Deputy Vice Chancellor - Academic', specific_title: 'Deputy Vice Chancellor', biography: 'Professor Ligha Aloysius Ebi is a renowned professor of Nursing with expertise in curriculum development and quality assurance in health professions education.', qualifications: 'PhD Nursing, MSc Health Education', research_interests: 'Nursing Education, Curriculum Development, Quality Assurance', email: 'dvc.academic@bmu.edu.ng', phone: '+234 803 111 0002', photo: null, achievements: 'Developed competency-based nursing curriculum\nLed BMU to full NMCN accreditation\nEstablished virtual simulation laboratory', publications: [{ title: 'Virtual Simulation in Nursing Education', journal: 'Nurse Education Today', year: 2023, citations: 12 }, { title: 'Competency-Based Nursing Education in African Context', journal: 'International Nursing Review', year: 2022, citations: 20 }] },
-  { id: 3, full_name: 'Prof. Godwill Abraham Ziriki', position: 'dvc_admin', position_display: 'Deputy Vice Chancellor - Administration', specific_title: 'Deputy Vice Chancellor, Sampou Campus', biography: 'Professor Godwill Abraham Ziriki oversees the administrative operations of the Sampou Campus. With expertise in Physics, he has successfully managed the Sampou Campus of the University effectively.', qualifications: 'MBBS, MPH, MBA', research_interests: 'Healthcare Management, Strategic Planning, Operations Management', email: 'dvc.admin@bmu.edu.ng', phone: '+234 803 111 0003', photo: null, achievements: 'Implemented ERP system reducing costs by 30%\nEstablished performance management framework\nLed ISO 9001 certification process', publications: [{ title: 'Operational Efficiency in Nigerian Universities', journal: 'Journal of Higher Education Management', year: 2023, citations: 8 }] },
-  { id: 4, full_name: 'Dr. Mrs. Felicia Eyimuze Akusu', position: 'registrar', position_display: 'Registrar', specific_title: 'Registrar', biography: 'Dr. Felicia manages the university\'s governance and administrative records. She brings expertise in academic policy and regulatory compliance.', qualifications: 'PhD Educational Administration', research_interests: 'Educational Administration, Regulatory Compliance, Records Management', email: 'registrar@bmu.edu.ng', phone: '+234 803 111 0004', photo: null, achievements: 'Processed accreditation for 15+ programs\nImplemented digital records management system\nEstablished quality assurance framework', publications: [{ title: 'Digital Transformation in University Administration', journal: 'Journal of Educational Management in Africa', year: 2023, citations: 5 }] },
-  { id: 5, full_name: 'Mr. David Alagoa', position: 'bursar', position_display: 'Bursar', specific_title: 'Bursar', biography: 'Mr. Alagoa oversees all financial operations of the university. With over 15 years of experience in educational institution finance, he ensures prudent resource management.', qualifications: 'MBA (Finance), ACA', research_interests: '', email: 'bursar@bmu.edu.ng', phone: '+234 803 111 0021', photo: null, achievements: 'Implemented automated financial reporting\nAchieved clean audit for 5 consecutive years\nReduced processing time by 40%', publications: [{ title: 'Financial Sustainability in Nigerian Universities', journal: 'Journal of Educational Finance in Africa', year: 2023, citations: 3 }] },
-  { id: 6, full_name: 'Mrs. Blessing Ayibatari', position: 'librarian', position_display: 'University Librarian', specific_title: 'University Librarian', biography: 'Mrs. Ayibatari manages the university library system and digital resources. She has transformed BMU\'s library into a modern information center.', qualifications: 'MLS, MA (Information Science)', research_interests: 'Library Management, Information Science, Digital Resources', email: 'librarian@bmu.edu.ng', phone: '+234 803 111 0022', photo: null, achievements: 'Digital library transformation completed\nAccess to 50+ medical databases secured\nLibrary usage increased by 200%', publications: [{ title: 'Digital Transformation in Academic Libraries', journal: 'Library Trends', year: 2023, citations: 10 }] },
-  { id: 7, full_name: 'Engr. Tonye Oweifa', position: 'director', position_display: 'Director', specific_title: 'Director of Works', biography: 'Engr. Tonye manages the university\'s physical infrastructure development and maintenance, ensuring a safe and conducive environment for learning.', qualifications: 'B.Eng (Civil), MNSE', research_interests: '', email: 'director.works@bmu.edu.ng', phone: '+234 803 111 0023', photo: null, achievements: 'Completed 5 major construction projects\nReduced maintenance costs by 25%\nImplemented preventive maintenance system', publications: [] },
-  { id: 8, full_name: 'Prof. John Okonkwo', position: 'dean', position_display: 'Dean', specific_title: 'Dean, College of Medicine', biography: 'Professor Okonkwo is an experienced internist with over 20 years of clinical and teaching experience. He leads the College of Medicine with a focus on producing competent physicians.', qualifications: 'MBBS, PhD (Internal Medicine)', research_interests: 'Internal Medicine, Tropical Medicine, Medical Education', email: 'dean.medicine@bmu.edu.ng', phone: '+234 803 111 0011', photo: null, achievements: 'Established 5 new clinical training partnerships\nPublished 40+ peer-reviewed articles\nLed MBBS program to full MDCN accreditation', publications: [{ title: 'Pattern of Cardiovascular Disease in the Niger Delta', journal: 'Nigerian Medical Journal', year: 2023, citations: 22 }, { title: 'Community-Based Medical Education: The BMU Model', journal: 'Medical Education International', year: 2022, citations: 15 }] },
-  { id: 9, full_name: 'Dr. Grace Ebi', position: 'dean', position_display: 'Dean', specific_title: 'Dean, School of Allied Health Sciences', biography: 'Dr. Ebi brings extensive experience in public health and laboratory medicine. She oversees programs in medical laboratory science, radiography, and other allied health disciplines.', qualifications: 'MBBS, MPH, MSc (Medical Laboratory Science)', research_interests: 'Public Health, Medical Laboratory Science, Disease Surveillance', email: 'dean.alliedhealth@bmu.edu.ng', phone: '+234 803 111 0012', photo: null, achievements: 'WHO Consultant on Laboratory Systems\nEstablished 3 new allied health programs\nPublished 25+ articles on laboratory medicine', publications: [{ title: 'Quality Assurance in Medical Laboratory Practice', journal: 'African Journal of Laboratory Medicine', year: 2023, citations: 18 }] },
-  { id: 10, full_name: 'Prof. Helen Douglas', position: 'dean', position_display: 'Dean', specific_title: 'Dean, School of Nursing', biography: 'Professor Douglas serves dual roles as DVC Academic and Dean of Nursing. She is a renowned nursing educator with expertise in curriculum development.', qualifications: 'PhD Nursing, MSc Health Education', research_interests: 'Nursing Education, Maternal Health, Clinical Simulation', email: 'dean.nursing@bmu.edu.ng', phone: '+234 803 111 0002', photo: null, achievements: 'Achieved NMCN full accreditation\nDeveloped simulation-based nursing curriculum\nPublished 30+ nursing education articles', publications: [{ title: 'Competency-Based Nursing Education: Implementation and Outcomes', journal: 'International Nursing Review', year: 2023, citations: 25 }] },
-  { id: 11, full_name: 'Prof. Michael Ogu', position: 'dean', position_display: 'Dean', specific_title: 'Dean, School of Postgraduate Studies', biography: 'Professor Ogu manages postgraduate programs at BMU, ensuring high standards for advanced degrees and research supervision.', qualifications: 'MBBS, MPH, MBA', research_interests: 'Postgraduate Education, Research Methodology, Health Systems Research', email: 'dean.postgraduate@bmu.edu.ng', phone: '+234 803 111 0003', photo: null, achievements: 'Established 4 new postgraduate programs\nSupervised 20+ postgraduate theses\nPublished 35+ research articles', publications: [{ title: 'Postgraduate Research Output in Nigerian Universities', journal: 'Journal of Higher Education in Africa', year: 2023, citations: 7 }] },
-  { id: 12, full_name: 'Prof. Chioma Amadi', position: 'director', position_display: 'Director', specific_title: 'Director, Institute of Public Health', biography: 'Professor Amadi is an epidemiologist with expertise in disease surveillance and community health interventions. She leads public health research and training initiatives.', qualifications: 'MBBS, DrPH (Epidemiology)', research_interests: 'Epidemiology, Disease Surveillance, Infectious Disease Control', email: 'director.publichealth@bmu.edu.ng', phone: '+234 803 111 0015', photo: null, achievements: 'Led 10+ major disease outbreak investigations\nPublished 50+ public health research articles\nTrained 500+ public health professionals', publications: [{ title: 'Disease Surveillance Systems in the Niger Delta', journal: 'African Journal of Public Health', year: 2023, citations: 30 }] },
-  { id: 13, full_name: 'Dr. Peter Iruo', position: 'director', position_display: 'Director', specific_title: 'Director, Continuing Professional Development', biography: 'Dr. Iruo coordinates professional development programs for healthcare practitioners. He has pioneered innovative approaches to continuing medical education.', qualifications: 'MBBS, MSc (Health Professions Education)', research_interests: 'Continuing Medical Education, Health Professions Education, Blended Learning', email: 'director.cpd@bmu.edu.ng', phone: '+234 803 111 0016', photo: null, achievements: 'Developed 20+ CPD programs\nTrained 1,000+ healthcare professionals\nEstablished online CPD platform', publications: [{ title: 'Blended Learning in Continuing Medical Education', journal: 'Journal of Continuing Education in the Health Professions', year: 2023, citations: 14 }] },
+  { id: 1, full_name: 'Prof. Dimie Ogoina', position: 'vc', position_display: 'Vice Chancellor', specific_title: 'Vice Chancellor', biography: 'Professor Dimie Ogoina is the Vice-Chancellor of Bayelsa Medical University (BMU), having assumed office on 2nd October 2024. An internationally acclaimed physician-scientist and infectious diseases specialist, he is the second substantive Vice-Chancellor of the University, succeeding the pioneer Vice-Chancellor, Professor Ebitimitula Nicholas Etebu. He is globally renowned for his pioneering work on mpox and was named one of Nature\'s Top 10 Scientists (2022) and among TIME\'s 100 Most Influential People in the World (2023).', qualifications: 'MBBS, FMCP, FWACP, FIDSA, FACP', research_interests: 'Infectious diseases, Mpox, Global health governance, Health systems', email: 'vc@bmu.edu.ng', phone: '+234 803 111 0001', photo: null, achievements: 'Named one of Nature\'s Top 10 Scientists (2022)\nListed among TIME\'s 100 Most Influential People in the World (2023)\nConsistently ranked among Stanford University\'s World Top 2% Scientists\nChair, WHO Emergency Committee on Mpox\nAuthored over 100 peer-reviewed publications', publications: [{ title: 'Evidence of mpox sexual transmission and implications for outbreak control', journal: 'The Lancet Infectious Diseases', year: 2022, citations: 120 }, { title: 'Mpox in Nigeria: clinical features and public health response', journal: 'New England Journal of Medicine', year: 2023, citations: 85 }] },
+  { id: 2, full_name: 'Prof. Ligha Aloysius Ebi', position: 'dvc_academic', position_display: 'Deputy Vice Chancellor - Academic', specific_title: 'Deputy Vice Chancellor (Administration & Academics)', biography: 'Professor Ligha Aloysius Ebi is an accomplished physician, academic, and administrator with over two decades of teaching, research, and clinical experience. He rose through the academic ranks to become Professor of Anatomy in 2017 and served in key leadership roles including Acting Dean of the Faculty of Basic Medical Sciences and Acting Provost at Niger Delta University. In 2024, he was appointed Deputy Vice-Chancellor (Administration & Academics) of Bayelsa Medical University.', qualifications: 'MBBS, MSc, MD, PhD, FPCR', research_interests: 'Radiological anatomy, Histology, Reproductive biology, Medical education', email: 'dvc.academic@bmu.edu.ng', phone: '+234 803 111 0002', photo: null, achievements: 'Professor of Anatomy (2017)\nDeputy Vice-Chancellor (Administration & Academics), BMU (2024)\nOver 40 publications in peer-reviewed journals\nDelivered the 58th Inaugural Lecture of Niger Delta University (2024)', publications: [] },
+  { id: 3, full_name: 'Prof. Godwill Abraham Ziriki', position: 'dvc_admin', position_display: 'Deputy Vice Chancellor - Administration', specific_title: 'Deputy Vice Chancellor, Sampou Campus', biography: 'Professor Godwill Abraham Ziriki is the Deputy Vice Chancellor in charge of the Sampou Campus of Bayelsa Medical University. He holds a Ph.D., M.Sc., and B.Sc. in Physics.', qualifications: 'PhD, M.Sc, B.Sc', research_interests: '', email: 'dvc.admin@bmu.edu.ng', phone: '+234 803 111 0003', photo: null, achievements: '', publications: [] },
+  { id: 4, full_name: 'Dr. Mrs. Felicia Eyimuze Akusu', position: 'registrar', position_display: 'Registrar', specific_title: 'Registrar/Secretary to Council', biography: 'Dr. Mrs. Felicia Eyimuze Akusu is the 2nd substantive Registrar of Bayelsa Medical University (BMU). She earned a B.Sc. in Business Education from the Rivers State University of Science and Technology (RSUST), a Master\'s degree in Educational Planning and Management, and a Ph.D. in Educational Management from Niger Delta University. She has rendered over twenty-nine years of dedicated service in tertiary education administration.', qualifications: 'PhD (Educational Management), M.Sc (Educational Planning & Management), B.Sc (Business Education)', research_interests: 'Educational management, University administration, Governance', email: 'registrar@bmu.edu.ng', phone: '+234 803 111 0004', photo: null, achievements: '29+ years of service in tertiary education administration\n2nd substantive Registrar of Bayelsa Medical University\nMember, ANUPA and NIM', publications: [] },
+  { id: 5, full_name: 'Mr. Ebipuado Saware Ombu', position: 'bursar', position_display: 'Bursar', specific_title: 'The Bursar', biography: 'Mr. Ebipuado Saware Ombu is the Bursar of Bayelsa Medical University. He is a chartered accountant and served as Chairman of the Institute of Chartered Accountants of Nigeria (ICAN), Bayelsa State Chapter.', qualifications: 'B.Sc., M.Sc., ACA', research_interests: '', email: 'bursar@bmu.edu.ng', phone: '+234 803 111 0021', photo: null, achievements: 'Former Chairman, ICAN Bayelsa State Chapter', publications: [] },
+  { id: 6, full_name: 'Dr. Abraham I. T. Etebu', position: 'librarian', position_display: 'University Librarian', specific_title: 'University Librarian', biography: 'Dr. Abraham Inetimitula Tabor Etebu is an accomplished Associate Professor of Library and Information Science. He holds a Ph.D. in Library and Information Science from the University of Nigeria, Nsukka, and is a Certified Librarian of Nigeria (CLN). His areas of specialization include Readers Services, Information Literacy, and Rural Information Services.', qualifications: 'B.Sc (Ed), M.Sc, Ph.D, CLN', research_interests: 'Readers services, Information literacy, Rural information services', email: 'librarian@bmu.edu.ng', phone: '+234 803 111 0022', photo: null, achievements: 'Associate Professor of Library and Information Science\nCertified Librarian of Nigeria (CLN)\nFormer Chairman, Nigerian Library Association (NLA), Bayelsa State Chapter', publications: [] },
+  { id: 7, full_name: 'Prof. Tarila Tebepah', position: 'other', position_display: 'Other', specific_title: 'Pro-Chancellor/Chairman of Council', biography: 'Prof. Tarila Tebepah is a surgeon, Professor of Ophthalmology, scholar and an Administrator. He served as Chairman of the Niger Delta Development Commission (NDDC), Commissioner for Health, Bayelsa State, Secretary of the People\'s Democratic Party (PDP), Bayelsa State, and Trustee of the Tertiary Education Trust Fund (TETFund).', qualifications: 'Professor of Ophthalmology', research_interests: '', email: null, phone: null, photo: null, achievements: 'Former Chairman, Niger Delta Development Commission (NDDC)\nFormer Commissioner for Health, Bayelsa State\nFormer Secretary, PDP Bayelsa State\nFormer Trustee, Tertiary Education Trust Fund (TETFund)', publications: [] },
+  { id: 8, full_name: 'Dr. Frederick Allison', position: 'dean', position_display: 'Dean', specific_title: 'Dean, Faculty of Basic Clinical Sciences', biography: 'Dr. Frederick Allison is a distinguished Consultant Chemical Pathologist and Senior Lecturer at the Faculty of Basic Clinical Sciences, where he also serves as the Dean of the Faculty. He completed his medical education at the University of Calabar and achieved his specialist qualification from the National Postgraduate Medical College of Nigeria.', qualifications: 'MBBS, FMCP', research_interests: 'Chemical pathology, Clinical biochemistry', email: 'dean.basicclinical@bmu.edu.ng', phone: '+234 803 111 0011', photo: null, achievements: 'Dean, Faculty of Basic Clinical Sciences\nConsultant Chemical Pathologist', publications: [] },
+  { id: 9, full_name: 'Dr. Theodore Allison', position: 'dean', position_display: 'Dean', specific_title: 'Ag. Dean, Faculty of Basic Medical Sciences', biography: 'Dr. Theodore Allison is the Acting Dean of the Faculty of Basic Medical Sciences at Bayelsa Medical University, where he provides academic and administrative leadership for the foundational medical science programmes.', qualifications: '', research_interests: '', email: 'dean.basicmedical@bmu.edu.ng', phone: '+234 803 111 0012', photo: null, achievements: '', publications: [] },
+  { id: 10, full_name: 'Dr. Gift Cornelius Timighe', position: 'dean', position_display: 'Dean', specific_title: 'Dean, Faculty of Health Sciences', biography: 'Dr. (Mrs) Gift Cornelius Timighe is the Dean of the Faculty of Health Sciences at Bayelsa Medical University, with expertise in Nursing and Midwifery.', qualifications: '', research_interests: 'Nursing and Midwifery', email: 'dean.healthsciences@bmu.edu.ng', phone: '+234 803 111 0013', photo: null, achievements: '', publications: [] },
+  { id: 11, full_name: 'Prof. Ebiowei S. F. Orubu', position: 'dean', position_display: 'Dean', specific_title: 'Dean, Faculty of Pharmaceutical Sciences', biography: 'Professor Ebiowei S. F. Orubu is the Dean of the Faculty of Pharmaceutical Sciences at Bayelsa Medical University.', qualifications: '', research_interests: 'Pharmaceutical Sciences', email: 'dean.pharm@bmu.edu.ng', phone: '+234 803 111 0014', photo: null, achievements: '', publications: [] },
+  { id: 12, full_name: 'Prof. Iniobong Reuben Inyang', position: 'dean', position_display: 'Dean', specific_title: 'Dean, Faculty of Science', biography: 'Professor Iniobong Reuben Inyang is the Dean of the Faculty of Science at Bayelsa Medical University.', qualifications: '', research_interests: '', email: 'dean.science@bmu.edu.ng', phone: '+234 803 111 0015', photo: null, achievements: '', publications: [] },
+  { id: 13, full_name: 'Prof. Isaac J. Abasi', position: 'dean', position_display: 'Dean', specific_title: 'Dean, Faculty of Clinical Sciences', biography: 'Professor Isaac J. Abasi is the Dean of the Faculty of Clinical Sciences at Bayelsa Medical University, with expertise in Obstetrics and Gynaecology.', qualifications: '', research_interests: 'Obstetrics and Gynaecology', email: 'dean.clinical@bmu.edu.ng', phone: '+234 803 111 0016', photo: null, achievements: '', publications: [] },
+  { id: 14, full_name: 'Prof. Philip Eyimina', position: 'other', position_display: 'Other', specific_title: 'Provost, College of Medicine', biography: 'Professor Philip Eyimina is the Provost of the College of Medicine at Bayelsa Medical University, with expertise in Brachial Plexus, Cytogenetics, and Neuroanatomy.', qualifications: '', research_interests: 'Brachial Plexus, Cytogenetics, Neuroanatomy', email: 'provost.medicine@bmu.edu.ng', phone: '+234 803 111 0017', photo: null, achievements: '', publications: [] },
+  { id: 15, full_name: 'Dr. Marie-Thérèse Teibowei', position: 'hod', position_display: 'Head of Department', specific_title: 'Special Assistant to the Vice-Chancellor, Public Relations Officer', biography: 'Dr. Marie-Thérèse Teibowei is the Special Assistant to the Vice-Chancellor, Public Relations Officer, and Senior Lecturer at Bayelsa Medical University (BMU). She is a multilingual scholar with expertise in Biomedical Translation, French, Strategic Communication, and International Studies. She was part of the pioneer management team that set up Bayelsa Medical University.', qualifications: 'PhD (French & International Studies), M.A. (Translation), B.Sc. (Journalism)', research_interests: 'Biomedical translation, Strategic communication, International studies', email: 'pro@bmu.edu.ng', phone: '+234 803 111 0018', photo: null, achievements: 'Established Nigeria\'s first Institute of Foreign Languages and Biomedical Translation\nPart of the pioneer management team of BMU\nRepresented BMU at the United Nations Climate Conferences', publications: [] },
 ];
 
 export interface HeroSlideData {
@@ -1998,11 +2632,20 @@ export interface AboutCoreValueData {
   order: number;
 }
 
+export interface WhyChooseItemData {
+  icon_name: string;
+  title: string;
+  description: string;
+}
+
 export interface AboutPageData {
   hero_title: string;
   hero_content: string;
   about_main_title: string;
   about_main_content: string;
+  mission_content: string;
+  vision_content: string;
+  why_choose: WhyChooseItemData[];
   meta_description: string;
   stats: AboutStatData[];
   core_values: AboutCoreValueData[];

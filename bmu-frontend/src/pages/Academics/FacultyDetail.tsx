@@ -42,6 +42,42 @@ interface FacultyData {
   departments: Department[];
 }
 
+interface RawDepartment {
+  id: number;
+  name: string;
+  slug: string;
+  code?: string | null;
+  description?: string;
+  leadership_name?: string;
+  hod_name?: string;
+  staff_count?: number;
+}
+
+interface RawFacultyItem {
+  id: number;
+  name: string;
+  slug: string;
+  code: string | null;
+  description: string;
+  mission_statement?: string | null;
+  vision_statement?: string | null;
+  college_id?: number | null;
+  college_name?: string | null;
+  collegeSlug?: string;
+  college?: string;
+  leadership_name?: string;
+  leadership_title?: string;
+  dean_name?: string;
+  dean_title?: string;
+  dean_photo?: string | null;
+  department_count?: number;
+  program_count?: number;
+  staff_count?: number;
+  student_count?: number;
+  departments?: RawDepartment[];
+  faculties?: RawFacultyItem[];
+}
+
 interface FallbackFaculty {
   collegeSlug: string;
   collegeName: string;
@@ -232,17 +268,19 @@ function mapFallbackToFacultyData(fb: FallbackFaculty): FacultyData {
 }
 
 function findFacultyInData(data: unknown, collegeSlug: string | null, slug: string): FacultyData | null {
-  const items = Array.isArray(data) ? data : (data as any)?.items;
+  const items = Array.isArray(data)
+    ? (data as RawFacultyItem[])
+    : (data as { items?: RawFacultyItem[] }).items;
   if (!Array.isArray(items)) return null;
 
-  const tryFind = (list: any[], cs: string | null, s: string) => {
+  const tryFind = (list: RawFacultyItem[], cs: string | null, s: string) => {
     let candidates = list;
     if (cs) {
-      candidates = list.filter((item: any) =>
+      candidates = list.filter((item) =>
         item.collegeSlug === cs || item.college_name === cs || item.college === cs
       );
     }
-    return candidates.find((item: any) => item.slug === s);
+    return candidates.find((item) => item.slug === s);
   };
 
   const found = tryFind(items, collegeSlug, slug);
@@ -262,9 +300,9 @@ function findFacultyInData(data: unknown, collegeSlug: string | null, slug: stri
        dean_photo: found.dean_photo ?? null,
       department_count: found.department_count ?? found.departments?.length ?? 0,
       program_count: found.program_count ?? 0,
-      staff_count: found.staff_count ?? (found.departments ?? []).reduce((s: number, d: any) => s + (d.staff_count ?? 0), 0),
+      staff_count: found.staff_count ?? (found.departments ?? []).reduce((s: number, d: RawDepartment) => s + (d.staff_count ?? 0), 0),
       student_count: found.student_count ?? 0,
-      departments: (found.departments ?? []).map((d: any) => ({
+      departments: (found.departments ?? []).map((d) => ({
         id: d.id,
         name: d.name,
         slug: d.slug,
@@ -279,7 +317,7 @@ function findFacultyInData(data: unknown, collegeSlug: string | null, slug: stri
   for (const college of items) {
     if (college.faculties && Array.isArray(college.faculties)) {
       if (collegeSlug && college.slug !== collegeSlug) continue;
-      const inner = college.faculties.find((f: any) => f.slug === slug);
+      const inner = college.faculties.find((f) => f.slug === slug);
       if (inner) {
         return {
           id: inner.id,
@@ -296,9 +334,9 @@ function findFacultyInData(data: unknown, collegeSlug: string | null, slug: stri
            dean_photo: inner.dean_photo ?? null,
           department_count: inner.department_count ?? inner.departments?.length ?? 0,
           program_count: inner.program_count ?? 0,
-          staff_count: inner.staff_count ?? (inner.departments ?? []).reduce((s: number, d: any) => s + (d.staff_count ?? 0), 0),
+          staff_count: inner.staff_count ?? (inner.departments ?? []).reduce((s: number, d: RawDepartment) => s + (d.staff_count ?? 0), 0),
           student_count: inner.student_count ?? 0,
-          departments: (inner.departments ?? []).map((d: any) => ({
+          departments: (inner.departments ?? []).map((d) => ({
             id: d.id,
             name: d.name,
             slug: d.slug,
@@ -319,9 +357,10 @@ export const FacultyDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const collegeSlug = searchParams.get('college');
+  const effectiveCollegeSlug = collegeSlug && collegeSlug !== 'null' && collegeSlug !== 'undefined' ? collegeSlug : null;
 
   const { data: faculty, isLoading, error } = useQuery<FacultyData | null>({
-    queryKey: ['faculty', slug, collegeSlug],
+    queryKey: ['faculty', slug, effectiveCollegeSlug],
     queryFn: async () => {
       if (!slug) return null;
 
@@ -336,15 +375,15 @@ export const FacultyDetail = () => {
 
       try {
         const response = await apiClient.get('/public/colleges');
-        const found = findFacultyInData(response.data, collegeSlug, slug);
+        const found = findFacultyInData(response.data, effectiveCollegeSlug, slug);
         if (found) return found;
       } catch {
         // fall through to fallback
       }
 
       let fallback = [...fallbackFaculties];
-      if (collegeSlug) {
-        fallback = fallback.filter(f => f.collegeSlug === collegeSlug);
+      if (effectiveCollegeSlug) {
+        fallback = fallback.filter(f => f.collegeSlug === effectiveCollegeSlug);
       }
       const fb = fallback.find(f => f.slug === slug);
       return fb ? mapFallbackToFacultyData(fb) : null;
@@ -372,6 +411,13 @@ export const FacultyDetail = () => {
       </div>
     );
   }
+
+  const facultyStats = [
+    faculty.department_count ? { value: faculty.department_count, label: 'Departments' } : null,
+    faculty.program_count ? { value: faculty.program_count, label: 'Programs' } : null,
+    faculty.staff_count ? { value: faculty.staff_count, label: 'Faculty Members' } : null,
+    faculty.student_count ? { value: faculty.student_count, label: 'Students' } : null,
+  ].filter(Boolean) as { value: number; label: string }[];
 
   return (
     <>
@@ -485,15 +531,11 @@ export const FacultyDetail = () => {
       </section>
 
       {/* Stats */}
+      {facultyStats.length > 0 && (
       <section className="py-12 border-y bg-white" style={{ borderColor: '#e5e4e7' }}>
         <div className="container-custom">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: faculty.department_count, label: 'Departments' },
-              { value: faculty.program_count || 'N/A', label: 'Programs' },
-              { value: faculty.staff_count || 'N/A', label: 'Faculty Members' },
-              { value: faculty.student_count || 'N/A', label: 'Students' },
-            ].map((stat, index) => (
+            {facultyStats.map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -509,6 +551,7 @@ export const FacultyDetail = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Departments */}
       {faculty.departments.length > 0 && (

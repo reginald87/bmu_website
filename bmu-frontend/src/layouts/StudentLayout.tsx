@@ -6,7 +6,7 @@ import {
   LayoutDashboard, ClipboardList, BarChart3, TrendingUp,
   ScanQrCode, Wallet, Home, ShieldCheck, UserCircle
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 
 const navItems = [
   { label: 'Dashboard', icon: LayoutDashboard, link: '/portals/student' },

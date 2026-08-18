@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import {
   BookOpen, Save, Send, Loader2
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { lecturerApi, type LecturerCourse, type CourseResult, type GradeUploadPayload } from '../../services/api';
 
 export const LecturerGradeEntry = () => {

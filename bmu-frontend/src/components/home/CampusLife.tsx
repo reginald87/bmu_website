@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import * as LucideIcons from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { useCampusStats, useCampusImages } from '../../services/apiHooks';
 
 const fallbackStats = [
@@ -119,14 +119,14 @@ export const CampusLife = () => {
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-black/30 hover:bg-black/50 text-white rounded-full transition-colors z-10"
                   aria-label="Previous image"
                 >
-                  <LucideIcons.ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setActiveIndex((prev) => (prev + 1) % images.length)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-black/30 hover:bg-black/50 text-white rounded-full transition-colors z-10"
                   aria-label="Next image"
                 >
-                  <LucideIcons.ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-5 h-5" />
                 </button>
               </>
             )}
@@ -140,7 +140,7 @@ export const CampusLife = () => {
               className="inline-flex items-center gap-2 px-6 py-3 font-semibold transition-all bg-[#1E1E1E] text-white hover:bg-[#A51C30]"
             >
               Explore Campus Life
-              <LucideIcons.ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

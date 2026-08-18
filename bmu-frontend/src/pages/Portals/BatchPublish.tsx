@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import {
   GraduationCap, Loader2, CheckCircle, Send, AlertTriangle
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { approvalApi } from '../../services/api';
 
 export const BatchPublish = () => {

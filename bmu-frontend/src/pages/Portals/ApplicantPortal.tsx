@@ -28,6 +28,68 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { apiClient } from '../../services/api';
 
+interface ApplicationStep {
+  name: string;
+  status: string;
+  date?: string;
+  decision?: string;
+}
+
+interface ApplicationDocument {
+  id?: number;
+  name: string;
+  status: string;
+  uploadDate?: string;
+  file?: string;
+}
+
+interface ApplicationMessage {
+  id: number;
+  type: string;
+  from: string;
+  date: string;
+  text: string;
+}
+
+interface AcademicRecord {
+  institution_name: string;
+  type: string;
+  year_of_completion: string;
+  grade?: string;
+  status?: string;
+}
+
+interface EditForm {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  dateOfBirth?: string;
+  address?: string;
+}
+
+interface Application {
+  id: string;
+  program: string;
+  programLevel: string;
+  status: string;
+  submittedDate: string;
+  lastUpdated: string;
+  progress: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  gender: string;
+  studentType: string;
+  address: string;
+  academicRecords: AcademicRecord[];
+  steps: ApplicationStep[];
+  documents: ApplicationDocument[];
+  messages: ApplicationMessage[];
+}
+
 
 
 const statusConfig: Record<string, { color: string; bg: string; label: string; icon: React.ComponentType<{ className?: string }> }> = {
@@ -311,10 +373,10 @@ const ApplicantDashboard = () => {
   const { user, logout } = useAuth();
   const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'documents' | 'messages'>('overview');
-  const [applications, setApplications] = useState<any[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
   const [hasPendingApp, setHasPendingApp] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState<any>({});
+  const [editForm, setEditForm] = useState<EditForm>({});
   const [replacingDoc, setReplacingDoc] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -418,21 +480,21 @@ const ApplicantDashboard = () => {
             gender: app.gender_display as string || '',
             studentType: app.student_type_display as string || '',
             address: app.address as string || '',
-            academicRecords: (app.academic_records as any[]) || [],
-            steps: ((app.steps || []) as any[]).map((s: any) => ({
+            academicRecords: (app.academic_records as AcademicRecord[]) || [],
+            steps: ((app.steps || []) as ApplicationStep[]).map((s: ApplicationStep) => ({
               name: s.name_display || s.name,
               status: s.status,
               date: s.completed_at,
               decision: s.decision,
             })),
-            documents: ((app.documents || []) as any[]).map((d: any) => ({
+            documents: ((app.documents || []) as ApplicationDocument[]).map((d: ApplicationDocument) => ({
               id: d.id,
               name: d.name_display || d.name,
               status: d.status,
               uploadDate: d.uploaded_at,
               file: d.file,
             })),
-            messages: ((app.messages || []) as any[]).map((m: any) => ({
+            messages: ((app.messages || []) as ApplicationMessage[]).map((m: ApplicationMessage) => ({
               id: m.id,
               type: m.type,
               from: m.from_name,
@@ -790,7 +852,7 @@ const ApplicantDashboard = () => {
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-4">Academic Records</h4>
                         <div className="space-y-3">
-                          {application.academicRecords.map((rec: any, i: number) => (
+                          {application.academicRecords.map((rec: AcademicRecord, i: number) => (
                             <div key={i} className="p-4 bg-gray-50 flex items-center justify-between">
                               <div>
                                 <p className="font-medium text-gray-900">{rec.institution_name}</p>
@@ -808,7 +870,7 @@ const ApplicantDashboard = () => {
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-4">Application Steps</h4>
                         <div className="space-y-4">
-                          {application?.steps.map((step: any, index: number) => (
+                          {application?.steps.map((step: ApplicationStep, index: number) => (
                             <div key={index} className="flex items-start gap-4">
                               <div className={`w-10 h-10 flex items-center justify-center flex-shrink-0 ${ step.status === 'completed' ? 'bg-green-100 text-green-600' : step.status === 'in_progress' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400' }`}>
                                 {step.status === 'completed' ? <CheckCircle className="w-5 h-5" /> :
@@ -825,9 +887,9 @@ const ApplicantDashboard = () => {
                                 {step.status === 'in_progress' && (
                                   <p className="text-sm text-blue-600">In Progress</p>
                                 )}
-                                {(step as any).decision && (
-                                  <p className={`text-sm font-medium ${ (step as any).decision === 'Accepted' ? 'text-green-600' : 'text-red-600' }`}>
-                                    Decision: {(step as any).decision}
+                                {step.decision && (
+                                  <p className={`text-sm font-medium ${ step.decision === 'Accepted' ? 'text-green-600' : 'text-red-600' }`}>
+                                    Decision: {step.decision}
                                   </p>
                                 )}
                               </div>
@@ -849,7 +911,7 @@ const ApplicantDashboard = () => {
                       </button>
                     </div>
                     <div className="space-y-3">
-                    {application?.documents.map((doc: any, index: number) => (
+                    {application?.documents.map((doc: ApplicationDocument, index: number) => (
                         <div key={index} className="flex items-center justify-between p-4 bg-gray-50">
                           <div className="flex items-center gap-3">
                             <div className={`w-10 h-10 flex items-center justify-center ${ doc.status === 'verified' ? 'bg-green-100' : doc.status === 'under_review' ? 'bg-yellow-100' : 'bg-gray-100' }`}>
@@ -903,7 +965,7 @@ const ApplicantDashboard = () => {
 
                 {activeTab === 'messages' && (
                   <div className="space-y-4">
-                    {application?.messages.map((message: any) => (
+                    {application?.messages.map((message: ApplicationMessage) => (
                       <div key={message.id} className={`p-4 ${ message.type === 'success' ? 'bg-green-50 border border-green-200' : message.type === 'action' ? 'bg-yellow-50 border border-yellow-200' : 'bg-blue-50 border border-blue-200' }`}>
                         <div className="flex items-start gap-3">
                           <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 ${ message.type === 'success' ? 'bg-green-100 text-green-600' : message.type === 'action' ? 'bg-yellow-100 text-yellow-600' : 'bg-blue-100 text-blue-600' }`}>

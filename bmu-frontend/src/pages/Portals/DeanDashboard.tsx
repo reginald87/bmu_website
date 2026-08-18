@@ -6,7 +6,7 @@ import {
   BookOpen, Users, UserCheck, ChevronRight,
   CheckSquare, BarChart3, Building, AlertCircle
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 interface DeanData {

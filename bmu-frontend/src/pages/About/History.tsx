@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, Award, Users, Building2, GraduationCap, Globe } from 'lucide-react';
+import { Building2, GraduationCap, Award, Globe } from 'lucide-react';
 import { useHistoryPage } from '../../services/apiHooks';
 import { useMemo } from 'react';
 
@@ -15,73 +15,58 @@ interface TimelineEvent {
 const fallbackTimelineEvents: TimelineEvent[] = [
   {
     year: '2018',
-    title: 'Foundation Established',
-    description: 'Bayelsa Medical University was established by the Bayelsa State Government under the administration of Governor Henry Seriake Dickson, recognizing the critical need for quality medical education in the Niger Delta region.',
+    title: 'Establishment',
+    description: 'BMU was established via the Bayelsa Medical University Law enacted by the Bayelsa State House of Assembly, beginning with two pioneer faculties: Basic Medical Sciences and Clinical Sciences (MBBS programme).',
     icon: Building2,
   },
   {
     year: '2019',
-    title: 'First Academic Session Begins',
-    description: 'BMU admitted its first cohort of students into the MBBS program and the School of Nursing, marking the beginning of academic activities at the Permanent Site in Yenagoa.',
+    title: 'University Founded',
+    description: 'BMU admitted its first students with foundational programs in Medicine and Nursing to address regional healthcare needs, and secured full accreditation from the National Universities Commission (NUC) for its MBBS programme.',
     icon: GraduationCap,
   },
   {
-    year: '2020',
-    title: 'NUC Accreditation',
-    description: 'Received full accreditation from the National Universities Commission (NUC) for all undergraduate programs, validating the quality of our academic standards and facilities.',
-    icon: Award,
-  },
-  {
     year: '2021',
-    title: 'Teaching Hospital Partnership',
-    description: 'Established formal partnership with the Federal Medical Centre, Yenagoa, providing students with hands-on clinical training and expanding community healthcare services.',
-    icon: Users,
-  },
-  {
-    year: '2022',
-    title: 'Research Centers Launch',
-    description: 'Launched the Center for Malaria Research and Center for Non-Communicable Diseases, positioning BMU as a leader in regional health research.',
-    icon: Globe,
+    title: 'Expansion and Growth',
+    description: 'The university expanded to include new faculties such as Pharmaceutical Sciences, Dentistry, Health Sciences, and Sciences, alongside accelerated development of the permanent campus along Imgbi Road.',
+    icon: Award,
   },
   {
     year: '2023',
-    title: 'Postgraduate Programs',
-    description: 'Introduced Master of Public Health (MPH) and other postgraduate programs, expanding access to advanced medical education in the region.',
-    icon: Calendar,
+    title: 'Campus Expansion',
+    description: 'Opened a state-of-the-art teaching hospital and advanced research laboratories, including VR/AR-equipped medical simulation labs, modern lecture halls, and student hostels.',
+    icon: Building2,
   },
   {
     year: '2024',
-    title: 'International Recognition',
-    description: 'BMU achieved recognition from the World Health Organization and established partnerships with international institutions for student exchange and research collaboration.',
-    icon: Award,
+    title: 'Academic Growth',
+    description: 'Launched the postgraduate school and several new specialty programs, attracting international students and further strengthening research capacity.',
+    icon: GraduationCap,
   },
   {
     year: '2025',
-    title: 'Campus Expansion',
-    description: 'Completed Phase II of campus development, including new research laboratories, a 500-seat auditorium, and expanded student accommodation facilities.',
-    icon: Building2,
+    title: 'Global Recognition',
+    description: 'Forged key partnerships with leading global universities and established a high-fidelity simulation lab, positioning BMU among Nigeria\'s fastest-growing medical universities.',
+    icon: Globe,
   },
 ];
 
 const titleIconMap: Record<string, React.ElementType> = {
-  'Foundation Established': Building2,
-  'First Academic Session Begins': GraduationCap,
-  'NUC Accreditation': Award,
-  'Teaching Hospital Partnership': Users,
-  'Research Centers Launch': Globe,
-  'Postgraduate Programs': Calendar,
-  'International Recognition': Award,
-  'International Collaborations': Globe,
+  'Establishment': Building2,
+  'University Founded': GraduationCap,
+  'Expansion and Growth': Award,
   'Campus Expansion': Building2,
+  'Academic Growth': GraduationCap,
+  'Global Recognition': Globe,
 };
 
 export const History = () => {
   const { data: pageData } = useHistoryPage();
 
-  const heroContent = pageData?.hero_content || 'From visionary beginnings in 2018 to becoming Nigeria\'s premier destination for healthcare education - the remarkable journey of Bayelsa Medical University.';
-  const introTitle = pageData?.intro_title || 'A Vision for Healthcare Excellence';
+  const heroContent = pageData?.hero_content || 'Bayelsa Medical University (BMU) was established to address critical healthcare manpower shortages in the Niger Delta region and Nigeria at large, growing into one of Nigeria\'s fastest-growing medical universities.';
+  const introTitle = pageData?.intro_title || 'About the Bayelsa Medical University';
   const introParagraphs = pageData?.intro_content ? pageData.intro_content.split('\n\n').filter(Boolean) : [];
-  const introImageCaption = pageData?.intro_image_caption || 'Campus Development Gallery';
+  const introImageCaption = pageData?.intro_image_caption || 'BMU Campus Development';
   const introImage = pageData?.intro_image || null;
   const introImages = pageData?.intro_images || [];
   const stats = pageData?.stats || [];

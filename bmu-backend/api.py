@@ -60,6 +60,7 @@ from research.models import ResearchAndDevelopment, Publication, ResearchGrant, 
 from careers.models import JobPosting
 from library.models import BookCategory, Book, DigitalResource
 from chat.models import Conversation, Message
+from accounts.alumni_models import AlumniProfile, AlumniEvent, AlumniDonation
 import locale
 
 
@@ -724,6 +725,9 @@ class AboutPageSchema(Schema):
     hero_content: str = ''
     about_main_title: str = ''
     about_main_content: str = ''
+    mission_content: str = ''
+    vision_content: str = ''
+    why_choose: List[dict] = []
     meta_description: str = ''
     stats: List[AboutStatSchema] = []
     core_values: List[AboutCoreValueSchema] = []
@@ -1552,6 +1556,7 @@ def get_department_details(request, slug: str):
     
     # Get staff members
     staff = []
+    publications_count = 0
     for user in department.staff_members.filter(is_active=True).select_related('department', 'college'):
         staff.append({
             'id': user.id,
@@ -1563,6 +1568,9 @@ def get_department_details(request, slug: str):
             'specialization': user.specialization,
             'publications_count': user.publications_count,
         })
+        publications_count += user.publications_count or 0
+
+    program_count = Program.objects.filter(department=department, is_active=True).count()
     
     return {
         'id': department.id,
@@ -1580,6 +1588,9 @@ def get_department_details(request, slug: str):
         'leadership_title': department.leadership_title,
         'hod_photo': department.hod_photo.url if department.hod_photo else None,
         'staff_count': len(staff) or department.staff_count or 0,
+        'student_count': department.student_count,
+        'program_count': program_count,
+        'publications_count': publications_count,
         'staff': staff
     }
 
@@ -1920,6 +1931,45 @@ class PageSectionSchema(Schema):
 def list_page_sections(request, page_key: str):
     """List all active sections for a given page key"""
     return PageSection.objects.filter(page_key=page_key, is_active=True).order_by('display_order')
+
+
+class PublicAlumniSchema(Schema):
+    id: int
+    user_id: int
+    name: str = Field(..., alias="user.full_name")
+    graduation_year: int
+    program: Optional[str] = Field(None, alias="program.title")
+    degree_awarded: Optional[str] = None
+    current_role: Optional[str] = Field(None, alias="job_title")
+    organization: Optional[str] = Field(None, alias="current_employer")
+    career_status: str
+    career_status_display: str = Field(..., alias="get_career_status_display")
+    is_mentor: bool
+    image: Optional[str] = None
+
+    @staticmethod
+    def resolve_image(obj):
+        if obj.user.profile_image:
+            return obj.user.profile_image.url
+        return None
+
+
+@public_router.get("/alumni", response=List[PublicAlumniSchema])
+def list_public_alumni(request, year: Optional[int] = None, program_id: Optional[int] = None, limit: int = 6):
+    """List alumni profiles for public display (e.g. home page distinguished alumni)"""
+    qs = AlumniProfile.objects.filter(user__is_active=True).select_related('user', 'program')
+    if year:
+        qs = qs.filter(graduation_year=year)
+    if program_id:
+        qs = qs.filter(program_id=program_id)
+    return qs.order_by('-graduation_year')[:limit]
+
+
+@public_router.get("/alumni/count")
+def public_alumni_count(request) -> dict:
+    """Total count of active alumni profiles for public display (e.g. home page stat)"""
+    count = AlumniProfile.objects.filter(user__is_active=True).count()
+    return {"count": count}
 
 
 class PortalDefinitionSchema(Schema):
@@ -2282,6 +2332,9 @@ def get_about_page(request):
         hero_content=page.hero_content,
         about_main_title=page.about_main_title,
         about_main_content=page.about_main_content,
+        mission_content=page.mission_content,
+        vision_content=page.vision_content,
+        why_choose=page.why_choose or [],
         meta_description=page.meta_description,
         stats=[
             AboutStatSchema(value=s.value, label=s.label, suffix=s.suffix, order=s.order)

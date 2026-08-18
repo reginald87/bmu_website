@@ -5,7 +5,7 @@ import {
   BookOpen, FileText, Calendar, Bell, Clock,
   Award, TrendingUp, ChevronRight
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 interface DashboardData {

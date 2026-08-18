@@ -1,14 +1,16 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { GraduationCap, Award, Building2, ArrowRight, Users, ExternalLink } from 'lucide-react';
+import { Award, Building2, ArrowRight, Users, ExternalLink, User } from 'lucide-react';
+import { useAlumni, useAlumniCount } from '../../services/apiHooks';
+import type { AlumniData } from '../../services/api';
 
 interface Alumni {
   id: number;
   name: string;
   graduationYear: number;
   program: string;
-  achievement: string;
+  achievement?: string;
   currentRole: string;
   organization: string;
   image?: string;
@@ -43,15 +45,34 @@ const fallbackAlumni: Alumni[] = [
     achievement: 'Excellence in Patient Care',
     currentRole: 'Head Nurse',
     organization: 'National Hospital Abuja',
-    image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1594824476967-48c8b964ac31?w=400&q=80',
   },
 ];
 
-export const AlumniAchievements = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
-  const { t } = useTranslation();
+const mapAlumni = (data: AlumniData): Alumni => ({
+  id: data.id,
+  name: data.name,
+  graduationYear: data.graduation_year,
+  program: data.program || data.degree_awarded || '',
+  currentRole: data.current_role || '',
+  organization: data.organization || '',
+  image: data.image || undefined,
+});
 
-  const notableAlumni = (homeSections?.find(s => s.section_key === 'alumni_notable')?.data as any[] || fallbackAlumni);
-  const alumniStat = (homeSections?.find(s => s.section_key === 'alumni_stat')?.data as any[] || [{ value: '2,500+', label: 'Active Alumni Network' }])[0];
+export const AlumniAchievements = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: unknown }> }) => {
+  const { t } = useTranslation();
+  const { data: backendAlumni } = useAlumni(6);
+  const { data: alumniCount } = useAlumniCount();
+
+  const staticAlumni = (homeSections?.find(s => s.section_key === 'alumni_notable')?.data as Alumni[] | undefined);
+
+  const notableAlumni: Alumni[] = backendAlumni && backendAlumni.length > 0
+    ? backendAlumni.map(mapAlumni)
+    : (staticAlumni && staticAlumni.length > 0 ? staticAlumni : fallbackAlumni);
+
+  const alumniTotal = (typeof alumniCount === 'number' && alumniCount > 0)
+    ? alumniCount.toString()
+    : (homeSections?.find(s => s.section_key === 'alumni_stat')?.data as Array<{ value: string; label: string }> || [{ value: '2,500+', label: 'Active Alumni Network' }])[0]?.value || '2,500+';
 
   return (
     <section className="py-20 bg-white">
@@ -97,7 +118,7 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
                       </div>
                     ) : (
                       <div className="w-16 h-16 bg-gray-100 flex items-center justify-center">
-                        <GraduationCap className="w-8 h-8 text-gray-400" />
+                        <User className="w-8 h-8 text-gray-400" />
                       </div>
                     )}
                   </div>
@@ -109,12 +130,14 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
                   </div>
                 </div>
 
-                <div className="mb-4 p-3 bg-gray-50">
-                  <div className="flex items-center gap-2">
-                    <Award className="w-5 h-5 text-yellow-600" />
-                    <span className="text-sm font-semibold text-[#1E1E1E]">{alumni.achievement}</span>
+                {alumni.achievement && (
+                  <div className="mb-4 p-3 bg-gray-50">
+                    <div className="flex items-center gap-2">
+                      <Award className="w-5 h-5 text-yellow-600" />
+                      <span className="text-sm font-semibold text-[#1E1E1E]">{alumni.achievement}</span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="pt-4 border-t border-gray-100">
                   <p className="text-sm text-gray-600 mb-1">
@@ -152,8 +175,8 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
                 <Users className="w-8 h-8 text-[#A51C30]" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#1E1E1E]">{alumniStat?.value || '2,500+'}</p>
-                <p className="text-gray-600">{alumniStat?.label || 'Active Alumni Network'}</p>
+                <p className="text-2xl font-bold text-[#1E1E1E]">{alumniTotal}</p>
+                <p className="text-gray-600">Active Alumni Network</p>
               </div>
             </div>
 

@@ -57,67 +57,22 @@ interface HierarchyData {
 
 const fallbackColleges = [
   {
-    id: 1, name: 'College of Medicine', slug: 'medicine',
-    fullName: 'Flagship medical college', color: '#1E1E1E',
-    description: 'The College of Medicine is the flagship college of BMU...',
-    faculty_count: 3, department_count: 12,
-    provost_name: 'Prof. Emmanuel Ekanem',
+    id: 1, name: 'College of Medicine', slug: 'college-of-medicine',
+    fullName: 'The flagship college of Bayelsa Medical University', color: '#1E1E1E',
+    primary_color: '#1E1E1E', secondary_color: '#A51C30',
+    description: 'The College of Medicine is the flagship college of Bayelsa Medical University, housing the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences. The University\'s other faculties — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — operate as standalone faculties with their own departments.',
+    overview_content: 'The College of Medicine provides the academic home for the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences, which together deliver the foundational and clinical training of the University\'s medical doctors. The remaining faculties of Bayelsa Medical University — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — are standalone faculties, each with its own departments and programmes.',
+    mission_statement: 'To deliver excellent teaching, research and community service in the basic and clinical medical sciences.',
+    vision_statement: 'To be a leading centre for medical education and research in West Africa.',
+    established_year: 2018,
+    faculty_count: 2, department_count: 4, student_count: 970,
+    provost_name: 'Prof. Philip Eyimina',
+    provost_title: 'Provost, College of Medicine',
     faculties: [
-      { id: 1, name: 'Basic Medical Sciences', slug: 'basic-medical-sciences', code: 'BMS', description: 'Foundation medical sciences...', department_count: 6, dean_name: 'Prof. Godwin Ikorite' },
-      { id: 2, name: 'Clinical Sciences', slug: 'clinical-sciences', code: 'CLS', description: 'Clinical training...', department_count: 8, dean_name: 'Dr. Jane Owei' },
-      { id: 3, name: 'Community Medicine', slug: 'community-medicine', code: 'COM', description: 'Public health...', department_count: 4, dean_name: 'Prof. Michael Ogu' },
+      { id: 1, name: 'Faculty of Basic Medical Sciences', slug: 'faculty-of-basic-medical-sciences', code: 'FBMS', description: 'Foundational medical sciences — human anatomy, human physiology and biochemistry.', department_count: 3, dean_name: 'Dr. Theodore Allison' },
+      { id: 2, name: 'Faculty of Clinical Sciences', slug: 'faculty-of-clinical-sciences', code: 'FCLS', description: 'Clinical education culminating in the six-year MBBS degree.', department_count: 1, dean_name: 'Prof. Isaac J. Abasi' },
     ]
-  },
-  {
-    id: 2, name: 'School of Allied Health Sciences', slug: 'allied-health',
-    color: '#A51C30',
-    description: 'Training professionals in medical laboratory science...',
-    faculty_count: 3, department_count: 9, provost_name: 'Dr. Grace Ebi',
-    faculties: [
-      { id: 4, name: 'Medical Laboratory Science', slug: 'medical-lab-science', code: 'MLS', description: 'Training medical laboratory scientists...', department_count: 4, dean_name: 'Dr. Richard Peters' },
-      { id: 5, name: 'Radiography', slug: 'radiography', code: 'RAD', description: 'Training radiographers...', department_count: 3, dean_name: 'Dr. Sarah Wodi' },
-      { id: 6, name: 'Physiotherapy', slug: 'physiotherapy', code: 'PHT', description: 'Training physiotherapists...', department_count: 2, dean_name: 'Dr. Ebi Robinson' },
-    ]
-  },
-  {
-    id: 3, name: 'School of Nursing', slug: 'nursing',
-    color: '#1E1E1E',
-    description: 'Producing compassionate nursing professionals...',
-    faculty_count: 2, department_count: 6, provost_name: 'Prof. Helen Douglas',
-    faculties: [
-      { id: 7, name: 'Nursing', slug: 'nursing-dept', code: 'NUR', description: 'Training professional nurses...', department_count: 4, dean_name: 'Prof. Helen Douglas' },
-      { id: 8, name: 'Midwifery', slug: 'midwifery', code: 'MID', description: 'Training midwives...', department_count: 2, dean_name: 'Dr. Faith George' },
-    ]
-  },
-  {
-    id: 4, name: 'School of Postgraduate Studies', slug: 'postgraduate',
-    color: '#A51C30',
-    description: 'Advanced training and research...',
-    faculty_count: 1, department_count: 0,
-    faculties: [
-      { id: 9, name: 'Postgraduate Programs', slug: 'postgraduate-programs', code: 'PGS', description: 'Advanced degrees...', department_count: 0, dean_name: 'Prof. Michael Ogu' },
-    ]
-  },
-  {
-    id: 5, name: 'Institute of Public Health', slug: 'public-health',
-    color: '#1E1E1E',
-    description: 'Focusing on population health...',
-    faculty_count: 3, department_count: 8, provost_name: 'Prof. Chioma Amadi',
-    faculties: [
-      { id: 10, name: 'Epidemiology', slug: 'epidemiology', code: 'EPI', description: 'Disease patterns...', department_count: 3, dean_name: 'Prof. Chioma Amadi' },
-      { id: 11, name: 'Health Policy', slug: 'health-policy', code: 'HPL', description: 'Health policy...', department_count: 3, dean_name: 'Dr. Emmanuel Akpan' },
-      { id: 12, name: 'Biostatistics', slug: 'biostatistics', code: 'BIO', description: 'Statistical methods...', department_count: 2, dean_name: 'Dr. Ngozi Eze' },
-    ]
-  },
-  {
-    id: 6, name: 'Continuing Professional Development (CPD)', slug: 'cpd',
-    color: '#A51C30',
-    description: 'Lifelong learning for medical professionals...',
-    faculty_count: 0, department_count: 0,
-    faculties: [
-      { id: 13, name: 'Professional Development', slug: 'professional-development', code: 'CPD', description: 'Lifelong learning...', department_count: 0, dean_name: 'Dr. Peter Iruo' },
-    ]
-  },
+  }
 ];
 
 function mapItemToHierarchy(item: Record<string, unknown>): HierarchyData {

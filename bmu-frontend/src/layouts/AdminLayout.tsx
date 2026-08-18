@@ -5,7 +5,7 @@ import {
   GraduationCap, Bell, User, LogOut, Menu, X,
   BarChart3, TrendingUp, Send, AlertTriangle, MessageCircle
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 
 const navItems = [
   { label: 'Dashboard', icon: BarChart3, link: '/portals/admin' },

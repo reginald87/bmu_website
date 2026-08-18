@@ -21,11 +21,11 @@ function randomColor(i: number): string {
   return colors[i % colors.length];
 }
 
-export const PartnerLogos = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
+export const PartnerLogos = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: unknown }> }) => {
   const { t } = useTranslation();
   const { data: apiPartners } = usePartners();
 
-  const partnerData = (homeSections?.find(s => s.section_key === 'partners')?.data as any[] || fallbackPartners);
+  const partnerData = (homeSections?.find(s => s.section_key === 'partners')?.data as typeof fallbackPartners || fallbackPartners);
 
   const partners: { name: string; abbr: string; color: string; icon?: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; logoUrl: string | null; description: string }[] = apiPartners && apiPartners.length > 0
     ? apiPartners.map((p, i) => ({

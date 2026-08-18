@@ -13,6 +13,17 @@ import {
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
 
+interface CalendarEvent {
+  id: number;
+  slug: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  category: string;
+  color: string;
+}
+
 const fallbackEvents = [
  {
  id: 1,
@@ -80,9 +91,9 @@ const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export const EventCalendar = () => {
  const [currentDate, setCurrentDate] = useState(new Date());
- const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<{ date: string; events: CalendarEvent[] } | null>(null);
 
-  const { data: events } = useQuery({
+   const { data: events } = useQuery<CalendarEvent[]>({
    queryKey: ['events'],
    queryFn: async () => {
     try {
@@ -148,9 +159,9 @@ export const EventCalendar = () => {
   setSelectedEvent(null);
  };
 
- const getEventsForDate = (dateStr: string) => {
-  return events.filter(event => event.date === dateStr);
- };
+  const getEventsForDate = (dateStr: string) => {
+   return (events || []).filter(event => event.date === dateStr);
+  };
 
  const monthNames = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -246,7 +257,7 @@ export const EventCalendar = () => {
   <div><div className="bg-white shadow-sm p-6"><h3 className="text-lg font-bold text-gray-900 mb-4">
   {selectedEvent ? `Events on ${selectedEvent.date}` : 'Upcoming Events'}
   </h3><div className="space-y-4">
-  {(selectedEvent?.events || events.slice(0, 5)).map((event: any) => (
+   {(selectedEvent?.events || events?.slice(0, 5) || []).map((event: CalendarEvent) => (
   <Link
   key={event.id}
   to={`/events/${event.slug}`}

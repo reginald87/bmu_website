@@ -6,7 +6,7 @@ import {
   BookOpen, ChevronRight,
   FileSpreadsheet, CheckSquare, Award, Bell, Clock, Mail
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { lecturerApi, type LecturerCourse } from '../../services/api';
 
 const portalLinks = [

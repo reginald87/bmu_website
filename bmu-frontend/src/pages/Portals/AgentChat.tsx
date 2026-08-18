@@ -5,7 +5,7 @@ import {
   MessageCircle, Send, Search,
   PhoneOff, RefreshCw, Wifi, WifiOff, ChevronRight,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { chatAdminApi, type ChatConversation, type ChatConversationDetail } from '../../services/api';
 
 const WS_BASE = import.meta.env.VITE_WS_URL || '';
@@ -122,7 +122,7 @@ export const AgentChat = () => {
       setTimeout(scrollToBottom, 100);
       inputRef.current?.focus();
     }
-  }, [selectedConv?.id, connectToConversation, scrollToBottom]);
+  }, [selectedConv, connectToConversation, scrollToBottom]);
 
   useEffect(() => {
     scrollToBottom();

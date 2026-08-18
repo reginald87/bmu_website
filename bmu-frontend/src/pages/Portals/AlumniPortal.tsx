@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ComponentType } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import {
@@ -19,7 +19,7 @@ import {
   Lock,
   AlertCircle,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 interface AlumniDashboardData {
@@ -27,7 +27,7 @@ interface AlumniDashboardData {
   updates: Array<{ title: string; date: string; type: string }>;
   events: Array<{ title: string; date: string; location: string; type: string }>;
   featured: Array<{ name: string; role: string; organization: string; year: string }>;
-  sections: Array<{ title: string; description: string; count: string | null; icon: any }>;
+  sections: Array<{ title: string; description: string; count: string | null; icon: ComponentType<{ className?: string }> }>;
 }
 
 export const AlumniPortal = () => {

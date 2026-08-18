@@ -7,7 +7,7 @@ import {
   Bell, User, BookOpen, Clock, Building,
   Activity, AlertTriangle
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 interface AdminData {

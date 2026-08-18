@@ -29,34 +29,10 @@ interface College {
 
 const fallbackColleges: College[] = [
   {
-    id: 1, slug: 'medicine', name: 'College of Medicine',
-    fullName: 'Flagship medical college', description: 'The College of Medicine is the flagship college of BMU, offering the MBBS program and training the next generation of physicians.',
-    color: '#1E1E1E', faculty_count: 3, department_count: 12, faculty_members_count: 120, provost_name: 'Prof. Emmanuel Ekanem'
-  },
-  {
-    id: 2, slug: 'allied-health', name: 'School of Allied Health Sciences',
-    description: 'Training professionals in medical laboratory science, radiography, physiotherapy, and more.',
-    color: '#A51C30', faculty_count: 3, department_count: 9, faculty_members_count: 45, provost_name: 'Dr. Grace Ebi'
-  },
-  {
-    id: 3, slug: 'nursing', name: 'School of Nursing',
-    description: 'Producing compassionate and competent nursing professionals.',
-    color: '#1E1E1E', faculty_count: 2, department_count: 6, faculty_members_count: 35, provost_name: 'Prof. Helen Douglas'
-  },
-  {
-    id: 4, slug: 'postgraduate', name: 'School of Postgraduate Studies',
-    description: 'Advanced training and research at master\'s and doctoral levels.',
-    color: '#A51C30', faculty_count: 1, department_count: 0, faculty_members_count: 80
-  },
-  {
-    id: 5, slug: 'public-health', name: 'Institute of Public Health',
-    description: 'Focusing on population health, epidemiology, and health policy.',
-    color: '#1E1E1E', faculty_count: 3, department_count: 8, faculty_members_count: 25, provost_name: 'Prof. Chioma Amadi'
-  },
-  {
-    id: 6, slug: 'cpd', name: 'Continuing Professional Development (CPD)',
-    description: 'Lifelong learning for medical professionals.',
-    color: '#A51C30', faculty_count: 0, department_count: 0, faculty_members_count: 15
+    id: 1, slug: 'college-of-medicine', name: 'College of Medicine',
+    fullName: 'Faculty of Basic Medical Sciences & Faculty of Clinical Sciences',
+    description: 'The College of Medicine is the flagship college of Bayelsa Medical University, housing the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences. The University\'s other faculties — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — operate as standalone faculties with their own departments.',
+    color: '#1E1E1E', faculty_count: 2, department_count: 4, faculty_members_count: 108, provost_name: 'Prof. Philip Eyimina'
   }
 ];
 

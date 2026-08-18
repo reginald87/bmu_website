@@ -10,12 +10,12 @@ const fallbackTestimonials: TestimonialData[] = [
   { id: 3, name: 'Mr. Emmanuel Douglas', role: 'MPH Candidate', quote: 'The public health program at BMU has given me the tools to make a real difference in community health.', photo_url: null },
 ];
 
-export const Testimonials = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
+export const Testimonials = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: unknown }> }) => {
   const { t } = useTranslation();
   const { data: apiData, isLoading } = useTestimonials();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const testimonialsData = (homeSections?.find(s => s.section_key === 'testimonials')?.data as any[] || fallbackTestimonials);
+  const testimonialsData = (homeSections?.find(s => s.section_key === 'testimonials')?.data as TestimonialData[] || fallbackTestimonials);
 
   const testimonials: TestimonialData[] = !isLoading && apiData && apiData.length > 0
     ? apiData

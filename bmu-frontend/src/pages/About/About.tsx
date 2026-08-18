@@ -1,39 +1,49 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Target, Eye, Heart, Award, Users, BookOpen, Globe, Lightbulb } from 'lucide-react';
+import { Target, Eye, Heart, Award, Users, BookOpen, HeartHandshake, Shield, ClipboardCheck, Sparkles, BadgeCheck } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAboutPage } from '../../services/apiHooks';
 import { useMemo } from 'react';
-import * as LucideIcons from 'lucide-react';
-
-const iconMap: Record<string, typeof Award> = {
-  Award, Heart, Lightbulb, Globe,
-  Excellence: Award, Compassion: Heart, Innovation: Lightbulb, Impact: Globe,
-};
+import { iconMap as iconRegistry } from '../../lib/icons';
 
 const fallbackCoreValues = [
-  { icon: Award, title: 'Excellence', description: 'We pursue the highest standards in teaching, research, and healthcare delivery.' },
-  { icon: Heart, title: 'Compassion', description: 'We put patients and communities at the center of everything we do.' },
-  { icon: Lightbulb, title: 'Innovation', description: 'We embrace new ideas and technologies to advance medical science.' },
-  { icon: Globe, title: 'Impact', description: 'We are committed to improving health outcomes in the Niger Delta and beyond.' },
+  { icon: HeartHandshake, title: 'Service', description: 'We believe that delivering excellent service to humanity is also serving God.' },
+  { icon: Shield, title: 'Integrity', description: 'We are committed to upholding the truth and intellectual honesty in all our endeavors.' },
+  { icon: Heart, title: 'Compassion', description: 'We show kindness and care towards our students, staff, and patients.' },
+  { icon: Target, title: 'Dedication', description: 'We are dedicated to engaging in innovative medical science practices that will translate into improved quality of life for people.' },
+  { icon: ClipboardCheck, title: 'Accountability', description: 'We are accountable for all our everyday decisions and actions to our institution, stakeholders, and society in general.' },
+  { icon: Users, title: 'Collaboration', description: 'We value teamwork and support for each other in every way possible to achieve the University\'s purpose.' },
+  { icon: Sparkles, title: 'Passion', description: 'We demonstrate uncommon enthusiasm and commitment to our work, students, staff, and patients.' },
 ];
 
 const fallbackStats = [
-  { value: '2018', label: 'Founded', suffix: '' },
-  { value: '6', label: 'Colleges & Schools', suffix: '' },
-  { value: '50+', label: 'Degree Programs', suffix: '' },
-  { value: '3,500+', label: 'Students', suffix: '' },
+  { value: '2019', label: 'Established', suffix: '' },
+  { value: '2,148', label: 'Students', suffix: '' },
+  { value: '7', label: 'Faculties', suffix: '' },
+  { value: '25', label: 'Departments', suffix: '' },
 ];
 
-const resolveIcon = (name?: string) => {
+const fallbackMission = 'BMU advances healthcare through quality education, evidence-based research, and compassionate service. We train competent professionals, foster innovation, and partner with communities to improve health outcomes locally and globally.';
+
+const fallbackVision = 'To be a leading African medical university recognized globally for excellence in health education, research, innovation, and community impact.';
+
+const fallbackWhyChoose = [
+  { icon: BookOpen, title: 'Cutting-Edge Learning, Real-World Impact', description: 'At Bayelsa Medical University, our modern labs, world-class faculty, and hands-on training prepare students to lead in healthcare, science, and research \u2014 right from the heart of the Niger Delta.' },
+  { icon: Heart, title: 'Excellence Rooted in Purpose', description: "We don't just teach medicine \u2014 we nurture purpose. BMU offers a student-centered education that empowers you to serve, innovate, and make a lasting difference in your community and beyond." },
+  { icon: BadgeCheck, title: 'Affordable Quality, Global Standards', description: 'BMU combines affordability with international best practices, giving you access to quality education, clinical exposure, and global career opportunities \u2014 all within a supportive learning environment.' },
+  { icon: Award, title: 'Academic Excellence', description: "At BMU, academic excellence isn't just a goal \u2014 it's our culture. With experienced faculty, rigorous programs, and a commitment to innovation, we equip students to excel locally and compete globally." },
+];
+
+const resolveIcon = (name?: string): LucideIcon => {
   if (!name) return Award;
-  return (LucideIcons as any)[name] || Award;
+  return iconRegistry[name] || Award;
 };
 
 export const About = () => {
   const { data: pageData } = useAboutPage();
 
-  const heroContent = pageData?.hero_content || 'Nigeria\'s premier institution for healthcare education, dedicated to training the next generation of medical professionals and advancing health outcomes in the Niger Delta region.';
+  const heroContent = pageData?.hero_content || 'Bayelsa Medical University is a beacon of excellence in medical education, research, and compassionate care, committed to developing the next generation of healthcare leaders and innovators.';
 
   const quickStats = useMemo(() => {
     if (pageData?.stats?.length) {
@@ -45,12 +55,26 @@ export const About = () => {
   const coreValues = useMemo(() => {
     if (pageData?.core_values?.length) {
       return pageData.core_values.map(v => ({
-        icon: iconMap[v.icon_name] || resolveIcon(v.icon_name),
+        icon: iconRegistry[v.icon_name] || resolveIcon(v.icon_name),
         title: v.title,
         description: v.description,
       }));
     }
     return fallbackCoreValues;
+  }, [pageData]);
+
+  const missionContent = pageData?.mission_content || fallbackMission;
+  const visionContent = pageData?.vision_content || fallbackVision;
+
+  const whyChoose = useMemo(() => {
+    if (pageData?.why_choose?.length) {
+      return pageData.why_choose.map(w => ({
+        icon: resolveIcon(w.icon_name),
+        title: w.title,
+        description: w.description,
+      }));
+    }
+    return fallbackWhyChoose;
   }, [pageData]);
 
   return (
@@ -131,9 +155,7 @@ export const About = () => {
                 <h2 className="text-title text-gray-900">Our Mission</h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                To provide world-class education in medical and health sciences, conduct cutting-edge research 
-                addressing regional health challenges, and deliver compassionate healthcare services that 
-                improve the quality of life for communities in the Niger Delta and beyond.
+                {missionContent}
               </p>
             </motion.div>
 
@@ -150,9 +172,7 @@ export const About = () => {
                 <h2 className="text-title text-gray-900">Our Vision</h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                To be the leading medical university in Africa, recognized globally for excellence in 
-                healthcare education, research innovation, and community health transformation. We aspire 
-                to be the institution of choice for aspiring medical professionals across the continent.
+                {visionContent}
               </p>
             </motion.div>
           </div>
@@ -206,33 +226,20 @@ export const About = () => {
                 Why Choose Bayelsa Medical University?
               </h2>
               <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A51C3020' }}>
-                    <BookOpen className="w-4 h-4" style={{ color: '#A51C30' }} />
-                  </div>
-                  <div>
-                    <h4 className="text-subtitle text-gray-900">Comprehensive Programs</h4>
-                    <p className="text-gray-600 text-body">From MBBS to specialized postgraduate degrees across 6 colleges</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1E1E1E20' }}>
-                    <Users className="w-4 h-4" style={{ color: '#1E1E1E' }} />
-                  </div>
-                  <div>
-                    <h4 className="text-subtitle text-gray-900">Expert Faculty</h4>
-                    <p className="text-gray-600 text-body">Learn from leading medical professionals and researchers</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A51C3020' }}>
-                    <Award className="w-4 h-4" style={{ color: '#1E1E1E' }} />
-                  </div>
-                  <div>
-                    <h4 className="text-subtitle text-gray-900">Full Accreditation</h4>
-                    <p className="text-gray-600 text-body">Recognized by NUC, MDCN, and all relevant professional bodies</p>
-                  </div>
-                </div>
+                {whyChoose.map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <div className="flex gap-4" key={index}>
+                      <div className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: index % 2 === 0 ? '#A51C3020' : '#1E1E1E20' }}>
+                        <Icon className="w-4 h-4" style={{ color: index % 2 === 0 ? '#A51C30' : '#1E1E1E' }} />
+                      </div>
+                      <div>
+                        <h4 className="text-subtitle text-gray-900">{item.title}</h4>
+                        <p className="text-gray-600 text-body">{item.description}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </motion.div>
 

@@ -21,7 +21,7 @@ interface AuthTokens {
   refresh: string;
 }
 
-interface AuthContextType {
+export interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
@@ -40,14 +40,16 @@ export interface RegisterData {
   role: string;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function getStoredTokens(): AuthTokens | null {
   try {
     const access = localStorage.getItem('bmu_access_token');
     const refresh = localStorage.getItem('bmu_refresh_token');
     if (access && refresh) return { access, refresh };
-  } catch {}
+  } catch {
+    // ignore storage access errors
+  }
   return null;
 }
 
@@ -161,10 +163,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
-  return context;
 };

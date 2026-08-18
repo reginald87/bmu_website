@@ -23,7 +23,51 @@ import { apiClient } from '../../services/api';
 import { EventRegistrationModal } from '../../components/events/EventRegistrationModal';
 import type { EventData } from '../../services/mockData';
 
-const fallbackEvents: Record<string, any> = {
+interface EventOrganizer {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+interface AgendaItem {
+  time: string;
+  activity: string;
+}
+
+interface EventSpeaker {
+  name: string;
+  role: string;
+  topic: string;
+}
+
+interface EventDetailData {
+  id: number;
+  title: string;
+  description: string;
+  longDescription: string;
+  date: string;
+  time: string;
+  endDate?: string;
+  location: string;
+  venue: string;
+  type?: string;
+  category: string;
+  featured?: boolean;
+  image?: string;
+  attendees?: number;
+  maxAttendees?: number;
+  registrationOpen: boolean;
+  registrationDeadline?: string;
+  price?: string;
+  fee?: number | null;
+  organizer: EventOrganizer;
+  agenda?: AgendaItem[];
+  speakers?: EventSpeaker[];
+  tags: string[];
+  relatedEvents?: number[];
+}
+
+const fallbackEvents: Record<string, EventDetailData> = {
  'international-medical-conference-2024': {
  id: 1,
  title: 'International Medical Conference 2024',
@@ -138,27 +182,29 @@ export const EventDetail = () => {
   const [copied, setCopied] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
 
- const { data: eventsData, isLoading, isError } = useQuery({
- queryKey: ['events'],
- queryFn: async () => {
-  try {
-    const response = await apiClient.get('/public/events');
-   const data = response.data?.items || response.data;
-   if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
-    return data;
+  const { data: eventsData, isLoading, isError } = useQuery<Record<string, EventDetailData> | EventDetailData[]>({
+  queryKey: ['events'],
+  queryFn: async () => {
+   try {
+     const response = await apiClient.get('/public/events');
+    const data = response.data?.items || response.data;
+    if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
+     return data;
+    }
+   } catch {
+     // fall back to mock data on error
    }
-  } catch {}
-  return fallbackEvents;
- },
- });
+   return fallbackEvents;
+  },
+  });
 
- const event = useMemo(() => {
- if (!slug || !eventsData) return null;
- if (Array.isArray(eventsData)) {
-  return eventsData.find((e: any) => e.slug === slug) || null;
- }
- return (eventsData as Record<string, any>)[slug] || null;
- }, [slug, eventsData]);
+  const event = useMemo<EventDetailData | null>(() => {
+  if (!slug || !eventsData) return null;
+  if (Array.isArray(eventsData)) {
+   return eventsData.find((e) => e.slug === slug) || null;
+  }
+  return eventsData[slug] || null;
+  }, [slug, eventsData]);
 
  useEffect(() => {
  window.scrollTo(0, 0);
@@ -281,7 +327,7 @@ export const EventDetail = () => {
   animate={{ opacity: 1, y: 0 }}
   transition={{ delay: 0.2 }}
   className="bg-white p-8 shadow-sm"><h2 className="text-2xl font-bold text-gray-900 mb-6">Event Agenda</h2><div className="space-y-4">
-  {event.agenda.map((item: any, index: number) => (
+   {event.agenda.map((item: AgendaItem, index: number) => (
   <div key={index} className="flex gap-4"><div className="w-24 flex-shrink-0 text-sm font-medium text-[#1E1E1E]">
   {item.time}
   </div><div className="flex-1 pb-4 border-b last:border-0"><p className="font-medium text-gray-900">{item.activity}</p></div></div>
@@ -296,7 +342,7 @@ export const EventDetail = () => {
   animate={{ opacity: 1, y: 0 }}
   transition={{ delay: 0.3 }}
   className="bg-white p-8 shadow-sm"><h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Speakers</h2><div className="grid sm:grid-cols-2 gap-6">
-  {event.speakers.map((speaker: any, index: number) => (
+   {event.speakers.map((speaker: EventSpeaker, index: number) => (
   <div key={index} className="flex items-start gap-4"><div className="w-16 h-16 bg-gray-200 flex items-center justify-center"><Users className="w-8 h-8 text-gray-400"/></div><div><h3 className="font-bold text-gray-900">{speaker.name}</h3><p className="text-[#1E1E1E] text-sm">{speaker.role}</p><p className="text-gray-600 text-sm mt-1">{speaker.topic}</p></div></div>
   ))}
   </div></motion.div>

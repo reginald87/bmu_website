@@ -4,10 +4,20 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { getLucideIcon } from '../../lib/icons';
 
-export const QuickLinks = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
+interface QuickLinkCard {
+  to: string;
+  title: string;
+  description?: string;
+  titleKey?: string;
+  descKey?: string;
+  icon: string;
+  image?: string;
+}
+
+export const QuickLinks = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: unknown }> }) => {
   const { t } = useTranslation();
 
-  const fallbackCards = [
+  const fallbackCards: QuickLinkCard[] = [
     {
       to: '/academics',
       title: t('home.quickLinks.academics'),

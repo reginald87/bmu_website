@@ -5,7 +5,7 @@ import {
   DollarSign, CheckCircle, AlertCircle, ChevronRight,
   Wallet, FileText, Shield, Download, Search, Loader2
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 import { DashboardLayout } from '../../components/dashboard/DashboardLayout';
 
@@ -34,7 +34,7 @@ export const BursaryDashboard = () => {
   const { isAuthenticated, user } = useAuth();
   const [data, setData] = useState<BursaryData | null>(null);
   const [pendingScholarships, setPendingScholarships] = useState<PendingScholarship[]>([]);
-  const [_isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<number | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -64,8 +64,9 @@ export const BursaryDashboard = () => {
       });
       setMessage({ type: 'success', text: `Scholarship ${action === 'verify' ? 'verified' : 'rejected'} successfully` });
       setPendingScholarships(prev => prev.filter(s => s.id !== recordId));
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.response?.data?.error || err.response?.data?.detail || 'Action failed' });
+    } catch (err) {
+      const e = err as { response?: { data?: { error?: string; detail?: string } } };
+      setMessage({ type: 'error', text: e.response?.data?.error || e.response?.data?.detail || 'Action failed' });
     } finally {
       setProcessingId(null);
     }

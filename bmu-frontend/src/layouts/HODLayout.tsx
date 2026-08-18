@@ -5,7 +5,7 @@ import {
   GraduationCap, Bell, User, LogOut, Menu, X,
   Building, CheckSquare
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 
 const navItems = [
   { label: 'Dashboard', icon: Building, link: '/portals/hod' },

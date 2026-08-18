@@ -4,7 +4,7 @@ import { Link, Navigate } from 'react-router-dom';
 import {
   Users, ChevronRight, BarChart3, Award, Calendar, ClipboardList, FileText
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 import { DashboardLayout } from '../../components/dashboard/DashboardLayout';
 

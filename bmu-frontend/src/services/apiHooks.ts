@@ -70,6 +70,8 @@ import {
   fetchMenuItems,
   fetchUtilityLinks,
   fetchPageSections,
+  fetchAlumni,
+  fetchAlumniCount,
   fetchPortalDefinitions,
   fetchCentrePages,
   fetchCentrePage,
@@ -652,6 +654,22 @@ export function usePageSections(pageKey: string) {
     queryKey: ['pageSections', pageKey],
     queryFn: () => fetchPageSections(pageKey),
     staleTime: 30 * 60 * 1000,
+  });
+}
+
+export function useAlumni(limit = 6) {
+  return useQuery({
+    queryKey: ['alumni', limit],
+    queryFn: () => fetchAlumni(limit),
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useAlumniCount() {
+  return useQuery({
+    queryKey: ['alumniCount'],
+    queryFn: fetchAlumniCount,
+    staleTime: 10 * 60 * 1000,
   });
 }
 

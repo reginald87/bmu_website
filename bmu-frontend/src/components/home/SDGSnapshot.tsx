@@ -7,10 +7,10 @@ const fallbackSdgs = [
   { number: 17, titleKey: 'home.sdg.partnerships', color: '#19486a' },
 ];
 
-export const SDGSnapshot = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
+export const SDGSnapshot = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: unknown }> }) => {
   const { t } = useTranslation();
 
-  const sdgs = (homeSections?.find(s => s.section_key === 'sdgs')?.data as any[] || fallbackSdgs);
+  const sdgs = (homeSections?.find(s => s.section_key === 'sdgs')?.data as typeof fallbackSdgs || fallbackSdgs);
 
   return (
     <div className="bg-white p-6">

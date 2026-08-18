@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 import { AlertTriangle, Download, Search } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 interface Defaulter {
@@ -22,12 +22,18 @@ export const DefaulterReport = () => {
 
   useEffect(() => {
     if (!isAuthenticated || !['admin', 'staff'].includes(user?.role || '')) return;
-    setIsLoading(true);
-    apiClient.get(`/auth/admin/defaulter-report?session=${session}&semester=${semester}`)
-      .then(res => setDefaulters(res.data))
-      .catch(() => setDefaulters([]))
-      .finally(() => setIsLoading(false));
-  }, [session, semester]);
+    void (async () => {
+      setIsLoading(true);
+      try {
+        const res = await apiClient.get(`/auth/admin/defaulter-report?session=${session}&semester=${semester}`);
+        setDefaulters(res.data);
+      } catch {
+        setDefaulters([]);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [session, semester, isAuthenticated, user?.role]);
 
   const exportCSV = () => {
     const rows = [['S/N', 'Name', 'Matric Number', 'Level', 'Total Amount'].join(',')];

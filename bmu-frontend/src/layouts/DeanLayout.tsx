@@ -5,7 +5,7 @@ import {
   GraduationCap, Bell, User, LogOut, Menu, X,
   Globe, CheckSquare
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 
 const navItems = [
   { label: 'Dashboard', icon: Globe, link: '/portals/dean' },

@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, ChevronDown } from 'lucide-react';
-import * as Icons from 'lucide-react';
+import { Menu, X, ChevronDown, University, GraduationCap, FlaskConical, Building2, Users, Globe, Newspaper, HeartHandshake, LogIn, BookOpen, Award, Briefcase, Link as LinkIcon } from 'lucide-react';
 import { UtilityBar } from './UtilityBar';
 import { MegaMenu } from './MegaMenu';
-import { megaGroups } from './megaMenuData';
+import { megaGroups, type MegaColumn } from './megaMenuData';
 import { useMenuItems } from '../../services/apiHooks';
 import type { MenuItemData } from '../../services/api';
 
@@ -16,22 +15,22 @@ const colors = {
 };
 
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  University: Icons.University,
-  GraduationCap: Icons.GraduationCap,
-  FlaskConical: Icons.FlaskConical,
-  Building2: Icons.Building2,
-  Users: Icons.Users,
-  Globe: Icons.Globe,
-  Newspaper: Icons.Newspaper,
-  HeartHandshake: Icons.HeartHandshake,
-  LogIn: Icons.LogIn,
-  BookOpen: Icons.BookOpen,
-  Award: Icons.Award,
-  Briefcase: Icons.Briefcase,
+  University,
+  GraduationCap,
+  FlaskConical,
+  Building2,
+  Users,
+  Globe,
+  Newspaper,
+  HeartHandshake,
+  LogIn,
+  BookOpen,
+  Award,
+  Briefcase,
 };
 
 function getIcon(name: string) {
-  return iconMap[name] || Icons.Link;
+  return iconMap[name] || LinkIcon;
 }
 
 interface DynamicMegaGroup {
@@ -42,6 +41,16 @@ interface DynamicMegaGroup {
   icon: string;
   column1: { heading: string; links: MenuItemData[] };
   column2: { heading: string; links: MenuItemData[] };
+}
+
+interface NavItem {
+  key: string;
+  label: string;
+  url: string;
+  title: string;
+  dynamic: boolean;
+  links: MenuItemData[];
+  columns: MegaColumn[];
 }
 
 function buildMegaGroups(items: MenuItemData[]): DynamicMegaGroup[] {
@@ -86,6 +95,29 @@ export const Navbar = () => {
   const navOrder = useDynamic ? dynamicGroups.map((g) => g.key) : Object.keys(megaGroups);
   const portalsItem = useDynamic ? dynamicGroups.find((g) => g.label.toLowerCase() === 'portals') : null;
   const mainNavItems = useDynamic ? dynamicGroups.filter((g) => g.label.toLowerCase() !== 'portals') : [];
+
+  const navItems: NavItem[] = useDynamic
+    ? mainNavItems.map((g) => ({
+        key: g.key,
+        label: g.label,
+        url: g.url,
+        title: g.label,
+        dynamic: true,
+        links: [...g.column1.links, ...g.column2.links],
+        columns: [],
+      }))
+    : navOrder.map((key) => {
+        const group = megaGroups[key];
+        return {
+          key: group.key,
+          label: t(group.labelKey),
+          url: group.to,
+          title: t(group.titleKey),
+          dynamic: false,
+          links: [],
+          columns: group.columns,
+        };
+      });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -271,11 +303,11 @@ export const Navbar = () => {
       >
         <div className="container-custom">
           <ul className="flex items-center justify-between" role="menubar">
-            {(useDynamic ? mainNavItems : navOrder.map((key) => ({ ...megaGroups[key], key }))).map((item) => {
-              const key = useDynamic ? item.key : item.key;
+            {navItems.map((item) => {
+              const key = item.key;
               const isActive = activeDropdown === key;
-              const label = useDynamic ? (item as DynamicMegaGroup).label : t((item as any).labelKey);
-              const url = useDynamic ? (item as DynamicMegaGroup).url : (item as any).to;
+              const label = item.label;
+              const url = item.url;
               return (
                 <li
                   key={key}
@@ -336,15 +368,13 @@ export const Navbar = () => {
       >
         <div className="container-custom py-6 h-full overflow-y-auto">
           <div className="space-y-2">
-            {(useDynamic ? dynamicGroups : navOrder.map((key) => ({ ...megaGroups[key], key }))).map((item) => {
-              const key = useDynamic ? item.key : item.key;
+            {navItems.map((item) => {
+              const key = item.key;
               const isOpen = openMobileGroup === key;
-              const label = useDynamic ? (item as DynamicMegaGroup).label : t((item as any).labelKey);
-              const url = useDynamic ? (item as DynamicMegaGroup).url : (item as any).to;
-              const title = useDynamic ? `${(item as any).label}` : t((item as any).titleKey);
-              const allLinks = useDynamic
-                ? [...(item as DynamicMegaGroup).column1.links, ...(item as DynamicMegaGroup).column2.links]
-                : [];
+              const label = item.label;
+              const url = item.url;
+              const title = item.title;
+              const allLinks = item.links;
               return (
                 <div key={key} className="border-b border-gray-100 last:border-0">
                   <button
@@ -363,7 +393,7 @@ export const Navbar = () => {
                       >
                         {title} →
                       </Link>
-                      {useDynamic ? (
+                      {item.dynamic ? (
                         <div className="space-y-1">
                           {allLinks.map((link) => (
                             link.is_external ? (
@@ -389,7 +419,7 @@ export const Navbar = () => {
                           ))}
                         </div>
                       ) : (
-                        (megaGroups as any)[key]?.columns.map((column: any, ci: number) => (
+                        item.columns.map((column, ci) => (
                           <div key={ci} className="mt-2">
                             {column.headingKey && (
                               <p className="text-xs font-bold uppercase tracking-wide text-gray-400 mb-1">
@@ -397,7 +427,7 @@ export const Navbar = () => {
                               </p>
                             )}
                             <div className="space-y-1">
-                              {column.links.map((link: any) => (
+                              {column.links.map((link) => (
                                 <Link
                                   key={link.to + link.key}
                                   to={link.to}

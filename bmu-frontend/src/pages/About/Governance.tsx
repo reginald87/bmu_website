@@ -1,10 +1,11 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Building2, Users, Gavel, FileText, Shield, Scale } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useGovernancePage } from '../../services/apiHooks';
 import { useMemo } from 'react';
-import * as LucideIcons from 'lucide-react';
+import { iconMap as iconRegistry } from '../../lib/icons';
 
 const fallbackGovernanceBodies = [
   {
@@ -51,9 +52,9 @@ const fallbackPolicies = [
   { title: 'Staff Welfare Policy', description: 'Ensuring staff wellbeing and professional development' },
 ];
 
-const resolveIcon = (name?: string) => {
+const resolveIcon = (name?: string): LucideIcon => {
   if (!name) return Building2;
-  return (LucideIcons as any)[name] || Building2;
+  return iconRegistry[name] || Building2;
 };
 
 export const Governance = () => {

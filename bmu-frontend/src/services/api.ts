@@ -77,6 +77,7 @@ import {
 } from './mockData';
 import {
   mockPrograms,
+  mockProgramDetails,
   mockFaculty,
   mockColleges,
   mockSDGMetrics,
@@ -263,6 +264,7 @@ export const fetchPrograms = async (params: FetchProgramsParams = {}): Promise<P
 
 export const fetchProgramBySlug = async (slug: string): Promise<Program | undefined> => {
   const mock = () => {
+    if (mockProgramDetails[slug]) return mockProgramDetails[slug];
     const all = [
       ...mockPrograms.undergraduate,
       ...mockPrograms.masters,
@@ -344,74 +346,86 @@ export const fetchPageContent = async (page?: string): Promise<PageContentSectio
 export const fetchAboutPage = async (): Promise<AboutPageData> => {
   return fetchWithFallback('/public/about-page', () => ({
     hero_title: 'About Bayelsa Medical University',
-    hero_content: 'Nigeria\'s premier institution for healthcare education, dedicated to training the next generation of medical professionals and advancing health outcomes in the Niger Delta region.',
-    about_main_title: 'Our Mission & Vision',
-    about_main_content: '',
-    meta_description: '',
+    hero_content: 'Bayelsa Medical University is a beacon of excellence in medical education, research, and compassionate care, committed to developing the next generation of healthcare leaders and innovators.',
+    about_main_title: 'About the Bayelsa Medical University',
+    about_main_content: 'BMU is a specialised medical university established to raise crops of professionally competent personnel in the multi-disciplinary study of medicine and allied medical sciences that are capable of identifying health needs and challenges of society and proffering solutions to such issues for the well-being of mankind.',
+    mission_content: 'BMU advances healthcare through quality education, evidence-based research, and compassionate service. We train competent professionals, foster innovation, and partner with communities to improve health outcomes locally and globally.',
+    vision_content: 'To be a leading African medical university recognized globally for excellence in health education, research, innovation, and community impact.',
+    meta_description: 'BMU is a specialised medical university established to raise crops of professionally competent personnel in the multi-disciplinary study of medicine and allied medical sciences.',
     stats: [
-      { value: '2018', label: 'Founded', suffix: '', order: 1 },
-      { value: '450', label: 'Faculty', suffix: '+', order: 2 },
-      { value: '50+', label: 'Degree Programs', suffix: '', order: 3 },
-      { value: '3,500+', label: 'Students', suffix: '', order: 4 },
+      { value: '2019', label: 'Established', suffix: '', order: 1 },
+      { value: '2,148', label: 'Students', suffix: '', order: 2 },
+      { value: '7', label: 'Faculties', suffix: '', order: 3 },
+      { value: '25', label: 'Departments', suffix: '', order: 4 },
+    ],
+    why_choose: [
+      { icon_name: 'FlaskConical', title: 'Cutting-Edge Learning, Real-World Impact', description: 'At Bayelsa Medical University, our modern labs, world-class faculty, and hands-on training prepare students to lead in healthcare, science, and research \u2014 right from the heart of the Niger Delta.' },
+      { icon_name: 'Heart', title: 'Excellence Rooted in Purpose', description: "We don't just teach medicine \u2014 we nurture purpose. BMU offers a student-centered education that empowers you to serve, innovate, and make a lasting difference in your community and beyond." },
+      { icon_name: 'BadgeCheck', title: 'Affordable Quality, Global Standards', description: 'BMU combines affordability with international best practices, giving you access to quality education, clinical exposure, and global career opportunities \u2014 all within a supportive learning environment.' },
+      { icon_name: 'Award', title: 'Academic Excellence', description: "At BMU, academic excellence isn't just a goal \u2014 it's our culture. With experienced faculty, rigorous programs, and a commitment to innovation, we equip students to excel locally and compete globally." },
     ],
     core_values: [
-      { icon_name: 'Award', title: 'Excellence', description: 'We pursue the highest standards in teaching, research, and healthcare delivery.', order: 1 },
-      { icon_name: 'Heart', title: 'Compassion', description: 'We put patients and communities at the center of everything we do.', order: 2 },
-      { icon_name: 'Lightbulb', title: 'Innovation', description: 'We embrace new ideas and technologies to advance medical science.', order: 3 },
-      { icon_name: 'Globe', title: 'Impact', description: 'We are committed to improving health outcomes in the Niger Delta and beyond.', order: 4 },
+      { icon_name: 'HeartHandshake', title: 'Service', description: 'We believe that delivering excellent service to humanity is also serving God.', order: 1 },
+      { icon_name: 'Shield', title: 'Integrity', description: 'We are committed to upholding the truth and intellectual honesty in all our endeavors.', order: 2 },
+      { icon_name: 'Heart', title: 'Compassion', description: 'We show kindness and care towards our students, staff, and patients.', order: 3 },
+      { icon_name: 'Target', title: 'Dedication', description: 'We are dedicated to engaging in innovative medical science practices that will translate into improved quality of life for people.', order: 4 },
+      { icon_name: 'ClipboardCheck', title: 'Accountability', description: 'We are accountable for all our everyday decisions and actions to our institution, stakeholders, and society in general.', order: 5 },
+      { icon_name: 'Users', title: 'Collaboration', description: "We value teamwork and support for each other in every way possible to achieve the University's purpose.", order: 6 },
+      { icon_name: 'Sparkles', title: 'Passion', description: 'We demonstrate uncommon enthusiasm and commitment to our work, students, staff, and patients.', order: 7 },
     ],
   }));
 };
 
 export const fetchHistoryPage = async (): Promise<HistoryPageData> => {
   return fetchWithFallback('/public/history-page', () => ({
-    hero_content: 'From visionary beginnings in 2018 to becoming Nigeria\'s premier destination for healthcare education - the remarkable journey of Bayelsa Medical University.',
-    meta_description: '',
-    intro_title: 'A Vision for Healthcare Excellence',
-    intro_content: `Bayelsa Medical University was born from a vision to address the critical shortage of qualified healthcare professionals in the Niger Delta region. Prior to 2018, aspiring medical students from Bayelsa State had to travel far from home to pursue their dreams.\n\nThe establishment of BMU changed this narrative, bringing world-class medical education to the heart of the Niger Delta. What began with a single MBBS program has grown into a comprehensive medical university with multiple colleges and research centers.\n\nToday, BMU stands as a testament to what focused investment in education can achieve - producing skilled healthcare professionals who serve their communities with excellence and compassion.`,
-    intro_image_caption: 'Campus Development Gallery',
+    hero_content: 'Bayelsa Medical University (BMU) was established to address critical healthcare manpower shortages in the Niger Delta region and Nigeria at large, growing into one of Nigeria\'s fastest-growing medical universities.',
+    meta_description: 'Explore the journey of Bayelsa Medical University from its establishment to becoming one of Nigeria\'s fastest-growing medical universities.',
+    intro_title: 'About the Bayelsa Medical University',
+    intro_content: `Bayelsa Medical University (BMU) was established in 2019 by the Bayelsa State Government under the leadership of His Excellency, Governor Henry Seriake Dickson, as part of a strategic vision to address critical healthcare manpower shortages in the Niger Delta region and Nigeria at large. The institution was conceived to be a world-class, technology-driven medical university that would produce highly skilled doctors, dentists, pharmacists, and allied health professionals to improve healthcare delivery in Nigeria.\n\nBMU is a specialised medical university established to raise crops of professionally competent personnel in the multi-disciplinary study of medicine and allied medical sciences that are capable of identifying health needs and challenges of society and proffering solutions to such issues for the well-being of mankind. It began with two pioneer faculties: Basic Medical Sciences (Anatomy, Physiology, Biochemistry) and Clinical Sciences (MBBS programme), with Prof. Ebitimitula Nicholas Etebu appointed as the pioneer Vice-Chancellor.\n\nToday, BMU is one of Nigeria's fastest-growing medical universities, known for technology-enhanced learning (AI, VR, and simulation-based training), strong clinical exposure (early patient interaction from Year 3), research focus (tropical diseases, public health, and medical innovation), and state government support ensuring sustainable growth.`,
+    intro_image_caption: 'BMU Campus Development',
     intro_image: null,
     intro_images: [],
     stats: [
-      { value: '7+', label: 'Years of Excellence' },
-      { value: '3,500+', label: 'Students Trained' },
-      { value: '50+', label: 'Degree Programs' },
+      { value: '2,148', label: 'Students' },
+      { value: '7', label: 'Faculties' },
+      { value: '25', label: 'Departments' },
     ],
     future_title: 'Looking Ahead',
-    future_content: `As we look to the future, BMU remains committed to expanding our impact. Plans are underway for new specialized colleges, enhanced research facilities, and strengthened international partnerships that will position us among Africa's top medical institutions.`,
-    future_quote: '"The best way to predict the future is to create it." - We are building tomorrow\'s healthcare, today.',
+    future_content: `Plans for postgraduate medical programmes (Residencies, MSc, PhD), the ongoing establishment of a satellite campus at Sampou, Kolokuma/Opokuma Local Government Area, and increased collaborations with global medical institutions.`,
+    future_quote: '"Together, we are not just building a university. We are building a legacy of excellence, innovation, and impact." \u2014 Professor Dimie Ogoina, Vice-Chancellor',
     timeline_events: [
-      { year: '2018', title: 'Foundation Established', description: 'Bayelsa Medical University was established by the Bayelsa State Government...', icon_name: 'Building2', order: 1 },
-      { year: '2019', title: 'First Academic Session Begins', description: 'BMU admitted its first cohort of students into the MBBS program...', icon_name: 'GraduationCap', order: 2 },
-      { year: '2020', title: 'NUC Accreditation', description: 'Received full accreditation from the National Universities Commission...', icon_name: 'Award', order: 3 },
-      { year: '2021', title: 'Teaching Hospital Partnership', description: 'Established formal partnership with the Federal Medical Centre, Yenagoa...', icon_name: 'Users', order: 4 },
-      { year: '2022', title: 'Research Centers Launch', description: 'Launched the Center for Malaria Research and Center for Non-Communicable Diseases...', icon_name: 'Globe', order: 5 },
-      { year: '2023', title: 'Postgraduate Programs', description: 'Introduced Master of Public Health (MPH) and other postgraduate programs...', icon_name: 'Calendar', order: 6 },
-      { year: '2024', title: 'International Recognition', description: 'BMU achieved recognition from the World Health Organization...', icon_name: 'Award', order: 7 },
-      { year: '2025', title: 'Campus Expansion', description: 'Completed Phase II of campus development, including new research laboratories...', icon_name: 'Building2', order: 8 },
+      { year: '2018', title: 'Establishment', description: 'BMU was established via the Bayelsa Medical University Law enacted by the Bayelsa State House of Assembly, beginning with two pioneer faculties: Basic Medical Sciences and Clinical Sciences (MBBS programme).', icon_name: 'Building2', order: 1 },
+      { year: '2019', title: 'University Founded', description: 'BMU admitted its first students with foundational programs in Medicine and Nursing to address regional healthcare needs, and secured full accreditation from the National Universities Commission (NUC) for its MBBS programme.', icon_name: 'GraduationCap', order: 2 },
+      { year: '2021', title: 'Expansion and Growth', description: 'The university expanded to include new faculties such as Pharmaceutical Sciences, Dentistry, Health Sciences, and Sciences, alongside accelerated development of the permanent campus along Imgbi Road.', icon_name: 'Award', order: 3 },
+      { year: '2023', title: 'Campus Expansion', description: 'Opened a state-of-the-art teaching hospital and advanced research laboratories, including VR/AR-equipped medical simulation labs, modern lecture halls, and student hostels.', icon_name: 'Building2', order: 4 },
+      { year: '2024', title: 'Academic Growth', description: 'Launched the postgraduate school and several new specialty programs, attracting international students and further strengthening research capacity.', icon_name: 'GraduationCap', order: 5 },
+      { year: '2025', title: 'Global Recognition', description: 'Forged key partnerships with leading global universities and established a high-fidelity simulation lab, positioning BMU among Nigeria\'s fastest-growing medical universities.', icon_name: 'Globe', order: 6 },
     ],
   }));
 };
 
 export const fetchVisionMissionPage = async (): Promise<VisionMissionPageData> => {
   return fetchWithFallback('/public/vision-mission-page', () => ({
-    hero_content: 'Guided by a compelling vision and driven by a transformative mission, we are shaping the future of healthcare in Africa.',
-    mission_content: 'To provide world-class education in medical and health sciences, conduct cutting-edge research addressing regional health challenges, and deliver compassionate healthcare services that improve the quality of life for communities in the Niger Delta and beyond.',
-    vision_content: 'To be the leading medical university in Africa, recognized globally for excellence in healthcare education, research innovation, and community health transformation.',
-    meta_description: '',
+    hero_content: 'Bayelsa Medical University advances healthcare through quality education, evidence-based research, and compassionate service, guided by a compelling vision and a transformative mission.',
+    mission_content: 'BMU advances healthcare through quality education, evidence-based research, and compassionate service. We train competent professionals, foster innovation, and partner with communities to improve health outcomes locally and globally.',
+    vision_content: 'To be a leading African medical university recognized globally for excellence in health education, research, innovation, and community impact.',
+    meta_description: 'Discover BMU\'s vision to be a leading African medical university and our mission to advance healthcare through quality education, evidence-based research, and compassionate service.',
     strategic_pillars: [
-      { icon_name: 'Lightbulb', title: 'Excellence in Education', description: 'Delivering world-class medical education through innovative teaching methods, modern facilities, and experienced faculty.', order: 1 },
-      { icon_name: 'Heart', title: 'Compassionate Care', description: 'Instilling values of empathy and patient-centered care in every graduate who serves our communities.', order: 2 },
-      { icon_name: 'Compass', title: 'Research Innovation', description: 'Advancing medical knowledge through cutting-edge research addressing regional and global health challenges.', order: 3 },
-      { icon_name: 'Target', title: 'Community Impact', description: 'Transforming healthcare delivery in the Niger Delta through service, outreach, and partnership.', order: 4 },
+      { icon_name: 'Award', title: 'Academic Excellence', description: 'Strengthening quality assurance, curriculum innovation, faculty development, and student engagement to deliver teaching and assessment aligned with global best practices.', order: 1 },
+      { icon_name: 'Leaf', title: 'Sustainability', description: 'Ensuring long-term financial and environmental sustainability through diversified revenue streams, entrepreneurship, and the integration of green technologies such as solar energy and energy-efficient systems.', order: 2 },
+      { icon_name: 'Users', title: 'Partnerships & Engagement', description: 'Building strong collaborations with local, national, and international institutions, and deepening community outreach to directly address the health needs of Bayelsa State, the Niger Delta, and beyond.', order: 3 },
+      { icon_name: 'Lightbulb', title: 'Innovation & Technology', description: 'Integrating advanced technologies \u2014 Artificial Intelligence (AI), Virtual Reality (VR), the Internet of Things (IoT), and telemedicine \u2014 into education, research, and administration.', order: 4 },
+      { icon_name: 'Microscope', title: 'Research Excellence', description: 'Establishing Centers of Excellence and a Global Research Incubator and Accelerator Hub to nurture high-impact research, attract international scholars, and reward outstanding academic and scientific achievement.', order: 5 },
+      { icon_name: 'HeartHandshake', title: 'Empowerment & Welfare', description: 'Creating a supportive and safe environment that prioritizes the welfare, career development, and mentorship of students and staff, fostering a community that is motivated, proud, and committed to excellence.', order: 6 },
     ],
     core_values: [
-      { title: 'Integrity', description: 'Upholding the highest ethical standards in all our dealings', order: 1 },
-      { title: 'Excellence', description: 'Pursuing the highest quality in education, research, and service', order: 2 },
-      { title: 'Innovation', description: 'Embracing new ideas and technologies to advance healthcare', order: 3 },
-      { title: 'Compassion', description: 'Putting patients and communities first in everything we do', order: 4 },
-      { title: 'Collaboration', description: 'Working together across disciplines and with our communities', order: 5 },
-      { title: 'Accountability', description: 'Taking responsibility for our actions and their outcomes', order: 6 },
+      { title: 'Service', description: 'We believe that delivering excellent service to humanity is also serving God.', order: 1 },
+      { title: 'Integrity', description: 'We are committed to upholding the truth and intellectual honesty in all our endeavors.', order: 2 },
+      { title: 'Compassion', description: 'We show kindness and care towards our students, staff, and patients.', order: 3 },
+      { title: 'Dedication', description: 'We are dedicated to engaging in innovative medical science practices that will translate into improved quality of life for people.', order: 4 },
+      { title: 'Accountability', description: 'We are accountable for all our everyday decisions and actions to our institution, stakeholders, and society in general.', order: 5 },
+      { title: 'Collaboration', description: 'We value teamwork and support for each other in every way possible to achieve the University\'s purpose.', order: 6 },
+      { title: 'Passion', description: 'We demonstrate uncommon enthusiasm and commitment to our work, students, staff, and patients.', order: 7 },
     ],
   }));
 };
@@ -1210,6 +1224,30 @@ export interface InstitutePageData {
 
 export const fetchPageSections = async (pageKey: string): Promise<PageSectionData[]> => {
   return fetchWithFallback(`/public/page-sections/${pageKey}`, () => [] as PageSectionData[]);
+};
+
+export interface AlumniData {
+  id: number;
+  user_id: number;
+  name: string;
+  graduation_year: number;
+  program?: string | null;
+  degree_awarded?: string | null;
+  current_role?: string | null;
+  organization?: string | null;
+  career_status: string;
+  career_status_display: string;
+  is_mentor: boolean;
+  image?: string | null;
+}
+
+export const fetchAlumni = async (limit = 6): Promise<AlumniData[]> => {
+  return fetchWithFallback('/public/alumni', () => [] as AlumniData[], { limit });
+};
+
+export const fetchAlumniCount = async (): Promise<number> => {
+  const res = await fetchWithFallback<{ count: number }>('/public/alumni/count', () => ({ count: 0 }));
+  return res.count;
 };
 
 export const fetchPortalDefinitions = async (): Promise<PortalDefinitionData[]> => {

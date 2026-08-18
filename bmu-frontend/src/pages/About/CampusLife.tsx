@@ -1,18 +1,19 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import * as LucideIcons from 'lucide-react';
+import { Home, Quote, ArrowRight, MapPin, Phone, Mail, Clock } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
   useCampusFeatures,
   useCampusStats,
   useCampusTestimonials,
   useCampusContact,
 } from '../../services/apiHooks';
+import { iconMap as iconRegistry } from '../../lib/icons';
 
-const resolveIcon = (name?: string) => {
-  if (!name) return LucideIcons.Home;
-  const icon = (LucideIcons as any)[name];
-  return typeof icon === 'function' || typeof icon === 'object' ? icon : LucideIcons.Home;
+const resolveIcon = (name?: string): LucideIcon => {
+  if (!name) return Home;
+  return iconRegistry[name] || Home;
 };
 
 const fallbackStats = [
@@ -206,7 +207,7 @@ export const CampusLife = () => {
                 transition={{ delay: i * 0.1 }}
                 className="bg-white/5 p-6 border border-white/10"
               >
-                <LucideIcons.Quote className="w-8 h-8 text-[#A51C30] mb-4 opacity-60" />
+                <Quote className="w-8 h-8 text-[#A51C30] mb-4 opacity-60" />
                 <p className="text-white/80 text-sm leading-relaxed mb-4">&ldquo;{t.quote}&rdquo;</p>
                 <div>
                   <p className="text-white font-semibold text-sm">{t.name}</p>
@@ -248,7 +249,7 @@ export const CampusLife = () => {
           <div className="text-center mt-12">
             <Link to="/gallery" className="inline-flex items-center gap-2 px-8 py-4 font-semibold transition-all bg-[#1E1E1E] text-white hover:bg-[#1E1E1E]/90">
               View Full Gallery
-              <LucideIcons.ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </div>
@@ -264,7 +265,7 @@ export const CampusLife = () => {
               <div className="grid sm:grid-cols-2 gap-4 text-left">
                 {contactInfo.address && (
                   <div className="flex items-start gap-3 p-4 bg-[#f8f9fa]">
-                    <LucideIcons.MapPin className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
+                    <MapPin className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Address</p>
                       <p className="text-gray-600 text-sm">{contactInfo.address}</p>
@@ -273,7 +274,7 @@ export const CampusLife = () => {
                 )}
                 {contactInfo.phone && (
                   <div className="flex items-start gap-3 p-4 bg-[#f8f9fa]">
-                    <LucideIcons.Phone className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
+                    <Phone className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Phone</p>
                       <p className="text-gray-600 text-sm">{contactInfo.phone}</p>
@@ -282,7 +283,7 @@ export const CampusLife = () => {
                 )}
                 {contactInfo.email && (
                   <div className="flex items-start gap-3 p-4 bg-[#f8f9fa]">
-                    <LucideIcons.Mail className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
+                    <Mail className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Email</p>
                       <p className="text-gray-600 text-sm">{contactInfo.email}</p>
@@ -291,7 +292,7 @@ export const CampusLife = () => {
                 )}
                 {contactInfo.office_hours && (
                   <div className="flex items-start gap-3 p-4 bg-[#f8f9fa]">
-                    <LucideIcons.Clock className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
+                    <Clock className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Office Hours</p>
                       <p className="text-gray-600 text-sm">{contactInfo.office_hours}</p>

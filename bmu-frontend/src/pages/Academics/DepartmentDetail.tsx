@@ -31,88 +31,194 @@ interface DepartmentData {
   faculty_id: number | null;
   faculty_name: string | null;
   faculty_slug: string | null;
-  college_id: number;
-  college_name: string;
+  college_id: number | null;
+  college_name: string | null;
   college_slug: string | null;
   leadership_name: string;
   leadership_title: string;
   hod_photo: string | null;
   staff_count: number;
+  student_count: number;
+  program_count: number;
+  publications_count: number;
   staff: StaffMember[];
 }
 
 const fallbackDepartments = [
   {
-    id: 1, name: 'Anatomy', slug: 'anatomy', code: 'ANT',
-    description: 'Study of human body structure.',
-    staff_count: 10, hod_name: 'Prof. Godwin Ikorite',
-    faculty_name: 'Basic Medical Sciences', college_name: 'College of Medicine'
+    id: 1, name: 'Anatomical Pathology', slug: 'anatomical-pathology', code: 'ANP',
+    description: 'Study of the structural and functional changes caused by disease, forming the basis of clinical diagnosis.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Basic Clinical Sciences', faculty_slug: 'faculty-of-basic-clinical-sciences',
+    college_name: null, college_slug: null
   },
   {
-    id: 2, name: 'Physiology', slug: 'physiology', code: 'PHY',
-    description: 'Study of body functions.',
-    staff_count: 8, hod_name: 'Dr. Blessing Amadi',
-    faculty_name: 'Basic Medical Sciences', college_name: 'College of Medicine'
+    id: 2, name: 'Biochemistry', slug: 'biochemistry', code: 'BCH',
+    description: 'The study of the chemical processes within and relating to living organisms, essential to understanding health and disease.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Basic Medical Sciences', faculty_slug: 'faculty-of-basic-medical-sciences',
+    college_name: 'College of Medicine', college_slug: 'college-of-medicine'
   },
   {
-    id: 3, name: 'Biochemistry', slug: 'biochemistry', code: 'BCH',
-    description: 'Study of chemical processes in living organisms.',
-    staff_count: 7, hod_name: 'Dr. Michael Ogu',
-    faculty_name: 'Basic Medical Sciences', college_name: 'College of Medicine'
+    id: 3, name: 'Human Anatomy', slug: 'human-anatomy', code: 'ANA',
+    description: 'The study of the structure of the human body, providing the foundation for clinical practice.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Basic Medical Sciences', faculty_slug: 'faculty-of-basic-medical-sciences',
+    college_name: 'College of Medicine', college_slug: 'college-of-medicine'
   },
   {
-    id: 4, name: 'Internal Medicine', slug: 'internal-medicine', code: 'IMD',
-    description: 'Adult medical care.',
-    staff_count: 15, hod_name: 'Prof. Jane Owei',
-    faculty_name: 'Clinical Sciences', college_name: 'College of Medicine'
+    id: 4, name: 'Human Physiology', slug: 'human-physiology', code: 'PSL',
+    description: 'The study of how the human body functions, from cells to organ systems.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Basic Medical Sciences', faculty_slug: 'faculty-of-basic-medical-sciences',
+    college_name: 'College of Medicine', college_slug: 'college-of-medicine'
   },
   {
-    id: 5, name: 'Paediatrics', slug: 'paediatrics', code: 'PED',
-    description: 'Child healthcare.',
-    staff_count: 10, hod_name: 'Dr. Adaeze Nwosu',
-    faculty_name: 'Clinical Sciences', college_name: 'College of Medicine'
+    id: 5, name: 'Medicine & Surgery', slug: 'medicine-surgery', code: 'MES',
+    description: 'The flagship department training medical doctors through the MBBS programme with comprehensive clinical education.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Clinical Sciences', faculty_slug: 'faculty-of-clinical-sciences',
+    college_name: 'College of Medicine', college_slug: 'college-of-medicine'
   },
   {
-    id: 6, name: 'Obstetrics & Gynaecology', slug: 'obstetrics-gynaecology', code: 'OBG',
-    description: 'Women\'s health and childbirth.',
-    staff_count: 12, hod_name: 'Dr. Faith George',
-    faculty_name: 'Clinical Sciences', college_name: 'College of Medicine'
+    id: 6, name: 'Dental Surgery', slug: 'dental-surgery', code: 'DTS',
+    description: 'Training dental surgeons in the prevention, diagnosis and treatment of oral diseases.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Dentistry', faculty_slug: 'faculty-of-dentistry',
+    college_name: null, college_slug: null
   },
   {
-    id: 7, name: 'Haematology', slug: 'haematology', code: 'HAE',
-    description: 'Study of blood disorders.',
-    staff_count: 5, hod_name: 'Dr. Richard Peters',
-    faculty_name: 'Medical Laboratory Science', college_name: 'School of Allied Health Sciences'
+    id: 7, name: 'Community Health', slug: 'community-health', code: 'CMH',
+    description: 'Training community health professionals to deliver primary healthcare and promote public health at community level.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
   },
   {
-    id: 8, name: 'Medical Microbiology', slug: 'medical-microbiology', code: 'MMB',
-    description: 'Study of disease-causing microorganisms.',
-    staff_count: 6, hod_name: 'Dr. Sarah Wodi',
-    faculty_name: 'Medical Laboratory Science', college_name: 'School of Allied Health Sciences'
+    id: 8, name: 'Dental Technology', slug: 'dental-technology', code: 'DTL',
+    description: 'Training dental technologists in the design and fabrication of dental prostheses and appliances.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
   },
   {
-    id: 9, name: 'General Nursing', slug: 'general-nursing', code: 'GNR',
-    description: 'Comprehensive nursing care.',
-    staff_count: 10, hod_name: 'Prof. Helen Douglas',
-    faculty_name: 'Nursing', college_name: 'School of Nursing'
+    id: 9, name: 'Health Care Administration and Hospital Management', slug: 'health-care-administration-and-hospital-management', code: 'HCA',
+    description: 'Preparing health administrators to manage hospitals and health services efficiently and effectively.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
   },
   {
-    id: 10, name: 'General Midwifery', slug: 'general-midwifery', code: 'GMD',
-    description: 'Maternal and newborn care.',
-    staff_count: 5, hod_name: 'Dr. Faith George',
-    faculty_name: 'Midwifery', college_name: 'School of Nursing'
+    id: 10, name: 'Health Information Management', slug: 'health-information-management', code: 'HIM',
+    description: 'Training professionals in the management of health information, medical records and health informatics.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
   },
   {
-    id: 11, name: 'Disease Surveillance', slug: 'disease-surveillance', code: 'DSV',
-    description: 'Monitoring disease patterns.',
-    staff_count: 4, hod_name: 'Prof. Chioma Amadi',
-    faculty_name: 'Epidemiology', college_name: 'Institute of Public Health'
+    id: 11, name: 'Human Nutrition and Dietetics', slug: 'human-nutrition-and-dietetics', code: 'HND',
+    description: 'Training nutritionists and dietitians to promote health through diet and manage nutrition-related diseases.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
   },
   {
-    id: 12, name: 'Health Statistics', slug: 'health-statistics', code: 'HST',
-    description: 'Health data analysis.',
-    staff_count: 2, hod_name: 'Dr. Ngozi Eze',
-    faculty_name: 'Biostatistics', college_name: 'Institute of Public Health'
+    id: 12, name: 'Medical Laboratory Science', slug: 'medical-laboratory-science', code: 'MLS',
+    description: 'Training medical laboratory scientists in diagnostic testing for disease prevention, diagnosis and treatment.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 13, name: 'Nursing Science', slug: 'nursing-science', code: 'NUR',
+    description: 'Training professional nurses in evidence-based, compassionate patient care across all healthcare settings.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 14, name: 'Optometry', slug: 'optometry', code: 'OPT',
+    description: 'Training optometrists in the examination, diagnosis and management of visual and eye health disorders.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 15, name: 'Physiotherapy', slug: 'physiotherapy', code: 'PHT',
+    description: 'Training physiotherapists to restore function and mobility through physical therapy and rehabilitation.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 16, name: 'Public Health', slug: 'public-health', code: 'PUB',
+    description: 'Training public health professionals in disease prevention, health promotion and population health.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 17, name: 'Radiography and Radiation Science', slug: 'radiography-and-radiation-science', code: 'RAD',
+    description: 'Training radiographers in medical imaging and radiation sciences for diagnostic and therapeutic purposes.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 18, name: 'Pharmacy', slug: 'pharmacy', code: 'PHA',
+    description: 'Training pharmacists in drug formulation, dispensing and clinical pharmacy through the Pharm.D programme.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Pharmaceutical Sciences', faculty_slug: 'faculty-of-pharmaceutical-sciences',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 19, name: 'Biology', slug: 'biology', code: 'BIO',
+    description: 'The study of living organisms, their structure, function, growth and evolution.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 20, name: 'Chemistry', slug: 'chemistry', code: 'CHM',
+    description: 'The study of the composition, structure and properties of matter and the changes it undergoes.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 21, name: 'Computer Science', slug: 'computer-science', code: 'CSE',
+    description: 'The study of computation, algorithms, programming and information systems.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 22, name: 'Mathematics', slug: 'mathematics', code: 'MTH',
+    description: 'The study of quantity, structure, space and change through abstract reasoning.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 23, name: 'Microbiology', slug: 'microbiology', code: 'MCB',
+    description: 'The study of microorganisms and their applications in health, industry and the environment.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 24, name: 'Physics with Electronics', slug: 'physics-with-electronics', code: 'PHY',
+    description: 'The study of matter, energy and their interactions, with emphasis on electronics and instrumentation.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science',
+    college_name: null, college_slug: null
+  },
+  {
+    id: 25, name: 'Statistics', slug: 'statistics', code: 'STA',
+    description: 'The science of collecting, analysing and interpreting data to inform decision-making.',
+    staff_count: 5, student_count: 0, program_count: 0, publications_count: 0, hod_name: '',
+    faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science',
+    college_name: null, college_slug: null
   },
 ];
 
@@ -124,14 +230,17 @@ const mapFallbackToDepartment = (fb: typeof fallbackDepartments[number]): Depart
   description: fb.description,
   faculty_id: null,
   faculty_name: fb.faculty_name,
-  faculty_slug: null,
-  college_id: fb.id,
+  faculty_slug: fb.faculty_slug,
+  college_id: fb.college_slug ? fb.id : null,
   college_name: fb.college_name,
-  college_slug: null,
+  college_slug: fb.college_slug,
   leadership_name: fb.hod_name,
   leadership_title: 'Head of Department',
   hod_photo: null,
   staff_count: fb.staff_count,
+  student_count: fb.student_count ?? 0,
+  program_count: fb.program_count ?? 0,
+  publications_count: fb.publications_count ?? 0,
   staff: [],
 });
 
@@ -160,9 +269,12 @@ export const DepartmentDetail = () => {
             college_slug: response.data.college_slug || null,
            leadership_name: response.data.leadership_name || '',
            leadership_title: response.data.leadership_title || '',
-           hod_photo: response.data.hod_photo ?? null,
-           staff_count: response.data.staff_count || 0,
-           staff: response.data.staff || [],
+hod_photo: response.data.hod_photo ?? null,
+            staff_count: response.data.staff_count || 0,
+            student_count: response.data.student_count || 0,
+            program_count: response.data.program_count || 0,
+            publications_count: response.data.publications_count || 0,
+            staff: response.data.staff || [],
          };
        }
      } catch {
@@ -197,9 +309,16 @@ export const DepartmentDetail = () => {
   );
  }
 
+  const departmentStats = [
+   department.staff_count ? { value: department.staff_count, label: 'Staff Members' } : null,
+   department.program_count ? { value: department.program_count, label: 'Programs' } : null,
+   department.student_count ? { value: department.student_count, label: 'Students' } : null,
+   department.publications_count ? { value: department.publications_count, label: 'Publications' } : null,
+  ].filter(Boolean) as { value: number; label: string }[];
+
  return (
- <>
- <Helmet>
+  <>
+  <Helmet>
  <title>{department.name} | Bayelsa Medical University</title>
  <meta name="description" content={department.description} />
  </Helmet>
@@ -223,7 +342,7 @@ export const DepartmentDetail = () => {
  <ChevronRight className="w-4 h-4" />
   {department.faculty_slug ? (
   <>
-  <Link to={`/academics/faculties/${department.faculty_slug}?college=${department.college_slug}`} className="hover:text-white transition">
+  <Link to={department.college_slug ? `/academics/faculties/${department.faculty_slug}?college=${department.college_slug}` : `/academics/faculties/${department.faculty_slug}`} className="hover:text-white transition">
   {department.faculty_name}
   </Link>
   <ChevronRight className="w-4 h-4" />
@@ -273,31 +392,28 @@ export const DepartmentDetail = () => {
  </div>
  </section>
 
- {/* Stats */}
- <section className="py-12 border-y bg-white" style={{ borderColor: '#e5e4e7' }}>
- <div className="container-custom">
- <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
- {[
- { value: department.staff_count, label: 'Staff Members' },
- { value: '15+', label: 'Programs' },
- { value: '500+', label: 'Students' },
- { value: '50+', label: 'Publications/Year' },
- ].map((stat, index) => (
- <motion.div
- key={index}
- initial={{ opacity: 0, y: 20 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ delay: index * 0.1 }}
- className="text-center"
- >
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
- <p className="text-gray-600 text-body">{stat.label}</p>
- </motion.div>
- ))}
- </div>
- </div>
- </section>
+  {/* Stats */}
+  {departmentStats.length > 0 && (
+  <section className="py-12 border-y bg-white" style={{ borderColor: '#e5e4e7' }}>
+  <div className="container-custom">
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+  {departmentStats.map((stat, index) => (
+  <motion.div
+  key={index}
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ delay: index * 0.1 }}
+  className="text-center"
+  >
+  <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+  <p className="text-gray-600 text-body">{stat.label}</p>
+  </motion.div>
+  ))}
+  </div>
+  </div>
+  </section>
+  )}
 
  {/* Staff Section */}
  {department.staff.length > 0 && (

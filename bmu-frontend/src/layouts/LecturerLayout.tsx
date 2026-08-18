@@ -5,7 +5,7 @@ import {
   GraduationCap, Bell, User, LogOut, Menu, X,
   BookOpen, FileSpreadsheet
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 
 const navItems = [
   { label: 'Dashboard', icon: BookOpen, link: '/portals/lecturer' },

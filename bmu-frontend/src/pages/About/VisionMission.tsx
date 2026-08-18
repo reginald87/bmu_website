@@ -1,58 +1,71 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Target, Eye, Heart, Lightbulb, Compass, ArrowRight } from 'lucide-react';
+import { Target, Eye, Lightbulb, ArrowRight, Award, Leaf, Users, Microscope, HeartHandshake } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useVisionMissionPage } from '../../services/apiHooks';
 import { useMemo } from 'react';
 
 const fallbackStrategicPillars = [
   {
+    icon: Award,
+    title: 'Academic Excellence',
+    description: 'Strengthening quality assurance, curriculum innovation, faculty development, and student engagement to deliver teaching and assessment aligned with global best practices.',
+  },
+  {
+    icon: Leaf,
+    title: 'Sustainability',
+    description: 'Ensuring long-term financial and environmental sustainability through diversified revenue streams, entrepreneurship, and the integration of green technologies such as solar energy and energy-efficient systems.',
+  },
+  {
+    icon: Users,
+    title: 'Partnerships & Engagement',
+    description: 'Building strong collaborations with local, national, and international institutions, and deepening community outreach to directly address the health needs of Bayelsa State, the Niger Delta, and beyond.',
+  },
+  {
     icon: Lightbulb,
-    title: 'Excellence in Education',
-    description: 'Delivering world-class medical education through innovative teaching methods, modern facilities, and experienced faculty.',
+    title: 'Innovation & Technology',
+    description: 'Integrating advanced technologies \u2014 Artificial Intelligence (AI), Virtual Reality (VR), the Internet of Things (IoT), and telemedicine \u2014 into education, research, and administration.',
   },
   {
-    icon: Heart,
-    title: 'Compassionate Care',
-    description: 'Instilling values of empathy and patient-centered care in every graduate who serves our communities.',
+    icon: Microscope,
+    title: 'Research Excellence',
+    description: 'Establishing Centers of Excellence and a Global Research Incubator and Accelerator Hub to nurture high-impact research, attract international scholars, and reward outstanding academic and scientific achievement.',
   },
   {
-    icon: Compass,
-    title: 'Research Innovation',
-    description: 'Advancing medical knowledge through cutting-edge research addressing regional and global health challenges.',
-  },
-  {
-    icon: Target,
-    title: 'Community Impact',
-    description: 'Transforming healthcare delivery in the Niger Delta through service, outreach, and partnership.',
+    icon: HeartHandshake,
+    title: 'Empowerment & Welfare',
+    description: 'Creating a supportive and safe environment that prioritizes the welfare, career development, and mentorship of students and staff, fostering a community that is motivated, proud, and committed to excellence.',
   },
 ];
 
 const fallbackCoreValues = [
-  { title: 'Integrity', description: 'Upholding the highest ethical standards in all our dealings' },
-  { title: 'Excellence', description: 'Pursuing the highest quality in education, research, and service' },
-  { title: 'Innovation', description: 'Embracing new ideas and technologies to advance healthcare' },
-  { title: 'Compassion', description: 'Putting patients and communities first in everything we do' },
-  { title: 'Collaboration', description: 'Working together across disciplines and with our communities' },
-  { title: 'Accountability', description: 'Taking responsibility for our actions and their outcomes' },
+  { title: 'Service', description: 'We believe that delivering excellent service to humanity is also serving God.' },
+  { title: 'Integrity', description: 'We are committed to upholding the truth and intellectual honesty in all our endeavors.' },
+  { title: 'Compassion', description: 'We show kindness and care towards our students, staff, and patients.' },
+  { title: 'Dedication', description: 'We are dedicated to engaging in innovative medical science practices that will translate into improved quality of life for people.' },
+  { title: 'Accountability', description: 'We are accountable for all our everyday decisions and actions to our institution, stakeholders, and society in general.' },
+  { title: 'Collaboration', description: 'We value teamwork and support for each other in every way possible to achieve the University\'s purpose.' },
+  { title: 'Passion', description: 'We demonstrate uncommon enthusiasm and commitment to our work, students, staff, and patients.' },
 ];
 
 const pillarIconMap: Record<string, typeof Lightbulb> = {
-  Lightbulb, Heart, Compass, Target,
-  'Excellence in Education': Lightbulb,
-  'Compassionate Care': Heart,
-  'Research Innovation': Compass,
-  'Community Impact': Target,
+  Award, Leaf, Users, Lightbulb, Microscope, HeartHandshake,
+  'Academic Excellence': Award,
+  'Sustainability': Leaf,
+  'Partnerships & Engagement': Users,
+  'Innovation & Technology': Lightbulb,
+  'Research Excellence': Microscope,
+  'Empowerment & Welfare': HeartHandshake,
 };
 
 export const VisionMission = () => {
   const { data: pageData } = useVisionMissionPage();
 
-  const pageDescription = pageData?.hero_content || 'Guided by a compelling vision and driven by a transformative mission, we are shaping the future of healthcare in Africa.';
+  const pageDescription = pageData?.hero_content || 'Bayelsa Medical University advances healthcare through quality education, evidence-based research, and compassionate service, guided by a compelling vision and a transformative mission.';
 
-  const visionContent = pageData?.vision_content || 'To be the leading medical university in Africa, recognized globally for excellence in healthcare education, research innovation, and community health transformation. We aspire to be the institution of choice for aspiring medical professionals across the continent.';
+  const visionContent = pageData?.vision_content || 'To be a leading African medical university recognized globally for excellence in health education, research, innovation, and community impact.';
 
-  const missionContent = pageData?.mission_content || 'To provide world-class education in medical and health sciences, conduct cutting-edge research addressing regional health challenges, and deliver compassionate healthcare services that improve the quality of life for communities in the Niger Delta and beyond.';
+  const missionContent = pageData?.mission_content || 'BMU advances healthcare through quality education, evidence-based research, and compassionate service. We train competent professionals, foster innovation, and partner with communities to improve health outcomes locally and globally.';
 
   const strategicPillars = useMemo(() => {
     if (pageData?.strategic_pillars?.length) {
@@ -163,7 +176,7 @@ export const VisionMission = () => {
           <div className="text-center mb-12">
             <h2 className="text-headline text-gray-900 mb-4">Strategic Pillars</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Four fundamental pillars that guide our journey toward achieving our vision and mission
+              Six strategic pillars that guide our journey toward achieving our vision and mission
             </p>
           </div>
 

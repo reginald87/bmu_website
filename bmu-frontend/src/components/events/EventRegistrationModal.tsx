@@ -4,6 +4,23 @@ import { X, CheckCircle, AlertCircle, Loader2, CreditCard, ArrowLeft } from 'luc
 import { useEventRegistration, useInitializePayment, useVerifyPayment } from '../../services/apiHooks';
 import type { EventData } from '../../services/mockData';
 
+interface RegistrationResult {
+  id?: number;
+  email?: string;
+  payment_status?: string;
+  payment_reference?: string;
+  registration?: {
+    id?: number;
+    email?: string;
+    payment_status?: string;
+    payment_reference?: string;
+  };
+}
+
+interface PaystackHandler {
+  openIframe: () => void;
+}
+
 declare global {
   interface Window {
     PaystackPop?: {
@@ -13,9 +30,10 @@ declare global {
         amount: number;
         currency: string;
         ref: string;
+        access_code?: string;
         callback: (response: { reference: string }) => void;
         onClose: () => void;
-      }) => void;
+      }) => PaystackHandler;
     };
   }
 }
@@ -47,7 +65,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
   const [institution, setInstitution] = useState('');
   const [step, setStep] = useState<Step>('form');
   const [errorMsg, setErrorMsg] = useState('');
-  const [registrationResult, setRegistrationResult] = useState<any>(null);
+  const [registrationResult, setRegistrationResult] = useState<RegistrationResult | null>(null);
 
   const freeRegistration = useEventRegistration();
   const initPayment = useInitializePayment();
@@ -103,7 +121,9 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
 
       if (publicKey && initResult.access_code && initResult.access_code !== 'demo_access_code') {
         await loadPaystackScript();
-        const handler = (window as any).PaystackPop.setup({
+        const paystack = window.PaystackPop;
+        if (!paystack) throw new Error('PaystackPop failed to load');
+        const handler = paystack.setup({
           key: publicKey,
           email,
           amount: (event.fee || 0) * 100,
@@ -112,7 +132,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
           onClose: () => {
             setStep('payment');
           },
-          callback: async (response: any) => {
+          callback: async (response: { reference: string }) => {
             setStep('processing');
             try {
               const verifyResult = await verifyPayment.mutateAsync(response.reference);

@@ -46,69 +46,70 @@ const standaloneColor = '#1E1E1E';
 
 const fallbackGroups: GroupedFaculty[] = [
   {
-    id: 1, name: 'Basic Medical Sciences', slug: 'basic-medical-sciences',
-    college_name: 'College of Medicine', college_slug: 'medicine', color: '#1E1E1E',
+    id: 1, name: 'Faculty of Basic Medical Sciences', slug: 'faculty-of-basic-medical-sciences',
+    college_name: 'College of Medicine', college_slug: 'college-of-medicine', color: '#1E1E1E',
     departments: [
-      { id: 1, name: 'Anatomy', slug: 'anatomy', code: 'ANT', description: 'Study of human body structure.', faculty_id: 1, faculty_name: 'Basic Medical Sciences', faculty_slug: 'basic-medical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Prof. Godwin Ikorite', staff_count: 10, student_count: 0, is_standalone: false },
-      { id: 2, name: 'Physiology', slug: 'physiology', code: 'PHY', description: 'Study of body functions.', faculty_id: 1, faculty_name: 'Basic Medical Sciences', faculty_slug: 'basic-medical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Dr. Blessing Amadi', staff_count: 8, student_count: 0, is_standalone: false },
-      { id: 3, name: 'Biochemistry', slug: 'biochemistry', code: 'BCH', description: 'Study of chemical processes.', faculty_id: 1, faculty_name: 'Basic Medical Sciences', faculty_slug: 'basic-medical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Dr. Michael Ogu', staff_count: 7, student_count: 0, is_standalone: false },
+      { id: 2, name: 'Biochemistry', slug: 'biochemistry', code: 'BCH', description: 'The study of the chemical processes within and relating to living organisms, essential to understanding health and disease.', faculty_id: 1, faculty_name: 'Faculty of Basic Medical Sciences', faculty_slug: 'faculty-of-basic-medical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: '', staff_count: 5, student_count: 0, is_standalone: false },
+      { id: 3, name: 'Human Anatomy', slug: 'human-anatomy', code: 'ANA', description: 'The study of the structure of the human body, providing the foundation for clinical practice.', faculty_id: 1, faculty_name: 'Faculty of Basic Medical Sciences', faculty_slug: 'faculty-of-basic-medical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: '', staff_count: 5, student_count: 0, is_standalone: false },
+      { id: 4, name: 'Human Physiology', slug: 'human-physiology', code: 'PSL', description: 'The study of how the human body functions, from cells to organ systems.', faculty_id: 1, faculty_name: 'Faculty of Basic Medical Sciences', faculty_slug: 'faculty-of-basic-medical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: '', staff_count: 5, student_count: 0, is_standalone: false },
     ]
   },
   {
-    id: 2, name: 'Clinical Sciences', slug: 'clinical-sciences',
-    college_name: 'College of Medicine', college_slug: 'medicine', color: '#1E1E1E',
-    departments: [
-      { id: 4, name: 'Internal Medicine', slug: 'internal-medicine', code: 'IMD', description: 'Adult medical care.', faculty_id: 2, faculty_name: 'Clinical Sciences', faculty_slug: 'clinical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Prof. Jane Owei', staff_count: 15, student_count: 0, is_standalone: false },
-      { id: 5, name: 'Paediatrics', slug: 'paediatrics', code: 'PED', description: 'Child healthcare.', faculty_id: 2, faculty_name: 'Clinical Sciences', faculty_slug: 'clinical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Dr. Adaeze Nwosu', staff_count: 10, student_count: 0, is_standalone: false },
-      { id: 6, name: 'Obstetrics & Gynaecology', slug: 'obstetrics-gynaecology', code: 'OBG', description: "Women's health and childbirth.", faculty_id: 2, faculty_name: 'Clinical Sciences', faculty_slug: 'clinical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'medicine', leadership_name: 'Dr. Faith George', staff_count: 12, student_count: 0, is_standalone: false },
-    ]
-  },
-  {
-    id: 3, name: 'Medical Laboratory Science', slug: 'medical-lab-science',
-    college_name: 'School of Allied Health Sciences', college_slug: 'allied-health', color: '#A51C30',
-    departments: [
-      { id: 7, name: 'Haematology', slug: 'haematology', code: 'HAE', description: 'Study of blood disorders.', faculty_id: 3, faculty_name: 'Medical Laboratory Science', faculty_slug: 'medical-lab-science', college_id: 2, college_name: 'School of Allied Health Sciences', college_slug: 'allied-health', leadership_name: 'Dr. Richard Peters', staff_count: 5, student_count: 0, is_standalone: false },
-      { id: 8, name: 'Medical Microbiology', slug: 'medical-microbiology', code: 'MMB', description: 'Study of disease-causing microorganisms.', faculty_id: 3, faculty_name: 'Medical Laboratory Science', faculty_slug: 'medical-lab-science', college_id: 2, college_name: 'School of Allied Health Sciences', college_slug: 'allied-health', leadership_name: 'Dr. Sarah Wodi', staff_count: 6, student_count: 0, is_standalone: false },
-    ]
-  },
-  {
-    id: 4, name: 'Nursing', slug: 'nursing-dept',
-    college_name: 'School of Nursing', college_slug: 'nursing', color: '#1E1E1E',
-    departments: [
-      { id: 9, name: 'General Nursing', slug: 'general-nursing', code: 'GNR', description: 'Comprehensive nursing care.', faculty_id: 4, faculty_name: 'Nursing', faculty_slug: 'nursing-dept', college_id: 3, college_name: 'School of Nursing', college_slug: 'nursing', leadership_name: 'Prof. Helen Douglas', staff_count: 10, student_count: 0, is_standalone: false },
-      { id: 10, name: 'Psychiatric Nursing', slug: 'psychiatric-nursing', code: 'PSN', description: 'Mental health nursing.', faculty_id: 4, faculty_name: 'Nursing', faculty_slug: 'nursing-dept', college_id: 3, college_name: 'School of Nursing', college_slug: 'nursing', leadership_name: 'Dr. Faith George', staff_count: 4, student_count: 0, is_standalone: false },
-    ]
-  },
-  {
-    id: 5, name: 'Midwifery', slug: 'midwifery',
-    college_name: 'School of Nursing', college_slug: 'nursing', color: '#1E1E1E',
-    departments: [
-      { id: 11, name: 'General Midwifery', slug: 'general-midwifery', code: 'GMD', description: 'Maternal and newborn care.', faculty_id: 5, faculty_name: 'Midwifery', faculty_slug: 'midwifery', college_id: 3, college_name: 'School of Nursing', college_slug: 'nursing', leadership_name: 'Dr. Faith George', staff_count: 5, student_count: 0, is_standalone: false },
-    ]
-  },
-  {
-    id: 7, name: 'Epidemiology', slug: 'epidemiology',
-    college_name: 'Institute of Public Health', college_slug: 'public-health', color: '#A51C30',
-    departments: [
-      { id: 12, name: 'Disease Surveillance', slug: 'disease-surveillance', code: 'DSV', description: 'Monitoring disease patterns.', faculty_id: 7, faculty_name: 'Epidemiology', faculty_slug: 'epidemiology', college_id: 5, college_name: 'Institute of Public Health', college_slug: 'public-health', leadership_name: 'Prof. Chioma Amadi', staff_count: 4, student_count: 0, is_standalone: false },
-      { id: 13, name: 'Field Epidemiology', slug: 'field-epidemiology', code: 'FEP', description: 'Outbreak investigation.', faculty_id: 7, faculty_name: 'Epidemiology', faculty_slug: 'epidemiology', college_id: 5, college_name: 'Institute of Public Health', college_slug: 'public-health', leadership_name: 'Dr. Ngozi Eze', staff_count: 3, student_count: 0, is_standalone: false },
-    ]
-  },
-  {
-    id: 8, name: 'Health Policy', slug: 'health-policy',
-    college_name: 'Institute of Public Health', college_slug: 'public-health', color: '#A51C30',
-    departments: [
-      { id: 17, name: 'Health Administration', slug: 'health-administration', code: 'HAD', description: 'Healthcare management.', faculty_id: 8, faculty_name: 'Health Policy', faculty_slug: 'health-policy', college_id: 5, college_name: 'Institute of Public Health', college_slug: 'public-health', leadership_name: 'Dr. Emmanuel Akpan', staff_count: 3, student_count: 0, is_standalone: false },
-    ]
-  },
-  {
-    id: 14, name: 'Science', slug: 'science',
+    id: 2, name: 'Faculty of Basic Clinical Sciences', slug: 'faculty-of-basic-clinical-sciences',
     college_name: null, college_slug: null, color: standaloneColor,
     departments: [
-      { id: 19, name: 'Biological Sciences', slug: 'biological-sciences', code: 'BIO', description: 'Study of living organisms.', faculty_id: 14, faculty_name: 'Science', faculty_slug: 'science', college_id: null, college_name: null, college_slug: null, leadership_name: 'Prof. Samuel Abasi', staff_count: 12, student_count: 0, is_standalone: true },
-      { id: 20, name: 'Chemistry', slug: 'chemistry', code: 'CHM', description: 'Study of chemical processes.', faculty_id: 14, faculty_name: 'Science', faculty_slug: 'science', college_id: null, college_name: null, college_slug: null, leadership_name: 'Dr. Ebi Robinson', staff_count: 8, student_count: 0, is_standalone: true },
-      { id: 21, name: 'Physics', slug: 'physics', code: 'PHY', description: 'Study of matter and energy.', faculty_id: 14, faculty_name: 'Science', faculty_slug: 'science', college_id: null, college_name: null, college_slug: null, leadership_name: 'Dr. Godwin Ikorite', staff_count: 6, student_count: 0, is_standalone: true },
-      { id: 22, name: 'Mathematics', slug: 'mathematics', code: 'MTH', description: 'Study of mathematical theory.', faculty_id: 14, faculty_name: 'Science', faculty_slug: 'science', college_id: null, college_name: null, college_slug: null, leadership_name: 'Dr. Ngozi Eze', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 1, name: 'Anatomical Pathology', slug: 'anatomical-pathology', code: 'ANP', description: 'Study of the structural and functional changes caused by disease, forming the basis of clinical diagnosis.', faculty_id: 2, faculty_name: 'Faculty of Basic Clinical Sciences', faculty_slug: 'faculty-of-basic-clinical-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+    ]
+  },
+  {
+    id: 3, name: 'Faculty of Clinical Sciences', slug: 'faculty-of-clinical-sciences',
+    college_name: 'College of Medicine', college_slug: 'college-of-medicine', color: '#1E1E1E',
+    departments: [
+      { id: 5, name: 'Medicine & Surgery', slug: 'medicine-surgery', code: 'MES', description: 'The flagship department training medical doctors through the MBBS programme with comprehensive clinical education.', faculty_id: 3, faculty_name: 'Faculty of Clinical Sciences', faculty_slug: 'faculty-of-clinical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: '', staff_count: 5, student_count: 0, is_standalone: false },
+    ]
+  },
+  {
+    id: 4, name: 'Faculty of Dentistry', slug: 'faculty-of-dentistry',
+    college_name: null, college_slug: null, color: standaloneColor,
+    departments: [
+      { id: 6, name: 'Dental Surgery', slug: 'dental-surgery', code: 'DTS', description: 'Training dental surgeons in the prevention, diagnosis and treatment of oral diseases.', faculty_id: 4, faculty_name: 'Faculty of Dentistry', faculty_slug: 'faculty-of-dentistry', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+    ]
+  },
+  {
+    id: 5, name: 'Faculty of Health Sciences', slug: 'faculty-of-health-sciences',
+    college_name: null, college_slug: null, color: standaloneColor,
+    departments: [
+      { id: 7, name: 'Community Health', slug: 'community-health', code: 'CMH', description: 'Training community health professionals to deliver primary healthcare and promote public health at community level.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 8, name: 'Dental Technology', slug: 'dental-technology', code: 'DTL', description: 'Training dental technologists in the design and fabrication of dental prostheses and appliances.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 9, name: 'Health Care Administration and Hospital Management', slug: 'health-care-administration-and-hospital-management', code: 'HCA', description: 'Preparing health administrators to manage hospitals and health services efficiently and effectively.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 10, name: 'Health Information Management', slug: 'health-information-management', code: 'HIM', description: 'Training professionals in the management of health information, medical records and health informatics.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 11, name: 'Human Nutrition and Dietetics', slug: 'human-nutrition-and-dietetics', code: 'HND', description: 'Training nutritionists and dietitians to promote health through diet and manage nutrition-related diseases.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 12, name: 'Medical Laboratory Science', slug: 'medical-laboratory-science', code: 'MLS', description: 'Training medical laboratory scientists in diagnostic testing for disease prevention, diagnosis and treatment.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 13, name: 'Nursing Science', slug: 'nursing-science', code: 'NUR', description: 'Training professional nurses in evidence-based, compassionate patient care across all healthcare settings.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 14, name: 'Optometry', slug: 'optometry', code: 'OPT', description: 'Training optometrists in the examination, diagnosis and management of visual and eye health disorders.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 15, name: 'Physiotherapy', slug: 'physiotherapy', code: 'PHT', description: 'Training physiotherapists to restore function and mobility through physical therapy and rehabilitation.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 16, name: 'Public Health', slug: 'public-health', code: 'PUB', description: 'Training public health professionals in disease prevention, health promotion and population health.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 17, name: 'Radiography and Radiation Science', slug: 'radiography-and-radiation-science', code: 'RAD', description: 'Training radiographers in medical imaging and radiation sciences for diagnostic and therapeutic purposes.', faculty_id: 5, faculty_name: 'Faculty of Health Sciences', faculty_slug: 'faculty-of-health-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+    ]
+  },
+  {
+    id: 6, name: 'Faculty of Pharmaceutical Sciences', slug: 'faculty-of-pharmaceutical-sciences',
+    college_name: null, college_slug: null, color: standaloneColor,
+    departments: [
+      { id: 18, name: 'Pharmacy', slug: 'pharmacy', code: 'PHA', description: 'Training pharmacists in drug formulation, dispensing and clinical pharmacy through the Pharm.D programme.', faculty_id: 6, faculty_name: 'Faculty of Pharmaceutical Sciences', faculty_slug: 'faculty-of-pharmaceutical-sciences', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+    ]
+  },
+  {
+    id: 7, name: 'Faculty of Science', slug: 'faculty-of-science',
+    college_name: null, college_slug: null, color: standaloneColor,
+    departments: [
+      { id: 19, name: 'Biology', slug: 'biology', code: 'BIO', description: 'The study of living organisms, their structure, function, growth and evolution.', faculty_id: 7, faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 20, name: 'Chemistry', slug: 'chemistry', code: 'CHM', description: 'The study of the composition, structure and properties of matter and the changes it undergoes.', faculty_id: 7, faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 21, name: 'Computer Science', slug: 'computer-science', code: 'CSE', description: 'The study of computation, algorithms, programming and information systems.', faculty_id: 7, faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 22, name: 'Mathematics', slug: 'mathematics', code: 'MTH', description: 'The study of quantity, structure, space and change through abstract reasoning.', faculty_id: 7, faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 23, name: 'Microbiology', slug: 'microbiology', code: 'MCB', description: 'The study of microorganisms and their applications in health, industry and the environment.', faculty_id: 7, faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 24, name: 'Physics with Electronics', slug: 'physics-with-electronics', code: 'PHY', description: 'The study of matter, energy and their interactions, with emphasis on electronics and instrumentation.', faculty_id: 7, faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
+      { id: 25, name: 'Statistics', slug: 'statistics', code: 'STA', description: 'The science of collecting, analysing and interpreting data to inform decision-making.', faculty_id: 7, faculty_name: 'Faculty of Science', faculty_slug: 'faculty-of-science', college_id: null, college_name: null, college_slug: null, leadership_name: '', staff_count: 5, student_count: 0, is_standalone: true },
     ]
   },
 ];

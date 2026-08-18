@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { getLucideIcon } from '../../lib/icons';
 
-export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: any }> }) => {
+export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ section_key: string; data: unknown }> }) => {
   const { t } = useTranslation();
 
   const fallbackHighlights = [
@@ -25,7 +25,7 @@ export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ s
     },
   ];
 
-  const highlights = (homeSections?.find(s => s.section_key === 'featured_story_highlights')?.data as any[] || fallbackHighlights);
+  const highlights = (homeSections?.find(s => s.section_key === 'featured_story_highlights')?.data as typeof fallbackHighlights || fallbackHighlights);
 
   return (
     <section className="py-24 bg-white">

@@ -1310,6 +1310,13 @@ class AboutPage(models.Model):
     hero_content = models.TextField(blank=True)
     about_main_title = models.CharField(max_length=200, blank=True, default='Our Mission & Vision')
     about_main_content = models.TextField(blank=True)
+    mission_content = models.TextField(blank=True, help_text="University mission statement")
+    vision_content = models.TextField(blank=True, help_text="University vision statement")
+    why_choose = models.JSONField(
+        blank=True,
+        default=list,
+        help_text="Why Choose BMU feature cards: [{icon_name, title, description}]",
+    )
     meta_description = models.CharField(max_length=300, blank=True)
 
     updated_at = models.DateTimeField(auto_now=True)
