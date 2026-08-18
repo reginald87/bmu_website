@@ -224,7 +224,7 @@ export const AnalyticsDashboard = () => {
                           <span className="text-sm font-medium text-gray-700 capitalize">{p.decision}</span>
                           <div className="flex items-center gap-2">
                             <div className="w-32 bg-gray-100 h-2 rounded">
-                              <div className="bg-[#1E1E1E] h-2 rounded" style={{ width: `${(p.count / Math.max(...overview.progression_distribution.map((x: ProgressionDistributionItem) => x.count))) * 100}%` }} />
+                              <div className="bg-[#1E1E1E] h-2 rounded" style={{ width: `${(p.count / Math.max(...(overview.progression_distribution || []).map((x: ProgressionDistributionItem) => x.count))) * 100}%` }} />
                             </div>
                             <span className="text-sm text-gray-500 w-8 text-right">{p.count}</span>
                           </div>

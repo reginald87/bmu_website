@@ -53,6 +53,7 @@ export const megaGroups: Record<string, MegaGroup> = {
           { key: 'nav.about_campusLife', to: '/about/campus' },
           { key: 'megaMenu.about_link11', to: '/people' },
           { key: 'megaMenu.about_link12', to: '/about/staff' },
+          { key: 'megaMenu.about_link13', to: '/about/documents' },
           { key: 'nav.about_contact', to: '/contact' },
         ],
       },

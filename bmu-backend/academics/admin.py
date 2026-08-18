@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models import (
     College, FacultyUnit, Department, Program, Course, Faculty,
     FacultyPublication, FacultyCustomLink, SDGMetric, HomeStats,
-    Leadership, NonAcademicStaff, AcademicCalendar, Deadline,
+    Leadership, LeadershipPublication, NonAcademicStaff, StaffPublication,
+    AcademicCalendar, Deadline,
     ProgramAccreditation, ProgramFacility, ProgramHighlight,
     ProgramCurriculumYear, ProgramCurriculumCourse, ProgramAdmissionRequirement,
     RegistrationPeriod, CourseSchedule,
@@ -221,12 +222,23 @@ class HomeStatsAdmin(admin.ModelAdmin):
     readonly_fields = ['updated_at']
 
 
+class LeadershipPublicationInline(admin.TabularInline):
+    model = LeadershipPublication
+    extra = 1
+
+
 @admin.register(Leadership)
 class LeadershipAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'position', 'specific_title', 'college', 'is_active', 'display_order']
     list_filter = ['position', 'is_active', 'college']
     search_fields = ['first_name', 'last_name', 'specific_title']
     ordering = ['display_order', 'last_name']
+    inlines = [LeadershipPublicationInline]
+
+
+class StaffPublicationInline(admin.TabularInline):
+    model = StaffPublication
+    extra = 1
 
 
 @admin.register(NonAcademicStaff)
@@ -235,6 +247,7 @@ class NonAcademicStaffAdmin(admin.ModelAdmin):
     list_filter = ['category', 'employment_type', 'is_active', 'college']
     search_fields = ['first_name', 'last_name', 'employee_id', 'job_title', 'email']
     raw_id_fields = ['supervisor']
+    inlines = [StaffPublicationInline]
 
 
 @admin.register(AcademicCalendar)

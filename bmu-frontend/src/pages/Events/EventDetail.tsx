@@ -42,6 +42,7 @@ interface EventSpeaker {
 
 interface EventDetailData {
   id: number;
+  slug: string;
   title: string;
   description: string;
   longDescription: string;
@@ -70,6 +71,7 @@ interface EventDetailData {
 const fallbackEvents: Record<string, EventDetailData> = {
  'international-medical-conference-2024': {
  id: 1,
+ slug: 'international-medical-conference-2024',
  title: 'International Medical Conference 2024',
  description: 'Join over 500 healthcare professionals from 30 countries discussing emerging infectious diseases, global health security, and the latest medical research.',
  longDescription: `
@@ -113,6 +115,7 @@ const fallbackEvents: Record<string, EventDetailData> = {
  },
  'matriculation-ceremony-2024': {
  id: 2,
+ slug: 'matriculation-ceremony-2024',
  title: '2024/2025 Matriculation Ceremony',
  description: 'Official welcome ceremony for new students entering the 2024/2025 academic session.',
  longDescription: `

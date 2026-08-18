@@ -1370,24 +1370,30 @@ class Command(BaseCommand):
                 ),
             )
 
-        # Annual Impact Reports
-        impact_reports = [
-            dict(title='Annual Impact Report 2024', description='Comprehensive report on BMU\'s SDG contributions and community impact for the 2024 academic year.', category='strategic', file_type='pdf', file_size='4.2 MB', version='2024', date_label='March 2025', display_order=1, is_featured=True),
-            dict(title='Annual Impact Report 2023', description='Detailed overview of BMU\'s impact on health, education, and gender equality in 2023.', category='strategic', file_type='pdf', file_size='3.8 MB', version='2023', date_label='March 2024', display_order=2, is_featured=True),
-            dict(title='Annual Impact Report 2022', description='Baseline impact report establishing key metrics for THE Impact Rankings submission.', category='strategic', file_type='pdf', file_size='3.5 MB', version='2022', date_label='April 2023', display_order=3, is_featured=True),
+        # Public Documents
+        public_docs = [
+            dict(title='University Prospectus 2024-2025', description='Complete guide to programs, admissions, and campus life at Bayelsa Medical University.', category='academic', file_type='pdf', file_size='8.5 MB', version='2024', date_label='January 2024', display_order=1, is_featured=True),
+            dict(title='Annual Financial Report 2023', description='Financial and operational report for the 2023 academic year.', category='financial', file_type='pdf', file_size='4.2 MB', version='2023', date_label='March 2024', display_order=2, is_featured=True),
+            dict(title='Research Ethics Guidelines', description='Guidelines for conducting ethical research at BMU.', category='research', file_type='pdf', file_size='1.8 MB', version='2024', date_label='Updated 2024', display_order=3, is_featured=False),
+            dict(title='Student Handbook 2024-2025', description='Rules, regulations, and guidelines for students.', category='student', file_type='pdf', file_size='3.5 MB', version='2024', date_label='August 2024', display_order=4, is_featured=True),
+            dict(title='Staff Policy Manual', description='Employment policies, benefits, and procedures for staff.', category='staff', file_type='pdf', file_size='2.9 MB', version='2024', date_label='July 2024', display_order=5, is_featured=False),
+            dict(title='Strategic Plan 2024-2030', description='University strategic vision and development goals.', category='strategic', file_type='pdf', file_size='5.1 MB', version='2024', date_label='December 2023', display_order=6, is_featured=True),
+            dict(title='Annual Impact Report 2024', description='Comprehensive report on BMU\'s SDG contributions and community impact for the 2024 academic year.', category='strategic', file_type='pdf', file_size='4.2 MB', version='2024', date_label='March 2025', display_order=7, is_featured=True),
+            dict(title='Annual Impact Report 2023', description='Detailed overview of BMU\'s impact on health, education, and gender equality in 2023.', category='strategic', file_type='pdf', file_size='3.8 MB', version='2023', date_label='March 2024', display_order=8, is_featured=False),
+            dict(title='Annual Impact Report 2022', description='Baseline impact report establishing key metrics for THE Impact Rankings submission.', category='strategic', file_type='pdf', file_size='3.5 MB', version='2022', date_label='April 2023', display_order=9, is_featured=False),
         ]
-        for r in impact_reports:
+        for d in public_docs:
             PublicDocument.objects.get_or_create(
-                title=r['title'],
+                title=d['title'],
                 defaults=dict(
-                    description=r['description'],
-                    category=r['category'],
-                    file_type=r['file_type'],
-                    file_size=r['file_size'],
-                    version=r['version'],
-                    date_label=r['date_label'],
-                    display_order=r['display_order'],
-                    is_featured=r['is_featured'],
+                    description=d['description'],
+                    category=d['category'],
+                    file_type=d['file_type'],
+                    file_size=d['file_size'],
+                    version=d['version'],
+                    date_label=d['date_label'],
+                    display_order=d['display_order'],
+                    is_featured=d['is_featured'],
                 ),
             )
 

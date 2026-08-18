@@ -25,21 +25,25 @@ import {
   X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
 interface ApplicationStep {
   name: string;
+  name_display?: string;
   status: string;
   date?: string;
+  completed_at?: string;
   decision?: string;
 }
 
 interface ApplicationDocument {
   id?: number;
   name: string;
+  name_display?: string;
   status: string;
   uploadDate?: string;
+  uploaded_at?: string;
   file?: string;
 }
 
@@ -47,7 +51,9 @@ interface ApplicationMessage {
   id: number;
   type: string;
   from: string;
+  from_name?: string;
   date: string;
+  created_at?: string;
   text: string;
 }
 
@@ -416,7 +422,7 @@ const ApplicantDashboard = () => {
         address: editForm.address,
       });
       if (res.status === 200) {
-        setApplications(prev => prev.map(a => a.id === application.id ? { ...a, ...editForm, firstName: editForm.firstName, lastName: editForm.lastName, email: editForm.email, phone: editForm.phone, dateOfBirth: editForm.dateOfBirth, address: editForm.address } : a));
+        setApplications(prev => prev.map(a => a.id === application.id ? { ...a, ...editForm, firstName: editForm.firstName, lastName: editForm.lastName, email: editForm.email, phone: editForm.phone, dateOfBirth: editForm.dateOfBirth, address: editForm.address } : a) as Application[]);
         setIsEditing(false);
         setEditForm({});
       }

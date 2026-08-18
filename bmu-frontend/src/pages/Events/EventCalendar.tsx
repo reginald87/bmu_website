@@ -214,7 +214,7 @@ export const EventCalendar = () => {
   return (
   <button
   key={index}
-  onClick={() => hasEvents && setSelectedEvent({ date: dayInfo.date, events: dayEvents })}
+  onClick={() => hasEvents && dayInfo.date && setSelectedEvent({ date: dayInfo.date, events: dayEvents })}
   className={`
   aspect-square p-2 text-left transition relative
   ${dayInfo.type === 'current' ? 'bg-white hover:bg-gray-50' : 'bg-gray-50 text-gray-400'}

@@ -127,6 +127,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
           key: publicKey,
           email,
           amount: (event.fee || 0) * 100,
+          currency: 'NGN',
           ref: initResult.reference,
           access_code: initResult.access_code,
           onClose: () => {
