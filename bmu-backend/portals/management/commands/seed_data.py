@@ -110,43 +110,114 @@ class Command(BaseCommand):
         ]:
             Event.objects.get_or_create(slug=ev_data.pop('slug'), defaults=ev_data)
 
-        NewsItem.objects.update_or_create(
-            slug='bmu-announces-new-research-partnership',
-            defaults={
-                'title': 'BMU Announces New Research Partnership',
-                'excerpt': 'Bayelsa Medical University has entered into a research partnership with leading international institutions to advance medical research in the Niger Delta region.',
-                'content': '<p>Bayelsa Medical University has entered into a landmark research partnership with leading international institutions to advance medical research in the Niger Delta region.</p><p>The partnership will focus on tropical disease research, community health initiatives, and capacity building for local researchers. This collaboration marks a significant step in BMU\'s mission to become a centre of excellence in medical education and research in Africa.</p>',
-                'category': 'research',
-                'author': 'Admin User',
-                'is_published': True,
-                'published_at': timezone.now(),
-            },
-        )
-        NewsItem.objects.update_or_create(
-            slug='vc-welcomes-new-intake-of-students',
-            defaults={
-                'title': 'VC Welcomes New Intake of Students',
-                'excerpt': 'The Vice Chancellor has welcomed the new batch of students for the 2025/2026 academic session, encouraging them to strive for excellence in their medical studies.',
-                'content': '<p>The Vice Chancellor of Bayelsa Medical University has officially welcomed the new intake of students for the 2025/2026 academic session during a matriculation ceremony held at the university\'s main campus.</p><p>In his address, the Vice Chancellor encouraged the new students to remain focused, dedicated, and committed to their studies, emphasizing the university\'s commitment to producing world-class healthcare professionals.</p>',
-                'category': 'academic',
-                'author': 'Admin User',
-                'is_published': True,
-                'published_at': timezone.now(),
-            },
-        )
-        NewsItem.objects.update_or_create(
-            slug='bmu-community-health-outreach-program',
-            defaults={
-                'title': 'BMU Community Health Outreach Program Reaches 5,000 Residents',
-                'excerpt': 'The university\'s community health outreach program has successfully provided free medical screenings and health education to over 5,000 residents in Bayelsa State.',
-                'content': '<p>Bayelsa Medical University\'s community health outreach program has successfully reached over 5,000 residents across Bayelsa State, providing free medical screenings, health education, and basic treatment.</p><p>The initiative, which involves medical students and faculty members, aims to improve healthcare access in rural communities while providing valuable practical experience for students.</p>',
-                'category': 'community',
-                'author': 'Admin User',
-                'is_published': True,
-                'is_featured': True,
-                'published_at': timezone.now(),
-            },
-        )
+        # ------------------------------------------------------------------
+        # Real BMU news (extracted from bmu.edu.ng)
+        # ------------------------------------------------------------------
+        NewsItem.objects.filter(slug__in=[
+            'bmu-announces-new-research-partnership',
+            'vc-welcomes-new-intake-of-students',
+            'bmu-community-health-outreach-program',
+        ]).delete()
+        news_items = [
+            dict(slug='bmu-on-the-move-prof-ogoina-is-working',
+                 title='BMU On The Move: Prof. Ogoina Is Working...',
+                 excerpt='The Bayelsa State Government has presented two coaster buses to BMU to ease the movement of staff and students between the Yenagoa and Sampou campuses.',
+                 category='community',
+                 author='Dr. (Mrs) Teibowei Marie (PRO/SAVC)',
+                 published_at=(2026, 8, 11),
+                 is_featured=True,
+                 content=(
+                     '<p>The Bayelsa State Government has fulfilled its promise to Bayelsa Medical University (BMU) with the presentation of two coaster buses to the institution\'s management.</p>'
+                     '<p>Presenting the vehicle documents to the Vice Chancellor of BMU, Prof. Dimie Ogoina, at Government House, the Secretary to the State Government, Prof. Nimibofa Ayawei, said the procurement was in response to the pressing needs of the specialised tertiary institution.</p>'
+                     '<p>Speaking on behalf of Governor Douye Diri, Prof. Ayawei urged the university management to make judicious use of the buses, noting that they would ease the movement of staff and students between the main campus in Yenagoa and the Sampou campuses.</p>'
+                     '<p>Receiving the documents on behalf of the Governing Council, management, staff and students of BMU, Prof. Ogoina expressed appreciation to His Excellency, Governor Douye Diri, and the state government for fulfilling the promise, assuring that the university would ensure optimal use and proper maintenance of the buses.</p>'
+                 )),
+            dict(slug='bmu-hosts-tetfund-courtesy-visit',
+                 title='Bayelsa Medical University Hosts Members of the Tertiary Fund (TetFund) for a Courtesy Visit',
+                 excerpt='BMU hosted members of the Tertiary Education Trust Fund (TetFund) on a courtesy visit to its Yenagoa and Sampou campuses.',
+                 category='community',
+                 author='Dr. (Mrs) Teibowei Marie (PRO/SAVC)',
+                 published_at=(2026, 8, 7),
+                 content=(
+                     '<p>Bayelsa Medical University (BMU) on Thursday, August 7th, 2026, hosted members of the Tertiary Education Trust Fund (TetFund) on a courtesy visit to its two campuses (Yenagoa Campus and Sampou Campus).</p>'
+                     '<p>The Vice-Chancellor welcomed the delegation, which included Pharm. Ibrahim Babashehu, Arc. Ashiry M. Yusuf, and Dr Yusuf Gamawa, stating that the university has been looking forward to this visit as it highlights the institution\'s growth.</p>'
+                     '<p>Appreciating the Vice-Chancellor for his warm reception, the team lead, Pharm. Ibrahim Babashehu, expressed his awe at the digital and technological development, especially the university\'s adoption of artificial intelligence, and commended the Vice-Chancellor\'s leadership and the need for continued support from the fund.</p>'
+                     '<p>The team toured the Sampou campus, where they visited the Pharmacognosy/Herbal Medicine Laboratory, Pharmaceutical/Medicine Chemistry Laboratory, Clinical Pharmacy Laboratory, and faculty buildings under construction, and at the Yenagoa campus, the Nursery Science Skills Laboratory, the University Store House, and several departmental laboratory complexes.</p>'
+                 )),
+            dict(slug='bmu-secures-approval-bachelor-radiography',
+                 title='BMU On The Move: BMU Secures Approval for Bachelor of Radiography Programme',
+                 excerpt='The Radiographers\u2019 Registration Board of Nigeria (RRBN) has approved BMU\u2019s Bachelor of Radiography Programme following a successful resource verification exercise.',
+                 category='achievement',
+                 author='Dr. (Mrs) Teibowei Marie (PRO/SAVC)',
+                 published_at=(2026, 8, 5),
+                 content=(
+                     '<p>Bayelsa Medical University (BMU), Yenagoa, has recorded another major milestone with the approval of its Bachelor of Radiography Programme by the Radiographers\u2019 Registration Board of Nigeria (RRBN) following a successful resource verification exercise.</p>'
+                     '<p>In a letter dated 28th July, 2026, the RRBN confirmed that the University\u2019s Radiography programme met the required standards after scoring 50 out of 50 in both academic content and physical facilities at the academic and clinical levels during the resource verification exercise conducted on 17th June, 2026.</p>'
+                     '<p>This achievement further reflects Bayelsa Medical University\u2019s unwavering commitment to delivering quality medical education through world-class teaching, modern infrastructure, and strict adherence to regulatory standards. The Vice-Chancellor, Professor Dimie Ogoina, congratulates the university community on the achievement \u2014 another testament to the institution\u2019s pursuit of excellence under the innovation-driven ASPIRE Agenda.</p>'
+                 )),
+            dict(slug='bmu-ongoing-jupeb-examination',
+                 title='BMU On The Move: Ongoing JUPEB Examination',
+                 excerpt='BMU successfully conducted a Physics Objective Examination for 172 JUPEB students at the university\u2019s Computer-Based Test (CBT) Centre.',
+                 category='academic',
+                 author='Dr. (Mrs) Teibowei Marie (PRO/SAVC)',
+                 published_at=(2026, 8, 4),
+                 content=(
+                     '<p>In line with the innovation-driven ASPIRE Agenda of Bayelsa Medical University (BMU), the university successfully conducted a Physics Objective Examination for 172 Joint Universities Preliminary Examinations Board (JUPEB) students at the university\'s Computer-Based Test (CBT) Centre on Tuesday, 4th August 2026.</p>'
+                     '<p>The examination was administered entirely as a Computer-Based Test (CBT), providing many of the students with their first experience of taking an objective examination using a digital platform. Despite this, the students demonstrated remarkable confidence and competence in navigating the CBT system.</p>'
+                     '<p>The exercise was conducted seamlessly in a calm and orderly environment under the strict supervision of examination officials, ensuring adherence to the university\'s high standards of transparency, fairness, and academic integrity.</p>'
+                     '<p>The examination team was led by Mrs Peremo Opiah, Secretary, Center for Foundation Studies, alongside Mr Enaregha Kelvin Oyindeinyefa, Mr Ekubo Prosper Simon, Mr Babatunde R. Atanda, and Mr Eneware Samuel Ebikonbowei.</p>'
+                 )),
+            dict(slug='bmu-july-in-retrospect',
+                 title='BMU: July in Retrospect',
+                 excerpt='A round-up of the activities and events that crowned the month of July at Bayelsa Medical University.',
+                 category='announcement',
+                 author='Dr. (Mrs) Teibowei Marie (PRO/SAVC)',
+                 published_at=(2026, 7, 31),
+                 content=(
+                     '<p>The following are the activities and events that crowned the month of July at Bayelsa Medical University:</p>'
+                     '<p><strong>Week One:</strong> Bayelsa Medical University strengthened research capacity through a Three-Day Grantsmanship and Mentorship Workshop.</p>'
+                     '<p><strong>Week Two:</strong> The university welcomed members of the House Committee on Education of the Bayelsa State House of Assembly on a courtesy visit; the Deputy Vice-Chancellor, Sampou Campus, Professor Godwill Ziriki, held a maiden meeting with newly deployed staff; and BMU was officially granted full membership of the Consortium of Medical Schools \u2013 Africa (COMS-A).</p>'
+                     '<p><strong>Week Three:</strong> The Vice-Chancellor, Prof. Dimie Ogoina, presented a keynote address at the NDU research workshop; BMU hosted a capacity-building initiative for administrative officers and secretaries; and the university hosted the ASUU NEC, Visitation and Mobilization Team for a courtesy visit.</p>'
+                 )),
+            dict(slug='bmu-public-disclaimer-admission-scammers',
+                 title='Public Disclaimer: Beware of Admission Scammers',
+                 excerpt='BMU alerts the public to fraudsters operating fake Facebook pages and circulating counterfeit admission letters.',
+                 category='announcement',
+                 author='Dr. (Mrs) Teibowei Marie (PRO/SAVC)',
+                 published_at=(2026, 7, 29),
+                 content=(
+                     '<p>Bayelsa Medical University (BMU) has been alerted to the activities of fraudsters operating fake Facebook pages and circulating counterfeit admission letters in an attempt to deceive unsuspecting members of the public.</p>'
+                     '<p>The university wishes to state clearly that: BMU does not offer admission through unofficial Facebook pages, WhatsApp messages, or other unauthorised social media accounts; BMU does not request or accept admission or school fee payments into personal bank accounts under any circumstance; and any admission letter, message, or individual requesting payment into a personal account or promising admission in exchange for money is fraudulent.</p>'
+                     '<p>All admissions and payments are processed only through the university\'s approved official channels and designated payment platforms in line with JAMB and the university\'s admission procedures.</p>'
+                     '<p>Prospective students, parents, and guardians are strongly advised to verify every admission-related information through the university\'s official communication channels before taking any action. If you receive suspicious admission offers or payment requests, ignore them and report the incident immediately.</p>'
+                 )),
+            dict(slug='mdcn-grants-accreditation-mbbs-programme',
+                 title='MBBS Students of BMU Celebrate as MDCN Grants Accreditation for MBBS Programme, Increasing Admission Quota to 150 per Session',
+                 excerpt='The Medical and Dental Council of Nigeria (MDCN) has granted accreditation for the MBBS programme and approved an increase in the admission quota from 100 to 150 per session.',
+                 category='achievement',
+                 author='Dr. (Mrs) Teibowei Marie (PRO/SAVC)',
+                 published_at=(2026, 3, 3),
+                 content=(
+                     '<p>The resounding promise made during his inaugural address was not mere rhetoric. Under the dynamic, digital, globally-minded and indefatigable leadership of the Vice-Chancellor, BMU has successfully been accredited for the Bachelor of Medicine and Surgery (MBBS) programme and has been granted approval for an increase in admission quota from 100 to 150 for each session.</p>'
+                     '<p>Established under the Medical and Dental Practitioners Act, the Council remains the statutory guardian of medical and dental education standards in Nigeria. The Council\u2019s accreditation of the MBBS Programme for BMU, following the verification visitation of 20th February 2026, is a powerful affirmation of BMU\u2019s rising stature as a centre of excellence in medical education \u2014 both within Nigeria and on the global stage.</p>'
+                     '<p><strong>What this means for MBBS students:</strong> Current and prospective students can pursue their medical education with assurance, knowing the programme meets and exceeds national quality benchmarks. BMU medical students can now proceed to write their part 2 exams, and the MBBS programme is on course to graduate the first set of medical doctors in the next few years.</p>'
+                     '<p>The university also specially congratulates the Governing Council led by Prof. Tarila Tebepah, the College of Medicine led by the Provost Professor Philip Eyimina, all Principal Officers, Deans, Professors, Directors, HODs, staff and students of the university.</p>'
+                 )),
+        ]
+        for n in news_items:
+            NewsItem.objects.update_or_create(
+                slug=n['slug'],
+                defaults=dict(
+                    title=n['title'],
+                    excerpt=n['excerpt'],
+                    content=n['content'],
+                    category=n['category'],
+                    author=n['author'],
+                    is_published=True,
+                    is_featured=n.get('is_featured', False),
+                    published_at=timezone.make_aware(timezone.datetime(*n['published_at'])),
+                ),
+            )
 
         # ------------------------------------------------------------------
         # Academic structure — real BMU organization
@@ -280,124 +351,124 @@ class Command(BaseCommand):
 
         program_defs = [
             dict(slug='mbbs', title='Medicine and Surgery', degree='MBBS', duration='6 years',
-                 dept='medicine-surgery', college='clinical-sciences', icon='Stethoscope', color='#1E1E1E', tuition=500000,
+                 dept='medicine-surgery', college='clinical-sciences', icon='Stethoscope', color='#1E1E1E', tuition=600000,
                  description='A comprehensive six-year programme that trains students in all aspects of medicine and surgery, producing competent medical doctors ready for residency training.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits (WAEC/NECO/NABTEB) in English, Mathematics, Physics, Chemistry and Biology obtained at not more than two sittings, with required UTME subjects in English Language, Physics, Chemistry and Biology. Direct Entry: A-Level/JUPEB passes in Biology, Chemistry and Physics. OND/HND/BSc in related sciences may be considered for advanced placement.',
                  career='Medical Doctor, Surgeon, Public Health Specialist, Medical Researcher, Hospital Administrator'),
             dict(slug='bnsc-nursing-science', title='Nursing Science', degree='B.NSc', duration='5 years',
-                 dept='nursing-science', college='health-sciences', icon='Heart', color='#A51C30', tuition=350000,
+                 dept='nursing-science', college='health-sciences', icon='Heart', color='#A51C30', tuition=400000,
                  description='A five-year professional nursing programme that prepares students for registered nursing practice across all healthcare settings.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits (WAEC/NECO/NABTEB) at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Physics/Mathematics. OND/HND Nursing with Lower Credit or an RN Certificate may also be considered.',
                  career='Registered Nurse, Nurse Practitioner, Nurse Educator, Public Health Nurse, Healthcare Administrator'),
             dict(slug='bmls-medical-laboratory-science', title='Medical Laboratory Science', degree='BMLS', duration='5 years',
                  dept='medical-laboratory-science', college='health-sciences', icon='Microscope', color='#A51C30', tuition=350000,
                  description='A five-year programme training students in diagnostic laboratory science including clinical chemistry, haematology and microbiology.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in Mathematics, English, Physics, Chemistry and Biology. Direct Entry: an MLT certificate (PASS grade) for admission to Year II. A second-class-lower degree in allied sciences such as Microbiology, Zoology, Biochemistry, Anatomy or Physiology may also be considered.',
                  career='Medical Laboratory Scientist, Research Scientist, Laboratory Manager, Infection Control Specialist'),
             dict(slug='bsc-radiography-and-radiation-science', title='Radiography and Radiation Science', degree='BSc', duration='4 years',
                  dept='radiography-and-radiation-science', college='health-sciences', icon='Scan', color='#A51C30', tuition=350000,
                  description='A four-year programme in medical imaging and radiation science, covering X-ray, ultrasound, CT and MRI for diagnosis and therapy.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits (WAEC/NECO/NABTEB) at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Physics/Mathematics. OND/HND Radiography or health sciences (Lower Credit) or an RR Certificate may also be considered.',
                  career='Radiographer, Radiation Therapist, Imaging Specialist, Healthcare Administrator'),
             dict(slug='bsc-physiotherapy', title='Physiotherapy', degree='BSc', duration='5 years',
                  dept='physiotherapy', college='health-sciences', icon='Activity', color='#A51C30', tuition=350000,
                  description='A five-year programme training physiotherapists to help patients recover function and mobility after injury or illness.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 9 points in Biology, Chemistry and Physics. OND/HND Physiotherapy or Physical Rehabilitation (Upper Credit) or a Registered Physiotherapy Assistant (PTA) certification may also be considered.',
                  career='Physiotherapist, Sports Therapist, Rehabilitation Specialist, Clinical Educator'),
             dict(slug='bsc-optometry', title='Optometry', degree='BSc', duration='6 years',
                  dept='optometry', college='health-sciences', icon='Scan', color='#A51C30', tuition=350000,
                  description='A six-year programme training optometrists in the examination, diagnosis and management of eye and vision disorders.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Physics. OND/HND Optometry or Health Sciences (Lower Credit) or a first degree in Biological/Medical Sciences (5-year direct entry) may also be considered.',
                  career='Optometrist, Vision Researcher, Optical Centre Manager, Public Eye Health Specialist'),
             dict(slug='bsc-public-health', title='Public Health', degree='BSc', duration='4 years',
-                 dept='public-health', college='health-sciences', icon='Globe', color='#A51C30', tuition=350000,
+                 dept='public-health', college='health-sciences', icon='Globe', color='#A51C30', tuition=300000,
                  description='A four-year programme in population health, disease prevention, health promotion and health policy.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics or a relevant social science subject. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology/Health Science, Chemistry and Physics/Mathematics. OND/HND Public Health or Community Health (Lower Credit) or an ND/Diploma in Public/Environmental Health may also be considered.',
                  career='Public Health Officer, Health Educator, Epidemiologist, Policy Analyst, NGO Program Manager'),
             dict(slug='bsc-community-health-science', title='Community Health Science', degree='BSc', duration='5 years',
-                 dept='community-health', college='health-sciences', icon='Globe', color='#A51C30', tuition=350000,
+                 dept='community-health', college='health-sciences', icon='Globe', color='#A51C30', tuition=300000,
                  description='A five-year programme training community health practitioners for primary healthcare delivery at community level.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology/Health Science, Chemistry and Physics. Direct Entry: ND/HND in Community Health (CHEW/CHO) with a CHPRBN licence, or A\'Level/JUPEB with a minimum of 10 points in Biology/Health Science, Chemistry and Physics/Mathematics.',
                  career='Community Health Practitioner, Primary Healthcare Coordinator, Health Extension Specialist'),
             dict(slug='bsc-dental-technology', title='Dental Technology', degree='BSc', duration='4 years',
-                 dept='dental-technology', college='health-sciences', icon='Bone', color='#A51C30', tuition=350000,
+                 dept='dental-technology', college='health-sciences', icon='Bone', color='#A51C30', tuition=158000,
                  description='A four-year programme training dental technologists in the design, fabrication and repair of dental prostheses and appliances.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits (WAEC/NECO/NABTEB) at not more than two sittings in English, Mathematics, Physics, Chemistry and Biology. Direct Entry: A\'Level/JUPEB with a minimum of 9 points in Biology, Chemistry and Physics. OND/HND Upper Credit in Dental Technology or Dental Therapy may also be considered.',
                  career='Dental Technologist, Dental Laboratory Manager, Prosthodontic Technician'),
             dict(slug='bsc-health-care-administration-and-hospital-management', title='Health Care Administration and Hospital Management', degree='BSc', duration='4 years',
-                 dept='health-care-administration-and-hospital-management', college='health-sciences', icon='Heart', color='#A51C30', tuition=350000,
+                 dept='health-care-administration-and-hospital-management', college='health-sciences', icon='Heart', color='#A51C30', tuition=158000,
                  description='A four-year programme preparing health managers and administrators to lead hospitals and health services efficiently.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Economics or Government and one other relevant subject. Direct Entry: A\'Level/JUPEB with a minimum of 8 points in Biology, Economics and Mathematics. OND/HND Health Administration or Public Health (Lower Credit) or NCE may also be considered.',
                  career='Hospital Administrator, Health Services Manager, Health Policy Analyst, Medical Records Director'),
             dict(slug='bsc-health-information-management', title='Health Information Management', degree='BSc', duration='5 years',
-                 dept='health-information-management', college='health-sciences', icon='Globe', color='#A51C30', tuition=350000,
+                 dept='health-information-management', college='health-sciences', icon='Globe', color='#A51C30', tuition=300000,
                  description='A five-year programme in the management of health data, medical records and health information systems.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Physics and Chemistry or Economics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Mathematics or Economics. OND/HND Health Information Management or Medical Records (Lower Credit) or a Diploma in HIM may also be considered.',
                  career='Health Information Manager, Medical Records Officer, Health Informatics Specialist, Data Analyst'),
             dict(slug='bsc-human-nutrition-and-dietetics', title='Human Nutrition and Dietetics', degree='BSc', duration='4 years',
-                 dept='human-nutrition-and-dietetics', college='health-sciences', icon='Heart', color='#A51C30', tuition=350000,
+                 dept='human-nutrition-and-dietetics', college='health-sciences', icon='Heart', color='#A51C30', tuition=158000,
                  description='A four-year programme training nutritionists and dietitians in the science of nutrition and therapeutic dietetics.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits (WAEC/NECO/NABTEB) at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 9 points in Biology, Chemistry and Physics/Mathematics. OND/HND Food Science or Home Economics with Lower Credit may also be considered.',
                  career='Dietitian, Nutritionist, Public Health Nutritionist, Food Service Manager'),
             dict(slug='doctor-of-pharmacy', title='Pharmacy', degree='Pharm.D', duration='6 years',
-                 dept='pharmacy', college='pharmaceutical-sciences', icon='Award', color='#1E1E1E', tuition=500000,
+                 dept='pharmacy', college='pharmaceutical-sciences', icon='Award', color='#1E1E1E', tuition=400000,
                  description='A six-year Doctor of Pharmacy programme covering pharmaceutical sciences, clinical pharmacy and professional pharmacy practice.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A-Level/JUPEB with a minimum of 12 points in Biology, Chemistry and Physics or Mathematics. OND/HND Pharmacy Technician or Pharmacology (Upper Credit) may also be considered for a 5-year direct entry.',
                  career='Pharmacist, Clinical Pharmacist, Pharmaceutical Researcher, Drug Regulatory Affairs Officer'),
             dict(slug='bds-dentistry', title='Dentistry', degree='BDS', duration='6 years',
-                 dept='dental-surgery', college='dentistry', icon='Stethoscope', color='#1E1E1E', tuition=500000,
+                 dept='dental-surgery', college='dentistry', icon='Stethoscope', color='#1E1E1E', tuition=600000,
                  description='A six-year Bachelor of Dental Surgery programme training dental surgeons in oral health care and maxillofacial surgery.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits (WAEC/NECO/NABTEB) in English, Mathematics, Physics, Chemistry and Biology obtained at not more than two sittings, with required UTME subjects in English Language, Physics, Chemistry and Biology. Direct Entry: A-Level/JUPEB passes in Biology, Chemistry and Physics. OND/HND/BSc in related sciences may be considered for advanced placement.',
                  career='Dental Surgeon, Oral Health Specialist, Dental Public Health Officer, Dental Researcher'),
             dict(slug='bsc-human-anatomy', title='Human Anatomy', degree='BSc', duration='4 years',
-                 dept='human-anatomy', college='basic-medical-sciences', icon='Bone', color='#1E1E1E', tuition=300000,
+                 dept='human-anatomy', college='basic-medical-sciences', icon='Bone', color='#1E1E1E', tuition=158000,
                  description='A four-year programme focused on the structure of the human body, providing foundations for medical and health sciences careers.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Physics. OND/HND Anatomy or Physiology (Lower Credit) or NCE in biology-related fields may also be considered.',
                  career='Anatomist, Medical Illustrator, Forensic Scientist, Research Assistant, Lecturer'),
             dict(slug='bsc-human-physiology', title='Human Physiology', degree='BSc', duration='4 years',
-                 dept='human-physiology', college='basic-medical-sciences', icon='Brain', color='#1E1E1E', tuition=300000,
+                 dept='human-physiology', college='basic-medical-sciences', icon='Brain', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in the study of body functions and regulatory mechanisms for research and academic careers.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Physics. OND/HND Physiology or Anatomy (Lower Credit) or NCE in Biology, Chemistry or Health Education may also be considered.',
                  career='Physiologist, Research Scientist, Lecturer, Pharmaceutical Researcher'),
             dict(slug='bsc-biochemistry', title='Biochemistry', degree='BSc', duration='4 years',
-                 dept='biochemistry', college='basic-medical-sciences', icon='Microscope', color='#1E1E1E', tuition=300000,
+                 dept='biochemistry', college='basic-medical-sciences', icon='Microscope', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in the chemistry of life, covering metabolic processes, molecular biology and clinical biochemistry.',
-                 requirements='Five O\'level credits in English Language, Mathematics, Biology, Chemistry and Physics; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Physics or Mathematics. OND/HND Biochemistry or Science Laboratory Technology (Lower Credit) may also be considered.',
                  career='Biochemist, Research Scientist, Laboratory Analyst, Pharmaceutical Researcher, Quality Control Officer'),
             dict(slug='bsc-biology', title='Biology', degree='BSc', duration='4 years',
-                 dept='biology', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 dept='biology', college='science', icon='BookOpen', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in the biological sciences covering the structure, function and diversity of living organisms.',
-                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Biology, Chemistry and Physics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Physics or Mathematics. OND/HND Biology, Microbiology or Science Laboratory Technology (Lower Credit) or NCE in Biology and Chemistry may also be considered.',
                  career='Biologist, Research Scientist, Environmental Officer, Science Educator, Lab Technician'),
             dict(slug='bsc-chemistry', title='Chemistry', degree='BSc', duration='4 years',
-                 dept='chemistry', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 dept='chemistry', college='science', icon='BookOpen', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in the composition, structure and properties of matter and the reactions that transform it.',
-                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Chemistry, Physics and Biology or Further Mathematics. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Chemistry, Physics and Mathematics or Biology. OND/HND Chemistry or Industrial Chemistry (Lower Credit) or NCE in Chemistry may also be considered.',
                  career='Chemist, Analytical Chemist, Quality Control Analyst, Industrial Chemist, Science Educator'),
             dict(slug='bsc-computer-science', title='Computer Science', degree='BSc', duration='4 years',
-                 dept='computer-science', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 dept='computer-science', college='science', icon='BookOpen', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in computing, covering algorithms, programming, software development and information systems.',
-                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits in English, Mathematics, Physics, Chemistry or Further Mathematics and one other science subject. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Mathematics, Physics and one other science subject. OND/HND Computer Science or ICT (Lower Credit) or NCE in Computer Science and Mathematics may also be considered.',
                  career='Software Developer, Systems Analyst, IT Consultant, Data Scientist, Network Administrator'),
             dict(slug='bsc-mathematics', title='Mathematics', degree='BSc', duration='4 years',
-                 dept='mathematics', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 dept='mathematics', college='science', icon='BookOpen', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in pure and applied mathematics, developing strong analytical and problem-solving skills.',
-                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits in English, Mathematics, Further Mathematics or Physics and any two of Chemistry, Biology, Economics or Geography. Direct Entry: A\'Level/JUPEB with a minimum of 9 points in Mathematics, Physics and another science subject. OND/HND Mathematics or Statistics (Lower Credit) or NCE in Mathematics may also be considered.',
                  career='Mathematician, Statistician, Actuary, Data Analyst, Mathematics Educator'),
             dict(slug='bsc-microbiology', title='Microbiology', degree='BSc', duration='4 years',
-                 dept='microbiology', college='science', icon='Microscope', color='#1E1E1E', tuition=300000,
+                 dept='microbiology', college='science', icon='Microscope', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in the study of microorganisms and their roles in health, disease, industry and the environment.',
-                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits in English, Mathematics, Biology, Chemistry and Physics or Agricultural Science. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Biology, Chemistry and Physics. OND/HND Microbiology, Biology, Biotechnology or Science Laboratory Technology (Lower Credit) or NCE with Biology and Chemistry or Health Education may also be considered.',
                  career='Microbiologist, Laboratory Scientist, Quality Control Analyst, Food Safety Officer, Research Scientist'),
             dict(slug='bsc-physics-with-electronics', title='Physics with Electronics', degree='BSc', duration='4 years',
-                 dept='physics-with-electronics', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 dept='physics-with-electronics', college='science', icon='BookOpen', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in physics with emphasis on electronics, instrumentation and applied technology.',
-                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant science subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Physics, Chemistry and one other relevant science subject. Direct Entry: A\'Level/JUPEB with a minimum of 10 points in Physics, Mathematics and Chemistry or Electronics. OND/HND Physics, Electronics or Electrical/Electronic Engineering (Lower Credit) or NCE in Physics and Mathematics/Electronics may also be considered.',
                  career='Physicist, Electronics Engineer, Instrumentation Specialist, Research Scientist, ICT Officer'),
             dict(slug='bsc-statistics', title='Statistics', degree='BSc', duration='4 years',
-                 dept='statistics', college='science', icon='BookOpen', color='#1E1E1E', tuition=300000,
+                 dept='statistics', college='science', icon='BookOpen', color='#1E1E1E', tuition=158000,
                  description='A four-year programme in the collection, analysis and interpretation of data for informed decision-making.',
-                 requirements='Five O\'level credits in English Language, Mathematics and three other relevant subjects; UTME with appropriate subject combination; Post-UTME screening.',
+                 requirements='UTME Entry: five O\'level credits at not more than two sittings in English, Mathematics, Further Mathematics or Physics, Economics/Biology/Geography and one other relevant subject. Direct Entry: A\'Level/JUPEB with a minimum of 8 points in Mathematics, Statistics or Further Maths and one other science/social science. OND/HND Statistics, Mathematics or Computer Science (Lower Credit) or NCE in Mathematics may also be considered.',
                  career='Statistician, Data Analyst, Biostatistician, Survey Methodologist, Actuarial Analyst'),
         ]
 
@@ -621,6 +692,110 @@ class Command(BaseCommand):
                 requires_login=True, is_active=True,
             ),
         )
+        DigitalResource.objects.get_or_create(
+            name='BMU-Learn',
+            defaults=dict(
+                description='Access specialized medical textbooks, research papers, and interactive learning modules tailored for health sciences education.',
+                resource_type='ebook_collection', url='https://bmu-learn.bmu.edu.ng/',
+                requires_login=True, is_active=True,
+            ),
+        )
+
+        etebu_books = [
+            dict(title='Library and Information Services to the Rural Community',
+                 authors='Dr. Abraham I. T. Etebu', resource_type='book',
+                 description='A practical text on delivering library and information services to rural communities in Nigeria.'),
+            dict(title='Introduction to Library and Society',
+                 authors='Dr. Abraham I. T. Etebu', resource_type='book',
+                 description='An introduction to the role of libraries and librarianship in society.'),
+            dict(title='Demystifying Reference Services',
+                 authors='Dr. Abraham I. T. Etebu', resource_type='book',
+                 description='A guide to reference services, readers services and information literacy.'),
+            dict(title='Information Literacy: Text for Students',
+                 authors='Dr. Abraham I. T. Etebu', resource_type='book',
+                 description='A textbook for students on information literacy, authored by the University Librarian.'),
+        ]
+        for b in etebu_books:
+            Book.objects.get_or_create(title=b['title'], defaults=b)
+
+        # ------------------------------------------------------------------
+        # Real BMU gallery (images downloaded from bmu.edu.ng/media/gallery/)
+        # ------------------------------------------------------------------
+        from content.models import GalleryImage
+        gallery_data = [
+            dict(title='BMU Vice-Chancellor Showcases University at Global HIV/STI 2025 World Congress Symposium in Montreal, Canada',
+                 description='"Africa is not just experiencing the burden of emerging infections - it is contributing to the global solutions." - Prof. Dimie Ogoina, Vice-Chancellor, BMU',
+                 category='events', event_date=date(2025, 7, 26), location='Montreal, Canada',
+                 image='gallery/Screenshot_2025-08-07_111406.png', display_order=1),
+            dict(title='ASPIRE Visionaire',
+                 description='Familiarisation tour of the Vice Chancellor, Prof. Dimie Ogoina, after his inauguration',
+                 category='campus', image='gallery/IMG_0175.JPG', display_order=2),
+            dict(title='Haematology Centre',
+                 description='The Haematology Centre at Bayelsa Medical University',
+                 category='campus', image='gallery/IMG_9802.JPG', display_order=3),
+            dict(title='Student Clinic',
+                 description='The Medical University Clinic with State of the Art Facilities',
+                 category='campus', image='gallery/Clinic1.jpg', display_order=4),
+            dict(title='Biology Laboratory',
+                 description='96 Capacity State-of-the-Art Modern Laboratory for Biology',
+                 category='facilities', image='gallery/Laboratory.jpg', display_order=5),
+        ]
+        for g in gallery_data:
+            GalleryImage.objects.get_or_create(
+                title=g['title'],
+                defaults=dict(
+                    description=g.get('description', ''), category=g['category'],
+                    event_date=g.get('event_date'), location=g.get('location', ''),
+                    image=g['image'], display_order=g['display_order'], is_published=True,
+                ),
+            )
+
+        # ------------------------------------------------------------------
+        # Real BMU testimonials and partners (from bmu.edu.ng)
+        # ------------------------------------------------------------------
+        testimonials_data = [
+            dict(name='Janet B.', role='B.Sc. Nursing Science (300 Level), Student',
+                 quote='BMU is where passion meets purpose. The hands-on training, simulation labs, and inspiring faculty make learning feel meaningful and practical.',
+                 display_order=1),
+            dict(name='Kingsley N.', role='B.Sc. Human Anatomy (Final Year Student)',
+                 quote='What stands out at BMU is the strong sense of community and academic excellence. Every day here brings me closer to my dream of becoming a researcher.',
+                 display_order=2),
+            dict(name='Faith O.', role='B.Sc. Public Health (Alumni)',
+                 quote='From the very beginning, I felt supported. The academic structure and mentorship at BMU shaped me into a purpose-driven professional ready to serve my community.',
+                 display_order=3),
+            dict(name='Ebiowei T.', role='MBBS Student (500 Level)',
+                 quote='BMU provides a focused and practical medical education. The clinical exposure and modern facilities have made learning engaging and rewarding.',
+                 display_order=4),
+            dict(name='Amarachi E.', role='B.Sc. Biochemistry (Alumna)',
+                 quote='Studying at BMU gave me not just knowledge but confidence. The lecturers were approachable and committed to our success. I left BMU fully prepared for the real world.',
+                 display_order=5),
+        ]
+        for t in testimonials_data:
+            Testimonial.objects.get_or_create(
+                name=t['name'],
+                defaults=dict(role=t['role'], quote=t['quote'], display_order=t['display_order'], is_active=True),
+            )
+
+        partners_data = [
+            dict(name='Federal Medical Centre, Yenagoa', website='https://fmcyenagoa.org.ng',
+                 description='Clinical training partner providing hospital-based training for BMU students.',
+                 display_order=1),
+            dict(name='National Universities Commission', website='https://www.nuc.edu.ng',
+                 description='The National Universities Commission, the statutory body that accredits and regulates university education in Nigeria.',
+                 display_order=2),
+            dict(name='Tertiary Education Trust Fund (TETFund)', website='https://tetfund.gov.ng',
+                 description='Federal government agency providing funding for infrastructure, research, and academic staff development.',
+                 display_order=3),
+            dict(name='Niger Delta University Teaching Hospital (NDUTH)', website='',
+                 description='Clinical training partner in Okolobiri, Bayelsa State.',
+                 display_order=4),
+        ]
+        for p in partners_data:
+            Partner.objects.get_or_create(
+                name=p['name'],
+                defaults=dict(website=p.get('website', ''), description=p['description'],
+                              display_order=p['display_order'], is_active=True),
+            )
 
         # (All 24 real BMU undergraduate programs are created in the academic structure section above.
         #  The previous placeholder programs, including the fake postgraduate MSc/PhD entries, have been removed.)
@@ -877,7 +1052,7 @@ class Command(BaseCommand):
                  qualifications='B.Sc., M.Sc., ACA',
                  research_interests='',
                  achievements='Former Chairman, ICAN Bayelsa State Chapter',
-                 display_order=5),
+                 display_order=6),
             dict(first_name='Abraham I. T.', last_name='Etebu', title='Dr.', position='librarian',
                  specific_title='University Librarian',
                  biography=(
@@ -891,9 +1066,9 @@ class Command(BaseCommand):
                      'Certified Librarian of Nigeria (CLN)\n'
                      'Former Chairman, Nigerian Library Association (NLA), Bayelsa State Chapter'
                  ),
-                 display_order=6),
-            dict(first_name='Tarila', last_name='Tebepah', title='Prof.', position='other',
-                 specific_title='Pro-Chancellor/Chairman of Council',
+                 display_order=7),
+            dict(first_name='Tarila', last_name='Tebepah', title='Prof.', position='pro_chancellor',
+                 specific_title='Pro-Chancellor & Chairman of Council',
                  biography='Prof. Tarila Tebepah is a surgeon, Professor of Ophthalmology, scholar and an Administrator. He served as Chairman of the Niger Delta Development Commission (NDDC), Commissioner for Health, Bayelsa State, Secretary of the People\'s Democratic Party (PDP), Bayelsa State, and Trustee of the Tertiary Education Trust Fund (TETFund).',
                  qualifications='Professor of Ophthalmology',
                  research_interests='',
@@ -903,7 +1078,7 @@ class Command(BaseCommand):
                      'Former Secretary, PDP Bayelsa State\n'
                      'Former Trustee, Tertiary Education Trust Fund (TETFund)'
                  ),
-                 display_order=7),
+                 display_order=0),
             dict(first_name='Frederick', last_name='Allison', title='Dr.', position='dean',
                  specific_title='Dean, Faculty of Basic Clinical Sciences',
                  biography=(
@@ -944,12 +1119,12 @@ class Command(BaseCommand):
                  qualifications='',
                  research_interests='Obstetrics and Gynaecology',
                  display_order=13),
-            dict(first_name='Philip', last_name='Eyimina', title='Prof.', position='other',
+            dict(first_name='Philip', last_name='Eyimina', title='Prof.', position='provost',
                  specific_title='Provost, College of Medicine',
                  biography='Professor Philip Eyimina is the Provost of the College of Medicine at Bayelsa Medical University, with expertise in Brachial Plexus, Cytogenetics, and Neuroanatomy.',
                  qualifications='',
                  research_interests='Brachial Plexus, Cytogenetics, Neuroanatomy',
-                 display_order=14),
+                 display_order=5),
             dict(first_name='Marie-Thérèse', last_name='Teibowei', title='Dr.', position='hod',
                  specific_title='Special Assistant to the Vice-Chancellor, Public Relations Officer',
                  biography=(
@@ -1095,15 +1270,25 @@ class Command(BaseCommand):
                 defaults=dict(items=rd['items'], display_order=rd['display_order']),
             )
 
+        ImportantDate.objects.filter(event__in=[
+            'Application Opening for 2025/2026 Session',
+            'UTME / Direct Entry Application Deadline',
+            'Postgraduate Application Deadline',
+            'Entrance Examination Date',
+            'Interview for Shortlisted Candidates',
+            'Admission List Publication',
+            'Registration and Orientation Week',
+            'First Semester Lectures Begin',
+        ]).delete()
         important_dates = [
-            dict(event='Application Opening for 2025/2026 Session', date=date(2025, 6, 1), status='upcoming', display_order=1),
-            dict(event='UTME / Direct Entry Application Deadline', date=date(2025, 8, 30), status='upcoming', display_order=2),
-            dict(event='Postgraduate Application Deadline', date=date(2025, 9, 15), status='upcoming', display_order=3),
-            dict(event='Entrance Examination Date', date=date(2025, 9, 20), status='upcoming', display_order=4),
-            dict(event='Interview for Shortlisted Candidates', date=date(2025, 10, 5), status='upcoming', display_order=5, description='Interviews for postgraduate and selected undergraduate programs'),
-            dict(event='Admission List Publication', date=date(2025, 10, 30), status='upcoming', display_order=6),
-            dict(event='Registration and Orientation Week', date=date(2025, 11, 10), status='upcoming', display_order=7, description='Registration for new students begins'),
-            dict(event='First Semester Lectures Begin', date=date(2025, 11, 24), status='upcoming', display_order=8),
+            dict(event='Application Opening', date=date(2026, 7, 1), status='upcoming', display_order=1,
+                 description='Application for admission opens in July every year.'),
+            dict(event='Early Decision Deadline', date=date(2026, 9, 30), status='upcoming', display_order=2,
+                 description='Deadline for early decision applications (September every year).'),
+            dict(event='Regular Decision Deadline', date=date(2026, 11, 30), status='upcoming', display_order=3,
+                 description='Deadline for regular decision applications (November).'),
+            dict(event='Notification of Decision', date=date(2026, 12, 15), status='upcoming', display_order=4,
+                 description='Not fixed; depends on your credentials and intended program.'),
         ]
         for d in important_dates:
             ImportantDate.objects.get_or_create(
@@ -1368,7 +1553,13 @@ class Command(BaseCommand):
                     dict(value='24', label='Degree Programs'),
                     dict(value='7', label='Faculties'),
                     dict(value='25', label='Departments'),
-                    dict(value='3,900', label='Students'),
+                    dict(value='2,148', label='Students'),
                 ],
             ),
+        )
+
+        from academics.models import HomeStats
+        HomeStats.objects.update_or_create(
+            id=1,
+            defaults=dict(students=2148, faculty=6, research_papers=120, partners=6),
         )

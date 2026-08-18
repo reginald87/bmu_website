@@ -660,10 +660,12 @@ class Leadership(models.Model):
     """University leadership positions (VC, DVC, Deans, Directors, etc.)"""
     
     POSITION_CHOICES = [
+        ('pro_chancellor', 'Pro-Chancellor'),
         ('vc', 'Vice Chancellor'),
         ('dvc_academic', 'Deputy Vice Chancellor - Academic'),
         ('dvc_admin', 'Deputy Vice Chancellor - Administration'),
         ('registrar', 'Registrar'),
+        ('provost', 'Provost, College of Medicine'),
         ('bursar', 'Bursar'),
         ('librarian', 'University Librarian'),
         ('dean', 'Dean'),

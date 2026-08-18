@@ -1,10 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Award, Mail, Phone, GraduationCap, Users, Building2, ExternalLink, BookOpen, UserPlus } from 'lucide-react';
+import { Award, Mail, Phone, GraduationCap, Users, Building2, ExternalLink, BookOpen, UserPlus, Landmark } from 'lucide-react';
 import { useLeadership } from '../../services/apiHooks';
 
+const governingCouncilPositions = new Set(['pro_chancellor']);
 const execPositions = new Set(['vc', 'dvc_academic', 'dvc_admin', 'registrar']);
+const provostPositions = new Set(['provost']);
 const keyPositions = new Set(['bursar', 'librarian', 'director']);
 const deanPositions = new Set(['dean']);
 const hodPositions = new Set(['hod']);
@@ -12,18 +14,22 @@ const hodPositions = new Set(['hod']);
 export function Leadership() {
   const { data: leaders } = useLeadership();
 
+  const governingCouncil = (leaders ?? []).filter(l => governingCouncilPositions.has(l.position));
   const executiveLeadership = (leaders ?? []).filter(l => execPositions.has(l.position));
+  const collegeProvost = (leaders ?? []).filter(l => provostPositions.has(l.position));
   const keyOffices = (leaders ?? []).filter(l => keyPositions.has(l.position));
   const collegeDeans = (leaders ?? []).filter(l => deanPositions.has(l.position));
   const headsOfDept = (leaders ?? []).filter(l => hodPositions.has(l.position));
-  const assigned = new Set([...executiveLeadership, ...keyOffices, ...collegeDeans, ...headsOfDept].map(l => l.id));
+  const assigned = new Set([...governingCouncil, ...executiveLeadership, ...collegeProvost, ...keyOffices, ...collegeDeans, ...headsOfDept].map(l => l.id));
   const otherLeadership = (leaders ?? []).filter(l => !assigned.has(l.id));
 
   const sectionConfig = [
+    { title: 'Governing Council', icon: Landmark, data: governingCouncil },
     { title: 'Executive Leadership', icon: Award, data: executiveLeadership },
-    { title: 'Key Administrative Offices', icon: Building2, data: keyOffices },
+    { title: 'Provost, College of Medicine', icon: Building2, data: collegeProvost },
     { title: 'Deans of Faculty', icon: GraduationCap, data: collegeDeans },
     { title: 'Heads of Department', icon: BookOpen, data: headsOfDept },
+    { title: 'Key Administrative Offices', icon: Users, data: keyOffices },
     { title: 'Other Leadership Positions', icon: UserPlus, data: otherLeadership },
   ];
 
