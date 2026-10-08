@@ -55,10 +55,10 @@ export const TrustImpact = ({ stats, statsLoading }: TrustImpactProps) => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-sm font-bold tracking-[0.2em] uppercase text-[#A51C30]">
+            <span className="text-sm font-bold tracking-[0.2em] uppercase text-primary-600">
               {t('home.accreditation.subtitle', 'Our Standards')}
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 text-[#1E1E1E] leading-[1.15]">
+            <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 text-ink-900 leading-[1.15]">
               {t('home.accreditation.title', 'Recognized & Accredited By')}
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
@@ -73,9 +73,9 @@ export const TrustImpact = ({ stats, statsLoading }: TrustImpactProps) => {
                     {acc.logo_url ? (
                       <img src={acc.logo_url} alt={acc.accrediting_body} className="w-6 h-6 object-contain" />
                     ) : (
-                      <Icon className="w-5 h-5 text-[#A51C30]" />
+                      <Icon className="w-5 h-5 text-primary-600" />
                     )}
-                    <span className="text-sm font-semibold text-[#1E1E1E]">{acc.accrediting_body}</span>
+                    <span className="text-sm font-semibold text-ink-900">{acc.accrediting_body}</span>
                     <CheckCircle2 className="w-4 h-4 text-green-600" />
                   </div>
                 );
@@ -93,9 +93,9 @@ export const TrustImpact = ({ stats, statsLoading }: TrustImpactProps) => {
             {statItems.map((item) => (
               <div
                 key={item.key}
-                className="bg-gray-50 p-6 text-center hover:bg-[#A51C30] group transition-colors duration-300"
+                className="bg-gray-50 p-6 text-center hover:bg-primary-600 group transition-colors duration-300"
               >
-                <div className="text-3xl font-bold text-[#1E1E1E] group-hover:text-white transition-colors">
+                <div className="text-3xl font-bold text-ink-900 group-hover:text-white transition-colors">
                   {statsLoading ? '—' : item.value.toLocaleString()}{item.suffix}
                 </div>
                 <div className="text-sm text-gray-500 group-hover:text-white/80 mt-1 transition-colors">
@@ -118,20 +118,20 @@ export const TrustImpact = ({ stats, statsLoading }: TrustImpactProps) => {
             return (
               <div key={acc.accrediting_body || index} className="bg-white p-6 border border-gray-200">
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-14 h-14 bg-primary-600/10 flex items-center justify-center flex-shrink-0">
                     {acc.logo_url ? (
                       <img src={acc.logo_url} alt={acc.accrediting_body} className="w-10 h-10 object-contain" />
                     ) : (
-                      <Icon className="w-7 h-7 text-[#A51C30]" />
+                      <Icon className="w-7 h-7 text-primary-600" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-bold text-[#1E1E1E]">{acc.accrediting_body}</h3>
+                      <h3 className="text-lg font-bold text-ink-900">{acc.accrediting_body}</h3>
                       <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
                     </div>
                     <p className="text-sm text-gray-600 mb-2 leading-relaxed">{acc.body_full_name}</p>
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 bg-[#A51C30]/10 text-[#A51C30]">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 bg-primary-600/10 text-primary-600">
                       <BadgeCheck className="w-3 h-3" />
                       {acc.status}
                     </span>

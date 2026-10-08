@@ -37,10 +37,10 @@ export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ s
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-sm font-bold tracking-[0.2em] uppercase text-[#A51C30]">
+            <span className="text-sm font-bold tracking-[0.2em] uppercase text-primary-600">
               Our Mission
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 text-[#1E1E1E] leading-[1.15]">
+            <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6 text-ink-900 leading-[1.15]">
               {t('home.featured.title')}
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
@@ -49,14 +49,14 @@ export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ s
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/about"
-                className="group inline-flex items-center gap-2 px-6 py-3 bg-[#A51C30] text-white font-semibold hover:bg-[#8a1828] transition-colors"
+                className="group inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors"
               >
                 {t('home.featured.cta')}
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 to="/about/leadership"
-                className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#A51C30] text-[#A51C30] font-semibold hover:bg-[#A51C30] hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary-600 text-primary-600 font-semibold hover:bg-primary-600 hover:text-white transition-colors"
               >
                 {t('nav.people_leadership')}
               </Link>
@@ -75,10 +75,10 @@ export const FeaturedStory = ({ sections: homeSections }: { sections?: Array<{ s
                 return (
                   <div
                     key={item.label}
-                    className="bg-gray-50 p-6 text-center hover:bg-[#A51C30] group transition-colors duration-300"
+                    className="bg-gray-50 p-6 text-center hover:bg-primary-600 group transition-colors duration-300"
                   >
-                    <Icon className="w-8 h-8 text-[#A51C30] group-hover:text-white mx-auto mb-3 transition-colors" />
-                    <div className="text-3xl font-bold text-[#1E1E1E] group-hover:text-white transition-colors">
+                    <Icon className="w-8 h-8 text-primary-600 group-hover:text-white mx-auto mb-3 transition-colors" />
+                    <div className="text-3xl font-bold text-ink-900 group-hover:text-white transition-colors">
                       {item.stat}
                     </div>
                     <div className="text-sm text-gray-500 group-hover:text-white/80 mt-1 transition-colors">

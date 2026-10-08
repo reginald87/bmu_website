@@ -46,11 +46,11 @@ export const StudentClearance = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-[#A51C30] animate-spin" />
+          <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
         </div>
       ) : !data ? (
         <div className="bg-white p-10 text-center shadow-sm border border-gray-100 rounded">
-          <ShieldCheck className="w-12 h-12 text-[#A51C30]/40 mx-auto mb-4" />
+          <ShieldCheck className="w-12 h-12 text-primary-600/40 mx-auto mb-4" />
           <p className="text-gray-600">Unable to load clearance status.</p>
         </div>
       ) : (

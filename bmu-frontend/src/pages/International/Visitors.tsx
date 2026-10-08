@@ -102,7 +102,7 @@ export const Visitors = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -115,7 +115,7 @@ export const Visitors = () => {
  <span className="text-white font-medium">Visitors & Delegations</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Visitors & <span className="text-[#A51C30]">Delegations</span>
+ Visitors & <span className="text-primary-600">Delegations</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Welcoming academic delegations, visiting scholars, and international partners to 
@@ -138,8 +138,8 @@ export const Visitors = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <Building className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <Building className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -168,15 +168,15 @@ export const Visitors = () => {
  className="bg-white p-8 shadow-sm border border-gray-100"
  >
  <div className="flex items-start gap-4">
- <div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0">
- <type.icon className="w-8 h-8 text-[#1E1E1E]" />
+ <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center flex-shrink-0">
+ <type.icon className="w-8 h-8 text-ink-900" />
  </div>
  <div className="flex-1">
  <div className="flex items-center gap-2 mb-2">
  <h3 className="text-title text-gray-900">{type.title}</h3>
  </div>
  <p className="text-body text-gray-600 mb-4">{type.description}</p>
- <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#A51C30]/20 text-sm text-[#1E1E1E]">
+ <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary-600/20 text-sm text-ink-900">
  <Clock className="w-4 h-4" />
  {type.duration}
  </div>
@@ -208,7 +208,7 @@ export const Visitors = () => {
  transition={{ delay: idx * 0.1 }}
  className="flex items-start gap-3"
  >
- <CheckCircle className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+ <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
  <span className="text-body text-gray-700">{service}</span>
  </motion.li>
  ))}
@@ -222,25 +222,25 @@ export const Visitors = () => {
  </p>
  <ul className="space-y-3 mb-8">
  <li className="flex items-center gap-3">
- <FileText className="w-5 h-5 text-[#A51C30]" />
+ <FileText className="w-5 h-5 text-primary-600" />
  <span className="text-body text-gray-700">Institution/organization details</span>
  </li>
  <li className="flex items-center gap-3">
- <Users className="w-5 h-5 text-[#A51C30]" />
+ <Users className="w-5 h-5 text-primary-600" />
  <span className="text-body text-gray-700">Number of visitors</span>
  </li>
  <li className="flex items-center gap-3">
- <Calendar className="w-5 h-5 text-[#A51C30]" />
+ <Calendar className="w-5 h-5 text-primary-600" />
  <span className="text-body text-gray-700">Proposed dates</span>
  </li>
  <li className="flex items-center gap-3">
- <MapPin className="w-5 h-5 text-[#A51C30]" />
+ <MapPin className="w-5 h-5 text-primary-600" />
  <span className="text-body text-gray-700">Purpose of visit</span>
  </li>
  </ul>
  <Link 
  to="/contact"
- className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition"
+ className="inline-flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
  >
  Request a Visit <ArrowRight className="w-4 h-4" />
  </Link>
@@ -269,8 +269,8 @@ export const Visitors = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white p-6 shadow-sm border border-gray-100 flex items-start gap-4"
  >
- <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0">
- <Globe className="w-6 h-6 text-[#A51C30]" />
+ <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center flex-shrink-0">
+ <Globe className="w-6 h-6 text-primary-600" />
  </div>
  <div className="flex-1">
  <h3 className="text-title text-gray-900">{visit.institution}</h3>
@@ -282,7 +282,7 @@ export const Visitors = () => {
  <Calendar className="w-3 h-3" /> {visit.date}
  </span>
  </div>
- <p className="text-small text-[#1E1E1E] mt-2">{visit.purpose}</p>
+ <p className="text-small text-ink-900 mt-2">{visit.purpose}</p>
  </div>
  </motion.div>
  ))}
@@ -291,7 +291,7 @@ export const Visitors = () => {
  </section>
 
  {/* Contact */}
- <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
  <div className="container-custom">
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
  <div>
@@ -303,13 +303,13 @@ export const Visitors = () => {
  <div className="flex flex-wrap gap-4">
  <Link 
  to="/contact"
- className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Contact Us <ArrowRight className="w-5 h-5" />
  </Link>
  <Link 
  to="/international/partnerships"
- className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#A51C30] transition"
+ className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-primary-600 transition"
  >
  Explore Partnerships
  </Link>

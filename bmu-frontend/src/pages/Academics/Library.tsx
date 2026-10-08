@@ -148,7 +148,7 @@ export const Library = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -163,7 +163,7 @@ export const Library = () => {
  <span className="text-white font-medium">Library</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Dr. <span className="text-[#A51C30]">Nabo</span> Graham-Douglas <span className="text-[#A51C30]">Library</span>
+ Dr. <span className="text-primary-600">Nabo</span> Graham-Douglas <span className="text-primary-600">Library</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Your gateway to knowledge and research. Access world-class medical and academic 
@@ -186,7 +186,7 @@ export const Library = () => {
   transition={{ delay: index * 0.1 }}
   className="text-center"
   >
-  <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+  <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
   <p className="text-gray-600 text-body">{stat.label}</p>
   </motion.div>
   ))}
@@ -216,8 +216,8 @@ export const Library = () => {
   transition={{ delay: index * 0.1 }}
   className="bg-white p-8 shadow-sm border border-gray-100 transition-shadow"
   >
-  <div className="w-14 h-14 bg-[#1E1E1E]/10 flex items-center justify-center mb-6">
-  <Icon className="w-7 h-7 text-[#1E1E1E]" />
+  <div className="w-14 h-14 bg-ink-900/10 flex items-center justify-center mb-6">
+  <Icon className="w-7 h-7 text-ink-900" />
   </div>
   <h3 className="text-title text-gray-900 mb-3">{service.title}</h3>
   <p className="text-body text-gray-600">{service.description}</p>
@@ -238,7 +238,7 @@ export const Library = () => {
   className="text-center mb-12"
   >
   <div className="flex items-center justify-center gap-3 mb-4">
-  <BookOpen className="w-8 h-8 text-[#A51C30]" />
+  <BookOpen className="w-8 h-8 text-primary-600" />
   <h2 className="text-headline text-gray-900">Book Collection</h2>
   </div>
   <p className="text-body text-gray-600 max-w-2xl mx-auto">
@@ -253,14 +253,14 @@ export const Library = () => {
   placeholder="Search by title or author..."
   value={bookSearch}
   onChange={(e) => setBookSearch(e.target.value)}
-  className="flex-1 px-4 py-3 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+  className="flex-1 px-4 py-3 border border-gray-200 focus:border-ink-900 focus:outline-none"
   />
   </div>
   </div>
 
   {booksLoading ? (
   <div className="flex items-center justify-center py-16">
-  <Loader2 className="w-10 h-10 text-[#A51C30] animate-spin" />
+  <Loader2 className="w-10 h-10 text-primary-600 animate-spin" />
   </div>
   ) : (
   <>
@@ -274,7 +274,7 @@ export const Library = () => {
   className="flex flex-col bg-white p-6 border border-gray-100 hover:shadow-md transition"
   >
   <div className="flex items-start gap-3 mb-3">
-  <BookOpen className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-1" />
+  <BookOpen className="w-5 h-5 text-primary-600 flex-shrink-0 mt-1" />
   <h3 className="font-semibold text-gray-900">{book.title}</h3>
   </div>
   <p className="text-small text-gray-500 mb-2">by {book.authors}</p>
@@ -286,7 +286,7 @@ export const Library = () => {
   {book.isbn && (
   <span className="px-2 py-1 bg-gray-100 text-xs text-gray-500">ISBN: {book.isbn}</span>
   )}
-  <span className="px-2 py-1 bg-[#A51C30]/10 text-xs text-[#A51C30]">{book.resource_type}</span>
+  <span className="px-2 py-1 bg-primary-600/10 text-xs text-primary-600">{book.resource_type}</span>
   </div>
   <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
   <span className={`text-xs font-medium ${book.available_copies > 0 ? 'text-green-700' : 'text-red-600'}`}>
@@ -296,7 +296,7 @@ export const Library = () => {
   <button
   onClick={() => handleBorrow(book.id, book.title)}
   disabled={book.available_copies <= 0}
-  className="px-4 py-1.5 text-xs bg-[#1E1E1E] text-white font-medium hover:bg-[#A51C30] transition disabled:opacity-40 disabled:cursor-not-allowed"
+  className="px-4 py-1.5 text-xs bg-ink-900 text-white font-medium hover:bg-primary-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
   >
   Borrow
   </button>
@@ -324,7 +324,7 @@ export const Library = () => {
   className="flex items-center justify-between mb-8"
   >
   <div className="flex items-center gap-3">
-  <CheckCircle2 className="w-8 h-8 text-[#A51C30]" />
+  <CheckCircle2 className="w-8 h-8 text-primary-600" />
   <h2 className="text-headline text-gray-900">My Borrowed Books</h2>
   </div>
   <span className="text-sm text-gray-500">{activeLoans.length} active loan{activeLoans.length === 1 ? '' : 's'}</span>
@@ -339,11 +339,11 @@ export const Library = () => {
 
   {loansLoading ? (
   <div className="flex items-center justify-center py-12">
-  <Loader2 className="w-8 h-8 text-[#A51C30] animate-spin" />
+  <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
   </div>
   ) : myLoans.length === 0 ? (
   <div className="bg-gray-50 border border-gray-100 p-10 text-center">
-  <BookOpen className="w-12 h-12 text-[#A51C30]/40 mx-auto mb-4" />
+  <BookOpen className="w-12 h-12 text-primary-600/40 mx-auto mb-4" />
   <p className="text-gray-600">You have no library loans yet. Browse the collection above and borrow a book.</p>
   </div>
   ) : (
@@ -351,14 +351,14 @@ export const Library = () => {
   {myLoans.map((loan) => (
   <div key={loan.id} className="bg-white border border-gray-100 shadow-sm p-6">
   <div className="flex items-start gap-3 mb-3">
-  <BookOpen className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-1" />
+  <BookOpen className="w-5 h-5 text-primary-600 flex-shrink-0 mt-1" />
   <div>
   <h3 className="font-semibold text-gray-900">{loan.book_title}</h3>
   <p className="text-small text-gray-500">{loan.authors}</p>
   </div>
   </div>
   <div className="space-y-1 text-small text-gray-600 mb-4">
-  <p>Status: <span className={`font-medium ${loan.is_overdue ? 'text-red-600' : 'text-[#A51C30]'}`}>{loan.is_overdue ? 'Overdue' : loan.status_display}</span></p>
+  <p>Status: <span className={`font-medium ${loan.is_overdue ? 'text-red-600' : 'text-primary-600'}`}>{loan.is_overdue ? 'Overdue' : loan.status_display}</span></p>
   {loan.due_date && <p>Due date: <span className="font-medium">{loan.due_date}</span></p>}
   {loan.renewed_count > 0 && <p>Renewals: {loan.renewed_count}</p>}
   </div>
@@ -366,14 +366,14 @@ export const Library = () => {
   <div className="flex gap-2">
   <button
   onClick={() => handleReturn(loan.id)}
-  className="flex-1 px-3 py-2 text-xs bg-[#1E1E1E] text-white font-medium hover:bg-[#A51C30] transition inline-flex items-center justify-center gap-1"
+  className="flex-1 px-3 py-2 text-xs bg-ink-900 text-white font-medium hover:bg-primary-600 transition inline-flex items-center justify-center gap-1"
   >
   <Undo2 className="w-4 h-4" /> Return
   </button>
   <button
   onClick={() => handleRenew(loan.id)}
   disabled={loan.renewed_count >= 2}
-  className="flex-1 px-3 py-2 text-xs border border-gray-300 text-gray-700 font-medium hover:border-[#A51C30] hover:text-[#A51C30] transition inline-flex items-center justify-center gap-1 disabled:opacity-40"
+  className="flex-1 px-3 py-2 text-xs border border-gray-300 text-gray-700 font-medium hover:border-primary-600 hover:text-primary-600 transition inline-flex items-center justify-center gap-1 disabled:opacity-40"
   >
   <RefreshCcw className="w-4 h-4" /> Renew
   </button>
@@ -397,7 +397,7 @@ export const Library = () => {
  viewport={{ once: true }}
  >
  <div className="flex items-center gap-3 mb-6">
- <Database className="w-8 h-8 text-[#A51C30]" />
+ <Database className="w-8 h-8 text-primary-600" />
  <h2 className="text-headline text-gray-900">Digital Resources</h2>
  </div>
  <p className="text-body text-gray-600 mb-8">
@@ -413,14 +413,14 @@ export const Library = () => {
   placeholder="Search digital resources..."
   value={digitalSearch}
   onChange={(e) => setDigitalSearch(e.target.value)}
-  className="flex-1 px-4 py-3 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+  className="flex-1 px-4 py-3 border border-gray-200 focus:border-ink-900 focus:outline-none"
   />
   </div>
   </div>
 
   {digitalLoading ? (
   <div className="flex items-center justify-center py-12">
-  <Loader2 className="w-8 h-8 text-[#A51C30] animate-spin" />
+  <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
   </div>
   ) : (
   <div className="space-y-4">
@@ -430,13 +430,13 @@ export const Library = () => {
   href={db.url}
   target="_blank"
   rel="noopener noreferrer"
-  className="flex items-start gap-4 p-4 bg-white border border-gray-100 hover:border-[#A51C30]/30 transition group"
+  className="flex items-start gap-4 p-4 bg-white border border-gray-100 hover:border-primary-600/30 transition group"
   >
-  <div className="w-10 h-10 bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0">
-  <Globe className="w-5 h-5 text-[#A51C30]" />
+  <div className="w-10 h-10 bg-primary-600/10 flex items-center justify-center flex-shrink-0">
+  <Globe className="w-5 h-5 text-primary-600" />
   </div>
   <div>
-  <h4 className="font-semibold text-gray-900 group-hover:text-[#A51C30] transition">{db.name}</h4>
+  <h4 className="font-semibold text-gray-900 group-hover:text-primary-600 transition">{db.name}</h4>
   <p className="text-small text-gray-600">{db.description}</p>
   <span className="inline-block mt-2 px-2 py-1 bg-gray-100 text-xs text-gray-600">
   {db.resource_type}
@@ -460,33 +460,33 @@ export const Library = () => {
  {/* Opening Hours */}
  <div className="bg-white p-8 shadow-sm border border-gray-100">
  <div className="flex items-center gap-3 mb-6">
- <Clock className="w-6 h-6 text-[#1E1E1E]" />
+ <Clock className="w-6 h-6 text-ink-900" />
  <h3 className="text-title text-gray-900">Opening Hours</h3>
  </div>
   <div className="space-y-4">
   {(openingHours ?? []).map((item) => (
   <div key={item.id} className="flex justify-between items-center py-2">
   <span className="text-body text-gray-700">{item.day}</span>
-  <span className="text-body font-medium text-[#1E1E1E]">{item.hours}</span>
+  <span className="text-body font-medium text-ink-900">{item.hours}</span>
   </div>
   ))}
  </div>
  </div>
 
  {/* Contact Info */}
- <div className="bg-[#1E1E1E] p-8">
+ <div className="bg-ink-900 p-8">
  <h3 className="text-title text-white mb-6">Contact Information</h3>
  <div className="space-y-4">
  <div className="flex items-start gap-3">
- <MapPin className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+ <MapPin className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
  <p className="text-white/80">University Library Complex, Main Campus, Yenagoa</p>
  </div>
  <div className="flex items-start gap-3">
- <Phone className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+ <Phone className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
  <p className="text-white/80">+234 803 111 0022</p>
  </div>
  <div className="flex items-start gap-3">
- <Mail className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+ <Mail className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
  <p className="text-white/80">library@bmu.edu.ng</p>
  </div>
  </div>
@@ -495,7 +495,7 @@ export const Library = () => {
  {/* Quick Search */}
  <div className="bg-[#f8f9fa] p-8 border border-gray-100">
  <div className="flex items-center gap-3 mb-4">
- <Search className="w-6 h-6 text-[#A51C30]" />
+ <Search className="w-6 h-6 text-primary-600" />
  <h3 className="text-title text-gray-900">Search Catalog</h3>
  </div>
  <p className="text-body text-gray-600 mb-4">
@@ -508,11 +508,11 @@ export const Library = () => {
   value={bookSearch}
   onChange={(e) => setBookSearch(e.target.value)}
   onKeyDown={(e) => e.key === 'Enter' && bookSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
-  className="flex-1 px-4 py-3 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+  className="flex-1 px-4 py-3 border border-gray-200 focus:border-ink-900 focus:outline-none"
   />
  <button
  onClick={() => bookSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
- className="px-6 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#A51C30] transition"
+ className="px-6 py-3 bg-ink-900 text-white font-medium hover:bg-primary-600 transition"
  >
  Search
  </button>
@@ -536,7 +536,7 @@ export const Library = () => {
   viewport={{ once: true }}
   className="bg-white p-6 border border-gray-100"
   >
-  <FileText className="w-6 h-6 text-[#A51C30] mb-3" />
+  <FileText className="w-6 h-6 text-primary-600 mb-3" />
   <h4 className="font-semibold text-gray-900 mb-2">{guideline.title}</h4>
   <p className="text-small text-gray-600">{guideline.text}</p>
   </motion.div>

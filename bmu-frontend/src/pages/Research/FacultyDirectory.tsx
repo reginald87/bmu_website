@@ -24,8 +24,8 @@ interface FacultyMember {
 }
 
 const positionColors: Record<string, string> = {
-  professor: '#A51C30',
-  associate_professor: '#1E1E1E',
+  professor: 'var(--color-primary-600)',
+  associate_professor: 'var(--color-ink-900)',
   senior_lecturer: '#2563EB',
   lecturer: '#059669',
   assistant_lecturer: '#7C3AED',
@@ -64,13 +64,13 @@ export const FacultyDirectory = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-16 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-16 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }} />
         <div className="container-custom relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <p className="text-[#A51C30] font-semibold text-sm tracking-wider uppercase mb-3">Research</p>
+            <p className="text-primary-600 font-semibold text-sm tracking-wider uppercase mb-3">Research</p>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Faculty Directory</h1>
             <p className="text-xl text-white/80 max-w-2xl">
               Meet our distinguished faculty members driving research and education at BMU.
@@ -91,7 +91,7 @@ export const FacultyDirectory = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by name, department, college, or research interests..."
-                className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:border-[#A51C30] focus:ring-1 focus:ring-[#A51C30] outline-none transition"
+                className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:border-primary-600 focus:ring-1 focus:ring-primary-600 outline-none transition"
               />
             </div>
             <div className="relative">
@@ -99,7 +99,7 @@ export const FacultyDirectory = () => {
               <select
                 value={positionFilter}
                 onChange={(e) => setPositionFilter(e.target.value)}
-                className="pl-10 pr-8 py-3 border border-gray-200 focus:border-[#A51C30] focus:ring-1 focus:ring-[#A51C30] outline-none transition appearance-none bg-white min-w-[200px]"
+                className="pl-10 pr-8 py-3 border border-gray-200 focus:border-primary-600 focus:ring-1 focus:ring-primary-600 outline-none transition appearance-none bg-white min-w-[200px]"
               >
                 <option value="all">All Positions</option>
                 {positions.map((pos) => (
@@ -119,7 +119,7 @@ export const FacultyDirectory = () => {
           {/* Loading */}
           {isLoading && (
             <div className="text-center py-20">
-              <div className="w-10 h-10 border-4 border-gray-200 border-t-[#A51C30] rounded-full animate-spin mx-auto" />
+              <div className="w-10 h-10 border-4 border-gray-200 border-t-primary-600 rounded-full animate-spin mx-auto" />
               <p className="mt-4 text-gray-500">Loading faculty...</p>
             </div>
           )}
@@ -134,7 +134,7 @@ export const FacultyDirectory = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((member, index) => {
               const initials = `${member.first_name?.[0] || ''}${member.last_name?.[0] || ''}`;
-              const color = positionColors[member.position] || '#A51C30';
+              const color = positionColors[member.position] || 'var(--color-primary-600)';
               return (
                 <motion.div
                   key={member.id}
@@ -164,7 +164,7 @@ export const FacultyDirectory = () => {
                           </div>
                         )}
                         <div className="min-w-0">
-                          <h3 className="font-bold text-gray-900 group-hover:text-[#A51C30] transition truncate">
+                          <h3 className="font-bold text-gray-900 group-hover:text-primary-600 transition truncate">
                             {member.title} {member.full_name}
                           </h3>
                           <p className="text-sm font-medium" style={{ color }}>
@@ -203,7 +203,7 @@ export const FacultyDirectory = () => {
                             <span>h-index: {member.h_index}</span>
                           )}
                         </div>
-                        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#A51C30] group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-primary-600 group-hover:translate-x-1 transition-all" />
                       </div>
                     </div>
                   </Link>

@@ -14,7 +14,7 @@ const fallbackGovernanceBodies = [
     description: 'The highest decision-making body responsible for the overall policy, governance, and strategic direction of the university.',
     responsibilities: ['Approve major policies', 'Oversee financial management', 'Appoint key officials', 'Ensure institutional accountability'],
     icon: Building2,
-    color: '#1E1E1E',
+    color: 'var(--color-ink-900)',
   },
   {
     title: 'University Senate',
@@ -22,7 +22,7 @@ const fallbackGovernanceBodies = [
     description: 'The highest academic body responsible for academic standards, curriculum development, and research oversight.',
     responsibilities: ['Academic policy formulation', 'Curriculum approval', 'Research standards', 'Student discipline (academic)'],
     icon: Users,
-    color: '#A51C30',
+    color: 'var(--color-primary-600)',
   },
   {
     title: 'Management Board',
@@ -30,7 +30,7 @@ const fallbackGovernanceBodies = [
     description: 'The day-to-day administrative leadership team implementing policies and managing university operations.',
     responsibilities: ['Operational management', 'Resource allocation', 'Staff administration', 'Implementation of policies'],
     icon: Gavel,
-    color: '#1E1E1E',
+    color: 'var(--color-ink-900)',
   },
 ];
 
@@ -70,7 +70,7 @@ export const Governance = () => {
         role: body.role,
         description: body.description,
         responsibilities: body.responsibilities || [],
-        color: body.color || '#1E1E1E',
+        color: body.color || 'var(--color-ink-900)',
       }));
     }
     return fallbackGovernanceBodies;
@@ -98,7 +98,7 @@ export const Governance = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -113,7 +113,7 @@ export const Governance = () => {
               <span className="text-white font-medium">Governance</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              University <span className="text-[#A51C30]">Governance</span>
+              University <span className="text-primary-600">Governance</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               {heroContent}
@@ -185,7 +185,7 @@ export const Governance = () => {
             
             <div className="flex flex-col items-center gap-4">
               {/* Council */}
-              <div className="w-full max-w-md bg-[#1E1E1E] text-white p-4 text-center">
+              <div className="w-full max-w-md bg-ink-900 text-white p-4 text-center">
                 <h4 className="font-bold">University Council</h4>
                 <p className="text-sm text-white/80">Supreme Authority</p>
               </div>
@@ -193,11 +193,11 @@ export const Governance = () => {
               
               {/* Senate & Management */}
               <div className="flex flex-col md:flex-row gap-4 w-full max-w-2xl">
-                <div className="flex-1 bg-[#A51C30] text-white p-4 text-center">
+                <div className="flex-1 bg-primary-600 text-white p-4 text-center">
                   <h4 className="font-bold">University Senate</h4>
                   <p className="text-sm text-white/80">Academic Authority</p>
                 </div>
-                <div className="flex-1 bg-[#1E1E1E] text-white p-4 text-center">
+                <div className="flex-1 bg-ink-900 text-white p-4 text-center">
                   <h4 className="font-bold">Management Board</h4>
                   <p className="text-sm text-white/80">Executive Authority</p>
                 </div>
@@ -235,8 +235,8 @@ export const Governance = () => {
                 className="bg-white p-5 shadow-sm border border-gray-100 transition-shadow"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1E1E1E15' }}>
-                    <Shield className="w-5 h-5" style={{ color: '#1E1E1E' }} />
+                  <div className="w-10 h-10 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 8%, transparent)' }}>
+                    <Shield className="w-5 h-5" style={{ color: 'var(--color-ink-900)' }} />
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900 text-sm">{committee.name}</h4>
@@ -267,10 +267,10 @@ export const Governance = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className="flex items-center gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-[#A51C30] transition-colors"
+                className="flex items-center gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-primary-600 transition-colors"
               >
-                <div className="w-10 h-10 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A51C3015' }}>
-                  <FileText className="w-5 h-5" style={{ color: '#A51C30' }} />
+                <div className="w-10 h-10 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 8%, transparent)' }}>
+                  <FileText className="w-5 h-5" style={{ color: 'var(--color-primary-600)' }} />
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">{policy.title}</h4>
@@ -283,7 +283,7 @@ export const Governance = () => {
       </section>
 
       {/* Transparency & Accountability */}
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -295,15 +295,15 @@ export const Governance = () => {
               </p>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <Scale className="w-6 h-6 text-[#A51C30]" />
+                  <Scale className="w-6 h-6 text-primary-600" />
                   <span className="text-white">Fair and equitable policies</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Shield className="w-6 h-6 text-[#A51C30]" />
+                  <Shield className="w-6 h-6 text-primary-600" />
                   <span className="text-white">Regular audits and compliance checks</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <FileText className="w-6 h-6 text-[#A51C30]" />
+                  <FileText className="w-6 h-6 text-primary-600" />
                   <span className="text-white">Public disclosure of key decisions</span>
                 </div>
               </div>

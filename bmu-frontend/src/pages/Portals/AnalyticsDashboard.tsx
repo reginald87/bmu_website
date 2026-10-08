@@ -110,7 +110,7 @@ export const AnalyticsDashboard = () => {
 
           {isLoading ? (
             <div className="flex justify-center py-20">
-              <div className="w-10 h-10 border-4 border-[#A51C30] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <>
@@ -118,14 +118,14 @@ export const AnalyticsDashboard = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   <div className="bg-white p-4 shadow-sm border border-gray-100">
                     <div className="flex items-center gap-3 mb-2">
-                      <Users className="w-5 h-5 text-[#A51C30]" />
+                      <Users className="w-5 h-5 text-primary-600" />
                     </div>
                     <div className="text-2xl font-bold text-gray-900">{overview.total_students}</div>
                     <div className="text-xs text-gray-500">Total Students</div>
                   </div>
                   <div className="bg-white p-4 shadow-sm border border-gray-100">
                     <div className="flex items-center gap-3 mb-2">
-                      <BookOpen className="w-5 h-5 text-[#1E1E1E]" />
+                      <BookOpen className="w-5 h-5 text-ink-900" />
                     </div>
                     <div className="text-2xl font-bold text-gray-900">{overview.total_results}</div>
                     <div className="text-xs text-gray-500">Published Results</div>
@@ -204,7 +204,7 @@ export const AnalyticsDashboard = () => {
                           <span className="text-sm font-medium text-gray-700 capitalize">{s.academic_status || 'Unknown'}</span>
                           <div className="flex items-center gap-2">
                             <div className="w-32 bg-gray-100 h-2 rounded">
-                              <div className="bg-[#A51C30] h-2 rounded" style={{ width: `${(s.count / overview.total_students) * 100}%` }} />
+                              <div className="bg-primary-600 h-2 rounded" style={{ width: `${(s.count / overview.total_students) * 100}%` }} />
                             </div>
                             <span className="text-sm text-gray-500 w-8 text-right">{s.count}</span>
                           </div>
@@ -224,7 +224,7 @@ export const AnalyticsDashboard = () => {
                           <span className="text-sm font-medium text-gray-700 capitalize">{p.decision}</span>
                           <div className="flex items-center gap-2">
                             <div className="w-32 bg-gray-100 h-2 rounded">
-                              <div className="bg-[#1E1E1E] h-2 rounded" style={{ width: `${(p.count / Math.max(...(overview.progression_distribution || []).map((x: ProgressionDistributionItem) => x.count))) * 100}%` }} />
+                              <div className="bg-ink-900 h-2 rounded" style={{ width: `${(p.count / Math.max(...(overview.progression_distribution || []).map((x: ProgressionDistributionItem) => x.count))) * 100}%` }} />
                             </div>
                             <span className="text-sm text-gray-500 w-8 text-right">{p.count}</span>
                           </div>
@@ -241,8 +241,8 @@ export const AnalyticsDashboard = () => {
               <div className="mt-8 bg-white shadow-sm border border-gray-100 p-6">
                 <h2 className="font-bold text-gray-900 mb-2">Quick Links</h2>
                 <div className="flex flex-wrap gap-3">
-                  <a href="/portals/admin" className="px-4 py-2 bg-[#1E1E1E] text-white text-sm font-medium hover:bg-[#1E1E1E]/90 transition">Admin Dashboard</a>
-                  <a href="/portals/admin/batch-publish" className="px-4 py-2 border border-[#1E1E1E] text-[#1E1E1E] text-sm font-medium hover:bg-gray-50 transition">Batch Publish</a>
+                  <a href="/portals/admin" className="px-4 py-2 bg-ink-900 text-white text-sm font-medium hover:bg-ink-900/90 transition">Admin Dashboard</a>
+                  <a href="/portals/admin/batch-publish" className="px-4 py-2 border border-ink-900 text-ink-900 text-sm font-medium hover:bg-gray-50 transition">Batch Publish</a>
                 </div>
               </div>
             </>

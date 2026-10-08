@@ -144,7 +144,7 @@ export const ResearchDetail = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="pt-[180px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="pt-[180px] pb-12" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="container-custom">
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
  <Link to="/research" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6">
@@ -153,7 +153,7 @@ export const ResearchDetail = () => {
  </Link>
 
  <div className="flex flex-wrap items-center gap-3 mb-4">
- <span className="px-3 py-1 bg-[#A51C30] text-[#1E1E1E] text-sm font-semibold">
+ <span className="px-3 py-1 bg-primary-600 text-ink-900 text-sm font-semibold">
  {project.category}
  </span>
  <span className={`px-3 py-1 text-sm font-medium capitalize ${statusColors[project.status]}`}>
@@ -170,26 +170,26 @@ export const ResearchDetail = () => {
  </section>
 
  {/* Stats Bar */}
- <div className="bg-[#A51C30] py-4">
+ <div className="bg-primary-600 py-4">
  <div className="container-custom">
  <div className="flex flex-wrap gap-8">
  <div className="flex items-center gap-2">
- <Clock className="w-5 h-5 text-[#1E1E1E]" />
- <span className="font-semibold text-[#1E1E1E]">{project.startDate}</span>
- <span className="text-[#1E1E1E]/70">to {project.endDate || 'Ongoing'}</span>
+ <Clock className="w-5 h-5 text-ink-900" />
+ <span className="font-semibold text-ink-900">{project.startDate}</span>
+ <span className="text-ink-900/70">to {project.endDate || 'Ongoing'}</span>
  </div>
  <div className="flex items-center gap-2">
- <DollarSign className="w-5 h-5 text-[#1E1E1E]" />
- <span className="font-semibold text-[#1E1E1E]">{project.budget}</span>
+ <DollarSign className="w-5 h-5 text-ink-900" />
+ <span className="font-semibold text-ink-900">{project.budget}</span>
  </div>
  <div className="flex items-center gap-2">
- <Award className="w-5 h-5 text-[#1E1E1E]" />
- <span className="font-semibold text-[#1E1E1E]">{project.publications}</span>
- <span className="text-[#1E1E1E]/70">Publications</span>
+ <Award className="w-5 h-5 text-ink-900" />
+ <span className="font-semibold text-ink-900">{project.publications}</span>
+ <span className="text-ink-900/70">Publications</span>
  </div>
  <div className="flex items-center gap-2">
- <MapPin className="w-5 h-5 text-[#1E1E1E]" />
- <span className="text-[#1E1E1E]">{project.location}</span>
+ <MapPin className="w-5 h-5 text-ink-900" />
+ <span className="text-ink-900">{project.location}</span>
  </div>
  </div>
  </div>
@@ -210,7 +210,7 @@ export const ResearchDetail = () => {
  onClick={() => setActiveTab(tab)}
  className={`px-6 py-3 font-medium capitalize transition ${
  activeTab === tab 
- ? 'text-[#1E1E1E] border-b-2 border-[#1E1E1E]' 
+ ? 'text-ink-900 border-b-2 border-ink-900' 
  : 'text-gray-600 hover:text-gray-900'
  }`}
  >
@@ -224,7 +224,7 @@ export const ResearchDetail = () => {
  <div className="space-y-6">
  <div>
  <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
- <Microscope className="w-5 h-5 text-[#1E1E1E]" />
+ <Microscope className="w-5 h-5 text-ink-900" />
  Project Overview
  </h3>
  <p className="text-gray-700 leading-relaxed">{project.description}</p>
@@ -234,10 +234,10 @@ export const ResearchDetail = () => {
  <div className="p-4 bg-gray-50 ">
  <h4 className="font-semibold text-gray-900 mb-2">Principal Investigator</h4>
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 bg-[#1E1E1E] flex items-center justify-center text-white text-sm font-medium">
+ <div className="w-10 h-10 bg-ink-900 flex items-center justify-center text-white text-sm font-medium">
  {project.principalInvestigator.split(' ').map(n => n[0]).join('')}
  </div>
- <Link to={`/research/faculty/${project.principalInvestigator.toLowerCase().replace(/[^a-z]/g, '-')}`} className="text-[#1E1E1E] font-medium hover:underline">
+ <Link to={`/research/faculty/${project.principalInvestigator.toLowerCase().replace(/[^a-z]/g, '-')}`} className="text-ink-900 font-medium hover:underline">
  {project.principalInvestigator}
  </Link>
  </div>
@@ -268,13 +268,13 @@ export const ResearchDetail = () => {
  {activeTab === 'objectives' && (
  <div>
  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
- <Target className="w-5 h-5 text-[#1E1E1E]" />
+ <Target className="w-5 h-5 text-ink-900" />
  Research Objectives
  </h3>
  <ul className="space-y-3">
  {project.objectives.map((obj, i) => (
  <li key={i} className="flex items-start gap-3">
- <CheckCircle className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+ <CheckCircle className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
  <span className="text-gray-700">{obj}</span>
  </li>
  ))}
@@ -285,7 +285,7 @@ export const ResearchDetail = () => {
  {activeTab === 'outcomes' && (
  <div>
  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
- <TrendingUp className="w-5 h-5 text-[#1E1E1E]" />
+ <TrendingUp className="w-5 h-5 text-ink-900" />
  Key Outcomes
  </h3>
  <ul className="space-y-3">
@@ -315,7 +315,7 @@ export const ResearchDetail = () => {
  </div>
  </motion.div>
 
- <motion.div className="bg-[#1E1E1E] p-6 text-white">
+ <motion.div className="bg-ink-900 p-6 text-white">
  <h3 className="text-lg font-bold mb-4">Interested in Collaboration?</h3>
  <p className="text-white/80 text-sm mb-4">Contact our research office to explore partnership opportunities.</p>
  <a

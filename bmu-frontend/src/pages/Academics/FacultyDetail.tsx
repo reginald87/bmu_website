@@ -104,7 +104,7 @@ interface FallbackDepartment {
 
 const fallbackFaculties: FallbackFaculty[] = [
   {
-    collegeSlug: '', collegeName: '', collegeColor: '#1E1E1E',
+    collegeSlug: '', collegeName: '', collegeColor: 'var(--color-ink-900)',
     id: 14, name: 'Science', slug: 'science', code: 'SCI',
     description: 'Faculty of Science offering programs in biological, physical, and mathematical sciences.',
     dean_name: 'Prof. Samuel Abasi', department_count: 4,
@@ -116,7 +116,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'medicine', collegeName: 'College of Medicine', collegeColor: '#1E1E1E',
+    collegeSlug: 'medicine', collegeName: 'College of Medicine', collegeColor: 'var(--color-ink-900)',
     id: 1, name: 'Basic Medical Sciences', slug: 'basic-medical-sciences', code: 'BMS',
     description: 'Foundation medical sciences including anatomy, physiology, and biochemistry.',
     dean_name: 'Prof. Godwin Ikorite', department_count: 6,
@@ -127,7 +127,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'medicine', collegeName: 'College of Medicine', collegeColor: '#1E1E1E',
+    collegeSlug: 'medicine', collegeName: 'College of Medicine', collegeColor: 'var(--color-ink-900)',
     id: 2, name: 'Clinical Sciences', slug: 'clinical-sciences', code: 'CLS',
     description: 'Clinical training and patient care education.',
     dean_name: 'Dr. Jane Owei', department_count: 8,
@@ -138,7 +138,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'medicine', collegeName: 'College of Medicine', collegeColor: '#1E1E1E',
+    collegeSlug: 'medicine', collegeName: 'College of Medicine', collegeColor: 'var(--color-ink-900)',
     id: 3, name: 'Community Medicine', slug: 'community-medicine', code: 'COM',
     description: 'Public health and community healthcare education.',
     dean_name: 'Prof. Michael Ogu', department_count: 4,
@@ -147,7 +147,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'allied-health', collegeName: 'School of Allied Health Sciences', collegeColor: '#A51C30',
+    collegeSlug: 'allied-health', collegeName: 'School of Allied Health Sciences', collegeColor: 'var(--color-primary-600)',
     id: 4, name: 'Medical Laboratory Science', slug: 'medical-lab-science', code: 'MLS',
     description: 'Training medical laboratory scientists.',
     dean_name: 'Dr. Richard Peters', department_count: 4,
@@ -157,7 +157,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'allied-health', collegeName: 'School of Allied Health Sciences', collegeColor: '#A51C30',
+    collegeSlug: 'allied-health', collegeName: 'School of Allied Health Sciences', collegeColor: 'var(--color-primary-600)',
     id: 5, name: 'Radiography', slug: 'radiography', code: 'RAD',
     description: 'Training radiographers and imaging specialists.',
     dean_name: 'Dr. Sarah Wodi', department_count: 3,
@@ -166,7 +166,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'allied-health', collegeName: 'School of Allied Health Sciences', collegeColor: '#A51C30',
+    collegeSlug: 'allied-health', collegeName: 'School of Allied Health Sciences', collegeColor: 'var(--color-primary-600)',
     id: 6, name: 'Physiotherapy', slug: 'physiotherapy', code: 'PHT',
     description: 'Training physiotherapists.',
     dean_name: 'Dr. Ebi Robinson', department_count: 2,
@@ -175,7 +175,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'nursing', collegeName: 'School of Nursing', collegeColor: '#1E1E1E',
+    collegeSlug: 'nursing', collegeName: 'School of Nursing', collegeColor: 'var(--color-ink-900)',
     id: 7, name: 'Nursing', slug: 'nursing-dept', code: 'NUR',
     description: 'Training professional nurses.',
     dean_name: 'Prof. Helen Douglas', department_count: 4,
@@ -185,7 +185,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'nursing', collegeName: 'School of Nursing', collegeColor: '#1E1E1E',
+    collegeSlug: 'nursing', collegeName: 'School of Nursing', collegeColor: 'var(--color-ink-900)',
     id: 8, name: 'Midwifery', slug: 'midwifery', code: 'MID',
     description: 'Training skilled midwives.',
     dean_name: 'Dr. Faith George', department_count: 2,
@@ -194,14 +194,14 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'postgraduate', collegeName: 'School of Postgraduate Studies', collegeColor: '#A51C30',
+    collegeSlug: 'postgraduate', collegeName: 'School of Postgraduate Studies', collegeColor: 'var(--color-primary-600)',
     id: 9, name: 'Postgraduate Programs', slug: 'postgraduate-programs', code: 'PGS',
     description: 'Advanced degrees and research training.',
     dean_name: 'Prof. Michael Ogu', department_count: 0,
     departments: []
   },
   {
-    collegeSlug: 'public-health', collegeName: 'Institute of Public Health', collegeColor: '#1E1E1E',
+    collegeSlug: 'public-health', collegeName: 'Institute of Public Health', collegeColor: 'var(--color-ink-900)',
     id: 10, name: 'Epidemiology', slug: 'epidemiology', code: 'EPI',
     description: 'Study of disease patterns and population health.',
     dean_name: 'Prof. Chioma Amadi', department_count: 3,
@@ -211,7 +211,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'public-health', collegeName: 'Institute of Public Health', collegeColor: '#1E1E1E',
+    collegeSlug: 'public-health', collegeName: 'Institute of Public Health', collegeColor: 'var(--color-ink-900)',
     id: 11, name: 'Health Policy', slug: 'health-policy', code: 'HPL',
     description: 'Health policy and management education.',
     dean_name: 'Dr. Emmanuel Akpan', department_count: 3,
@@ -220,7 +220,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'public-health', collegeName: 'Institute of Public Health', collegeColor: '#1E1E1E',
+    collegeSlug: 'public-health', collegeName: 'Institute of Public Health', collegeColor: 'var(--color-ink-900)',
     id: 12, name: 'Biostatistics', slug: 'biostatistics', code: 'BIO',
     description: 'Statistical methods for health research.',
     dean_name: 'Dr. Ngozi Eze', department_count: 2,
@@ -229,7 +229,7 @@ const fallbackFaculties: FallbackFaculty[] = [
     ]
   },
   {
-    collegeSlug: 'cpd', collegeName: 'Continuing Professional Development (CPD)', collegeColor: '#A51C30',
+    collegeSlug: 'cpd', collegeName: 'Continuing Professional Development (CPD)', collegeColor: 'var(--color-primary-600)',
     id: 13, name: 'Professional Development', slug: 'professional-development', code: 'CPD',
     description: 'Lifelong learning for healthcare professionals.',
     dean_name: 'Dr. Peter Iruo', department_count: 0,
@@ -393,7 +393,7 @@ export const FacultyDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-12 w-12 border-b-2 border-[#1E1E1E]"></div>
+        <div className="animate-spin h-12 w-12 border-b-2 border-ink-900"></div>
       </div>
     );
   }
@@ -404,7 +404,7 @@ export const FacultyDetail = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Faculty Not Found</h2>
           <p className="text-gray-600 mb-4">The faculty you're looking for doesn't exist.</p>
-          <Link to="/academics/faculties" className="text-[#1E1E1E] font-medium hover:underline">
+          <Link to="/academics/faculties" className="text-ink-900 font-medium hover:underline">
             Back to Faculties
           </Link>
         </div>
@@ -427,7 +427,7 @@ export const FacultyDetail = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
+      <section className="relative pt-[180px] pb-20 overflow-hidden bg-ink-900">
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -457,7 +457,7 @@ export const FacultyDetail = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
               <div className="lg:col-span-2">
                 {faculty.code && (
-                  <span className="inline-block px-3 py-1 bg-[#A51C30] text-[#1E1E1E] text-sm font-semibold mb-4">
+                  <span className="inline-block px-3 py-1 bg-primary-600 text-ink-900 text-sm font-semibold mb-4">
                     {faculty.code}
                   </span>
                 )}
@@ -500,8 +500,8 @@ export const FacultyDetail = () => {
                 className="bg-white p-8 shadow-sm"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center">
-                    <Target className="w-6 h-6 text-[#1E1E1E]" />
+                  <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center">
+                    <Target className="w-6 h-6 text-ink-900" />
                   </div>
                   <h3 className="text-title text-gray-900">Our Mission</h3>
                 </div>
@@ -518,8 +518,8 @@ export const FacultyDetail = () => {
                 className="bg-white p-8 shadow-sm"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center">
-                    <Eye className="w-6 h-6 text-[#A51C30]" />
+                  <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-primary-600" />
                   </div>
                   <h3 className="text-title text-gray-900">Our Vision</h3>
                 </div>
@@ -544,7 +544,7 @@ export const FacultyDetail = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}
@@ -578,8 +578,8 @@ export const FacultyDetail = () => {
                     className="block bg-white p-6 shadow-sm border border-gray-100 transition-shadow h-full"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-14 h-14 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0">
-                        <Building className="w-7 h-7 text-[#1E1E1E]" />
+                      <div className="w-14 h-14 bg-ink-900/10 flex items-center justify-center flex-shrink-0">
+                        <Building className="w-7 h-7 text-ink-900" />
                       </div>
                       <div className="flex-1">
                         <h3 className="text-title text-gray-900 mb-1">{dept.name}</h3>
@@ -594,7 +594,7 @@ export const FacultyDetail = () => {
                         <p className="text-body text-gray-600 mt-2 line-clamp-2">
                           {dept.description || `${dept.staff_count} staff members`}
                         </p>
-                        <div className="mt-3 flex items-center gap-1 text-sm font-medium text-[#1E1E1E]">
+                        <div className="mt-3 flex items-center gap-1 text-sm font-medium text-ink-900">
                           Explore <ArrowRight className="w-4 h-4" />
                         </div>
                       </div>
@@ -608,7 +608,7 @@ export const FacultyDetail = () => {
       )}
 
       {/* CTA */}
-      <section className="py-16 bg-[#1E1E1E]">
+      <section className="py-16 bg-ink-900">
         <div className="container-custom">
           <div className="text-center">
             <h2 className="text-headline text-white mb-4">
@@ -620,13 +620,13 @@ export const FacultyDetail = () => {
             <div className="flex flex-wrap justify-center gap-4">
               <Link 
                 to="/academics/programs"
-                className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+                className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
               >
                 Browse Programs
               </Link>
               <Link 
                 to="/apply"
-                className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+                className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
               >
                 Apply Now
               </Link>

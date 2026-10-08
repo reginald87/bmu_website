@@ -58,8 +58,8 @@ interface HierarchyData {
 const fallbackColleges = [
   {
     id: 1, name: 'College of Medicine', slug: 'college-of-medicine',
-    fullName: 'The flagship college of Bayelsa Medical University', color: '#1E1E1E',
-    primary_color: '#1E1E1E', secondary_color: '#A51C30',
+    fullName: 'The flagship college of Bayelsa Medical University', color: 'var(--color-ink-900)',
+    primary_color: 'var(--color-ink-900)', secondary_color: 'var(--color-primary-600)',
     description: 'The College of Medicine is the flagship college of Bayelsa Medical University, housing the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences. The University\'s other faculties — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — operate as standalone faculties with their own departments.',
     overview_content: 'The College of Medicine provides the academic home for the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences, which together deliver the foundational and clinical training of the University\'s medical doctors. The remaining faculties of Bayelsa Medical University — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — are standalone faculties, each with its own departments and programmes.',
     mission_statement: 'To deliver excellent teaching, research and community service in the basic and clinical medical sciences.',
@@ -93,7 +93,7 @@ function mapItemToHierarchy(item: Record<string, unknown>): HierarchyData {
       established_year: (item.established_year as number) || 0,
       faculty_count: (item.faculty_count as number) || 0,
       student_count: (item.student_count as number) || 0,
-      primary_color: (item.primary_color as string) || (item.color as string) || '#1E1E1E',
+      primary_color: (item.primary_color as string) || (item.color as string) || 'var(--color-ink-900)',
       secondary_color: (item.secondary_color as string) || '',
       banner_image: (item.banner_image as string) ?? null,
     },
@@ -151,7 +151,7 @@ export const CollegeDetail = () => {
               established_year: collegeData.established_year || 0,
               faculty_count: collegeData.faculty_count || 0,
               student_count: collegeData.student_count || 0,
-              primary_color: collegeData.primary_color || '#1E1E1E',
+              primary_color: collegeData.primary_color || 'var(--color-ink-900)',
               secondary_color: collegeData.secondary_color || '',
               banner_image: collegeData.banner_image ?? collegeData.preview_image ?? null,
             },
@@ -192,7 +192,7 @@ export const CollegeDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-12 w-12 border-b-2 border-[#1E1E1E]"></div>
+        <div className="animate-spin h-12 w-12 border-b-2 border-ink-900"></div>
       </div>
     );
   }
@@ -203,7 +203,7 @@ export const CollegeDetail = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">College Not Found</h2>
           <p className="text-gray-600 mb-4">The college you're looking for doesn't exist.</p>
-          <Link to="/academics" className="text-[#1E1E1E] font-medium hover:underline">
+          <Link to="/academics" className="text-ink-900 font-medium hover:underline">
             Back to Academics
           </Link>
         </div>
@@ -212,7 +212,7 @@ export const CollegeDetail = () => {
   }
 
   const { college, faculties } = data;
-  const primaryColor = college.primary_color || '#1E1E1E';
+  const primaryColor = college.primary_color || 'var(--color-ink-900)';
 
   return (
     <>
@@ -440,13 +440,13 @@ export const CollegeDetail = () => {
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 to="/academics/programs"
-                className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+                className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
               >
                 Browse Programs
               </Link>
               <Link
                 to="/apply"
-                className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+                className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
               >
                 Apply Now
               </Link>

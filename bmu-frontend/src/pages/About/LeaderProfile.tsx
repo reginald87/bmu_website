@@ -35,7 +35,7 @@ export const LeaderProfile = () => {
 
   if (isLoading) {
     return (
-      <section className="pt-[180px] min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="text-white text-center">
           <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
           <p>Loading profile...</p>
@@ -50,11 +50,11 @@ export const LeaderProfile = () => {
         <Helmet>
           <title>Profile Not Found | Bayelsa Medical University</title>
         </Helmet>
-        <section className="pt-[180px] min-h-screen" style={{ backgroundColor: '#1E1E1E' }}>
+        <section className="pt-[180px] min-h-screen" style={{ backgroundColor: 'var(--color-ink-900)' }}>
           <div className="container-custom text-center py-20">
             <h1 className="text-3xl font-bold text-white mb-4">Profile Not Found</h1>
             <p className="text-white/70 mb-8">The leadership profile you're looking for does not exist.</p>
-            <Link to="/about/leadership" className="inline-flex items-center gap-2 px-8 py-3 bg-[#A51C30] text-white font-semibold hover:bg-[#8a1828] transition-colors">
+            <Link to="/about/leadership" className="inline-flex items-center gap-2 px-8 py-3 bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">
               <ArrowLeft className="w-4 h-4" />
               View All Leadership
             </Link>
@@ -75,7 +75,7 @@ export const LeaderProfile = () => {
         <meta name="description" content={`${leader.full_name} - ${leader.position_display}`} />
       </Helmet>
 
-      <section className="pt-[180px] pb-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] pb-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 text-white/60 text-sm mb-6">
@@ -99,13 +99,13 @@ export const LeaderProfile = () => {
 
               <div className="flex-1 text-white">
                 <h1 className="text-3xl md:text-4xl font-bold mb-3">{leader.full_name}</h1>
-                <p className="text-xl text-[#A51C30] font-medium mb-2">{leader.position_display}</p>
+                <p className="text-xl text-primary-600 font-medium mb-2">{leader.position_display}</p>
                 {leader.specific_title && (
                   <p className="text-white/70 mb-3">{leader.specific_title}</p>
                 )}
                 {leader.qualifications && (
                   <div className="flex items-center gap-2 text-white/80 mb-3">
-                    <GraduationCap className="w-5 h-5 text-[#A51C30]" />
+                    <GraduationCap className="w-5 h-5 text-primary-600" />
                     <span>{leader.qualifications}</span>
                   </div>
                 )}
@@ -117,7 +117,7 @@ export const LeaderProfile = () => {
 
       <div className="bg-gray-50 border-b">
         <div className="container-custom py-4">
-          <Link to="/about/leadership" className="inline-flex items-center gap-2 text-gray-600 hover:text-[#1E1E1E] transition">
+          <Link to="/about/leadership" className="inline-flex items-center gap-2 text-gray-600 hover:text-ink-900 transition">
             <ArrowLeft className="w-4 h-4" />
             Back to Leadership
           </Link>
@@ -136,7 +136,7 @@ export const LeaderProfile = () => {
               {leader.research_interests && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
                   <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-[#1E1E1E]" />
+                    <BookOpen className="w-5 h-5 text-ink-900" />
                     Research Interests
                   </h2>
                   <p className="text-gray-700 leading-relaxed">{leader.research_interests}</p>
@@ -146,13 +146,13 @@ export const LeaderProfile = () => {
               {achievements.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                   <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Award className="w-5 h-5 text-[#1E1E1E]" />
+                    <Award className="w-5 h-5 text-ink-900" />
                     Key Achievements
                   </h2>
                   <ul className="space-y-3">
                     {achievements.map((a, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <span className="w-2 h-2 bg-[#A51C30] mt-2 flex-shrink-0" />
+                        <span className="w-2 h-2 bg-primary-600 mt-2 flex-shrink-0" />
                         <span className="text-gray-700">{a}</span>
                       </li>
                     ))}
@@ -163,19 +163,19 @@ export const LeaderProfile = () => {
               {publications.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
                   <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-[#1E1E1E]" />
+                    <FileText className="w-5 h-5 text-ink-900" />
                     Publications
                   </h2>
                   <div className="space-y-4">
                     {publications.map((pub, i) => (
-                      <div key={i} className="border-l-4 border-[#A51C30] pl-4 py-2">
+                      <div key={i} className="border-l-4 border-primary-600 pl-4 py-2">
                         <h4 className="font-semibold text-gray-900">{pub.title}</h4>
                         <p className="text-sm text-gray-600">
                           {pub.journal} • {pub.year}
                           {pub.citations !== undefined && ` • ${pub.citations} citations`}
                         </p>
                         {pub.doi && (
-                          <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#1E1E1E] hover:underline inline-flex items-center gap-1 mt-1">
+                          <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer" className="text-xs text-ink-900 hover:underline inline-flex items-center gap-1 mt-1">
                             DOI: {pub.doi} <ExternalLink className="w-3 h-3" />
                           </a>
                         )}
@@ -192,19 +192,19 @@ export const LeaderProfile = () => {
                 <div className="space-y-4">
                   {leader.email && (
                     <div className="flex items-start gap-3">
-                      <Mail className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+                      <Mail className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-sm text-gray-500">Email</p>
-                        <a href={`mailto:${leader.email}`} className="text-gray-900 hover:text-[#1E1E1E] transition">{leader.email}</a>
+                        <a href={`mailto:${leader.email}`} className="text-gray-900 hover:text-ink-900 transition">{leader.email}</a>
                       </div>
                     </div>
                   )}
                   {leader.phone && (
                     <div className="flex items-start gap-3">
-                      <Phone className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+                      <Phone className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-sm text-gray-500">Phone</p>
-                        <a href={`tel:${leader.phone}`} className="text-gray-900 hover:text-[#1E1E1E] transition">{leader.phone}</a>
+                        <a href={`tel:${leader.phone}`} className="text-gray-900 hover:text-ink-900 transition">{leader.phone}</a>
                       </div>
                     </div>
                   )}

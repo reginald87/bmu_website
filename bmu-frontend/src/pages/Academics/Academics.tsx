@@ -44,21 +44,21 @@ const fallbackUnits = [
  name: 'College of Medicine',
  programs: 'MBBS, B.Sc Anatomy, B.Sc Physiology, B.Sc Biochemistry',
  icon: GraduationCap,
- color: '#1E1E1E',
+ color: 'var(--color-ink-900)',
  link: '/colleges/college-of-medicine'
  },
  {
  name: 'Faculty of Basic Medical Sciences',
  programs: 'B.Sc Anatomy, B.Sc Physiology, B.Sc Biochemistry',
  icon: Microscope,
- color: '#1E1E1E',
+ color: 'var(--color-ink-900)',
  link: '/academics/faculties/faculty-of-basic-medical-sciences'
  },
 {
   name: 'Faculty of Basic Clinical Sciences',
   programs: 'Anatomical Pathology',
   icon: Activity,
-  color: '#1E1E1E',
+  color: 'var(--color-ink-900)',
   link: '/academics/faculties/faculty-of-basic-clinical-sciences',
   standalone: true
   },
@@ -66,14 +66,14 @@ const fallbackUnits = [
   name: 'Faculty of Clinical Sciences',
   programs: 'MBBS Medicine & Surgery',
   icon: Stethoscope,
-  color: '#1E1E1E',
+  color: 'var(--color-ink-900)',
   link: '/academics/faculties/faculty-of-clinical-sciences'
   },
   {
   name: 'Faculty of Dentistry',
   programs: 'BDS Dental Surgery',
   icon: Stethoscope,
-  color: '#1E1E1E',
+  color: 'var(--color-ink-900)',
   link: '/academics/faculties/faculty-of-dentistry',
   standalone: true
   },
@@ -81,7 +81,7 @@ const fallbackUnits = [
   name: 'Faculty of Health Sciences',
   programs: 'B.NSc Nursing, BMLS, Radiography, Physiotherapy, Optometry, Public Health',
   icon: HeartPulse,
-  color: '#A51C30',
+  color: 'var(--color-primary-600)',
   link: '/academics/faculties/faculty-of-health-sciences',
   standalone: true
   },
@@ -89,7 +89,7 @@ const fallbackUnits = [
   name: 'Faculty of Pharmaceutical Sciences',
   programs: 'Pharm.D Pharmacy',
   icon: Award,
-  color: '#1E1E1E',
+  color: 'var(--color-ink-900)',
   link: '/academics/faculties/faculty-of-pharmaceutical-sciences',
   standalone: true
   },
@@ -97,7 +97,7 @@ const fallbackUnits = [
   name: 'Faculty of Science',
   programs: 'B.Sc Biology, Chemistry, Microbiology, Physics, Mathematics, Statistics, Computer Science',
   icon: FlaskConical,
-  color: '#1E1E1E',
+  color: 'var(--color-ink-900)',
   link: '/academics/faculties/faculty-of-science',
   standalone: true
   }
@@ -166,7 +166,7 @@ export const Academics = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -179,7 +179,7 @@ export const Academics = () => {
  <span className="text-white font-medium">Academics</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Academic <span className="text-[#A51C30]">Excellence</span>
+ Academic <span className="text-primary-600">Excellence</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  World-class healthcare education combining rigorous academic training with 
@@ -203,7 +203,7 @@ export const Academics = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -264,7 +264,7 @@ export const Academics = () => {
  to={link.link}
  className="block h-full bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
  >
- <link.icon className="w-8 h-8 text-[#A51C30] mb-4" />
+ <link.icon className="w-8 h-8 text-primary-600 mb-4" />
  <h3 className="text-title text-gray-900 mb-1">{link.title}</h3>
  <p className="text-body text-gray-600">{link.desc}</p>
  </Link>
@@ -275,12 +275,12 @@ export const Academics = () => {
  </section>
 
  {/* CTA */}
- <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="container-custom">
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
  <div>
  <h2 className="text-headline text-white mb-4">
- Start Your <span className="text-[#A51C30]">Journey</span>
+ Start Your <span className="text-primary-600">Journey</span>
  </h2>
  <p className="text-lead text-white/80 mb-6">
  Join thousands of students pursuing excellence in healthcare education. 
@@ -289,13 +289,13 @@ export const Academics = () => {
  <div className="flex flex-wrap gap-4">
  <Link 
  to="/academics/programs"
- className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Explore Programs
  </Link>
  <Link 
  to="/apply"
- className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+ className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
  >
  Apply Now
  </Link>
@@ -313,7 +313,7 @@ export const Academics = () => {
  'Student support and mentorship programs'
  ].map((item, index) => (
  <div key={index} className="flex items-start gap-3">
- <Award className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+ <Award className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
  <p className="text-white/80">{item}</p>
  </div>
  ))}

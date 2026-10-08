@@ -85,7 +85,7 @@ export const StudentProfile = () => {
     }
   };
 
-  const inputCls = 'w-full px-3 py-2.5 border border-gray-200 focus:ring-2 focus:ring-[#A51C30] focus:border-transparent outline-none transition text-sm';
+  const inputCls = 'w-full px-3 py-2.5 border border-gray-200 focus:ring-2 focus:ring-primary-600 focus:border-transparent outline-none transition text-sm';
   const labelCls = 'block text-sm font-medium text-gray-700 mb-1.5';
 
   return (
@@ -107,18 +107,18 @@ export const StudentProfile = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-[#A51C30] animate-spin" />
+          <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Summary */}
           <div className="space-y-6">
             <div className="bg-white p-6 shadow-sm border border-gray-100 rounded">
-              <div className="w-20 h-20 bg-[#1E1E1E]/10 flex items-center justify-center mb-4">
-                <User className="w-10 h-10 text-[#1E1E1E]" />
+              <div className="w-20 h-20 bg-ink-900/10 flex items-center justify-center mb-4">
+                <User className="w-10 h-10 text-ink-900" />
               </div>
               <h2 className="font-bold text-lg text-gray-900">{data?.user?.full_name || user?.full_name}</h2>
-              <p className="text-sm text-[#A51C30]">{data?.user?.program || 'MBBS (Medicine & Surgery)'}</p>
+              <p className="text-sm text-primary-600">{data?.user?.program || 'MBBS (Medicine & Surgery)'}</p>
               <div className="mt-4 space-y-2 text-sm text-gray-600">
                 <div className="flex items-center gap-2">
                   <GraduationCap className="w-4 h-4 text-gray-400" />
@@ -214,7 +214,7 @@ export const StudentProfile = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#A51C30] transition inline-flex items-center gap-2 disabled:opacity-50"
+                className="px-6 py-3 bg-ink-900 text-white font-semibold hover:bg-primary-600 transition inline-flex items-center gap-2 disabled:opacity-50"
               >
                 {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                 Save Changes

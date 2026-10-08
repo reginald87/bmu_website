@@ -13,7 +13,7 @@ export const UpcomingEvents = ({ events }: UpcomingEventsProps) => {
   if (displayEvents.length === 0) {
     return (
       <div className="bg-white p-6">
-        <h3 className="text-xl font-bold mb-4 text-[#1E1E1E]">
+        <h3 className="text-xl font-bold mb-4 text-ink-900">
           {t('home.upcomingEvents.title')}
         </h3>
         <p className="text-gray-500">{t('home.upcomingEvents.noEvents')}</p>
@@ -23,7 +23,7 @@ export const UpcomingEvents = ({ events }: UpcomingEventsProps) => {
 
   return (
     <div className="bg-white p-6">
-      <h3 className="text-xl font-bold mb-4 text-[#1E1E1E]">
+      <h3 className="text-xl font-bold mb-4 text-ink-900">
         {t('home.upcomingEvents.title')}
       </h3>
       <div className="space-y-4">
@@ -33,7 +33,7 @@ export const UpcomingEvents = ({ events }: UpcomingEventsProps) => {
             to={`/events/${event.slug}`}
             className="flex items-start gap-4 p-4 hover:bg-gray-50 transition"
           >
-            <div className="flex-shrink-0 w-16 h-16 flex flex-col items-center justify-center text-white bg-[#A51C30]">
+            <div className="flex-shrink-0 w-16 h-16 flex flex-col items-center justify-center text-white bg-primary-600">
               <span className="text-2xl font-bold">{new Date(event.event_date).getDate()}</span>
               <span className="text-xs uppercase">
                 {new Date(event.event_date).toLocaleDateString('en-US', { month: 'short' })}

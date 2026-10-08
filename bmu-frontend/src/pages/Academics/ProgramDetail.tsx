@@ -93,7 +93,7 @@ const transformDetail = (src: ProgramDetailSource): Program => ({
   requirements: (src.requirements || '').split('.').filter(Boolean).map((r: string) => r.trim()),
   careerPaths: (src.career_opportunities || '').split(',').filter(Boolean).map((c: string) => c.trim()),
   icon: iconMap[src.icon || ''] || Stethoscope,
-  color: src.color || '#1E1E1E',
+  color: src.color || 'var(--color-ink-900)',
   category: (src.category === 'postgraduate' || src.level === 'masters' || src.level === 'phd') ? 'postgraduate' : 'undergraduate',
   tuition: src.tuition_per_year_local ? `₦${Number(src.tuition_per_year_local).toLocaleString()} per session` : src.tuition_fee_local ? `₦${Number(src.tuition_fee_local).toLocaleString()}` : 'Contact for fees',
   intake: src.intake || 'September/October',
@@ -114,7 +114,7 @@ export const ProgramDetail = () => {
  if (isLoading) {
   return (
    <div className="min-h-screen flex items-center justify-center">
-    <Loader2 className="w-12 h-12 text-[#1E1E1E] animate-spin" />
+    <Loader2 className="w-12 h-12 text-ink-900 animate-spin" />
    </div>
   );
  }

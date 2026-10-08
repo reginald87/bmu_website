@@ -101,14 +101,14 @@ export const StudentHostel = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-[#A51C30] animate-spin" />
+          <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Current allocation */}
           <div className="bg-white p-6 shadow-sm border border-gray-100 rounded">
             <div className="flex items-center gap-3 mb-6">
-              <Home className="w-6 h-6 text-[#A51C30]" />
+              <Home className="w-6 h-6 text-primary-600" />
               <h3 className="font-bold text-gray-900">My Allocation</h3>
             </div>
             {allocation ? (
@@ -139,7 +139,7 @@ export const StudentHostel = () => {
               </div>
             ) : (
               <div className="py-10 text-center">
-                <BedDouble className="w-12 h-12 text-[#A51C30]/40 mx-auto mb-4" />
+                <BedDouble className="w-12 h-12 text-primary-600/40 mx-auto mb-4" />
                 <p className="text-gray-600 mb-1">No hostel allocation for this session.</p>
                 <p className="text-xs text-gray-400">Submit a request below and Student Affairs will allocate a bed space.</p>
               </div>
@@ -156,7 +156,7 @@ export const StudentHostel = () => {
                   value={hostel}
                   onChange={(e) => setHostel(e.target.value)}
                   disabled={!!allocation && ['pending', 'allocated'].includes(allocation.status)}
-                  className="w-full px-3 py-2.5 border border-gray-200 focus:ring-2 focus:ring-[#A51C30] focus:border-transparent outline-none transition text-sm disabled:bg-gray-50 disabled:text-gray-400"
+                  className="w-full px-3 py-2.5 border border-gray-200 focus:ring-2 focus:ring-primary-600 focus:border-transparent outline-none transition text-sm disabled:bg-gray-50 disabled:text-gray-400"
                 >
                   {HOSTELS.map((h) => (
                     <option key={h} value={h}>{h}</option>
@@ -166,7 +166,7 @@ export const StudentHostel = () => {
               <button
                 type="submit"
                 disabled={submitting || (!!allocation && ['pending', 'allocated'].includes(allocation.status))}
-                className="w-full py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#A51C30] transition inline-flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3 bg-ink-900 text-white font-semibold hover:bg-primary-600 transition inline-flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Home className="w-5 h-5" />}
                 Submit Request

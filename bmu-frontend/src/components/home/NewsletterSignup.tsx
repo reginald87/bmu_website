@@ -20,7 +20,7 @@ export const NewsletterSignup = () => {
   };
 
   return (
-    <section className="py-12 bg-[#1E1E1E]">
+    <section className="py-12 bg-ink-900">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -69,7 +69,7 @@ export const NewsletterSignup = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="px-6 py-3 font-semibold flex items-center gap-2 bg-[#A51C30] text-white hover:bg-[#8a1828] transition-colors disabled:opacity-50"
+                  className="px-6 py-3 font-semibold flex items-center gap-2 bg-primary-600 text-white hover:bg-primary-700 transition-colors disabled:opacity-50"
                 >
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-current border-t-transparent animate-spin" />

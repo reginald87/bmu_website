@@ -133,7 +133,7 @@ export const Rankings = () => {
       </Helmet>
 
       {/* Hero - pt-[180px] to clear fixed navbar */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         {/* Subtle Pattern Overlay */}
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
@@ -150,7 +150,7 @@ export const Rankings = () => {
               <span className="text-white font-medium">Rankings</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Rankings & <span className="text-[#A51C30]">Recognition</span>
+              Rankings & <span className="text-primary-600">Recognition</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               BMU's commitment to excellence is reflected in our rankings, accreditations, 
@@ -175,8 +175,8 @@ export const Rankings = () => {
                   transition={{ delay: index * 0.1 }}
                   className="text-center"
                 >
-                  <div className="w-12 h-12 flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#A51C3020' }}>
-                    <Icon className="w-6 h-6" style={{ color: '#A51C30' }} />
+                  <div className="w-12 h-12 flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+                    <Icon className="w-6 h-6" style={{ color: 'var(--color-primary-600)' }} />
                   </div>
                   <div className="text-2xl md:text-3xl font-bold text-gray-900">{metric.value}</div>
                   <div className="text-xs text-gray-600 mt-1">{metric.label}</div>
@@ -207,7 +207,7 @@ export const Rankings = () => {
                 transition={{ delay: index * 0.1 }}
                 className="bg-white p-6 shadow-sm border border-gray-100 flex items-center gap-6"
               >
-                <div className="w-16 h-16 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1E1E1E' }}>
+                <div className="w-16 h-16 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-ink-900)' }}>
                   <span className="text-title text-white">{ranking.rank}</span>
                 </div>
                 <div className="flex-1">
@@ -242,15 +242,15 @@ export const Rankings = () => {
               >
                 <div className="flex flex-col md:flex-row md:items-center gap-4">
                   <div className="flex items-center gap-4 flex-1">
-                    <div className="w-14 h-14 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A51C3020' }}>
-                      <Shield className="w-7 h-7" style={{ color: '#1E1E1E' }} />
+                    <div className="w-14 h-14 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+                      <Shield className="w-7 h-7" style={{ color: 'var(--color-ink-900)' }} />
                     </div>
                     <div>
                       <div className="flex items-center gap-3">
                         <h3 className="text-title text-gray-900">{acc.body}</h3>
                         <span 
                           className="px-3 py-1 text-xs font-semibold"
-                          style={{ backgroundColor: acc.status === 'Full Accreditation' ? '#A51C3020' : '#ffd70020', color: acc.status === 'Full Accreditation' ? '#1E1E1E' : '#b8860b' }}
+                          style={{ backgroundColor: acc.status === 'Full Accreditation' ? 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' : '#ffd70020', color: acc.status === 'Full Accreditation' ? 'var(--color-ink-900)' : '#b8860b' }}
                         >
                           {acc.status}
                         </span>
@@ -297,14 +297,14 @@ export const Rankings = () => {
                 className="flex gap-4"
               >
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: '#A51C3020' }}>
-                    <Award className="w-6 h-6" style={{ color: '#A51C30' }} />
+                  <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+                    <Award className="w-6 h-6" style={{ color: 'var(--color-primary-600)' }} />
                   </div>
                 </div>
                 <div className="flex-1 pb-6 border-b border-gray-200 last:border-0">
                   <span 
                     className="inline-block px-2 py-1 text-xs font-semibold mb-2"
-                    style={{ backgroundColor: '#1E1E1E', color: 'white' }}
+                    style={{ backgroundColor: 'var(--color-ink-900)', color: 'white' }}
                   >
                     {achievement.year}
                   </span>

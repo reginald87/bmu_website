@@ -121,7 +121,7 @@ const CPDLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[180px] pb-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-ink-900 to-primary-600 pt-[180px] pb-12 px-4">
       <div className="max-w-md mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -129,7 +129,7 @@ const CPDLogin = () => {
           className="bg-white overflow-hidden"
         >
           {/* Header */}
-          <div className="bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] p-8 text-center">
+          <div className="bg-gradient-to-br from-ink-900 to-primary-600 p-8 text-center">
             <div className="w-16 h-16 bg-white/20 flex items-center justify-center mx-auto mb-4">
               <Stethoscope className="w-8 h-8 text-white" />
             </div>
@@ -154,7 +154,7 @@ const CPDLogin = () => {
                     type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent outline-none transition"
                     placeholder="Enter your email or license number"
                   />
                 </div>
@@ -167,7 +167,7 @@ const CPDLogin = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent outline-none transition"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent outline-none transition"
                     placeholder="Enter your password"
                   />
                 </div>
@@ -175,14 +175,14 @@ const CPDLogin = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 bg-[#1E1E1E] text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
+                className="w-full py-3 bg-ink-900 text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
               >
                 {isLoading ? 'Signing in...' : 'Sign In'}
               </button>
             </form>
 
             <div className="mt-6 text-center text-sm text-gray-800 space-y-3">
-              <p>Don't have an account? <button className="text-[#1E1E1E] font-semibold hover:underline">Register here</button></p>
+              <p>Don't have an account? <button className="text-ink-900 font-semibold hover:underline">Register here</button></p>
               <p><button className="hover:underline">Forgot password?</button></p>
             </div>
           </div>
@@ -215,7 +215,7 @@ const CPDDashboard = () => {
         <div className="container-custom py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#1E1E1E] flex items-center justify-center">
+              <div className="w-12 h-12 bg-ink-900 flex items-center justify-center">
                 <Stethoscope className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -248,7 +248,7 @@ const CPDDashboard = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as 'overview' | 'courses' | 'certificates')}
-                className={`px-6 py-4 text-sm font-medium capitalize border-b-2 transition ${ activeTab === tab ? 'border-[#1E1E1E] text-[#1E1E1E]' : 'border-transparent text-gray-800 hover:text-gray-900' }`}
+                className={`px-6 py-4 text-sm font-medium capitalize border-b-2 transition ${ activeTab === tab ? 'border-ink-900 text-ink-900' : 'border-transparent text-gray-800 hover:text-gray-900' }`}
               >
                 {tab}
               </button>
@@ -273,7 +273,7 @@ const CPDDashboard = () => {
                 <div className="bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-blue-50 flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-[#1E1E1E]" />
+                      <Clock className="w-6 h-6 text-ink-900" />
                     </div>
                     <span className="text-sm text-gray-700">CPD Hours</span>
                   </div>
@@ -281,7 +281,7 @@ const CPDDashboard = () => {
                   <p className="text-sm text-gray-800">of {cpdUserData.requiredHours} required hours</p>
                   <div className="mt-3 h-2 bg-gray-100 overflow-hidden">
                     <div
-                      className="h-full bg-[#1E1E1E] transition-all duration-500"
+                      className="h-full bg-ink-900 transition-all duration-500"
                       style={{ width: `${progressPercentage}%` }}
                     />
                   </div>
@@ -290,7 +290,7 @@ const CPDDashboard = () => {
                 <div className="bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-purple-50 flex items-center justify-center">
-                      <BookOpen className="w-6 h-6 text-[#A51C30]" />
+                      <BookOpen className="w-6 h-6 text-primary-600" />
                     </div>
                     <span className="text-sm text-gray-700">Courses</span>
                   </div>
@@ -301,7 +301,7 @@ const CPDDashboard = () => {
                 <div className="bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 flex items-center justify-center">
-                      <Award className="w-6 h-6 text-[#A51C30]" />
+                      <Award className="w-6 h-6 text-primary-600" />
                     </div>
                     <span className="text-sm text-gray-700">Certificates</span>
                   </div>
@@ -338,14 +338,14 @@ const CPDDashboard = () => {
                         <div className="mt-2 flex items-center gap-2">
                           <div className="flex-1 h-2 bg-gray-100 overflow-hidden max-w-[200px]">
                             <div
-                              className="h-full bg-[#1E1E1E]"
+                              className="h-full bg-ink-900"
                               style={{ width: `${course.progress}%` }}
                             />
                           </div>
                           <span className="text-sm text-gray-800">{course.progress}%</span>
                         </div>
                       </div>
-                      <button className="px-4 py-2 bg-[#1E1E1E] text-white text-sm font-medium hover:opacity-90 transition">
+                      <button className="px-4 py-2 bg-ink-900 text-white text-sm font-medium hover:opacity-90 transition">
                         {course.progress === 0 ? 'Start' : 'Continue'}
                       </button>
                     </div>
@@ -398,14 +398,14 @@ const CPDDashboard = () => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search courses..."
-                      className="w-full pl-12 pr-4 py-3 border border-gray-300 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                      className="w-full pl-12 pr-4 py-3 border border-gray-300 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     />
                   </div>
                   <div className="flex gap-2">
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-[#1E1E1E]"
+                      className="px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-ink-900"
                     >
                       <option value="all">All Categories</option>
                       <option value="clinical">Clinical Skills</option>
@@ -424,18 +424,18 @@ const CPDDashboard = () => {
               {/* Available Courses Grid */}
               {isLoading ? (
                 <div className="flex justify-center py-20">
-                  <Loader2 className="w-8 h-8 text-[#1E1E1E] animate-spin" />
+                  <Loader2 className="w-8 h-8 text-ink-900 animate-spin" />
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {(courses ?? []).map((course) => (
                     <div key={course.id} className="bg-white shadow-sm overflow-hidden transition">
-                      <div className="h-40 bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] flex items-center justify-center">
+                      <div className="h-40 bg-gradient-to-br from-ink-900 to-primary-600 flex items-center justify-center">
                         <BookOpen className="w-16 h-16 text-white/50" />
                       </div>
                       <div className="p-6">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-medium text-[#1E1E1E] bg-blue-50 px-2 py-1">{course.category_display}</span>
+                          <span className="text-xs font-medium text-ink-900 bg-blue-50 px-2 py-1">{course.category_display}</span>
                           <span className="text-xs text-gray-700">{course.delivery_mode_display}</span>
                         </div>
                         <h3 className="font-bold text-gray-900 mb-2">{course.title}</h3>
@@ -454,7 +454,7 @@ const CPDDashboard = () => {
                             <p className="text-xs text-gray-700">Starts {course.start_date}</p>
                             <p className="text-xs text-gray-700">{course.instructor_name}</p>
                           </div>
-                          <button className="px-4 py-2 bg-[#1E1E1E] text-white text-sm font-medium hover:opacity-90 transition">
+                          <button className="px-4 py-2 bg-ink-900 text-white text-sm font-medium hover:opacity-90 transition">
                             Enroll (₦{course.fee_local.toLocaleString()})
                           </button>
                         </div>
@@ -487,7 +487,7 @@ const CPDDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {completedCourses.map((course) => (
                   <div key={course.id} className="border p-6 flex items-center gap-4">
-                    <div className="w-16 h-20 bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] flex items-center justify-center flex-shrink-0">
+                    <div className="w-16 h-20 bg-gradient-to-br from-ink-900 to-primary-600 flex items-center justify-center flex-shrink-0">
                       <Award className="w-8 h-8 text-white" />
                     </div>
                     <div className="flex-1">
@@ -496,7 +496,7 @@ const CPDDashboard = () => {
                       <p className="text-sm text-gray-700">Issued {course.completedDate}</p>
                       <p className="text-sm text-gray-700">{course.hours} CPD Hours</p>
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-[#1E1E1E] text-white text-sm font-medium hover:opacity-90 transition">
+                    <button className="flex items-center gap-2 px-4 py-2 bg-ink-900 text-white text-sm font-medium hover:opacity-90 transition">
                       <Download className="w-4 h-4" />
                       Download
                     </button>

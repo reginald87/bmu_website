@@ -93,7 +93,7 @@ export const VisionMission = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -108,7 +108,7 @@ export const VisionMission = () => {
               <span className="text-white font-medium">Vision & Mission</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Our <span className="text-[#A51C30]">Vision & Mission</span>
+              Our <span className="text-primary-600">Vision & Mission</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               {pageDescription}
@@ -126,11 +126,11 @@ export const VisionMission = () => {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="bg-white p-8 border-l-4 border-[#A51C30] transition-shadow"
+              className="bg-white p-8 border-l-4 border-primary-600 transition-shadow"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 flex items-center justify-center" style={{ backgroundColor: '#A51C3020' }}>
-                  <Target className="w-7 h-7" style={{ color: '#A51C30' }} />
+                <div className="w-14 h-14 flex items-center justify-center" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+                  <Target className="w-7 h-7" style={{ color: 'var(--color-primary-600)' }} />
                 </div>
                 <h2 className="text-title text-gray-900">Our Mission</h2>
               </div>
@@ -149,11 +149,11 @@ export const VisionMission = () => {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="bg-white p-8 border-l-4 border-[#1E1E1E] transition-shadow"
+              className="bg-white p-8 border-l-4 border-ink-900 transition-shadow"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 flex items-center justify-center" style={{ backgroundColor: '#1E1E1E20' }}>
-                  <Eye className="w-7 h-7" style={{ color: '#1E1E1E' }} />
+                <div className="w-14 h-14 flex items-center justify-center" style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 12.5%, transparent)' }}>
+                  <Eye className="w-7 h-7" style={{ color: 'var(--color-ink-900)' }} />
                 </div>
                 <h2 className="text-title text-gray-900">Our Vision</h2>
               </div>
@@ -193,8 +193,8 @@ export const VisionMission = () => {
                   className="bg-white p-6 shadow-sm border border-gray-100 transition-all group"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ backgroundColor: '#A51C3020' }}>
-                      <Icon className="w-6 h-6" style={{ color: '#1E1E1E' }} />
+                    <div className="w-12 h-12 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+                      <Icon className="w-6 h-6" style={{ color: 'var(--color-ink-900)' }} />
                     </div>
                     <div>
                       <h3 className="text-subtitle text-gray-900 mb-2">{pillar.title}</h3>
@@ -226,7 +226,7 @@ export const VisionMission = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className="bg-white p-5 shadow-sm border border-gray-100 hover:border-[#A51C30] transition-colors"
+                className="bg-white p-5 shadow-sm border border-gray-100 hover:border-primary-600 transition-colors"
               >
                 <h4 className="text-subtitle text-gray-900 mb-1">{value.title}</h4>
                 <p className="text-body text-gray-600">{value.description}</p>
@@ -237,7 +237,7 @@ export const VisionMission = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-headline text-white mb-4">Join Us in Our Mission</h2>
@@ -249,7 +249,7 @@ export const VisionMission = () => {
               <Link 
                 to="/apply" 
                 className="px-8 py-4 font-semibold text-center flex items-center justify-center gap-2 transition hover:opacity-90"
-                style={{ backgroundColor: '#A51C30', color: '#1E1E1E' }}
+                style={{ backgroundColor: 'var(--color-primary-600)', color: 'var(--color-ink-900)' }}
               >
                 Apply Now
                 <ArrowRight className="w-5 h-5" />

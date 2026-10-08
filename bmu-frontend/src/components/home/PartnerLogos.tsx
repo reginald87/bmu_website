@@ -17,7 +17,7 @@ function abbr(name: string): string {
 }
 
 function randomColor(i: number): string {
-  const colors = ['#0093D5', '#00A651', '#20558A', '#0066B3', '#FF6600', '#A51C30', '#E67E22', '#8E44AD'];
+  const colors = ['#0093D5', '#00A651', '#20558A', '#0066B3', '#FF6600', 'var(--color-primary-600)', '#E67E22', '#8E44AD'];
   return colors[i % colors.length];
 }
 
@@ -53,10 +53,10 @@ export const PartnerLogos = ({ sections: homeSections }: { sections?: Array<{ se
           viewport={{ once: true }}
           className="mb-12"
         >
-          <span className="text-sm font-semibold tracking-wider uppercase text-[#A51C30]">
+          <span className="text-sm font-semibold tracking-wider uppercase text-primary-600">
             Global Network
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-[#1E1E1E]">
+          <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-ink-900">
             {t('home.partnerLogos.title', 'Strategic Partners')}
           </h2>
           <p className="text-gray-800 max-w-2xl">
@@ -113,7 +113,7 @@ export const PartnerLogos = ({ sections: homeSections }: { sections?: Array<{ se
         >
           <Link
             to="/research/collaborations"
-            className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#A51C30] text-[#A51C30] font-semibold hover:bg-[#A51C30] hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary-600 text-primary-600 font-semibold hover:bg-primary-600 hover:text-white transition-colors"
           >
             View All Partnerships
             <ArrowRight className="w-4 h-4" />

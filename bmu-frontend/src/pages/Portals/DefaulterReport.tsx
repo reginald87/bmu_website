@@ -71,14 +71,14 @@ export const DefaulterReport = () => {
               </select>
             </div>
             <div className="flex items-end">
-              <button onClick={exportCSV} disabled={defaulters.length === 0} className="px-4 py-2 bg-[#1E1E1E] text-white text-sm font-medium hover:bg-[#1E1E1E]/90 transition disabled:opacity-50 flex items-center gap-2">
+              <button onClick={exportCSV} disabled={defaulters.length === 0} className="px-4 py-2 bg-ink-900 text-white text-sm font-medium hover:bg-ink-900/90 transition disabled:opacity-50 flex items-center gap-2">
                 <Download className="w-4 h-4" /> Export CSV
               </button>
             </div>
           </div>
 
           {isLoading ? (
-            <div className="flex justify-center py-20"><div className="w-10 h-10 border-4 border-[#A51C30] border-t-transparent rounded-full animate-spin" /></div>
+            <div className="flex justify-center py-20"><div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" /></div>
           ) : (
             <>
               <div className="bg-white p-4 shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
@@ -86,7 +86,7 @@ export const DefaulterReport = () => {
                   <Search className="w-5 h-5" />
                   <span>{defaulters.length} defaulter(s)</span>
                 </div>
-                <div className="text-lg font-bold text-[#A51C30]">₦{totalOutstanding.toLocaleString()}</div>
+                <div className="text-lg font-bold text-primary-600">₦{totalOutstanding.toLocaleString()}</div>
               </div>
 
               {defaulters.length === 0 ? (
@@ -105,7 +105,7 @@ export const DefaulterReport = () => {
                           <p className="text-sm text-gray-500">{d.matric_number} · Level {d.level}</p>
                         </div>
                         <div className="text-right">
-                          <div className="font-bold text-[#A51C30]">₦{d.outstanding_amount.toLocaleString()}</div>
+                          <div className="font-bold text-primary-600">₦{d.outstanding_amount.toLocaleString()}</div>
                         </div>
                       </div>
                     </div>

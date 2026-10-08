@@ -53,7 +53,7 @@ export const Health = () => {
 
   if (isLoading) {
    return (
-    <section className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#1E1E1E' }}>
+    <section className="flex items-center justify-center min-h-screen" style={{ backgroundColor: 'var(--color-ink-900)' }}>
      <Loader2 className="w-8 h-8 text-white animate-spin" />
     </section>
    );
@@ -67,7 +67,7 @@ export const Health = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -107,8 +107,8 @@ export const Health = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <HeartPulse className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <HeartPulse className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -137,8 +137,8 @@ export const Health = () => {
    className="bg-white p-8 shadow-sm border border-gray-100"
   >
    <div className="flex items-start gap-4 mb-6">
-   <div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0">
-    <HeartPulse className="w-8 h-8 text-[#1E1E1E]" />
+   <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center flex-shrink-0">
+    <HeartPulse className="w-8 h-8 text-ink-900" />
    </div>
    <div className="flex-1">
     <h3 className="text-title text-gray-900 mb-2">{program.title}</h3>
@@ -149,7 +149,7 @@ export const Health = () => {
    <div className="flex items-center justify-between p-4 bg-gray-50 mb-6">
    {program.stats && Object.entries(program.stats).slice(0, 1).map(([label, value]) => (
     <div key={label}>
-     <div className="text-stat-sm text-[#1E1E1E]">{value.toLocaleString()}+</div>
+     <div className="text-stat-sm text-ink-900">{value.toLocaleString()}+</div>
      <p className="text-xs text-gray-500">{label}</p>
     </div>
    ))}
@@ -161,7 +161,7 @@ export const Health = () => {
     {(program.objectives ?? []).map((obj, idx) => (
     <span 
      key={idx}
-     className="px-3 py-1 text-xs bg-[#A51C30]/20 text-[#1E1E1E] font-medium"
+     className="px-3 py-1 text-xs bg-primary-600/20 text-ink-900 font-medium"
     >
      {obj}
     </span>
@@ -194,8 +194,8 @@ export const Health = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white p-6 shadow-sm border border-gray-100"
  >
- <div className="w-12 h-12 bg-[#A51C30]/20 flex items-center justify-center mb-4">
- <Calendar className="w-6 h-6 text-[#A51C30]" />
+ <div className="w-12 h-12 bg-primary-600/20 flex items-center justify-center mb-4">
+ <Calendar className="w-6 h-6 text-primary-600" />
  </div>
  <h3 className="text-title text-gray-900 mb-2">{campaign.title}</h3>
  <p className="text-body text-gray-600 mb-4">{campaign.description}</p>
@@ -235,8 +235,8 @@ export const Health = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white p-4 shadow-sm border border-gray-100 flex items-center gap-3"
  >
- <div className="w-10 h-10 bg-[#A51C30]/20 flex items-center justify-center flex-shrink-0">
- <Users className="w-5 h-5 text-[#A51C30]" />
+ <div className="w-10 h-10 bg-primary-600/20 flex items-center justify-center flex-shrink-0">
+ <Users className="w-5 h-5 text-primary-600" />
  </div>
  <span className="text-body text-gray-700">{partner}</span>
  </motion.div>
@@ -246,7 +246,7 @@ export const Health = () => {
  </section>
 
  {/* Get Involved CTA */}
- <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
  <div className="container-custom">
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
  <div>
@@ -257,13 +257,13 @@ export const Health = () => {
  <div className="flex flex-wrap gap-4">
  <Link 
  to="/contact"
- className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Partner With Us <ArrowRight className="w-5 h-5" />
  </Link>
  <Link 
  to="/impact/community"
- className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#A51C30] transition"
+ className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-primary-600 transition"
  >
  Volunteer Programs
  </Link>

@@ -74,7 +74,7 @@ export const ResearchFunding = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -89,7 +89,7 @@ export const ResearchFunding = () => {
  <span className="text-white font-medium">Research Funding</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Research <span className="text-[#A51C30]">Funding</span>
+ Research <span className="text-primary-600">Funding</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Access funding opportunities to support your research. BMU offers grants, 
@@ -112,8 +112,8 @@ export const ResearchFunding = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -130,7 +130,7 @@ export const ResearchFunding = () => {
  onClick={() => setActiveTab('opportunities')}
  className={`px-6 py-3 font-medium transition ${
  activeTab === 'opportunities'
- ? 'bg-[#1E1E1E] text-white'
+ ? 'bg-ink-900 text-white'
  : 'bg-white text-gray-600 hover:bg-gray-100'
  }`}
  >
@@ -140,7 +140,7 @@ export const ResearchFunding = () => {
  onClick={() => setActiveTab('past')}
  className={`px-6 py-3 font-medium transition ${
  activeTab === 'past'
- ? 'bg-[#1E1E1E] text-white'
+ ? 'bg-ink-900 text-white'
  : 'bg-white text-gray-600 hover:bg-gray-100'
  }`}
  >
@@ -169,7 +169,7 @@ export const ResearchFunding = () => {
   }`}>
   {statusMap[opp.status] === 'open' ? 'Open' : statusMap[opp.status] === 'upcoming' ? 'Upcoming' : opp.status}
   </span>
- <span className="px-3 py-1 bg-[#A51C30]/10 text-[#A51C30] text-xs font-medium">
+ <span className="px-3 py-1 bg-primary-600/10 text-primary-600 text-xs font-medium">
  {opp.category}
  </span>
  </div>
@@ -177,7 +177,7 @@ export const ResearchFunding = () => {
  <p className="text-body text-gray-600">{opp.description}</p>
  </div>
  <div className="lg:text-right">
- <p className="text-stat-sm text-[#1E1E1E]">{opp.amount}</p>
+ <p className="text-stat-sm text-ink-900">{opp.amount}</p>
  <p className="text-small text-gray-500">Award Range</p>
  </div>
  </div>
@@ -185,7 +185,7 @@ export const ResearchFunding = () => {
  <div className="flex flex-wrap gap-2 mb-4">
  {opp.eligibility.map((item, idx) => (
  <span key={idx} className="flex items-center gap-1 text-small text-gray-600">
- <CheckCircle className="w-3 h-3 text-[#A51C30]" />
+ <CheckCircle className="w-3 h-3 text-primary-600" />
  {item}
  </span>
  ))}
@@ -198,7 +198,7 @@ export const ResearchFunding = () => {
  </div>
   <button
   onClick={() => setSelectedGrant(opp)}
-  className="inline-flex items-center gap-2 px-4 py-2 bg-[#1E1E1E] text-white text-sm font-medium hover:bg-[#1E1E1E]/90 transition"
+  className="inline-flex items-center gap-2 px-4 py-2 bg-ink-900 text-white text-sm font-medium hover:bg-ink-900/90 transition"
   >
   Apply Now
   <ArrowRight className="w-4 h-4" />
@@ -228,7 +228,7 @@ export const ResearchFunding = () => {
   <td className="px-6 py-4 text-sm text-gray-900 font-medium">{grant.title}</td>
   <td className="px-6 py-4 text-sm text-gray-600">{grant.principal_investigator || '-'}</td>
   <td className="px-6 py-4 text-sm text-gray-600">{grant.funding_agency}</td>
-  <td className="px-6 py-4 text-sm text-[#1E1E1E] font-semibold">{grant.amount}</td>
+  <td className="px-6 py-4 text-sm text-ink-900 font-semibold">{grant.amount}</td>
   <td className="px-6 py-4 text-sm text-gray-600">{grant.year}</td>
   </tr>
   ))}
@@ -241,7 +241,7 @@ export const ResearchFunding = () => {
  </section>
 
  {/* How to Apply */}
- <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
  <div className="container-custom">
  <div className="text-center mb-12">
  <h2 className="text-headline text-white mb-4">How to Apply</h2>
@@ -260,8 +260,8 @@ export const ResearchFunding = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white/10 backdrop-blur-sm p-6 text-center"
  >
- <div className="w-12 h-12 bg-[#A51C30] flex items-center justify-center mx-auto mb-4">
- <span className="text-[#1E1E1E] font-bold text-lg">{item.step}</span>
+ <div className="w-12 h-12 bg-primary-600 flex items-center justify-center mx-auto mb-4">
+ <span className="text-ink-900 font-bold text-lg">{item.step}</span>
  </div>
  <h3 className="text-title text-white mb-2">{item.title}</h3>
  <p className="text-body text-white/80">{item.desc}</p>
@@ -277,7 +277,7 @@ export const ResearchFunding = () => {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
  <div>
  <h2 className="text-headline text-gray-900 mb-4">
- Research <span className="text-[#A51C30]">Support</span>
+ Research <span className="text-primary-600">Support</span>
  </h2>
  <p className="text-lead text-gray-600 mb-6">
  Our Research Office provides comprehensive support for grant applications, 
@@ -285,21 +285,21 @@ export const ResearchFunding = () => {
  </p>
  <div className="space-y-4">
  <div className="flex items-start gap-3">
- <FileText className="w-6 h-6 text-[#1E1E1E] flex-shrink-0" />
+ <FileText className="w-6 h-6 text-ink-900 flex-shrink-0" />
  <div>
  <h4 className="font-semibold text-gray-900">Grant Writing Workshops</h4>
  <p className="text-body text-gray-600">Regular workshops on proposal writing and funding applications</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
- <TrendingUp className="w-6 h-6 text-[#1E1E1E] flex-shrink-0" />
+ <TrendingUp className="w-6 h-6 text-ink-900 flex-shrink-0" />
  <div>
  <h4 className="font-semibold text-gray-900">Funding Database Access</h4>
  <p className="text-body text-gray-600">Access to international funding opportunities and grant databases</p>
  </div>
  </div>
  <div className="flex items-start gap-3">
- <Users className="w-6 h-6 text-[#1E1E1E] flex-shrink-0" />
+ <Users className="w-6 h-6 text-ink-900 flex-shrink-0" />
  <div>
  <h4 className="font-semibold text-gray-900">Collaboration Matching</h4>
  <p className="text-body text-gray-600">Connect with potential collaborators for multi-disciplinary projects</p>
@@ -308,15 +308,15 @@ export const ResearchFunding = () => {
  </div>
  </div>
 
- <div className="bg-[#1E1E1E] p-8">
+ <div className="bg-ink-900 p-8">
  <h3 className="text-title text-white mb-6">Contact Research Office</h3>
  <div className="space-y-4 text-white/80">
  <p className="flex items-center gap-2">
- <Target className="w-5 h-5 text-[#A51C30]" />
+ <Target className="w-5 h-5 text-primary-600" />
  research@bmu.edu.ng
  </p>
  <p className="flex items-center gap-2">
- <Clock className="w-5 h-5 text-[#A51C30]" />
+ <Clock className="w-5 h-5 text-primary-600" />
  Mon-Fri: 8:00 AM - 4:00 PM
  </p>
  </div>
@@ -324,7 +324,7 @@ export const ResearchFunding = () => {
  <p className="text-white/60 text-sm mb-4">Download application guidelines and templates</p>
  <Link 
  to="#"
- className="inline-flex items-center gap-2 px-6 py-3 bg-[#A51C30] text-[#1E1E1E] font-semibold hover:bg-white transition"
+ className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-ink-900 font-semibold hover:bg-white transition"
  >
  <FileText className="w-5 h-5" />
  Download Templates

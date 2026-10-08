@@ -49,7 +49,7 @@ export const StudentPortal = () => {
         <div className="px-4 py-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
           <div className="flex items-center gap-2">
             <span className="text-gray-500">Matric:</span>
-            <span className="font-semibold text-[#1E1E1E]">{user?.email || 'N/A'}</span>
+            <span className="font-semibold text-ink-900">{user?.email || 'N/A'}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-gray-500">Level:</span>
@@ -65,10 +65,10 @@ export const StudentPortal = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Current GPA', value: dashboard?.current_gpa != null ? dashboard.current_gpa.toFixed(2) : 'N/A', icon: Award, color: '#A51C30' },
-          { label: 'CGPA', value: dashboard?.current_cgpa != null ? dashboard.current_cgpa.toFixed(2) : 'N/A', icon: TrendingUp, color: '#1E1E1E' },
-          { label: 'Courses', value: String(dashboard?.total_courses ?? '--'), icon: BookOpen, color: '#A51C30' },
-          { label: 'Fees Paid', value: `₦${dashboard?.total_fees_paid?.toLocaleString() || '0'}`, icon: FileText, color: '#1E1E1E' },
+          { label: 'Current GPA', value: dashboard?.current_gpa != null ? dashboard.current_gpa.toFixed(2) : 'N/A', icon: Award, color: 'var(--color-primary-600)' },
+          { label: 'CGPA', value: dashboard?.current_cgpa != null ? dashboard.current_cgpa.toFixed(2) : 'N/A', icon: TrendingUp, color: 'var(--color-ink-900)' },
+          { label: 'Courses', value: String(dashboard?.total_courses ?? '--'), icon: BookOpen, color: 'var(--color-primary-600)' },
+          { label: 'Fees Paid', value: `₦${dashboard?.total_fees_paid?.toLocaleString() || '0'}`, icon: FileText, color: 'var(--color-ink-900)' },
         ].map((stat, index) => (
           <motion.div
             key={stat.label}
@@ -103,16 +103,16 @@ export const StudentPortal = () => {
                 >
                   <Link
                     to={link.link}
-                    className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-[#1E1E1E] transition group rounded"
+                    className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-ink-900 transition group rounded"
                   >
-                    <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1E1E]/20 transition rounded">
-                      <BookOpen className="w-6 h-6 text-[#1E1E1E]" />
+                    <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ink-900/20 transition rounded">
+                      <BookOpen className="w-6 h-6 text-ink-900" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 group-hover:text-[#1E1E1E] transition truncate">{link.title}</h3>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-ink-900 transition truncate">{link.title}</h3>
                       <p className="text-sm text-gray-500 truncate">{link.description}</p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#1E1E1E] transition flex-shrink-0" />
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-ink-900 transition flex-shrink-0" />
                   </Link>
                 </motion.div>
               ))}
@@ -128,15 +128,15 @@ export const StudentPortal = () => {
                   key={event.id}
                   className={`flex items-center gap-4 p-4 ${index !== dashboard.upcoming_events.length - 1 ? 'border-b' : ''}`}
                 >
-                  <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0 rounded">
-                    <Calendar className="w-6 h-6 text-[#A51C30]" />
+                  <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center flex-shrink-0 rounded">
+                    <Calendar className="w-6 h-6 text-primary-600" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-gray-900 truncate">{event.title}</h3>
                     <p className="text-sm text-gray-500 truncate">{event.location}{event.event_type ? ` \u2022 ${event.event_type}` : ''}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-medium text-[#1E1E1E]">{event.event_date ? new Date(event.event_date).toLocaleDateString() : ''}</p>
+                    <p className="text-sm font-medium text-ink-900">{event.event_date ? new Date(event.event_date).toLocaleDateString() : ''}</p>
                   </div>
                 </div>
               )) : (
@@ -153,7 +153,7 @@ export const StudentPortal = () => {
           {/* Notifications */}
           <div className="bg-white shadow-sm border border-gray-100 p-4 rounded">
             <div className="flex items-center gap-2 mb-4">
-              <Bell className="w-5 h-5 text-[#A51C30]" />
+              <Bell className="w-5 h-5 text-primary-600" />
               <h2 className="font-bold text-gray-900">Notifications</h2>
             </div>
             <div className="space-y-4">
@@ -190,7 +190,7 @@ export const StudentPortal = () => {
           {/* Important Dates */}
           <div className="bg-white shadow-sm border border-gray-100 p-4 rounded">
             <div className="flex items-center gap-2 mb-4">
-              <Clock className="w-5 h-5 text-[#A51C30]" />
+              <Clock className="w-5 h-5 text-primary-600" />
               <h2 className="font-bold text-gray-900">Important Dates</h2>
             </div>
             <ul className="space-y-3 text-sm">
@@ -214,14 +214,14 @@ export const StudentPortal = () => {
           </div>
 
           {/* Support */}
-          <div className="bg-[#1E1E1E] p-4 text-white rounded">
+          <div className="bg-ink-900 p-4 text-white rounded">
             <h2 className="font-bold mb-2">Need Help?</h2>
             <p className="text-sm text-white/80 mb-4">Contact student support for assistance</p>
             <div className="space-y-2 text-sm">
-              <a href="tel:+2348031110020" className="flex items-center gap-2 hover:text-[#A51C30] transition">
+              <a href="tel:+2348031110020" className="flex items-center gap-2 hover:text-primary-600 transition">
                 <span>📞</span> +234 803 111 0020
               </a>
-              <a href="mailto:student@bmu.edu.ng" className="flex items-center gap-2 hover:text-[#A51C30] transition">
+              <a href="mailto:student@bmu.edu.ng" className="flex items-center gap-2 hover:text-primary-600 transition">
                 <span>✉️</span> student@bmu.edu.ng
               </a>
             </div>

@@ -67,7 +67,7 @@ export const ApplicationStatus = () => {
         <div className="container-custom max-w-4xl">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#1E1E1E] mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-ink-900 mb-2">
               Check Application Status
             </h1>
             <p className="text-gray-600">
@@ -86,13 +86,13 @@ export const ApplicationStatus = () => {
                   value={searchId}
                   onChange={(e) => setSearchId(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="w-full pl-10 pr-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30]"
+                  className="w-full pl-10 pr-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600"
                 />
               </div>
               <button
                 onClick={handleSearch}
                 disabled={isLoading || !searchId}
-                className="px-6 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 disabled:opacity-50 transition flex items-center gap-2"
+                className="px-6 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 disabled:opacity-50 transition flex items-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -130,11 +130,11 @@ export const ApplicationStatus = () => {
               <div className="space-y-2">
                 <p className="text-sm text-gray-500">Need help?</p>
                 <div className="flex justify-center gap-4">
-                  <a href="tel:+2348031110020" className="flex items-center gap-1 text-[#1E1E1E] hover:underline">
+                  <a href="tel:+2348031110020" className="flex items-center gap-1 text-ink-900 hover:underline">
                     <Phone className="w-4 h-4" />
                     +234 803 111 0020
                   </a>
-                  <a href="mailto:admissions@bmu.edu.ng" className="flex items-center gap-1 text-[#1E1E1E] hover:underline">
+                  <a href="mailto:admissions@bmu.edu.ng" className="flex items-center gap-1 text-ink-900 hover:underline">
                     <Mail className="w-4 h-4" />
                     admissions@bmu.edu.ng
                   </a>
@@ -199,7 +199,7 @@ export const ApplicationStatus = () => {
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Application Progress</h2>
                 <div className="w-full bg-gray-200 h-4">
                   <div
-                    className="bg-[#A51C30] h-4 transition-all duration-500"
+                    className="bg-primary-600 h-4 transition-all duration-500"
                     style={{ width: `${application.progress_percentage || 0}%` }}
                   />
                 </div>

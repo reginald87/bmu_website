@@ -90,7 +90,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto"
           >
-            <div className="sticky top-0 bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-6 text-white z-10">
+            <div className="sticky top-0 bg-gradient-to-r from-ink-900 to-primary-600 p-6 text-white z-10">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-2xl font-bold">Apply for {job.title}</h2>
@@ -131,7 +131,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                           required
                           value={formData.firstName}
                           onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                           placeholder="John"
                         />
                       </div>
@@ -145,7 +145,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                           required
                           value={formData.lastName}
                           onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                           placeholder="Doe"
                         />
                       </div>
@@ -162,7 +162,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                           required
                           value={formData.email}
                           onChange={(e) => setFormData({...formData, email: e.target.value})}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                           placeholder="john@example.com"
                         />
                       </div>
@@ -176,7 +176,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                           required
                           value={formData.phone}
                           onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                           placeholder="+234 800 000 0000"
                         />
                       </div>
@@ -192,7 +192,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                         required
                         value={formData.qualification}
                         onChange={(e) => setFormData({...formData, qualification: e.target.value})}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                         placeholder="e.g., Ph.D in Anatomy, M.Sc Nursing"
                       />
                     </div>
@@ -207,7 +207,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                         required
                         value={formData.experience}
                         onChange={(e) => setFormData({...formData, experience: e.target.value})}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                         placeholder="e.g., 5 years"
                       />
                     </div>
@@ -222,7 +222,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                         rows={4}
                         value={formData.coverLetter}
                         onChange={(e) => setFormData({...formData, coverLetter: e.target.value})}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent resize-none"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent resize-none"
                         placeholder="Tell us why you're the best candidate for this position..."
                       />
                     </div>
@@ -230,7 +230,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Resume/CV *</label>
-                    <div className="border-2 border-dashed border-gray-300 p-6 text-center hover:border-[#1E1E1E] transition">
+                    <div className="border-2 border-dashed border-gray-300 p-6 text-center hover:border-ink-900 transition">
                       <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                       <p className="text-sm text-gray-600 mb-1">Drag and drop your resume here, or click to browse</p>
                       <p className="text-xs text-gray-400">PDF, DOCX up to 5MB</p>
@@ -242,7 +242,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                       />
                     </div>
                     {formData.resume && (
-                      <p className="text-sm text-[#1E1E1E] mt-2">Selected: {formData.resume.name}</p>
+                      <p className="text-sm text-ink-900 mt-2">Selected: {formData.resume.name}</p>
                     )}
                   </div>
 
@@ -257,7 +257,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex-1 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="flex-1 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {isSubmitting ? (
                         <>
@@ -315,7 +315,7 @@ export const JobBoard = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="pt-[180px] pb-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] pb-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -332,7 +332,7 @@ export const JobBoard = () => {
             </div>
 
             <h1 className="text-display text-white mb-4">
-              Join Our <span className="text-[#A51C30]">Team</span>
+              Join Our <span className="text-primary-600">Team</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl mx-auto">
               Discover exciting career opportunities at Bayelsa Medical University. 
@@ -353,7 +353,7 @@ export const JobBoard = () => {
                 placeholder="Search job titles, keywords..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
               />
             </div>
 
@@ -361,7 +361,7 @@ export const JobBoard = () => {
               <select
                 value={selectedJobType}
                 onChange={(e) => setSelectedJobType(e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                className="w-full px-4 py-3 bg-white border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
               >
                 {jobTypes.map(type => (
                   <option key={type} value={type}>{type}</option>
@@ -373,7 +373,7 @@ export const JobBoard = () => {
               <select
                 value={selectedDepartment}
                 onChange={(e) => setSelectedDepartment(e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                className="w-full px-4 py-3 bg-white border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
               >
                 {departments.map(dept => (
                   <option key={dept} value={dept}>{dept}</option>
@@ -393,7 +393,7 @@ export const JobBoard = () => {
         <section className="py-24 bg-white">
           <div className="container-custom">
             <div className="flex flex-col items-center justify-center">
-              <Loader2 className="w-12 h-12 animate-spin text-[#1E1E1E]" />
+              <Loader2 className="w-12 h-12 animate-spin text-ink-900" />
               <p className="mt-4 text-gray-600">Loading job listings...</p>
             </div>
           </div>
@@ -421,7 +421,7 @@ export const JobBoard = () => {
                         <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                           <div>
                             <h3 className="text-xl font-bold text-gray-900 mb-1">{job.title}</h3>
-                            <p className="text-[#1E1E1E] font-medium">{job.department}</p>
+                            <p className="text-ink-900 font-medium">{job.department}</p>
                           </div>
                           <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium">
                             {job.is_open ? 'Open' : 'Closed'}
@@ -488,7 +488,7 @@ export const JobBoard = () => {
                       <div className="flex lg:flex-col items-center lg:items-stretch gap-3 lg:w-48">
                         <button
                           onClick={() => openApplication(job)}
-                          className="flex-1 lg:w-full py-3 px-6 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition flex items-center justify-center gap-2"
+                          className="flex-1 lg:w-full py-3 px-6 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition flex items-center justify-center gap-2"
                         >
                           <Send className="w-4 h-4" />
                           Apply Now
@@ -552,8 +552,8 @@ export const JobBoard = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center p-6"
               >
-                <div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="w-8 h-8 text-[#1E1E1E]" />
+                <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center mx-auto mb-4">
+                  <item.icon className="w-8 h-8 text-ink-900" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
                 <p className="text-gray-600">{item.desc}</p>

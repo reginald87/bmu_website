@@ -102,7 +102,7 @@ export const Contact = () => {
       </Helmet>
 
       {/* Hero - pt-[180px] to clear fixed navbar */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         {/* Subtle Pattern Overlay */}
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
@@ -119,7 +119,7 @@ export const Contact = () => {
               <span className="text-white font-medium">Contact Us</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Get in <span className="text-[#A51C30]">Touch</span>
+              Get in <span className="text-primary-600">Touch</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               We would love to hear from you. Reach out for inquiries, admissions information, or partnership opportunities.
@@ -143,8 +143,8 @@ export const Contact = () => {
                   transition={{ delay: index * 0.1 }}
                   className="bg-white p-6 shadow-sm border border-gray-100"
                 >
-                  <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ backgroundColor: '#A51C3020' }}>
-                    <Icon className="w-6 h-6" style={{ color: '#A51C30' }} />
+                  <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+                    <Icon className="w-6 h-6" style={{ color: 'var(--color-primary-600)' }} />
                   </div>
                   <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
                   {item.details.map((line, i) => (
@@ -172,7 +172,7 @@ export const Contact = () => {
               
               {isSubmitted ? (
                 <div className="text-center py-12">
-                  <CheckCircle className="w-16 h-16 mx-auto mb-4" style={{ color: '#A51C30' }} />
+                  <CheckCircle className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--color-primary-600)' }} />
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Message Sent!</h3>
                   <p className="text-gray-600">Thank you for reaching out. We will get back to you within 24-48 hours.</p>
                 </div>
@@ -185,7 +185,7 @@ export const Contact = () => {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#A51C30] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent"
                       placeholder="Your full name"
                     />
                   </div>
@@ -196,7 +196,7 @@ export const Contact = () => {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#A51C30] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -206,7 +206,7 @@ export const Contact = () => {
                       required
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#A51C30] focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent"
                     >
                       <option value="">Select a subject</option>
                       <option value="admissions">Admissions Inquiry</option>
@@ -223,7 +223,7 @@ export const Contact = () => {
                       rows={4}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#A51C30] focus:border-transparent resize-none"
+                      className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent resize-none"
                       placeholder="How can we help you?"
                     />
                   </div>
@@ -231,7 +231,7 @@ export const Contact = () => {
                     type="submit"
                     disabled={submitMutation.isPending}
                     className="w-full py-3 px-6 font-semibold text-white flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-50"
-                    style={{ backgroundColor: '#A51C30' }}
+                    style={{ backgroundColor: 'var(--color-primary-600)' }}
                   >
                     {submitMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                     {submitMutation.isPending ? 'Sending...' : 'Send Message'}
@@ -251,16 +251,16 @@ export const Contact = () => {
                 {departmentContacts.map((dept) => (
                   <div
                     key={dept.name}
-                    className="p-4 border border-gray-200 hover:border-[#A51C30] transition-colors"
+                    className="p-4 border border-gray-200 hover:border-primary-600 transition-colors"
                   >
                     <h4 className="font-semibold text-gray-900 mb-1">{dept.name}</h4>
                     <div className="text-sm text-gray-600 space-y-1">
                       <p className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" style={{ color: '#A51C30' }} />
+                        <Mail className="w-4 h-4" style={{ color: 'var(--color-primary-600)' }} />
                         {dept.email}
                       </p>
                       <p className="flex items-center gap-2">
-                        <Phone className="w-4 h-4" style={{ color: '#A51C30' }} />
+                        <Phone className="w-4 h-4" style={{ color: 'var(--color-primary-600)' }} />
                         {dept.phone}
                       </p>
                     </div>

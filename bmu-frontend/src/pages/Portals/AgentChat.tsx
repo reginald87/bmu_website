@@ -267,7 +267,7 @@ export const AgentChat = () => {
                 placeholder="Search conversations..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-[#A51C30]"
+                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-primary-600"
               />
             </div>
 
@@ -294,7 +294,7 @@ export const AgentChat = () => {
                       key={opt.value}
                       onClick={() => { setStatusFilter(opt.value); setFilterOpen(false); }}
                       className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition ${
-                        statusFilter === opt.value ? 'bg-[#A51C30]/5 text-[#A51C30] font-medium' : 'text-gray-700'
+                        statusFilter === opt.value ? 'bg-primary-600/5 text-primary-600 font-medium' : 'text-gray-700'
                       }`}
                     >
                       {opt.label}
@@ -309,7 +309,7 @@ export const AgentChat = () => {
           <div className="flex-1 overflow-y-auto">
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="w-6 h-6 border-2 border-[#A51C30] border-t-transparent rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
               </div>
             ) : filteredConversations.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
@@ -322,13 +322,13 @@ export const AgentChat = () => {
                   key={conv.id}
                   onClick={() => handleSelectConversation(conv)}
                   className={`w-full text-left p-4 border-b border-gray-100 hover:bg-gray-50 transition ${
-                    selectedConv?.id === conv.id ? 'bg-[#A51C30]/5 border-l-2 border-l-[#A51C30]' : ''
+                    selectedConv?.id === conv.id ? 'bg-primary-600/5 border-l-2 border-l-primary-600' : ''
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2 mb-1">
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-8 h-8 rounded-full bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xs font-bold text-[#A51C30]">
+                      <div className="w-8 h-8 rounded-full bg-primary-600/10 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs font-bold text-primary-600">
                           {(conv.visitor_name || 'V')[0].toUpperCase()}
                         </span>
                       </div>
@@ -382,7 +382,7 @@ export const AgentChat = () => {
               {/* Chat header */}
               <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 bg-gray-50">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-[#A51C30] flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-full bg-primary-600 flex items-center justify-center">
                     <span className="text-sm font-bold text-white">
                       {(selectedConv.visitor_name || 'V')[0].toUpperCase()}
                     </span>
@@ -457,7 +457,7 @@ export const AgentChat = () => {
                               isAgent ? 'rounded-2xl rounded-br-md' : 'rounded-2xl rounded-bl-md'
                             }`}
                             style={{
-                              backgroundColor: isAgent ? '#A51C30' : msg.role === 'bot' ? '#fff' : '#e0d5c8',
+                              backgroundColor: isAgent ? 'var(--color-primary-600)' : msg.role === 'bot' ? '#fff' : '#e0d5c8',
                               color: isAgent ? '#fff' : '#1a1a1a',
                             }}
                           >
@@ -468,7 +468,7 @@ export const AgentChat = () => {
                           </div>
                         </div>
                         {isAgent && (
-                          <div className="w-7 h-7 rounded-full bg-[#A51C30] flex items-center justify-center ml-2 flex-shrink-0 self-end">
+                          <div className="w-7 h-7 rounded-full bg-primary-600 flex items-center justify-center ml-2 flex-shrink-0 self-end">
                             <span className="text-xs font-bold text-white">A</span>
                           </div>
                         )}
@@ -501,12 +501,12 @@ export const AgentChat = () => {
                       }
                     }}
                     disabled={selectedConv.status === 'ended' || isSending}
-                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-[#A51C30] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-primary-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
                   <button
                     onClick={handleSend} aria-label="Send message"
                     disabled={!inputText.trim() || isSending || selectedConv.status === 'ended'}
-                    className="w-10 h-10 rounded-full bg-[#A51C30] text-white flex items-center justify-center hover:bg-[#8a1725] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-4 h-4" />
                   </button>

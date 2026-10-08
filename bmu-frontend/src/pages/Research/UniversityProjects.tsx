@@ -14,11 +14,11 @@ import {
 import { useUniversityProjects } from '../../services/apiHooks';
 
 const categoryMeta: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  infrastructure: { label: 'Infrastructure', icon: Building2, color: '#1E1E1E' },
-  research: { label: 'Research', icon: Microscope, color: '#A51C30' },
-  community: { label: 'Community & Outreach', icon: HeartHandshake, color: '#A51C30' },
-  technology: { label: 'Technology & Digital', icon: Cpu, color: '#1E1E1E' },
-  academic: { label: 'Academic & Student', icon: GraduationCap, color: '#A51C30' },
+  infrastructure: { label: 'Infrastructure', icon: Building2, color: 'var(--color-ink-900)' },
+  research: { label: 'Research', icon: Microscope, color: 'var(--color-primary-600)' },
+  community: { label: 'Community & Outreach', icon: HeartHandshake, color: 'var(--color-primary-600)' },
+  technology: { label: 'Technology & Digital', icon: Cpu, color: 'var(--color-ink-900)' },
+  academic: { label: 'Academic & Student', icon: GraduationCap, color: 'var(--color-primary-600)' },
 };
 
 const statusConfig: Record<string, { label: string; color: string }> = {
@@ -49,7 +49,7 @@ export const UniversityProjects = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -64,11 +64,11 @@ export const UniversityProjects = () => {
               <span className="text-white font-medium">University Projects</span>
             </div>
             <div className="flex items-center gap-3 mb-4">
-              <Briefcase className="w-8 h-8 text-[#A51C30]" />
-              <span className="text-small font-semibold text-[#A51C30] uppercase tracking-wide">Building a Legacy</span>
+              <Briefcase className="w-8 h-8 text-primary-600" />
+              <span className="text-small font-semibold text-primary-600 uppercase tracking-wide">Building a Legacy</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              University <span className="text-[#A51C30]">Projects</span>
+              University <span className="text-primary-600">Projects</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               From state-of-the-art teaching hospitals and smart campuses to community outreach and
@@ -92,8 +92,8 @@ export const UniversityProjects = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}
@@ -113,7 +113,7 @@ export const UniversityProjects = () => {
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featured.slice(0, 2).map((project, index) => {
-                const meta = categoryMeta[project.category] || { label: project.category, icon: Briefcase, color: '#1E1E1E' };
+                const meta = categoryMeta[project.category] || { label: project.category, icon: Briefcase, color: 'var(--color-ink-900)' };
                 const MetaIcon = meta.icon;
                 const status = statusConfig[project.status] || statusConfig.ongoing;
                 return (
@@ -136,7 +136,7 @@ export const UniversityProjects = () => {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-[#1E1E1E]">
+                          <div className="w-full h-full flex items-center justify-center bg-ink-900">
                             <MetaIcon className="w-12 h-12 text-white/60" />
                           </div>
                         )}
@@ -156,7 +156,7 @@ export const UniversityProjects = () => {
                         <p className="text-body text-gray-600 mb-4 line-clamp-2">{project.description}</p>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-gray-500">{project.year ? `Since ${project.year}` : project.lead_unit}</span>
-                          <span className="inline-flex items-center gap-1 text-sm font-medium text-[#A51C30] transition group-hover:gap-2">
+                          <span className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 transition group-hover:gap-2">
                             View Project <ArrowRight className="w-4 h-4" />
                           </span>
                         </div>
@@ -182,14 +182,14 @@ export const UniversityProjects = () => {
 
           {isLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-[#A51C30]" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
             </div>
           ) : projects.length === 0 ? (
             <p className="text-center text-gray-500">No university projects found.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projects.map((project, index) => {
-                const meta = categoryMeta[project.category] || { label: project.category, icon: Briefcase, color: '#1E1E1E' };
+                const meta = categoryMeta[project.category] || { label: project.category, icon: Briefcase, color: 'var(--color-ink-900)' };
                 const MetaIcon = meta.icon;
                 const status = statusConfig[project.status] || statusConfig.ongoing;
                 return (
@@ -212,7 +212,7 @@ export const UniversityProjects = () => {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-[#1E1E1E]">
+                          <div className="w-full h-full flex items-center justify-center bg-ink-900">
                             <MetaIcon className="w-12 h-12 text-white/60" />
                           </div>
                         )}
@@ -231,7 +231,7 @@ export const UniversityProjects = () => {
                         <p className="text-body text-gray-600 mb-4 line-clamp-3">{project.description}</p>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-gray-500">{project.year ? `Since ${project.year}` : project.lead_unit}</span>
-                          <span className="inline-flex items-center gap-1 text-sm font-medium text-[#A51C30] transition group-hover:gap-2">
+                          <span className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 transition group-hover:gap-2">
                             View Project <ArrowRight className="w-4 h-4" />
                           </span>
                         </div>

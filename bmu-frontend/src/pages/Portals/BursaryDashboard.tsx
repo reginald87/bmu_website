@@ -77,10 +77,10 @@ export const BursaryDashboard = () => {
   }
 
   const stats = [
-    { label: 'Pending Verifications', value: data?.pending_verifications ?? 0, icon: Search, color: '#A51C30' },
-    { label: 'Total Collections', value: `₦${(data?.total_collections ?? 0).toLocaleString()}`, icon: DollarSign, color: '#1E1E1E' },
-    { label: 'Defaulters', value: data?.defaulters_count ?? 0, icon: AlertCircle, color: '#A51C30' },
-    { label: 'Pending Scholarships', value: data?.pending_scholarships ?? 0, icon: Shield, color: '#1E1E1E' },
+    { label: 'Pending Verifications', value: data?.pending_verifications ?? 0, icon: Search, color: 'var(--color-primary-600)' },
+    { label: 'Total Collections', value: `₦${(data?.total_collections ?? 0).toLocaleString()}`, icon: DollarSign, color: 'var(--color-ink-900)' },
+    { label: 'Defaulters', value: data?.defaulters_count ?? 0, icon: AlertCircle, color: 'var(--color-primary-600)' },
+    { label: 'Pending Scholarships', value: data?.pending_scholarships ?? 0, icon: Shield, color: 'var(--color-ink-900)' },
   ];
 
   return (
@@ -118,15 +118,15 @@ export const BursaryDashboard = () => {
             { title: 'Financial Reports', desc: 'Revenue and collection reports', link: '#', icon: Download },
           ].map((item, i) => (
             <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-              <Link to={item.link} className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-[#1E1E1E] transition group">
-                <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1E1E]/20 transition">
-                  <item.icon className="w-6 h-6 text-[#1E1E1E]" />
+              <Link to={item.link} className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-ink-900 transition group">
+                <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ink-900/20 transition">
+                  <item.icon className="w-6 h-6 text-ink-900" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 group-hover:text-[#1E1E1E] transition">{item.title}</h3>
+                  <h3 className="font-semibold text-gray-900 group-hover:text-ink-900 transition">{item.title}</h3>
                   <p className="text-sm text-gray-500">{item.desc}</p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#1E1E1E] transition" />
+                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-ink-900 transition" />
               </Link>
             </motion.div>
           ))}

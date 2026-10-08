@@ -33,10 +33,10 @@ export const RegistrarDashboard = () => {
   }
 
   const stats = [
-    { label: 'Enrolled Students', value: data?.enrolled_students?.toLocaleString() ?? 0, icon: Users, color: '#A51C30' },
-    { label: 'Active Sessions', value: data?.active_sessions ?? 0, icon: Calendar, color: '#1E1E1E' },
-    { label: 'Pending Registrations', value: data?.pending_registrations ?? 0, icon: ClipboardList, color: '#A51C30' },
-    { label: 'Completed Registrations', value: data?.completed_registrations ?? 0, icon: FileText, color: '#1E1E1E' },
+    { label: 'Enrolled Students', value: data?.enrolled_students?.toLocaleString() ?? 0, icon: Users, color: 'var(--color-primary-600)' },
+    { label: 'Active Sessions', value: data?.active_sessions ?? 0, icon: Calendar, color: 'var(--color-ink-900)' },
+    { label: 'Pending Registrations', value: data?.pending_registrations ?? 0, icon: ClipboardList, color: 'var(--color-primary-600)' },
+    { label: 'Completed Registrations', value: data?.completed_registrations ?? 0, icon: FileText, color: 'var(--color-ink-900)' },
   ];
 
   return (
@@ -65,15 +65,15 @@ export const RegistrarDashboard = () => {
             { title: 'Graduation List', desc: 'Review eligible graduates', link: '#', icon: Award },
           ].map((item, i) => (
             <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-              <Link to={item.link} className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-[#1E1E1E] transition group">
-                <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1E1E]/20 transition">
-                  <item.icon className="w-6 h-6 text-[#1E1E1E]" />
+              <Link to={item.link} className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-ink-900 transition group">
+                <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ink-900/20 transition">
+                  <item.icon className="w-6 h-6 text-ink-900" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 group-hover:text-[#1E1E1E] transition">{item.title}</h3>
+                  <h3 className="font-semibold text-gray-900 group-hover:text-ink-900 transition">{item.title}</h3>
                   <p className="text-sm text-gray-500">{item.desc}</p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#1E1E1E] transition" />
+                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-ink-900 transition" />
               </Link>
             </motion.div>
           ))}
@@ -86,8 +86,8 @@ export const RegistrarDashboard = () => {
           {data?.programs.map((p, i) => (
             <div key={p.name} className={`flex items-center justify-between p-4 ${i !== (data?.programs.length ?? 0) - 1 ? 'border-b' : ''}`}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#A51C30]/10 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-[#A51C30]" />
+                <div className="w-10 h-10 bg-primary-600/10 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-primary-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 text-sm">{p.name}</h3>

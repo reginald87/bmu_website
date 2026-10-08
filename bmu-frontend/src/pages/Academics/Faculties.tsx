@@ -27,12 +27,12 @@ interface CollegeGroup {
   faculties: FacultyData[];
 }
 
-const standaloneColor = '#1E1E1E';
+const standaloneColor = 'var(--color-ink-900)';
 
 const fallbackColleges: CollegeGroup[] = [
   {
     id: 1, name: 'College of Medicine', slug: 'college-of-medicine',
-    color: '#1E1E1E',
+    color: 'var(--color-ink-900)',
     faculties: [
       { id: 1, name: 'Faculty of Basic Medical Sciences', slug: 'faculty-of-basic-medical-sciences', code: 'FBMS', description: 'Foundational medical sciences — human anatomy, human physiology and biochemistry.', department_count: 3, college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: 'Dr. Theodore Allison', is_standalone: false },
       { id: 2, name: 'Faculty of Clinical Sciences', slug: 'faculty-of-clinical-sciences', code: 'FCLS', description: 'Clinical education culminating in the six-year MBBS degree.', department_count: 1, college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: 'Prof. Isaac J. Abasi', is_standalone: false },
@@ -107,7 +107,7 @@ export const Faculties = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#1E1E1E] animate-spin" />
+        <Loader2 className="w-12 h-12 text-ink-900 animate-spin" />
       </div>
     );
   }
@@ -122,7 +122,7 @@ export const Faculties = () => {
         <meta name="description" content="Discover our world-class academic faculties dedicated to excellence in healthcare education." />
       </Helmet>
 
-      <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
+      <section className="relative pt-[180px] pb-20 overflow-hidden bg-ink-900">
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -136,7 +136,7 @@ export const Faculties = () => {
               <span className="text-white font-medium">Faculties</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Our <span className="text-[#A51C30]">Faculties</span>
+              Our <span className="text-primary-600">Faculties</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               Explore our academic faculties — both within colleges and as standalone units — each dedicated to excellence in healthcare education and research.
@@ -164,7 +164,7 @@ export const Faculties = () => {
                   <div className="flex items-center gap-3 mb-8">
                     <div
                       className="w-12 h-12 flex items-center justify-center"
-                      style={{ backgroundColor: college.color || '#1E1E1E' }}
+                      style={{ backgroundColor: college.color || 'var(--color-ink-900)' }}
                     >
                       <School className="w-6 h-6 text-white" />
                     </div>
@@ -172,7 +172,7 @@ export const Faculties = () => {
                       <h2 className="text-headline text-gray-900">{college.name}</h2>
                       <Link
                         to={`/colleges/${college.slug}`}
-                        className="text-small text-[#1E1E1E] hover:underline"
+                        className="text-small text-ink-900 hover:underline"
                       >
                         View College Details →
                       </Link>
@@ -183,7 +183,7 @@ export const Faculties = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {college.faculties.map((faculty, facultyIndex) => {
                         const Icon = iconMap[faculty.name] || BookOpen;
-                        const color = college.color || '#1E1E1E';
+                        const color = college.color || 'var(--color-ink-900)';
                         return (
                           <motion.div
                             key={faculty.id}
@@ -218,7 +218,7 @@ export const Faculties = () => {
                                 </span>
                                 <Link
                                   to={`/academics/faculties/${faculty.slug}`}
-                                  className="inline-flex items-center gap-2 text-[#1E1E1E] font-medium hover:gap-3 transition-all"
+                                  className="inline-flex items-center gap-2 text-ink-900 font-medium hover:gap-3 transition-all"
                                 >
                                   Explore
                                   <ArrowRight className="w-4 h-4" />
@@ -293,7 +293,7 @@ export const Faculties = () => {
                               </span>
                               <Link
                                 to={`/academics/faculties/${faculty.slug}`}
-                                className="inline-flex items-center gap-2 text-[#1E1E1E] font-medium hover:gap-3 transition-all"
+                                className="inline-flex items-center gap-2 text-ink-900 font-medium hover:gap-3 transition-all"
                               >
                                 Explore
                                 <ArrowRight className="w-4 h-4" />
@@ -328,8 +328,8 @@ export const Faculties = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}

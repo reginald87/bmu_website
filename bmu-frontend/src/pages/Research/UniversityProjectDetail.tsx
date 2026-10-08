@@ -64,7 +64,7 @@ export const UniversityProjectDetail = () => {
         <div className="container-custom text-center py-20">
           <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <p className="text-gray-500 text-lg">Project not found.</p>
-          <Link to="/research/university-projects" className="text-[#A51C30] hover:underline mt-4 inline-block">
+          <Link to="/research/university-projects" className="text-primary-600 hover:underline mt-4 inline-block">
             Back to University Projects
           </Link>
         </div>
@@ -93,11 +93,11 @@ export const UniversityProjectDetail = () => {
         <div className="container-custom">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">
-            <Link to="/" className="hover:text-[#A51C30] transition">Home</Link>
+            <Link to="/" className="hover:text-primary-600 transition">Home</Link>
             <span>/</span>
-            <Link to="/research" className="hover:text-[#A51C30] transition">Research</Link>
+            <Link to="/research" className="hover:text-primary-600 transition">Research</Link>
             <span>/</span>
-            <Link to="/research/university-projects" className="hover:text-[#A51C30] transition">University Projects</Link>
+            <Link to="/research/university-projects" className="hover:text-primary-600 transition">University Projects</Link>
             <span>/</span>
             <span className="text-gray-900 font-medium truncate max-w-[200px]">{project.title}</span>
           </div>
@@ -105,7 +105,7 @@ export const UniversityProjectDetail = () => {
           {/* Back link */}
           <Link
             to="/research/university-projects"
-            className="inline-flex items-center gap-2 text-sm text-[#A51C30] hover:underline mb-6"
+            className="inline-flex items-center gap-2 text-sm text-primary-600 hover:underline mb-6"
           >
             <ArrowLeft size={16} /> Back to University Projects
           </Link>
@@ -117,7 +117,7 @@ export const UniversityProjectDetail = () => {
                 <StatusIcon size={14} />
                 {status.label}
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold bg-[#1E1E1E15] text-[#1E1E1E]">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold bg-ink-900/8 text-ink-900">
                 {categoryLabels[project.category] || project.category}
               </span>
               <span className="text-sm text-gray-500">{project.year ? `Since ${project.year}` : project.lead_unit}</span>
@@ -129,7 +129,7 @@ export const UniversityProjectDetail = () => {
           {/* Cover image / video */}
           {embedUrl ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-              <div className="relative aspect-video bg-[#1E1E1E] mb-10">
+              <div className="relative aspect-video bg-ink-900 mb-10">
                 <iframe
                   src={embedUrl}
                   title={project.title}
@@ -191,7 +191,7 @@ export const UniversityProjectDetail = () => {
                 {project.highlights.map((highlight, i) => (
                   <div key={i} className="p-5 border border-gray-200">
                     <div className="flex items-start gap-3">
-                      <ListChecks className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+                      <ListChecks className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                       <p className="text-gray-700">{highlight}</p>
                     </div>
                   </div>

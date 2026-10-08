@@ -59,7 +59,7 @@ export const Sustainability = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-[#A51C30]" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
       </div>
     );
   }
@@ -72,7 +72,7 @@ export const Sustainability = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#A51C30' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-primary-600)' }}>
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -109,8 +109,8 @@ export const Sustainability = () => {
                   transition={{ delay: index * 0.1 }}
                   className="text-center"
                 >
-                  <Icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
-                  <div className="text-stat text-[#1E1E1E] mb-1">{value.toLocaleString()}</div>
+                  <Icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                  <div className="text-stat text-ink-900 mb-1">{value.toLocaleString()}</div>
                   <p className="text-gray-600 text-body">{statLabels[key] ?? key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</p>
                 </motion.div>
               );
@@ -131,7 +131,7 @@ export const Sustainability = () => {
 
           <div className="relative">
             {/* Timeline Line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#A51C30]/30 hidden lg:block" />
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-primary-600/30 hidden lg:block" />
 
             <div className="space-y-12">
               {carbonTargets.map((target, index) => (
@@ -145,12 +145,12 @@ export const Sustainability = () => {
                 >
                   <div className={`flex-1 ${index % 2 === 0 ? 'lg:text-right' : 'lg:text-left'}`}>
                     <div className="bg-white p-6 shadow-sm border border-gray-100 inline-block">
-                      <div className="text-stat-sm text-[#1E1E1E]">{target.year}</div>
+                      <div className="text-stat-sm text-ink-900">{target.year}</div>
                       <p className="text-gray-600">{target.reduction} reduction target</p>
                     </div>
                   </div>
-                  <div className="w-12 h-12 bg-[#A51C30] flex items-center justify-center flex-shrink-0 z-10">
-                    <Target className="w-6 h-6 text-[#1E1E1E]" />
+                  <div className="w-12 h-12 bg-primary-600 flex items-center justify-center flex-shrink-0 z-10">
+                    <Target className="w-6 h-6 text-ink-900" />
                   </div>
                   <div className="flex-1" />
                 </motion.div>
@@ -193,8 +193,8 @@ export const Sustainability = () => {
                     transition={{ delay: idx * 0.1 }}
                     className="flex items-start gap-3 p-4 bg-white shadow-sm border border-gray-100"
                   >
-                    <div className="w-10 h-10 bg-[#A51C30]/20 flex items-center justify-center flex-shrink-0">
-                      <Target className="w-5 h-5 text-[#A51C30]" />
+                    <div className="w-10 h-10 bg-primary-600/20 flex items-center justify-center flex-shrink-0">
+                      <Target className="w-5 h-5 text-primary-600" />
                     </div>
                     <span className="text-body text-gray-700 pt-2">{obj}</span>
                   </motion.li>
@@ -217,7 +217,7 @@ export const Sustainability = () => {
               <ul className="space-y-3">
                 {researchAreas.map((area, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                     <span className="text-body text-gray-700">{area}</span>
                   </li>
                 ))}
@@ -237,8 +237,8 @@ export const Sustainability = () => {
                       transition={{ delay: idx * 0.1 }}
                       className="flex items-center gap-4 p-4 bg-white shadow-sm border border-gray-100"
                     >
-                      <div className="w-12 h-12 bg-[#A51C30]/20 flex items-center justify-center flex-shrink-0">
-                        <Award className="w-6 h-6 text-[#A51C30]" />
+                      <div className="w-12 h-12 bg-primary-600/20 flex items-center justify-center flex-shrink-0">
+                        <Award className="w-6 h-6 text-primary-600" />
                       </div>
                       <p className="text-body text-gray-700">{achievement}</p>
                     </motion.div>
@@ -272,8 +272,8 @@ export const Sustainability = () => {
                   transition={{ delay: idx * 0.1 }}
                   className="bg-white p-6 shadow-sm border border-gray-100 text-center"
                 >
-                  <div className="w-14 h-14 bg-[#A51C30]/20 flex items-center justify-center mx-auto mb-4">
-                    <Users className="w-7 h-7 text-[#A51C30]" />
+                  <div className="w-14 h-14 bg-primary-600/20 flex items-center justify-center mx-auto mb-4">
+                    <Users className="w-7 h-7 text-primary-600" />
                   </div>
                   <p className="text-body text-gray-700 font-medium">{partner}</p>
                 </motion.div>
@@ -284,7 +284,7 @@ export const Sustainability = () => {
       )}
 
       {/* Get Involved CTA */}
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom text-center">
           <h2 className="text-headline text-white mb-4">Join Our Green Mission</h2>
           <p className="text-lead text-white/80 max-w-2xl mx-auto mb-8">
@@ -293,13 +293,13 @@ export const Sustainability = () => {
           <div className="flex flex-wrap justify-center gap-4">
             <Link 
               to="/contact"
-              className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+              className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
             >
               Partner With Us
             </Link>
             <Link 
               to="/research/funding"
-              className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+              className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
             >
               Research Grants
             </Link>

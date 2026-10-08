@@ -73,7 +73,7 @@ export const QRAttendanceScanner = () => {
               </div>
 
               {!scanning && !result && (
-                <button onClick={startScanning} className="mt-4 px-6 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition flex items-center gap-2 mx-auto">
+                <button onClick={startScanning} className="mt-4 px-6 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition flex items-center gap-2 mx-auto">
                   <Camera className="w-5 h-5" /> Start Scanning
                 </button>
               )}
@@ -93,7 +93,7 @@ export const QRAttendanceScanner = () => {
                     </span>
                   </div>
                   <p className={`text-sm ${result.success ? 'text-green-700' : 'text-red-700'}`}>{result.message}</p>
-                  <button onClick={() => setResult(null)} className="mt-3 text-sm text-[#1E1E1E] underline">
+                  <button onClick={() => setResult(null)} className="mt-3 text-sm text-ink-900 underline">
                     Scan Again
                   </button>
                 </div>

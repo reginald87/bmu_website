@@ -36,12 +36,12 @@ export const VCDashboard = () => {
   }
 
   const stats = [
-    { label: 'Total Students', value: data?.total_students?.toLocaleString() ?? 0, icon: Users, color: '#A51C30' },
-    { label: 'Faculty', value: data?.total_faculty ?? 0, icon: GraduationCap, color: '#1E1E1E' },
-    { label: 'Staff', value: data?.total_staff ?? 0, icon: Users, color: '#A51C30' },
-    { label: 'Programs', value: data?.total_programs ?? 0, icon: BookOpen, color: '#1E1E1E' },
-    { label: 'Avg GPA', value: data?.average_gpa?.toFixed(2) ?? '—', icon: TrendingUp, color: '#A51C30' },
-    { label: 'Graduation Rate', value: data?.graduation_rate ? `${data.graduation_rate}%` : '—', icon: Award, color: '#1E1E1E' },
+    { label: 'Total Students', value: data?.total_students?.toLocaleString() ?? 0, icon: Users, color: 'var(--color-primary-600)' },
+    { label: 'Faculty', value: data?.total_faculty ?? 0, icon: GraduationCap, color: 'var(--color-ink-900)' },
+    { label: 'Staff', value: data?.total_staff ?? 0, icon: Users, color: 'var(--color-primary-600)' },
+    { label: 'Programs', value: data?.total_programs ?? 0, icon: BookOpen, color: 'var(--color-ink-900)' },
+    { label: 'Avg GPA', value: data?.average_gpa?.toFixed(2) ?? '—', icon: TrendingUp, color: 'var(--color-primary-600)' },
+    { label: 'Graduation Rate', value: data?.graduation_rate ? `${data.graduation_rate}%` : '—', icon: Award, color: 'var(--color-ink-900)' },
   ];
 
   return (
@@ -62,7 +62,7 @@ export const VCDashboard = () => {
         { label: 'New Session Begins', date: 'Sep 15' },
       ]}
       sidebar={
-        <div className="bg-[#1E1E1E] p-4 text-white">
+        <div className="bg-ink-900 p-4 text-white">
           <h2 className="font-bold mb-2">Quick Stats</h2>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
@@ -87,15 +87,15 @@ export const VCDashboard = () => {
             { title: 'Defaulter Report', desc: 'Fee defaulters overview', link: '/portals/admin/defaulter-report', icon: AlertTriangle },
           ].map((item, i) => (
             <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-              <Link to={item.link} className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-[#1E1E1E] transition group">
-                <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1E1E]/20 transition">
-                  <item.icon className="w-6 h-6 text-[#1E1E1E]" />
+              <Link to={item.link} className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-ink-900 transition group">
+                <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ink-900/20 transition">
+                  <item.icon className="w-6 h-6 text-ink-900" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 group-hover:text-[#1E1E1E] transition">{item.title}</h3>
+                  <h3 className="font-semibold text-gray-900 group-hover:text-ink-900 transition">{item.title}</h3>
                   <p className="text-sm text-gray-500">{item.desc}</p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#1E1E1E] transition" />
+                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-ink-900 transition" />
               </Link>
             </motion.div>
           ))}
@@ -108,8 +108,8 @@ export const VCDashboard = () => {
           {data?.colleges.map((c, i) => (
             <div key={c.name} className={`flex items-center justify-between p-4 ${i !== (data?.colleges.length ?? 0) - 1 ? 'border-b' : ''}`}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#A51C30]/10 flex items-center justify-center">
-                  <Globe className="w-5 h-5 text-[#A51C30]" />
+                <div className="w-10 h-10 bg-primary-600/10 flex items-center justify-center">
+                  <Globe className="w-5 h-5 text-primary-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 text-sm">{c.name}</h3>

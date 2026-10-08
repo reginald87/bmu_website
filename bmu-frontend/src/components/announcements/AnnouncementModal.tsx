@@ -92,7 +92,7 @@ export const AnnouncementModal = () => {
             <button
               onClick={handleClose}
               aria-label="Close announcement"
-              className="absolute top-4 right-4 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-md hover:bg-[#A51C30] hover:text-white transition-colors"
+              className="absolute top-4 right-4 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-md hover:bg-primary-600 hover:text-white transition-colors"
             >
               <X size={18} />
             </button>
@@ -107,14 +107,14 @@ export const AnnouncementModal = () => {
                   style={{ maxHeight: '42vh', minHeight: 180 }}
                 />
                 <div className="absolute bottom-4 left-6 flex items-center gap-2">
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#A51C30] text-white text-xs font-bold uppercase tracking-wider rounded-sm shadow-lg">
+                  <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-600 text-white text-xs font-bold uppercase tracking-wider rounded-sm shadow-lg">
                     <Icon size={14} />
                     {label}
                   </span>
                 </div>
               </div>
             ) : (
-              <div className="relative flex items-center justify-between px-6 pt-8 pb-6 bg-gradient-to-br from-[#A51C30] to-[#7e1424]">
+              <div className="relative flex items-center justify-between px-6 pt-8 pb-6 bg-gradient-to-br from-primary-600 to-primary-800">
                 <div className="flex items-center gap-3">
                   <span className="w-11 h-11 flex items-center justify-center rounded-full bg-white/15 text-white">
                     <Icon size={22} />
@@ -133,7 +133,7 @@ export const AnnouncementModal = () => {
             <div className="px-6 sm:px-8 py-6 overflow-y-auto max-h-[calc(90vh-42vh)]">
               <h2
                 id="announcement-title"
-                className="text-2xl font-bold text-[#1E1E1E] leading-snug mb-2"
+                className="text-2xl font-bold text-ink-900 leading-snug mb-2"
               >
                 {announcement.title}
               </h2>
@@ -156,7 +156,7 @@ export const AnnouncementModal = () => {
                     href={announcement.link_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 px-6 py-3 bg-[#A51C30] text-white text-sm font-semibold hover:bg-[#8a1828] transition-colors"
+                    className="group inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors"
                   >
                     {announcement.link_text || 'Learn More'}
                     <ArrowRight
@@ -167,7 +167,7 @@ export const AnnouncementModal = () => {
                 )}
                 <button
                   onClick={handleClose}
-                  className="px-4 py-3 text-sm font-medium text-gray-500 hover:text-[#A51C30] transition-colors"
+                  className="px-4 py-3 text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors"
                 >
                   Dismiss
                 </button>
@@ -175,7 +175,7 @@ export const AnnouncementModal = () => {
             </div>
 
             <div className="px-6 sm:px-8 py-3.5 border-t border-gray-100 bg-gray-50/70 flex items-center justify-between">
-              <p className="text-xs font-semibold text-[#A51C30] uppercase tracking-wider">
+              <p className="text-xs font-semibold text-primary-600 uppercase tracking-wider">
                 Bayelsa Medical University
               </p>
               <p className="text-[11px] text-gray-400">

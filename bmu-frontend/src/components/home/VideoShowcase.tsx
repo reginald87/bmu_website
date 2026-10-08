@@ -49,7 +49,7 @@ export const VideoShowcase = () => {
   };
 
   return (
-    <section className="py-24 bg-[#1E1E1E] text-white">
+    <section className="py-24 bg-ink-900 text-white">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,7 +58,7 @@ export const VideoShowcase = () => {
           transition={{ duration: 0.5 }}
           className="mb-14"
         >
-          <span className="text-sm font-bold tracking-[0.2em] uppercase text-[#A51C30]">
+          <span className="text-sm font-bold tracking-[0.2em] uppercase text-primary-600">
             Campus Life
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-4">
@@ -100,7 +100,7 @@ export const VideoShowcase = () => {
               )}
               {hasVideo && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 rounded-full bg-[#A51C30]/90 flex items-center justify-center hover:bg-[#A51C30] transition-colors group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-20 h-20 rounded-full bg-primary-600/90 flex items-center justify-center hover:bg-primary-600 transition-colors group-hover:scale-110 transition-transform duration-300">
                     <Play className="w-8 h-8 text-white ml-1" />
                   </div>
                 </div>

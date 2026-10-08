@@ -60,7 +60,7 @@ export const PublicDocuments = () => {
         <meta name="description" content="Access public documents, reports, and resources from Bayelsa Medical University." />
       </Helmet>
 
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -75,7 +75,7 @@ export const PublicDocuments = () => {
               <span className="text-white font-medium">Public Documents</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Public <span className="text-[#A51C30]">Documents</span>
+              Public <span className="text-primary-600">Documents</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               Access official university documents, reports, and resources for download.
@@ -90,7 +90,7 @@ export const PublicDocuments = () => {
             <div className="lg:col-span-2">
               {isLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-8 h-8 text-[#1E1E1E] animate-spin" />
+                  <Loader2 className="w-8 h-8 text-ink-900 animate-spin" />
                 </div>
               ) : documents.length === 0 ? (
                 <div className="text-center py-12">
@@ -107,10 +107,10 @@ export const PublicDocuments = () => {
                       className="bg-white shadow-sm p-6 transition"
                     >
                       <div className="flex items-start justify-between mb-4">
-                        <div className="p-3 bg-[#A51C30]/10">
-                          <FileText className="w-6 h-6 text-[#A51C30]" />
+                        <div className="p-3 bg-primary-600/10">
+                          <FileText className="w-6 h-6 text-primary-600" />
                         </div>
-                        <span className="text-xs font-medium text-[#A51C30] bg-[#A51C30]/10 px-3 py-1">
+                        <span className="text-xs font-medium text-primary-600 bg-primary-600/10 px-3 py-1">
                           {doc.category}
                         </span>
                       </div>
@@ -126,14 +126,14 @@ export const PublicDocuments = () => {
                       <div className="flex items-center gap-4">
                         <button
                           onClick={() => downloadPublicDocument(doc.id)}
-                          className="flex items-center gap-2 text-[#A51C30] font-medium hover:text-[#1E1E1E] transition"
+                          className="flex items-center gap-2 text-primary-600 font-medium hover:text-ink-900 transition"
                         >
                           <Download className="w-4 h-4" />
                           Download
                         </button>
                         <button
                           onClick={() => window.open(`/api/public/public-documents/${doc.id}/download?view=1`, '_blank')}
-                          className="flex items-center gap-2 text-gray-600 font-medium hover:text-[#1E1E1E] transition"
+                          className="flex items-center gap-2 text-gray-600 font-medium hover:text-ink-900 transition"
                         >
                           <ExternalLink className="w-4 h-4" />
                           View
@@ -151,7 +151,7 @@ export const PublicDocuments = () => {
                 <ul className="space-y-3">
                   {quickLinks.map((link) => (
                     <li key={link.to}>
-                      <Link to={link.to} className="flex items-center justify-between text-gray-600 hover:text-[#A51C30] transition">
+                      <Link to={link.to} className="flex items-center justify-between text-gray-600 hover:text-primary-600 transition">
                         <span>{link.label}</span>
                         <ChevronRight className="w-4 h-4" />
                       </Link>
@@ -160,7 +160,7 @@ export const PublicDocuments = () => {
                 </ul>
               </div>
 
-              <div className="bg-gradient-to-br from-[#A51C30] to-[#1E1E1E] shadow-sm p-6 text-white">
+              <div className="bg-gradient-to-br from-primary-600 to-ink-900 shadow-sm p-6 text-white">
                 <h3 className="font-semibold mb-2">Need a specific document?</h3>
                 <p className="text-white/80 text-sm mb-4">Can't find what you're looking for? Contact our office for assistance.</p>
                 <Link to="/contact" className="inline-flex items-center gap-2 text-white font-medium hover:underline">

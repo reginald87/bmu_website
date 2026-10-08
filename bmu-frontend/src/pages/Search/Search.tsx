@@ -59,7 +59,7 @@ export const Search = () => {
 
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] text-white">
+        <div className="bg-gradient-to-r from-ink-900 to-primary-600 text-white">
           <div className="container-custom py-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -102,7 +102,7 @@ export const Search = () => {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 text-sm font-medium transition ${
                   selectedCategory === cat
-                    ? 'bg-[#1E1E1E] text-white'
+                    ? 'bg-ink-900 text-white'
                     : 'bg-white text-gray-600 hover:bg-gray-100'
                 }`}
               >
@@ -142,7 +142,7 @@ export const Search = () => {
                     <button
                       key={term}
                       onClick={() => setSearchQuery(term)}
-                      className="px-4 py-2 bg-white text-gray-600 hover:text-[#1E1E1E] transition"
+                      className="px-4 py-2 bg-white text-gray-600 hover:text-ink-900 transition"
                     >
                       {term}
                     </button>
@@ -164,12 +164,12 @@ export const Search = () => {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="font-semibold text-gray-900 group-hover:text-[#1E1E1E] transition">
+                          <span className="font-semibold text-gray-900 group-hover:text-ink-900 transition">
                             {item.label}
                           </span>
                           <p className="text-sm text-gray-500">{item.desc}</p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#1E1E1E] transition" />
+                        <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-ink-900 transition" />
                       </div>
                     </Link>
                   ))}
@@ -196,8 +196,8 @@ export const Search = () => {
                         className="block p-6 bg-white shadow-sm transition group"
                       >
                         <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1E1E]/20 transition">
-                            <Icon className="w-6 h-6 text-[#1E1E1E]" />
+                          <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ink-900/20 transition">
+                            <Icon className="w-6 h-6 text-ink-900" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
@@ -205,13 +205,13 @@ export const Search = () => {
                                 {result.type}
                               </span>
                             </div>
-                            <h3 className="font-bold text-lg text-gray-900 group-hover:text-[#1E1E1E] transition line-clamp-1">
+                            <h3 className="font-bold text-lg text-gray-900 group-hover:text-ink-900 transition line-clamp-1">
                               {result.title}
                             </h3>
                             <p className="text-gray-600 mt-1 line-clamp-2">
                               {result.description}
                             </p>
-                            <div className="mt-3 flex items-center gap-2 text-sm text-[#1E1E1E]">
+                            <div className="mt-3 flex items-center gap-2 text-sm text-ink-900">
                               <span className="font-medium">View</span>
                               <ChevronRight className="w-4 h-4" />
                             </div>
@@ -237,13 +237,13 @@ export const Search = () => {
                 <div className="flex justify-center gap-3">
                   <button
                     onClick={clearSearch}
-                    className="px-4 py-2 text-[#1E1E1E] font-medium hover:bg-[#1E1E1E]/10 transition"
+                    className="px-4 py-2 text-ink-900 font-medium hover:bg-ink-900/10 transition"
                   >
                     Clear Search
                   </button>
                   <Link
                     to="/contact"
-                    className="px-4 py-2 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition"
+                    className="px-4 py-2 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
                   >
                     Contact Support
                   </Link>

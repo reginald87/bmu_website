@@ -43,7 +43,7 @@ export const FundedProjectDetail = () => {
         <div className="container-custom text-center py-20">
           <Building2 className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <p className="text-gray-500 text-lg">Project not found.</p>
-          <Link to="/impact/external-partners" className="text-[#A51C30] hover:underline mt-4 inline-block">
+          <Link to="/impact/external-partners" className="text-primary-600 hover:underline mt-4 inline-block">
             Back to External Partners
           </Link>
         </div>
@@ -74,11 +74,11 @@ export const FundedProjectDetail = () => {
         <div className="container-custom">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">
-            <Link to="/" className="hover:text-[#A51C30] transition">Home</Link>
+            <Link to="/" className="hover:text-primary-600 transition">Home</Link>
             <span>/</span>
-            <Link to="/impact" className="hover:text-[#A51C30] transition">Impact</Link>
+            <Link to="/impact" className="hover:text-primary-600 transition">Impact</Link>
             <span>/</span>
-            <Link to="/impact/external-partners" className="hover:text-[#A51C30] transition">External Partners</Link>
+            <Link to="/impact/external-partners" className="hover:text-primary-600 transition">External Partners</Link>
             <span>/</span>
             <span className="text-gray-900 font-medium truncate max-w-[200px]">{project.title}</span>
           </div>
@@ -86,7 +86,7 @@ export const FundedProjectDetail = () => {
           {/* Back link */}
           <Link
             to="/impact/external-partners"
-            className="inline-flex items-center gap-2 text-sm text-[#A51C30] hover:underline mb-6"
+            className="inline-flex items-center gap-2 text-sm text-primary-600 hover:underline mb-6"
           >
             <ArrowLeft size={16} /> Back to External Partners
           </Link>

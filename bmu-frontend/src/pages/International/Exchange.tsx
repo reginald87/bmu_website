@@ -61,7 +61,7 @@ export const Exchange = () => {
   </Helmet>
 
   {/* Hero */}
-  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
   <div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
   }} />
@@ -74,7 +74,7 @@ export const Exchange = () => {
   <span className="text-white font-medium">Exchange Programs</span>
   </div>
   <h1 className="text-display text-white mb-6">
-  Student <span className="text-[#A51C30]">Exchange</span>
+  Student <span className="text-primary-600">Exchange</span>
   </h1>
   <p className="text-lead text-white/80 max-w-2xl">
   Broaden your horizons through study abroad opportunities at our partner institutions 
@@ -96,7 +96,7 @@ export const Exchange = () => {
 
   {isLoading ? (
   <div className="flex justify-center py-20">
-  <Loader2 className="w-12 h-12 text-[#A51C30] animate-spin" />
+  <Loader2 className="w-12 h-12 text-primary-600 animate-spin" />
   </div>
   ) : (
   <div className="space-y-8">
@@ -112,8 +112,8 @@ export const Exchange = () => {
   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
   <div className="lg:col-span-2">
   <div className="flex items-center gap-3 mb-4">
-  <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center">
-  <Plane className="w-6 h-6 text-[#A51C30]" />
+  <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center">
+  <Plane className="w-6 h-6 text-primary-600" />
   </div>
   <h3 className="text-title text-gray-900">{program.title}</h3>
   </div>
@@ -131,25 +131,25 @@ export const Exchange = () => {
 
   <div className="flex flex-wrap gap-4 mb-6">
   <div className="flex items-center gap-2 px-4 py-2 bg-gray-100">
-  <GraduationCap className="w-4 h-4 text-[#A51C30]" />
+  <GraduationCap className="w-4 h-4 text-primary-600" />
   <span className="text-small">{program.partner.name}</span>
   </div>
   <div className="flex items-center gap-2 px-4 py-2 bg-gray-100">
-  <MapPin className="w-4 h-4 text-[#A51C30]" />
+  <MapPin className="w-4 h-4 text-primary-600" />
   <span className="text-small">{program.partner.country}</span>
   </div>
   <div className="flex items-center gap-2 px-4 py-2 bg-gray-100">
-  <Clock className="w-4 h-4 text-[#A51C30]" />
+  <Clock className="w-4 h-4 text-primary-600" />
   <span className="text-small">{program.duration_weeks} weeks</span>
   </div>
   <div className="flex items-center gap-2 px-4 py-2 bg-gray-100">
-  <Users className="w-4 h-4 text-[#A51C30]" />
+  <Users className="w-4 h-4 text-primary-600" />
   <span className="text-small">{program.available_slots} / {program.total_slots} slots available</span>
   </div>
   </div>
 
   {program.application_deadline && (
-  <div className="flex items-center gap-2 mb-4 text-sm text-[#A51C30] font-medium">
+  <div className="flex items-center gap-2 mb-4 text-sm text-primary-600 font-medium">
   <Calendar className="w-4 h-4" />
   <span>Apply by: {new Date(program.application_deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
   </div>
@@ -170,7 +170,7 @@ export const Exchange = () => {
   <ul className="space-y-3 mb-6">
   {program.benefits.map((benefit, idx) => (
   <li key={idx} className="flex items-start gap-2">
-  <CheckCircle className="w-4 h-4 text-[#A51C30] flex-shrink-0 mt-0.5" />
+  <CheckCircle className="w-4 h-4 text-primary-600 flex-shrink-0 mt-0.5" />
   <span className="text-body text-gray-600">{benefit}</span>
   </li>
   ))}
@@ -221,7 +221,7 @@ export const Exchange = () => {
   className="bg-white p-6 shadow-sm border border-gray-100"
   >
   <div className="flex items-center gap-4 mb-4">
-  <div className="w-12 h-12 bg-[#1E1E1E] flex items-center justify-center text-white font-bold">
+  <div className="w-12 h-12 bg-ink-900 flex items-center justify-center text-white font-bold">
   {item.step}
   </div>
   <h3 className="text-title text-gray-900">{item.title}</h3>
@@ -249,7 +249,7 @@ export const Exchange = () => {
   transition={{ delay: idx * 0.1 }}
   className="flex items-start gap-3"
   >
-  <CheckCircle className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+  <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
   <span className="text-body text-gray-700">{req}</span>
   </motion.li>
   ))}
@@ -296,15 +296,15 @@ export const Exchange = () => {
   </p>
   <ul className="space-y-3 mb-6">
   <li className="flex items-center gap-3">
-  <DollarSign className="w-5 h-5 text-[#A51C30]" />
+  <DollarSign className="w-5 h-5 text-primary-600" />
   <span className="text-body text-gray-700">Exchange scholarships available</span>
   </li>
   <li className="flex items-center gap-3">
-  <Home className="w-5 h-5 text-[#A51C30]" />
+  <Home className="w-5 h-5 text-primary-600" />
   <span className="text-body text-gray-700">Housing assistance provided</span>
   </li>
   <li className="flex items-center gap-3">
-  <BookOpen className="w-5 h-5 text-[#A51C30]" />
+  <BookOpen className="w-5 h-5 text-primary-600" />
   <span className="text-body text-gray-700">Academic advising throughout</span>
   </li>
   </ul>
@@ -312,13 +312,13 @@ export const Exchange = () => {
   <div className="flex flex-wrap gap-4">
   <Link 
   to="/contact"
-  className="inline-flex items-center gap-2 px-8 py-4 bg-[#1E1E1E] text-white font-bold hover:bg-[#1E1E1E]/90 transition"
+  className="inline-flex items-center gap-2 px-8 py-4 bg-ink-900 text-white font-bold hover:bg-ink-900/90 transition"
   >
   Apply Now <ArrowRight className="w-5 h-5" />
   </Link>
   <Link 
   to="/academics/admissions"
-  className="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#1E1E1E] text-[#1E1E1E] font-bold hover:bg-[#1E1E1E] hover:text-white transition"
+  className="inline-flex items-center gap-2 px-8 py-4 border-2 border-ink-900 text-ink-900 font-bold hover:bg-ink-900 hover:text-white transition"
   >
   Learn More
   </Link>

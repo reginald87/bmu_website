@@ -74,7 +74,7 @@ export const Admissions = () => {
 
   const statusColor = (status: string) => {
     switch (status) {
-      case 'open': return 'bg-[#A51C30]';
+      case 'open': return 'bg-primary-600';
       case 'upcoming': case 'extended': return 'bg-yellow-500';
       case 'closed': return 'bg-gray-300';
       default: return 'bg-gray-300';
@@ -83,7 +83,7 @@ export const Admissions = () => {
 
   const statusBadge = (status: string) => {
     switch (status) {
-      case 'open': return 'bg-[#A51C30]/20 text-[#1E1E1E]';
+      case 'open': return 'bg-primary-600/20 text-ink-900';
       case 'extended': return 'bg-yellow-100 text-yellow-800';
       default: return 'bg-gray-100 text-gray-600';
     }
@@ -105,7 +105,7 @@ export const Admissions = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -120,7 +120,7 @@ export const Admissions = () => {
               <span className="text-white font-medium">Admissions</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Join <span className="text-[#A51C30]">BMU</span>
+              Join <span className="text-primary-600">BMU</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl mb-8">
               Begin your journey to becoming a healthcare professional. Explore our admission
@@ -129,14 +129,14 @@ export const Admissions = () => {
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/apply"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
               >
                 Apply Now
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 to="/academics/programs"
-                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
               >
                 Explore Programs
               </Link>
@@ -166,7 +166,7 @@ export const Admissions = () => {
                 className="bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-[#1E1E1E] flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-ink-900 flex items-center justify-center flex-shrink-0">
                     <span className="text-white font-bold">{step.step}</span>
                   </div>
                   <div>
@@ -185,7 +185,7 @@ export const Admissions = () => {
         <div className="container-custom">
           {reqLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-[#A51C30]" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
             </div>
           ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -196,7 +196,7 @@ export const Admissions = () => {
               viewport={{ once: true }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <GraduationCap className="w-8 h-8 text-[#A51C30]" />
+                <GraduationCap className="w-8 h-8 text-primary-600" />
                 <h2 className="text-headline text-gray-900">Undergraduate Requirements</h2>
               </div>
 
@@ -206,11 +206,11 @@ export const Admissions = () => {
                 ) : (
                 undergradReqs.map((req) => (
                   <div key={req.id} className="bg-white p-6 border border-gray-100">
-                    <h3 className="text-title text-[#1E1E1E] mb-4">{req.title}</h3>
+                    <h3 className="text-title text-ink-900 mb-4">{req.title}</h3>
                     <ul className="space-y-3">
                       {req.items.map((item, idx) => (
                         <li key={idx} className="flex items-start gap-3 text-body text-gray-600">
-                          <CheckCircle className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                           {item}
                         </li>
                       ))}
@@ -228,7 +228,7 @@ export const Admissions = () => {
               viewport={{ once: true }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <BookOpen className="w-8 h-8 text-[#1E1E1E]" />
+                <BookOpen className="w-8 h-8 text-ink-900" />
                 <h2 className="text-headline text-gray-900">Postgraduate Requirements</h2>
               </div>
 
@@ -238,11 +238,11 @@ export const Admissions = () => {
                 ) : (
                 postgradReqs.map((req) => (
                   <div key={req.id} className="bg-white p-6 border border-gray-100">
-                    <h3 className="text-title text-[#1E1E1E] mb-4">{req.title}</h3>
+                    <h3 className="text-title text-ink-900 mb-4">{req.title}</h3>
                     <ul className="space-y-3">
                       {req.items.map((item, idx) => (
                         <li key={idx} className="flex items-start gap-3 text-body text-gray-600">
-                          <CheckCircle className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                           {item}
                         </li>
                       ))}
@@ -262,7 +262,7 @@ export const Admissions = () => {
         <div className="container-custom">
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Clock className="w-8 h-8 text-[#A51C30]" />
+              <Clock className="w-8 h-8 text-primary-600" />
               <h2 className="text-headline text-gray-900">Important Dates</h2>
             </div>
             <p className="text-lead text-gray-600">Mark your calendar for these key admission dates</p>
@@ -270,7 +270,7 @@ export const Admissions = () => {
 
           {datesLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-[#A51C30]" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
             </div>
           ) : !importantDates || importantDates.length === 0 ? (
             <p className="text-center text-gray-500">No important dates found.</p>
@@ -301,7 +301,7 @@ export const Admissions = () => {
       </section>
 
       {/* Help Section */}
-      <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -316,14 +316,14 @@ export const Admissions = () => {
               <div className="flex flex-wrap gap-4">
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#A51C30] font-semibold hover:bg-[#A51C30] transition"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary-600 font-semibold hover:bg-primary-600 transition"
                 >
                   Contact Admissions
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
                   href="tel:+2348031110000"
-                  className="inline-flex items-center gap-2 px-6 py-3 border-2 border-white text-white font-semibold hover:bg-white hover:text-[#A51C30] transition"
+                  className="inline-flex items-center gap-2 px-6 py-3 border-2 border-white text-white font-semibold hover:bg-white hover:text-primary-600 transition"
                 >
                   Call: +234 803 111 0000
                 </a>

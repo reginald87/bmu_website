@@ -35,7 +35,7 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
         <div className="flex-shrink-0 mr-2 self-end">
           <div
             className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold"
-            style={{ backgroundColor: msg.role === 'bot' ? '#A51C30' : '#1E1E1E' }}
+            style={{ backgroundColor: msg.role === 'bot' ? 'var(--color-primary-600)' : 'var(--color-ink-900)' }}
           >
             {msg.role === 'bot' ? 'B' : 'A'}
           </div>
@@ -52,7 +52,7 @@ function MessageBubble({ msg }: { msg: ChatMessage }) {
               : 'rounded-2xl rounded-bl-md'
           }`}
           style={{
-            backgroundColor: isVisitor ? '#A51C30' : '#f0f0f0',
+            backgroundColor: isVisitor ? 'var(--color-primary-600)' : '#f0f0f0',
             color: isVisitor ? '#fff' : '#1a1a1a',
           }}
         >
@@ -79,7 +79,7 @@ function TypingIndicator() {
       <div className="flex-shrink-0 mr-2 self-end">
         <div
           className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold"
-          style={{ backgroundColor: '#1E1E1E' }}
+          style={{ backgroundColor: 'var(--color-ink-900)' }}
         >
           A
         </div>
@@ -211,7 +211,7 @@ export function ChatWidget() {
             {/* Header */}
             <div
               className="flex items-center justify-between px-4 py-3 flex-shrink-0"
-              style={{ backgroundColor: '#A51C30' }}
+              style={{ backgroundColor: 'var(--color-primary-600)' }}
             >
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -275,7 +275,7 @@ export function ChatWidget() {
                 <div className="flex flex-col items-center justify-center h-full text-center px-6">
                   <div
                     className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-                    style={{ backgroundColor: '#A51C30' }}
+                    style={{ backgroundColor: 'var(--color-primary-600)' }}
                   >
                     <MessageCircle className="w-8 h-8 text-white" />
                   </div>
@@ -289,7 +289,7 @@ export function ChatWidget() {
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                       className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none"
-                      style={{ borderColor: contactName ? '#A51C30' : '#d1d5db' }}
+                      style={{ borderColor: contactName ? 'var(--color-primary-600)' : '#d1d5db' }}
                       required
                     />
                     <input
@@ -302,7 +302,7 @@ export function ChatWidget() {
                     <button
                       type="submit"
                       className="w-full py-2.5 rounded-lg text-white font-medium text-sm"
-                      style={{ backgroundColor: '#A51C30' }}
+                      style={{ backgroundColor: 'var(--color-primary-600)' }}
                     >
                       Start Chat
                     </button>
@@ -320,7 +320,7 @@ export function ChatWidget() {
                     <div className="flex flex-col items-center mt-4 pt-4 border-t border-gray-300/50">
                       <div
                         className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
-                        style={{ backgroundColor: '#A51C30' }}
+                        style={{ backgroundColor: 'var(--color-primary-600)' }}
                       >
                         <MessageCircle className="w-6 h-6 text-white" />
                       </div>
@@ -330,7 +330,7 @@ export function ChatWidget() {
                       <button
                         onClick={handleNewChat}
                         className="px-6 py-2.5 rounded-lg text-white font-medium text-sm transition hover:opacity-90"
-                        style={{ backgroundColor: '#A51C30' }}
+                        style={{ backgroundColor: 'var(--color-primary-600)' }}
                       >
                         Start New Conversation
                       </button>
@@ -369,7 +369,7 @@ export function ChatWidget() {
                   onClick={handleSend} aria-label="Send message"
                   disabled={!inputText.trim() || conversationEnded}
                   className="w-10 h-10 rounded-full flex items-center justify-center text-white disabled:opacity-50 transition"
-                  style={{ backgroundColor: inputText.trim() && !conversationEnded ? '#A51C30' : '#ccc' }}
+                  style={{ backgroundColor: inputText.trim() && !conversationEnded ? 'var(--color-primary-600)' : '#ccc' }}
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -386,7 +386,7 @@ export function ChatWidget() {
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen(!isOpen)} aria-label="Open chat"
           className="fixed bottom-20 right-6 z-[60] w-14 h-14 rounded-full flex items-center justify-center shadow-lg text-white"
-          style={{ backgroundColor: '#A51C30' }}
+          style={{ backgroundColor: 'var(--color-primary-600)' }}
         >
           <MessageCircle className="w-6 h-6" />
         </motion.button>

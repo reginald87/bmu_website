@@ -59,7 +59,7 @@ export const VerifyEmail = () => {
       >
         {state === 'verifying' && (
           <div className="space-y-4">
-            <Loader2 className="w-10 h-10 text-[#A51C30] mx-auto animate-spin" />
+            <Loader2 className="w-10 h-10 text-primary-600 mx-auto animate-spin" />
             <p className="text-gray-600">Verifying your email address…</p>
           </div>
         )}
@@ -71,7 +71,7 @@ export const VerifyEmail = () => {
             <p className="text-gray-600">{message}</p>
             <button
               onClick={() => navigate('/portals/login')}
-              className="w-full py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"
+              className="w-full py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition"
             >
               Go to Login
             </button>
@@ -85,7 +85,7 @@ export const VerifyEmail = () => {
             <p className="text-gray-600">{message}</p>
             <button
               onClick={() => navigate('/portals/login')}
-              className="w-full py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"
+              className="w-full py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition"
             >
               Back to Login
             </button>

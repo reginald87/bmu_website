@@ -19,7 +19,7 @@ export const Gallery = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#1E1E1E] animate-spin" />
+        <Loader2 className="w-12 h-12 text-ink-900 animate-spin" />
       </div>
     );
   }
@@ -30,7 +30,7 @@ export const Gallery = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Gallery</h2>
           <p className="text-gray-600 mb-4">Failed to load gallery images. Please try again later.</p>
-          <Link to="/" className="text-[#1E1E1E] font-medium hover:underline">
+          <Link to="/" className="text-ink-900 font-medium hover:underline">
             Back to Home
           </Link>
         </div>
@@ -45,7 +45,7 @@ export const Gallery = () => {
         <meta name="description" content="Explore photos and videos from Bayelsa Medical University events, campus life, and academic activities." />
       </Helmet>
 
-      <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
+      <section className="relative pt-[180px] pb-20 overflow-hidden bg-ink-900">
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -57,7 +57,7 @@ export const Gallery = () => {
               <span className="text-white font-medium">Gallery</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Photo <span className="text-[#A51C30]">Gallery</span>
+              Photo <span className="text-primary-600">Gallery</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               Explore moments from our campus life, academic events, ceremonies, and student activities.
@@ -76,7 +76,7 @@ export const Gallery = () => {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-4 py-2 text-sm font-medium transition-all ${
                     selectedCategory === category
-                      ? 'bg-[#1E1E1E] text-white'
+                      ? 'bg-ink-900 text-white'
                       : 'bg-white text-gray-700 hover:bg-gray-100'
                   }`}
                 >
@@ -145,7 +145,7 @@ export const Gallery = () => {
 
                   {image.category && (
                     <div className="absolute top-3 left-3">
-                      <span className="px-2 py-1 bg-[#1E1E1E] text-white text-xs">
+                      <span className="px-2 py-1 bg-ink-900 text-white text-xs">
                         {image.category}
                       </span>
                     </div>

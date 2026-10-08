@@ -69,11 +69,11 @@ const FeatureSection = ({ sectionKey, bgGray = false }: { sectionKey: string; bg
                 transition={{ delay: i * 0.05 }}
                 className="bg-white shadow-sm border border-gray-100 overflow-hidden transition-shadow group"
               >
-                <div className="h-1.5 bg-[#1E1E1E] group-hover:bg-[#A51C30] transition-colors" />
+                <div className="h-1.5 bg-ink-900 group-hover:bg-primary-600 transition-colors" />
                 <div className="p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-11 h-11 flex items-center justify-center flex-shrink-0 bg-[#1E1E1E]/10">
-                      <Icon className="w-5 h-5 text-[#1E1E1E]" />
+                    <div className="w-11 h-11 flex items-center justify-center flex-shrink-0 bg-ink-900/10">
+                      <Icon className="w-5 h-5 text-ink-900" />
                     </div>
                     <div>
                       <h3 className="text-base font-bold text-gray-900 mb-1.5">{item.title}</h3>
@@ -110,7 +110,7 @@ export const CampusLife = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
+      <section className="relative pt-[180px] pb-20 overflow-hidden bg-ink-900">
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -124,7 +124,7 @@ export const CampusLife = () => {
               <span className="text-white font-medium">Campus Life</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Life at <span className="text-[#A51C30]">BMU</span>
+              Life at <span className="text-primary-600">BMU</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">{heroContent}</p>
           </motion.div>
@@ -144,7 +144,7 @@ export const CampusLife = () => {
                 transition={{ delay: i * 0.08 }}
                 className="text-center"
               >
-                <div className="text-3xl md:text-4xl font-bold text-[#A51C30]">{stat.value}</div>
+                <div className="text-3xl md:text-4xl font-bold text-primary-600">{stat.value}</div>
                 <div className="text-gray-600 text-sm mt-1">{stat.label}</div>
               </motion.div>
             ))}
@@ -178,9 +178,9 @@ export const CampusLife = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="bg-[#1E1E1E] p-6 text-center group cursor-pointer hover:-translate-y-1 transition-transform"
+                    className="bg-ink-900 p-6 text-center group cursor-pointer hover:-translate-y-1 transition-transform"
                   >
-                    <div className="w-14 h-14 bg-white/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-[#A51C30] transition-colors">
+                    <div className="w-14 h-14 bg-white/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-600 transition-colors">
                       <Icon className="w-7 h-7 text-white" />
                     </div>
                     <h3 className="text-white font-bold mb-1">{item.title}</h3>
@@ -194,10 +194,10 @@ export const CampusLife = () => {
       )}
 
       {/* Testimonials */}
-      <section className="py-20 bg-[#1E1E1E]">
+      <section className="py-20 bg-ink-900">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <span className="text-sm font-semibold tracking-wider uppercase text-[#A51C30]">Student Voices</span>
+            <span className="text-sm font-semibold tracking-wider uppercase text-primary-600">Student Voices</span>
             <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-white">What Our Students Say</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -210,7 +210,7 @@ export const CampusLife = () => {
                 transition={{ delay: i * 0.1 }}
                 className="bg-white/5 p-6 border border-white/10"
               >
-                <Quote className="w-8 h-8 text-[#A51C30] mb-4 opacity-60" />
+                <Quote className="w-8 h-8 text-primary-600 mb-4 opacity-60" />
                 <p className="text-white/80 text-sm leading-relaxed mb-4">&ldquo;{t.quote}&rdquo;</p>
                 <div>
                   <p className="text-white font-semibold text-sm">{t.name}</p>
@@ -226,8 +226,8 @@ export const CampusLife = () => {
       <section className="py-20 bg-[#f8f9fa]">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <span className="text-sm font-semibold tracking-wider uppercase text-[#A51C30]">Visual Journey</span>
-            <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-[#1E1E1E]">Campus Gallery</h2>
+            <span className="text-sm font-semibold tracking-wider uppercase text-primary-600">Visual Journey</span>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-ink-900">Campus Gallery</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">Experience the beauty and vibrancy of Bayelsa Medical University through our lens</p>
           </div>
           <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
@@ -241,16 +241,16 @@ export const CampusLife = () => {
                 className="relative group break-inside-avoid overflow-hidden cursor-pointer"
               >
                 <img src={photo.image_url} alt={photo.title} className="w-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ minHeight: i % 3 === 0 ? '320px' : i % 3 === 1 ? '240px' : '280px' }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1E1E1E]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#A51C30]">{photo.category}</span>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary-600">{photo.category}</span>
                   <h3 className="text-white font-bold text-lg">{photo.title}</h3>
                 </div>
               </motion.div>
             ))}
           </div>
           <div className="text-center mt-12">
-            <Link to="/gallery" className="inline-flex items-center gap-2 px-8 py-4 font-semibold transition-all bg-[#1E1E1E] text-white hover:bg-[#1E1E1E]/90">
+            <Link to="/gallery" className="inline-flex items-center gap-2 px-8 py-4 font-semibold transition-all bg-ink-900 text-white hover:bg-ink-900/90">
               View Full Gallery
               <ArrowRight className="w-5 h-5" />
             </Link>
@@ -268,7 +268,7 @@ export const CampusLife = () => {
               <div className="grid sm:grid-cols-2 gap-4 text-left">
                 {contactInfo.address && (
                   <div className="flex items-start gap-3 p-4 bg-[#f8f9fa]">
-                    <MapPin className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
+                    <MapPin className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Address</p>
                       <p className="text-gray-600 text-sm">{contactInfo.address}</p>
@@ -277,7 +277,7 @@ export const CampusLife = () => {
                 )}
                 {contactInfo.phone && (
                   <div className="flex items-start gap-3 p-4 bg-[#f8f9fa]">
-                    <Phone className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
+                    <Phone className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Phone</p>
                       <p className="text-gray-600 text-sm">{contactInfo.phone}</p>
@@ -286,7 +286,7 @@ export const CampusLife = () => {
                 )}
                 {contactInfo.email && (
                   <div className="flex items-start gap-3 p-4 bg-[#f8f9fa]">
-                    <Mail className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
+                    <Mail className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Email</p>
                       <p className="text-gray-600 text-sm">{contactInfo.email}</p>
@@ -295,7 +295,7 @@ export const CampusLife = () => {
                 )}
                 {contactInfo.office_hours && (
                   <div className="flex items-start gap-3 p-4 bg-[#f8f9fa]">
-                    <Clock className="w-5 h-5 text-[#A51C30] mt-0.5 flex-shrink-0" />
+                    <Clock className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Office Hours</p>
                       <p className="text-gray-600 text-sm">{contactInfo.office_hours}</p>

@@ -83,7 +83,7 @@ export const Collaborations = () => {
   </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -98,7 +98,7 @@ export const Collaborations = () => {
  <span className="text-white font-medium">Collaborations</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Research <span className="text-[#A51C30]">Collaborations</span>
+ Research <span className="text-primary-600">Collaborations</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Building global partnerships to advance healthcare research, education, 
@@ -121,8 +121,8 @@ export const Collaborations = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -150,8 +150,8 @@ export const Collaborations = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
  >
- <div className="w-14 h-14 bg-[#1E1E1E]/10 flex items-center justify-center mb-4">
- <benefit.icon className="w-7 h-7 text-[#1E1E1E]" />
+ <div className="w-14 h-14 bg-ink-900/10 flex items-center justify-center mb-4">
+ <benefit.icon className="w-7 h-7 text-ink-900" />
  </div>
  <h3 className="text-title text-gray-900 mb-2">{benefit.title}</h3>
  <p className="text-body text-gray-600">{benefit.desc}</p>
@@ -165,7 +165,7 @@ export const Collaborations = () => {
  <section className="py-20">
  <div className="container-custom">
  <div className="flex items-center gap-3 mb-12">
- <Globe className="w-8 h-8 text-[#A51C30]" />
+ <Globe className="w-8 h-8 text-primary-600" />
  <h2 className="text-headline text-gray-900">International Partners</h2>
  </div>
 
@@ -181,7 +181,7 @@ export const Collaborations = () => {
  >
  <div className="flex items-start justify-between mb-4">
  <div>
- <span className="px-3 py-1 bg-[#1E1E1E]/10 text-[#1E1E1E] text-xs font-medium">
+ <span className="px-3 py-1 bg-ink-900/10 text-ink-900 text-xs font-medium">
  {partner.type}
  </span>
  <h3 className="text-title text-gray-900 mt-2">{partner.name}</h3>
@@ -211,7 +211,7 @@ export const Collaborations = () => {
  <section className="py-20" style={{ backgroundColor: '#f8f9fa' }}>
  <div className="container-custom">
  <div className="flex items-center gap-3 mb-12">
- <Building2 className="w-8 h-8 text-[#1E1E1E]" />
+ <Building2 className="w-8 h-8 text-ink-900" />
  <h2 className="text-headline text-gray-900">Local & Regional Partners</h2>
  </div>
 
@@ -227,7 +227,7 @@ export const Collaborations = () => {
  >
  <div className="flex items-start justify-between mb-4">
  <div>
- <span className="px-3 py-1 bg-[#A51C30]/10 text-[#A51C30] text-xs font-medium">
+ <span className="px-3 py-1 bg-primary-600/10 text-primary-600 text-xs font-medium">
  {partner.type}
  </span>
  <h3 className="text-title text-gray-900 mt-2">{partner.name}</h3>
@@ -254,12 +254,12 @@ export const Collaborations = () => {
  </section>
 
  {/* CTA */}
- <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
  <div className="container-custom">
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
  <div>
  <h2 className="text-headline text-white mb-4">
- Partner with <span className="text-[#A51C30]">BMU</span>
+ Partner with <span className="text-primary-600">BMU</span>
  </h2>
  <p className="text-lead text-white/90 mb-6">
  We are always looking for new partnerships to expand our impact. 
@@ -269,14 +269,14 @@ export const Collaborations = () => {
  <div className="flex flex-wrap gap-4">
  <a 
  href="mailto:research@bmu.edu.ng"
- className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#A51C30] font-semibold hover:bg-[#A51C30] transition"
+ className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary-600 font-semibold hover:bg-primary-600 transition"
  >
  <Handshake className="w-5 h-5" />
  Propose Collaboration
  </a>
  <Link 
  to="/research/funding"
- className="inline-flex items-center gap-2 px-6 py-3 border-2 border-white text-white font-semibold hover:bg-white hover:text-[#A51C30] transition"
+ className="inline-flex items-center gap-2 px-6 py-3 border-2 border-white text-white font-semibold hover:bg-white hover:text-primary-600 transition"
  >
  <Award className="w-5 h-5" />
  Research Grants
@@ -289,7 +289,7 @@ export const Collaborations = () => {
  <div className="space-y-4">
  {whyPartner.map((item, index) => (
  <div key={index} className="flex items-start gap-3">
- <Award className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+ <Award className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
  <p className="text-white/80">{item}</p>
  </div>
  ))}

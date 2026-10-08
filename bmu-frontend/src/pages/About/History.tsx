@@ -92,7 +92,7 @@ export const History = () => {
       </Helmet>
 
       {/* Hero - pt-[140px] to clear fixed navbar */}
-      <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         {/* Subtle Pattern Overlay */}
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
@@ -109,7 +109,7 @@ export const History = () => {
               <span className="text-white font-medium">Our History</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Our <span className="text-[#A51C30]">History</span>
+              Our <span className="text-primary-600">History</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               {heroContent}
@@ -204,7 +204,7 @@ export const History = () => {
                       <div className={`bg-white p-6 shadow-sm border border-gray-100 ${isLeft ? 'md:mr-0' : 'md:ml-0'}`}>
                         <span 
                           className="inline-block px-3 py-1 text-sm font-bold mb-3"
-                          style={{ backgroundColor: '#A51C3020', color: '#A51C30' }}
+                          style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)', color: 'var(--color-primary-600)' }}
                         >
                           {event.year}
                         </span>
@@ -214,7 +214,7 @@ export const History = () => {
                     </div>
 
                     {/* Center dot */}
-                    <div className="absolute left-4 md:left-1/2 top-6 w-4 h-4 border-4 border-white md:-translate-x-1/2" style={{ backgroundColor: '#A51C30' }} />
+                    <div className="absolute left-4 md:left-1/2 top-6 w-4 h-4 border-4 border-white md:-translate-x-1/2" style={{ backgroundColor: 'var(--color-primary-600)' }} />
 
                     {/* Icon side */}
                     <div className="flex-1 hidden md:block" />
@@ -229,7 +229,7 @@ export const History = () => {
       {/* Present Day */}
       <section className="py-16">
         <div className="container-custom">
-          <div className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-8 md:p-12 text-white">
+          <div className="bg-gradient-to-r from-ink-900 to-primary-600 p-8 md:p-12 text-white">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               {stats.map((stat, i) => (
                 <div key={i}>

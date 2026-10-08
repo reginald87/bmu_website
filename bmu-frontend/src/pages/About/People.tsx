@@ -14,7 +14,7 @@ export const People = () => {
  </Helmet>
 
  {/* Hero Section */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-10" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -33,7 +33,7 @@ export const People = () => {
  </div>
 
  <h1 className="text-display text-white mb-6">
- Our <span className="text-[#A51C30]">People</span>
+ Our <span className="text-primary-600">People</span>
  </h1>
  <p className="text-lead text-white/80 max-w-3xl">
  The dedicated professionals who make Bayelsa Medical University a center of excellence in healthcare education and research.
@@ -47,7 +47,7 @@ export const People = () => {
     <div className="container-custom">
       {isLoading ? (
         <div className="flex justify-center py-8">
-          <Loader2 className="w-8 h-8 text-[#1E1E1E] animate-spin" />
+          <Loader2 className="w-8 h-8 text-ink-900 animate-spin" />
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -58,10 +58,10 @@ export const People = () => {
             transition={{ delay: 0 }}
             className="bg-white p-6 border border-gray-100 text-center"
           >
-            <div className="w-12 h-12 flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1E1E1E10' }}>
-              <Users className="w-6 h-6" style={{ color: '#1E1E1E' }} />
+            <div className="w-12 h-12 flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 6%, transparent)' }}>
+              <Users className="w-6 h-6" style={{ color: 'var(--color-ink-900)' }} />
             </div>
-            <div className="text-3xl font-bold mb-1" style={{ color: '#A51C30' }}>
+            <div className="text-3xl font-bold mb-1" style={{ color: 'var(--color-primary-600)' }}>
               {stats?.total_personnel ?? 400}+
             </div>
             <div className="text-sm font-semibold text-gray-900">Total Personnel</div>
@@ -74,10 +74,10 @@ export const People = () => {
             transition={{ delay: 0.1 }}
             className="bg-white p-6 border border-gray-100 text-center"
           >
-            <div className="w-12 h-12 flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1E1E1E10' }}>
-              <Award className="w-6 h-6" style={{ color: '#1E1E1E' }} />
+            <div className="w-12 h-12 flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 6%, transparent)' }}>
+              <Award className="w-6 h-6" style={{ color: 'var(--color-ink-900)' }} />
             </div>
-            <div className="text-3xl font-bold mb-1" style={{ color: '#A51C30' }}>
+            <div className="text-3xl font-bold mb-1" style={{ color: 'var(--color-primary-600)' }}>
               85%
             </div>
             <div className="text-sm font-semibold text-gray-900">PhD Holders</div>
@@ -90,10 +90,10 @@ export const People = () => {
             transition={{ delay: 0.2 }}
             className="bg-white p-6 border border-gray-100 text-center"
           >
-            <div className="w-12 h-12 flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1E1E1E10' }}>
-              <BookOpen className="w-6 h-6" style={{ color: '#1E1E1E' }} />
+            <div className="w-12 h-12 flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 6%, transparent)' }}>
+              <BookOpen className="w-6 h-6" style={{ color: 'var(--color-ink-900)' }} />
             </div>
-            <div className="text-3xl font-bold mb-1" style={{ color: '#A51C30' }}>
+            <div className="text-3xl font-bold mb-1" style={{ color: 'var(--color-primary-600)' }}>
               {stats?.department_count ?? 12}
             </div>
             <div className="text-sm font-semibold text-gray-900">Departments</div>
@@ -106,10 +106,10 @@ export const People = () => {
             transition={{ delay: 0.3 }}
             className="bg-white p-6 border border-gray-100 text-center"
           >
-            <div className="w-12 h-12 flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1E1E1E10' }}>
-              <Phone className="w-6 h-6" style={{ color: '#1E1E1E' }} />
+            <div className="w-12 h-12 flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 6%, transparent)' }}>
+              <Phone className="w-6 h-6" style={{ color: 'var(--color-ink-900)' }} />
             </div>
-            <div className="text-3xl font-bold mb-1" style={{ color: '#A51C30' }}>
+            <div className="text-3xl font-bold mb-1" style={{ color: 'var(--color-primary-600)' }}>
               24/7
             </div>
             <div className="text-sm font-semibold text-gray-900">Support</div>
@@ -129,10 +129,10 @@ export const People = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <span className="text-sm font-semibold tracking-wider uppercase" style={{ color: '#A51C30' }}>
+        <span className="text-sm font-semibold tracking-wider uppercase" style={{ color: 'var(--color-primary-600)' }}>
           Explore Our Community
         </span>
-        <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4" style={{ color: '#1E1E1E' }}>
+        <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4" style={{ color: 'var(--color-ink-900)' }}>
           Meet Our Team
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto">
@@ -142,9 +142,9 @@ export const People = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {([
-          { id: 'leadership', title: 'Leadership', description: 'Meet our visionary executive team leading Bayelsa Medical University towards excellence in healthcare education and research.', icon: Crown, count: `${stats?.leadership_count ?? 12}`, link: '/about/leadership', color: '#1E1E1E', bgColor: '#1E1E1E10' },
-          { id: 'faculty', title: 'Faculty', description: 'Our distinguished academic staff comprising world-class educators, researchers, and clinicians dedicated to shaping the next generation of healthcare professionals.', icon: GraduationCap, count: `${stats?.faculty_count ?? 150}+`, link: '/academics/faculty', color: '#A51C30', bgColor: '#A51C3010' },
-          { id: 'staff', title: 'Staff Directory', description: 'The dedicated administrative and support professionals who ensure smooth operations across all university departments and services.', icon: Briefcase, count: `${stats?.staff_count ?? 200}+`, link: '/about/staff', color: '#A51C30', bgColor: '#A51C3015' },
+          { id: 'leadership', title: 'Leadership', description: 'Meet our visionary executive team leading Bayelsa Medical University towards excellence in healthcare education and research.', icon: Crown, count: `${stats?.leadership_count ?? 12}`, link: '/about/leadership', color: 'var(--color-ink-900)', bgColor: 'color-mix(in srgb, var(--color-ink-900) 6%, transparent)' },
+          { id: 'faculty', title: 'Faculty', description: 'Our distinguished academic staff comprising world-class educators, researchers, and clinicians dedicated to shaping the next generation of healthcare professionals.', icon: GraduationCap, count: `${stats?.faculty_count ?? 150}+`, link: '/academics/faculty', color: 'var(--color-primary-600)', bgColor: 'color-mix(in srgb, var(--color-primary-600) 6%, transparent)' },
+          { id: 'staff', title: 'Staff Directory', description: 'The dedicated administrative and support professionals who ensure smooth operations across all university departments and services.', icon: Briefcase, count: `${stats?.staff_count ?? 200}+`, link: '/about/staff', color: 'var(--color-primary-600)', bgColor: 'color-mix(in srgb, var(--color-primary-600) 8%, transparent)' },
         ] as const).map((category, index) => {
           const Icon = category.icon;
           return (
@@ -180,7 +180,7 @@ export const People = () => {
 
                 {/* Content */}
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#1E1E1E] transition-colors">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-ink-900 transition-colors">
                     {category.title}
                   </h3>
                   <p className="text-gray-600 text-sm leading-relaxed mb-4">
@@ -211,8 +211,8 @@ export const People = () => {
  className="bg-white p-8 border border-gray-100"
  >
  <div className="flex items-start gap-4">
- <div className="w-14 h-14 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A51C3020' }}>
- <Users className="w-7 h-7" style={{ color: '#1E1E1E' }} />
+ <div className="w-14 h-14 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+ <Users className="w-7 h-7" style={{ color: 'var(--color-ink-900)' }} />
  </div>
  <div>
  <h3 className="text-xl font-bold text-gray-900 mb-2">Join Our Team</h3>
@@ -222,7 +222,7 @@ export const People = () => {
  <Link
  to="/careers"
  className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-sm transition-all"
- style={{ backgroundColor: '#1E1E1E', color: 'white' }}
+ style={{ backgroundColor: 'var(--color-ink-900)', color: 'white' }}
  >
  View Open Positions
  <ArrowRight className="w-4 h-4" />
@@ -239,8 +239,8 @@ export const People = () => {
  className="bg-white p-8 border border-gray-100"
  >
  <div className="flex items-start gap-4">
- <div className="w-14 h-14 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A51C3010' }}>
- <Phone className="w-7 h-7" style={{ color: '#A51C30' }} />
+ <div className="w-14 h-14 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 6%, transparent)' }}>
+ <Phone className="w-7 h-7" style={{ color: 'var(--color-primary-600)' }} />
  </div>
  <div>
  <h3 className="text-xl font-bold text-gray-900 mb-2">Contact Directory</h3>
@@ -250,7 +250,7 @@ export const People = () => {
  <Link
  to="/contact"
  className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-sm transition-all border-2"
- style={{ borderColor: '#A51C30', color: '#A51C30' }}
+ style={{ borderColor: 'var(--color-primary-600)', color: 'var(--color-primary-600)' }}
  >
  Contact Us
  <ArrowRight className="w-4 h-4" />

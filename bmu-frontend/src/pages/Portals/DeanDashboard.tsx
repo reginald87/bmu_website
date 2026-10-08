@@ -35,10 +35,10 @@ export const DeanDashboard = () => {
   }
 
   const stats = [
-    { label: 'Students', value: data?.total_students ?? 0, icon: Users, color: '#A51C30' },
-    { label: 'Departments', value: data?.total_departments ?? 0, icon: Building, color: '#1E1E1E' },
-    { label: 'Lecturers', value: data?.total_lecturers ?? 0, icon: UserCheck, color: '#A51C30' },
-    { label: 'Pending Approvals', value: data?.pending_approvals ?? 0, icon: AlertCircle, color: '#1E1E1E' },
+    { label: 'Students', value: data?.total_students ?? 0, icon: Users, color: 'var(--color-primary-600)' },
+    { label: 'Departments', value: data?.total_departments ?? 0, icon: Building, color: 'var(--color-ink-900)' },
+    { label: 'Lecturers', value: data?.total_lecturers ?? 0, icon: UserCheck, color: 'var(--color-primary-600)' },
+    { label: 'Pending Approvals', value: data?.pending_approvals ?? 0, icon: AlertCircle, color: 'var(--color-ink-900)' },
   ];
 
   return (
@@ -82,15 +82,15 @@ export const DeanDashboard = () => {
                 { title: 'Batch Publish', desc: 'Publish approved results', link: '/portals/admin/batch-publish', icon: BookOpen },
               ].map((item, i) => (
                 <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                  <Link to={item.link} className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-[#1E1E1E] transition group">
-                    <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1E1E]/20 transition">
-                      <item.icon className="w-6 h-6 text-[#1E1E1E]" />
+                  <Link to={item.link} className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-ink-900 transition group">
+                    <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ink-900/20 transition">
+                      <item.icon className="w-6 h-6 text-ink-900" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 group-hover:text-[#1E1E1E] transition">{item.title}</h3>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-ink-900 transition">{item.title}</h3>
                       <p className="text-sm text-gray-500">{item.desc}</p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#1E1E1E] transition" />
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-ink-900 transition" />
                   </Link>
                 </motion.div>
               ))}
@@ -103,8 +103,8 @@ export const DeanDashboard = () => {
               {data?.departments.map((d, i) => (
                 <div key={d.name} className={`flex items-center justify-between p-4 ${i !== (data?.departments.length ?? 0) - 1 ? 'border-b' : ''}`}>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#A51C30]/10 flex items-center justify-center">
-                      <Building className="w-5 h-5 text-[#A51C30]" />
+                    <div className="w-10 h-10 bg-primary-600/10 flex items-center justify-center">
+                      <Building className="w-5 h-5 text-primary-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 text-sm">{d.name}</h3>
@@ -123,7 +123,7 @@ export const DeanDashboard = () => {
         <div className="space-y-6">
           <div className="bg-white shadow-sm border border-gray-100 p-4">
             <div className="flex items-center gap-2 mb-4">
-              <AlertCircle className="w-5 h-5 text-[#A51C30]" />
+              <AlertCircle className="w-5 h-5 text-primary-600" />
               <h2 className="font-bold text-gray-900">Notifications</h2>
             </div>
             <div className="space-y-4">
@@ -145,7 +145,7 @@ export const DeanDashboard = () => {
 
           <div className="bg-white shadow-sm border border-gray-100 p-4">
             <div className="flex items-center gap-2 mb-4">
-              <BookOpen className="w-5 h-5 text-[#A51C30]" />
+              <BookOpen className="w-5 h-5 text-primary-600" />
               <h2 className="font-bold text-gray-900">Important Dates</h2>
             </div>
             <ul className="space-y-3 text-sm">
@@ -162,11 +162,11 @@ export const DeanDashboard = () => {
             </ul>
           </div>
 
-          <div className="bg-[#1E1E1E] p-4 text-white">
+          <div className="bg-ink-900 p-4 text-white">
             <h2 className="font-bold mb-2">Need Help?</h2>
             <p className="text-sm text-white/80 mb-4">Contact IT support for assistance</p>
             <div className="space-y-2 text-sm">
-              <a href="mailto:it@bmu.edu.ng" className="flex items-center gap-2 hover:text-[#A51C30] transition">
+              <a href="mailto:it@bmu.edu.ng" className="flex items-center gap-2 hover:text-primary-600 transition">
                 <span>✉️</span> it@bmu.edu.ng
               </a>
             </div>

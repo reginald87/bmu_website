@@ -18,7 +18,7 @@ const fallbackQuickLinks = [
  description: 'Strategic collaborations with universities and institutions worldwide for research and academic exchange.',
  icon: Handshake,
  link: '/international/partnerships',
- color: '#1E1E1E',
+ color: 'var(--color-ink-900)',
  stat: '45+ Partners'
  },
  {
@@ -26,7 +26,7 @@ const fallbackQuickLinks = [
  description: 'Opportunities for BMU students to study abroad and for international students to experience education at BMU.',
  icon: Plane,
  link: '/international/exchange',
- color: '#A51C30',
+ color: 'var(--color-primary-600)',
  stat: '25+ Countries'
  },
  {
@@ -34,7 +34,7 @@ const fallbackQuickLinks = [
  description: 'Support services, admissions guidance, and resources for students from around the world.',
  icon: Users,
  link: '/international/students',
- color: '#A51C30',
+ color: 'var(--color-primary-600)',
  stat: '500+ Students'
  },
  {
@@ -42,7 +42,7 @@ const fallbackQuickLinks = [
  description: 'Hosting academic delegations, international scholars, and institutional visits.',
  icon: Building,
  link: '/international/visitors',
- color: '#1E1E1E',
+ color: 'var(--color-ink-900)',
  stat: '100+ Visits/Year'
  }
 ];
@@ -73,7 +73,7 @@ export const International = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -86,7 +86,7 @@ export const International = () => {
  <span className="text-white font-medium">International</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Global <span className="text-[#A51C30]">Engagement</span>
+ Global <span className="text-primary-600">Engagement</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Connecting Bayelsa Medical University to the world through strategic partnerships, 
@@ -109,8 +109,8 @@ export const International = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -193,7 +193,7 @@ export const International = () => {
  transition={{ delay: index * 0.05 }}
  className="bg-white p-4 shadow-sm border border-gray-100 flex items-center gap-2"
  >
- <MapPin className="w-4 h-4 text-[#A51C30]" />
+ <MapPin className="w-4 h-4 text-primary-600" />
  <span className="text-body text-gray-700">{country}</span>
  </motion.div>
  ))}
@@ -202,7 +202,7 @@ export const International = () => {
  </section>
 
  {/* CTA */}
- <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
  <div className="container-custom text-center">
  <h2 className="text-headline text-white mb-4">Connect With Us</h2>
  <p className="text-lead text-white/80 max-w-2xl mx-auto mb-8">
@@ -212,13 +212,13 @@ export const International = () => {
  <div className="flex flex-wrap justify-center gap-4">
  <Link 
  to="/international/students"
- className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Apply as International Student
  </Link>
  <Link 
  to="/contact"
- className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#A51C30] transition"
+ className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-primary-600 transition"
  >
  Contact International Office
  </Link>

@@ -65,7 +65,7 @@ export const InternationalStudents = () => {
  if (isLoading) {
   return (
    <div className="flex items-center justify-center min-h-[60vh]">
-    <Loader2 className="w-8 h-8 animate-spin text-[#A51C30]" />
+    <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
    </div>
   );
  }
@@ -78,7 +78,7 @@ export const InternationalStudents = () => {
   </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -91,7 +91,7 @@ export const InternationalStudents = () => {
   <span className="text-white font-medium">International Students</span>
   </div>
   <h1 className="text-display text-white mb-6">
-  Welcome <span className="text-[#A51C30]">International</span> Students
+  Welcome <span className="text-primary-600">International</span> Students
   </h1>
   <p className="text-lead text-white/80 max-w-2xl">
  Join our diverse community of students from over 45 countries. World-class healthcare 
@@ -114,8 +114,8 @@ export const InternationalStudents = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <Users className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <Users className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -144,7 +144,7 @@ export const InternationalStudents = () => {
  className="bg-white p-6 shadow-sm border border-gray-100"
  >
   <div className="flex items-center gap-4 mb-4">
-  <div className="w-12 h-12 bg-[#1E1E1E] flex items-center justify-center text-white font-bold">
+  <div className="w-12 h-12 bg-ink-900 flex items-center justify-center text-white font-bold">
   {item.step}
   </div>
   </div>
@@ -172,14 +172,14 @@ export const InternationalStudents = () => {
  transition={{ delay: idx * 0.1 }}
  className="flex items-start gap-3"
  >
- <CheckCircle className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+ <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
  <span className="text-body text-gray-700">{doc}</span>
  </motion.li>
  ))}
  </ul>
  </div>
 
- <div className="bg-[#1E1E1E] p-8 text-white">
+ <div className="bg-ink-900 p-8 text-white">
  <h3 className="text-title mb-4">Application Deadlines</h3>
  <div className="space-y-4 mb-8">
  <div className="flex justify-between items-center pb-4 border-b border-white/20">
@@ -197,7 +197,7 @@ export const InternationalStudents = () => {
  </div>
  <Link 
  to="/apply"
- className="inline-flex items-center gap-2 px-6 py-3 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Start Application <ArrowRight className="w-4 h-4" />
  </Link>
@@ -226,8 +226,8 @@ export const InternationalStudents = () => {
    transition={{ delay: index * 0.1 }}
    className="bg-white p-6 shadow-sm border border-gray-100"
    >
-   <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center mb-4">
-   <FileText className="w-6 h-6 text-[#A51C30]" />
+   <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center mb-4">
+   <FileText className="w-6 h-6 text-primary-600" />
    </div>
    <h3 className="text-title text-gray-900 mb-2">{service.title}</h3>
    <p className="text-body text-gray-600">{service.short_description}</p>
@@ -262,7 +262,7 @@ export const InternationalStudents = () => {
  </section>
 
  {/* Contact CTA */}
- <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
  <div className="container-custom">
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
  <div>
@@ -273,13 +273,13 @@ export const InternationalStudents = () => {
  <div className="flex flex-wrap gap-4">
  <Link 
  to="/apply"
- className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Apply Now <ArrowRight className="w-5 h-5" />
  </Link>
  <Link 
  to="/contact"
- className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#A51C30] transition"
+ className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-primary-600 transition"
  >
  Contact Us
  </Link>

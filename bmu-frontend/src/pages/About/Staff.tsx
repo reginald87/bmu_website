@@ -55,7 +55,7 @@ export const Staff = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -70,7 +70,7 @@ export const Staff = () => {
               <span className="text-white font-medium">Staff Directory</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Our <span className="text-[#A51C30]">Staff</span>
+              Our <span className="text-primary-600">Staff</span>
             </h1>
             <p className="text-xl text-white/80 max-w-2xl">
               Meet the dedicated professionals who keep Bayelsa Medical University running smoothly.
@@ -97,7 +97,7 @@ export const Staff = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-3xl md:text-4xl font-bold" style={{ color: '#A51C30' }}>
+                <div className="text-3xl md:text-4xl font-bold" style={{ color: 'var(--color-primary-600)' }}>
                   {stat.value}
                 </div>
                 <div className="text-gray-600 text-sm mt-1">{stat.label}</div>
@@ -119,13 +119,13 @@ export const Staff = () => {
                   placeholder="Search staff..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1E1E1E] w-full sm:w-64"
+                  className="pl-10 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ink-900 w-full sm:w-64"
                 />
               </div>
               <select
                 value={divisionFilter}
                 onChange={e => setDivisionFilter(e.target.value)}
-                className="px-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1E1E1E]"
+                className="px-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ink-900"
               >
                 {divisions.map(division => (
                   <option key={division} value={division}>{division}</option>
@@ -134,7 +134,7 @@ export const Staff = () => {
               <select
                 value={departmentFilter}
                 onChange={e => setDepartmentFilter(e.target.value)}
-                className="px-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1E1E1E]"
+                className="px-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ink-900"
               >
                 {departments.map(dept => (
                   <option key={dept} value={dept}>{dept}</option>
@@ -159,7 +159,7 @@ export const Staff = () => {
                 className="group bg-white shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
               >
                 {/* Header with gradient */}
-                <div className="h-20 bg-gradient-to-r from-[#A51C30] to-[#1E1E1E] relative">
+                <div className="h-20 bg-gradient-to-r from-primary-600 to-ink-900 relative">
                   <div className="absolute -bottom-8 left-6">
                     <div className="w-16 h-16 bg-white p-1">
                       {staff.photo_url ? (
@@ -185,14 +185,14 @@ export const Staff = () => {
                 <div className="pt-10 pb-6 px-6">
                   <div className="mb-4">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#1E1E1E] transition-colors">
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-ink-900 transition-colors">
                         {staff.full_name}
                       </h3>
                       {staff.employee_id && (
                         <span className="text-[10px] text-gray-400 font-mono">#{staff.employee_id}</span>
                       )}
                     </div>
-                    <p className="text-sm font-medium" style={{ color: '#A51C30' }}>{staff.job_title}</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-primary-600)' }}>{staff.job_title}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <Building2 className="w-3 h-3 text-gray-400" />
                       <span className="text-xs text-gray-500">{staff.department_name || staff.college_name || 'University'}</span>
@@ -203,14 +203,14 @@ export const Staff = () => {
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4 text-gray-400" />
-                      <a href={`mailto:${staff.email}`} className="hover:text-[#1E1E1E] transition">
+                      <a href={`mailto:${staff.email}`} className="hover:text-ink-900 transition">
                         {staff.email}
                       </a>
                     </div>
                     {staff.phone && (
                       <div className="flex items-center gap-2">
                         <Phone className="w-4 h-4 text-gray-400" />
-                        <a href={`tel:${staff.phone}`} className="hover:text-[#1E1E1E] transition">
+                        <a href={`tel:${staff.phone}`} className="hover:text-ink-900 transition">
                           {staff.phone}
                         </a>
                       </div>
@@ -256,7 +256,7 @@ export const Staff = () => {
                   <Link
                     to={`/about/staff/${staff.id}`}
                     className="flex items-center justify-center gap-2 w-full px-4 py-2 font-medium transition-all"
-                    style={{ backgroundColor: '#1E1E1E10', color: '#1E1E1E' }}
+                    style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 6%, transparent)', color: 'var(--color-ink-900)' }}
                   >
                     View Profile
                     <ExternalLink className="w-4 h-4" />
@@ -276,9 +276,9 @@ export const Staff = () => {
           </div>
         </section>
       )}
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom text-center">
-          <Briefcase className="w-12 h-12 mx-auto mb-4" style={{ color: '#A51C30' }} />
+          <Briefcase className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-primary-600)' }} />
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Join Our Team
           </h2>
@@ -288,7 +288,7 @@ export const Staff = () => {
           <Link
             to="/careers"
             className="inline-flex items-center gap-2 px-8 py-4 font-semibold transition-all"
-            style={{ backgroundColor: '#A51C30', color: '#1E1E1E' }}
+            style={{ backgroundColor: 'var(--color-primary-600)', color: 'var(--color-ink-900)' }}
           >
             View Open Positions
           </Link>

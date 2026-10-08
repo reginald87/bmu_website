@@ -27,7 +27,7 @@ const iconMap: Record<string, React.ElementType> = {
   environment: Leaf,
 };
 
-const colors = ['#1E1E1E', '#A51C30'];
+const colors = ['var(--color-ink-900)', 'var(--color-primary-600)'];
 
 function getCenterIcon(center: ResearchCenter): React.ElementType {
   const slug = center.slug.toLowerCase();
@@ -52,7 +52,7 @@ export const ResearchCenters = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -67,7 +67,7 @@ export const ResearchCenters = () => {
               <span className="text-white font-medium">Research Centers</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Research <span className="text-[#A51C30]">Centers</span>
+              Research <span className="text-primary-600">Centers</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               World-class research facilities addressing the health challenges of the
@@ -82,7 +82,7 @@ export const ResearchCenters = () => {
         <div className="container-custom">
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-[#A51C30]" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
             </div>
           ) : !centers || centers.length === 0 ? (
             <div className="text-center py-20">
@@ -193,7 +193,7 @@ export const ResearchCenters = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}
@@ -202,12 +202,12 @@ export const ResearchCenters = () => {
       </section>
 
       {/* Facilities CTA */}
-      <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-headline text-white mb-4">
-                Research <span className="text-[#A51C30]">Facilities</span>
+                Research <span className="text-primary-600">Facilities</span>
               </h2>
               <p className="text-lead text-white/90 mb-6">
                 Our research centers are equipped with state-of-the-art laboratories,
@@ -216,14 +216,14 @@ export const ResearchCenters = () => {
               <div className="flex flex-wrap gap-4">
                 <Link
                   to="/research/faculty"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#A51C30] font-semibold hover:bg-[#A51C30] transition"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary-600 font-semibold hover:bg-primary-600 transition"
                 >
                   <Users className="w-5 h-5" />
                   Meet Our Researchers
                 </Link>
                 <Link
                   to="/research/funding"
-                  className="inline-flex items-center gap-2 px-6 py-3 border-2 border-white text-white font-semibold hover:bg-white hover:text-[#A51C30] transition"
+                  className="inline-flex items-center gap-2 px-6 py-3 border-2 border-white text-white font-semibold hover:bg-white hover:text-primary-600 transition"
                 >
                   <Award className="w-5 h-5" />
                   Research Grants
@@ -248,7 +248,7 @@ export const ResearchCenters = () => {
                   transition={{ delay: index * 0.1 }}
                   className="bg-white/10 backdrop-blur-sm p-4 text-center"
                 >
-                  <Microscope className="w-6 h-6 text-[#A51C30] mx-auto mb-2" />
+                  <Microscope className="w-6 h-6 text-primary-600 mx-auto mb-2" />
                   <p className="text-white text-body">{facility}</p>
                 </motion.div>
               ))}

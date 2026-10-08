@@ -45,10 +45,10 @@ interface StatsCounterProps {
 }
 
 const statConfig = [
-  { key: 'researchPapers' as const, icon: BookOpen, suffix: '+', gradient: 'from-[#A51C30] to-[#c4254a]', bgGlow: 'bg-[#A51C30]/5' },
-  { key: 'students' as const, icon: GraduationCap, suffix: '+', gradient: 'from-[#1E1E1E] to-[#3a3a3a]', bgGlow: 'bg-[#1E1E1E]/5' },
-  { key: 'faculty' as const, icon: Users, suffix: '+', gradient: 'from-[#A51C30] to-[#8a1828]', bgGlow: 'bg-[#A51C30]/5' },
-  { key: 'partners' as const, icon: Globe, suffix: '', gradient: 'from-[#1E1E1E] to-[#2a2a2a]', bgGlow: 'bg-[#1E1E1E]/5' },
+  { key: 'researchPapers' as const, icon: BookOpen, suffix: '+', gradient: 'from-primary-600 to-primary-500', bgGlow: 'bg-primary-600/5' },
+  { key: 'students' as const, icon: GraduationCap, suffix: '+', gradient: 'from-ink-900 to-[#3a3a3a]', bgGlow: 'bg-ink-900/5' },
+  { key: 'faculty' as const, icon: Users, suffix: '+', gradient: 'from-primary-600 to-primary-700', bgGlow: 'bg-primary-600/5' },
+  { key: 'partners' as const, icon: Globe, suffix: '', gradient: 'from-ink-900 to-[#2a2a2a]', bgGlow: 'bg-ink-900/5' },
 ];
 
 export const StatsCounter = ({ stats, isLoading }: StatsCounterProps) => {
@@ -100,23 +100,23 @@ export const StatsCounter = ({ stats, isLoading }: StatsCounterProps) => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group relative"
               >
-                <div className={`relative bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:border-[#A51C30]/20 overflow-hidden`}>
+                <div className={`relative bg-white rounded-2xl p-8 text-center shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:border-primary-600/20 overflow-hidden`}>
                   <div className={`absolute inset-0 ${item.bgGlow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   
                   <div className={`relative inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className="w-7 h-7 text-white" />
                   </div>
 
-                  <div className="relative text-4xl md:text-5xl font-extrabold text-[#1E1E1E] tracking-tight">
+                  <div className="relative text-4xl md:text-5xl font-extrabold text-ink-900 tracking-tight">
                     <AnimatedNumber value={counters[item.key]} />
-                    <span className="text-[#A51C30]">{item.suffix}</span>
+                    <span className="text-primary-600">{item.suffix}</span>
                   </div>
 
                   <div className="relative text-sm font-medium text-gray-500 mt-3 uppercase tracking-wider">
                     {labels[item.key]}
                   </div>
 
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-transparent via-[#A51C30] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-transparent via-primary-600 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </motion.div>
             );

@@ -46,7 +46,7 @@ export const BatchPublish = () => {
       <div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             className="max-w-lg mx-auto bg-white p-8 border border-gray-100 shadow-sm text-center">
-            <GraduationCap className="w-16 h-16 mx-auto text-[#1E1E1E] mb-4" />
+            <GraduationCap className="w-16 h-16 mx-auto text-ink-900 mb-4" />
             <h2 className="text-xl font-bold text-gray-900 mb-2">Publish Semester Results</h2>
             <p className="text-gray-500 mb-6">
               This will compute GPA and CGPA for all students with senate-approved results.
@@ -72,7 +72,7 @@ export const BatchPublish = () => {
             )}
 
             <button onClick={handlePublish} disabled={publishing}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition disabled:opacity-50">
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition disabled:opacity-50">
               {publishing ? (
                 <><Loader2 className="w-5 h-5 animate-spin" /> Publishing...</>
               ) : (

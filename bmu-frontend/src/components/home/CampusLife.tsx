@@ -44,10 +44,10 @@ export const CampusLife = () => {
           viewport={{ once: true }}
           className="text-left mb-16"
         >
-          <span className="text-sm font-bold tracking-[0.2em] uppercase text-[#A51C30]">
+          <span className="text-sm font-bold tracking-[0.2em] uppercase text-primary-600">
             Campus Life
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-3 mb-4 text-[#1E1E1E]">
+          <h2 className="text-4xl md:text-5xl font-bold mt-3 mb-4 text-ink-900">
             Life at BMU
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl leading-relaxed">
@@ -63,9 +63,9 @@ export const CampusLife = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="bg-gray-50 p-6 text-center group hover:bg-[#A51C30] transition-colors duration-300"
+              className="bg-gray-50 p-6 text-center group hover:bg-primary-600 transition-colors duration-300"
             >
-              <div className="text-3xl md:text-4xl font-bold text-[#1E1E1E] group-hover:text-white transition-colors">{stat.value}</div>
+              <div className="text-3xl md:text-4xl font-bold text-ink-900 group-hover:text-white transition-colors">{stat.value}</div>
               <div className="text-sm text-gray-500 group-hover:text-white/80 mt-1 transition-colors">{stat.label}</div>
             </motion.div>
           ))}
@@ -137,7 +137,7 @@ export const CampusLife = () => {
             <p className="text-gray-600 text-sm mb-5">From residential halls to student organizations, discover everything our campus has to offer.</p>
             <Link
               to="/about/campus"
-              className="inline-flex items-center gap-2 px-6 py-3 font-semibold transition-all bg-[#1E1E1E] text-white hover:bg-[#A51C30]"
+              className="inline-flex items-center gap-2 px-6 py-3 font-semibold transition-all bg-ink-900 text-white hover:bg-primary-600"
             >
               Explore Campus Life
               <ArrowRight className="w-4 h-4" />

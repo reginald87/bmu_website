@@ -242,14 +242,14 @@ export const EventDetail = () => {
 
   if (isLoading) {
  return (
-  <><Helmet><title>Loading Event | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><div className="w-16 h-16 border-4 border-gray-200 border-t-[#1E1E1E] rounded-full animate-spin mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Loading Event</h1><p className="text-gray-600">Please wait while we fetch the event details...</p></div></div></div></>
+  <><Helmet><title>Loading Event | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><div className="w-16 h-16 border-4 border-gray-200 border-t-ink-900 rounded-full animate-spin mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Loading Event</h1><p className="text-gray-600">Please wait while we fetch the event details...</p></div></div></div></>
  );
  }
 
  if (isError) {
  return (
   <><Helmet><title>Error | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Event</h1><p className="text-gray-600 mb-6">An error occurred while fetching the event. Please try again later.</p><Link
-  to="/events" className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"><ChevronLeft className="w-5 h-5"/>
+  to="/events" className="inline-flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition"><ChevronLeft className="w-5 h-5"/>
   Back to Events
   </Link></div></div></div></>
  );
@@ -258,7 +258,7 @@ export const EventDetail = () => {
  if (!event) {
  return (
   <><Helmet><title>Event Not Found | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Event Not Found</h1><p className="text-gray-600 mb-6">The event you're looking for doesn't exist or has been removed.</p><Link
-  to="/events" className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"><ChevronLeft className="w-5 h-5"/>
+  to="/events" className="inline-flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition"><ChevronLeft className="w-5 h-5"/>
   Back to Events
   </Link></div></div></div></>
  );
@@ -269,7 +269,7 @@ export const EventDetail = () => {
  {/* Navigation Bar */}
  <div className="bg-white border-b sticky top-[140px] z-20"><div className="container-custom py-4"><div className="flex items-center justify-between"><button
   onClick={() => navigate(-1)}
-  className="flex items-center gap-2 text-gray-600 text-[#1E1E1E] transition"><ChevronLeft className="w-5 h-5"/><span className="hidden sm:inline">Back to Events</span></button><div className="flex items-center gap-2"><div className="relative"><button
+  className="flex items-center gap-2 text-gray-600 text-ink-900 transition"><ChevronLeft className="w-5 h-5"/><span className="hidden sm:inline">Back to Events</span></button><div className="flex items-center gap-2"><div className="relative"><button
   onClick={() => setShowShareMenu(!showShareMenu)}
   className="p-2 bg-gray-100 transition"><Share2 className="w-5 h-5 text-gray-600"/></button>
   {showShareMenu && (
@@ -281,10 +281,10 @@ export const EventDetail = () => {
   {copied ? 'Copied!' : 'Copy Link'}
   </button></div>
   )}
-  </div><button onClick={() => setIsBookmarked(!isBookmarked)} aria-label="Toggle bookmark" aria-pressed={isBookmarked} className="p-2 bg-gray-100 transition"><Bookmark className={`w-5 h-5 ${isBookmarked ? 'text-[#1E1E1E] fill-[#1E1E1E]' : 'text-gray-600'}`} /></button><button onClick={handlePrint} aria-label="Print" className="p-2 bg-gray-100 transition"><Printer className="w-5 h-5 text-gray-600"/></button></div></div></div></div>
+  </div><button onClick={() => setIsBookmarked(!isBookmarked)} aria-label="Toggle bookmark" aria-pressed={isBookmarked} className="p-2 bg-gray-100 transition"><Bookmark className={`w-5 h-5 ${isBookmarked ? 'text-ink-900 fill-ink-900' : 'text-gray-600'}`} /></button><button onClick={handlePrint} aria-label="Print" className="p-2 bg-gray-100 transition"><Printer className="w-5 h-5 text-gray-600"/></button></div></div></div></div>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}><div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} /><div className="container-custom relative z-10"><motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}><div className="flex items-center gap-2 text-white/60 text-sm mb-6"><Link to="/" className="text-white transition">Home</Link><span>/</span><Link to="/events" className="text-white transition">Events</Link><span>/</span><span className="text-white font-medium">Event Details</span></div><div className="flex items-center gap-3 mb-6"><span className="px-3 py-1 text-sm font-medium bg-white/20">
   {event.category}
@@ -308,9 +308,9 @@ export const EventDetail = () => {
  <motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
-  className="grid sm:grid-cols-2 gap-4"><div className="bg-white p-6 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 bg-[#1E1E1E]/10 flex items-center justify-center"><Calendar className="w-5 h-5 text-[#1E1E1E]"/></div><span className="text-sm text-gray-500">Date</span></div><p className="font-semibold text-gray-900">{event.date}</p>
+  className="grid sm:grid-cols-2 gap-4"><div className="bg-white p-6 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 bg-ink-900/10 flex items-center justify-center"><Calendar className="w-5 h-5 text-ink-900"/></div><span className="text-sm text-gray-500">Date</span></div><p className="font-semibold text-gray-900">{event.date}</p>
   {event.endDate && <p className="text-sm text-gray-500">to {event.endDate}</p>}
-  </div><div className="bg-white p-6 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 bg-[#A51C30]/10 flex items-center justify-center"><Clock className="w-5 h-5 text-[#A51C30]"/></div><span className="text-sm text-gray-500">Time</span></div><p className="font-semibold text-gray-900">{event.time}</p></div><div className="bg-white p-6 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 bg-[#A51C30]/20 flex items-center justify-center"><MapPin className="w-5 h-5 text-[#1E1E1E]"/></div><span className="text-sm text-gray-500">Location</span></div><p className="font-semibold text-gray-900">{event.location}</p><p className="text-sm text-gray-500">{event.venue}</p></div><div className="bg-white p-6 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 bg-blue-100 flex items-center justify-center"><Users className="w-5 h-5 text-blue-600"/></div><span className="text-sm text-gray-500">Attendees</span></div><p className="font-semibold text-gray-900">{event.attendees} registered</p>
+  </div><div className="bg-white p-6 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 bg-primary-600/10 flex items-center justify-center"><Clock className="w-5 h-5 text-primary-600"/></div><span className="text-sm text-gray-500">Time</span></div><p className="font-semibold text-gray-900">{event.time}</p></div><div className="bg-white p-6 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 bg-primary-600/20 flex items-center justify-center"><MapPin className="w-5 h-5 text-ink-900"/></div><span className="text-sm text-gray-500">Location</span></div><p className="font-semibold text-gray-900">{event.location}</p><p className="text-sm text-gray-500">{event.venue}</p></div><div className="bg-white p-6 shadow-sm"><div className="flex items-center gap-3 mb-3"><div className="w-10 h-10 bg-blue-100 flex items-center justify-center"><Users className="w-5 h-5 text-blue-600"/></div><span className="text-sm text-gray-500">Attendees</span></div><p className="font-semibold text-gray-900">{event.attendees} registered</p>
   {event.maxAttendees && <p className="text-sm text-gray-500">Max: {event.maxAttendees}</p>}
   </div></motion.div>
 
@@ -320,7 +320,7 @@ export const EventDetail = () => {
   animate={{ opacity: 1, y: 0 }}
   transition={{ delay: 0.1 }}
   className="bg-white p-8 shadow-sm"><h2 className="text-2xl font-bold text-gray-900 mb-4">About This Event</h2><div
-  className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-a:text-[#1E1E1E] prose-strong:text-gray-900 prose-ul:text-gray-700"dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.longDescription) }}
+  className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-a:text-ink-900 prose-strong:text-gray-900 prose-ul:text-gray-700"dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.longDescription) }}
   /></motion.div>
 
  {/* Agenda */}
@@ -331,7 +331,7 @@ export const EventDetail = () => {
   transition={{ delay: 0.2 }}
   className="bg-white p-8 shadow-sm"><h2 className="text-2xl font-bold text-gray-900 mb-6">Event Agenda</h2><div className="space-y-4">
    {event.agenda.map((item: AgendaItem, index: number) => (
-  <div key={index} className="flex gap-4"><div className="w-24 flex-shrink-0 text-sm font-medium text-[#1E1E1E]">
+  <div key={index} className="flex gap-4"><div className="w-24 flex-shrink-0 text-sm font-medium text-ink-900">
   {item.time}
   </div><div className="flex-1 pb-4 border-b last:border-0"><p className="font-medium text-gray-900">{item.activity}</p></div></div>
   ))}
@@ -346,7 +346,7 @@ export const EventDetail = () => {
   transition={{ delay: 0.3 }}
   className="bg-white p-8 shadow-sm"><h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Speakers</h2><div className="grid sm:grid-cols-2 gap-6">
    {event.speakers.map((speaker: EventSpeaker, index: number) => (
-  <div key={index} className="flex items-start gap-4"><div className="w-16 h-16 bg-gray-200 flex items-center justify-center"><Users className="w-8 h-8 text-gray-400"/></div><div><h3 className="font-bold text-gray-900">{speaker.name}</h3><p className="text-[#1E1E1E] text-sm">{speaker.role}</p><p className="text-gray-600 text-sm mt-1">{speaker.topic}</p></div></div>
+  <div key={index} className="flex items-start gap-4"><div className="w-16 h-16 bg-gray-200 flex items-center justify-center"><Users className="w-8 h-8 text-gray-400"/></div><div><h3 className="font-bold text-gray-900">{speaker.name}</h3><p className="text-ink-900 text-sm">{speaker.role}</p><p className="text-gray-600 text-sm mt-1">{speaker.topic}</p></div></div>
   ))}
   </div></motion.div>
  )}
@@ -361,13 +361,13 @@ export const EventDetail = () => {
    className="bg-white p-6 shadow-sm sticky top-24"><h3 className="text-xl font-bold text-gray-900 mb-4">Register for this Event</h3>
  
     {event.fee || event.price ? (
-    <div className="mb-4"><span className="text-sm text-gray-500">Registration Fee</span><div className="flex items-center gap-2 mt-1"><CreditCard className="w-5 h-5 text-[#1E1E1E]"/><p className="text-2xl font-bold text-[#1E1E1E]">{event.fee != null ? `₦${Number(event.fee).toLocaleString()}` : event.price}</p></div></div>
+    <div className="mb-4"><span className="text-sm text-gray-500">Registration Fee</span><div className="flex items-center gap-2 mt-1"><CreditCard className="w-5 h-5 text-ink-900"/><p className="text-2xl font-bold text-ink-900">{event.fee != null ? `₦${Number(event.fee).toLocaleString()}` : event.price}</p></div></div>
     ) : null}
 
    {event.registrationOpen ? (
     <><button
     onClick={() => setShowRegistrationModal(true)}
-    className="w-full py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition mb-4">
+    className="w-full py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition mb-4">
     {(event.fee != null && event.fee > 0) || (event.price && event.price !== 'Free') ? 'Register & Pay Now' : 'Register Now'}
     </button></>
    ) : (
@@ -380,8 +380,8 @@ export const EventDetail = () => {
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ delay: 0.1 }}
-  className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4">Organizer</h3><p className="font-medium text-[#1E1E1E]">{event.organizer.name}</p><div className="mt-4 space-y-2 text-sm"><a href={`mailto:${event.organizer.email}`} className="flex items-center gap-2 text-gray-600 text-[#1E1E1E] transition"><Mail className="w-4 h-4"/> {event.organizer.email}
-  </a><a href={`tel:${event.organizer.phone}`} className="flex items-center gap-2 text-gray-600 text-[#1E1E1E] transition"><Phone className="w-4 h-4"/> {event.organizer.phone}
+  className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4">Organizer</h3><p className="font-medium text-ink-900">{event.organizer.name}</p><div className="mt-4 space-y-2 text-sm"><a href={`mailto:${event.organizer.email}`} className="flex items-center gap-2 text-gray-600 text-ink-900 transition"><Mail className="w-4 h-4"/> {event.organizer.email}
+  </a><a href={`tel:${event.organizer.phone}`} className="flex items-center gap-2 text-gray-600 text-ink-900 transition"><Phone className="w-4 h-4"/> {event.organizer.phone}
   </a></div></motion.div>
 
  {/* Add to Calendar */}
@@ -412,9 +412,9 @@ export const EventDetail = () => {
   <Link
   key={evt.id}
   to={`/events/${evt.slug}`}
-  className="bg-white overflow-hidden shadow-sm transition group"><div className="bg-gray-200 h-48 flex items-center justify-center"><Calendar className="w-12 h-12 text-gray-400"/></div><div className="p-6"><span className="text-xs text-[#A51C30] font-medium">{evt.category}</span><h3 className="font-bold text-[#1E1E1E] mt-2 mb-2 group- text-[#A51C30] transition line-clamp-2">
+  className="bg-white overflow-hidden shadow-sm transition group"><div className="bg-gray-200 h-48 flex items-center justify-center"><Calendar className="w-12 h-12 text-gray-400"/></div><div className="p-6"><span className="text-xs text-primary-600 font-medium">{evt.category}</span><h3 className="font-bold text-ink-900 mt-2 mb-2 group- text-primary-600 transition line-clamp-2">
   {evt.title}
-  </h3><p className="text-sm text-[#1E1E1E]/50">{evt.date}</p></div></Link>
+  </h3><p className="text-sm text-ink-900/50">{evt.date}</p></div></Link>
   ))}
   </div></section></div></div>
 

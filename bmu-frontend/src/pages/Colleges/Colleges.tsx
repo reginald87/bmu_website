@@ -32,7 +32,7 @@ const fallbackColleges: College[] = [
     id: 1, slug: 'college-of-medicine', name: 'College of Medicine',
     fullName: 'Faculty of Basic Medical Sciences & Faculty of Clinical Sciences',
     description: 'The College of Medicine is the flagship college of Bayelsa Medical University, housing the Faculty of Basic Medical Sciences and the Faculty of Clinical Sciences. The University\'s other faculties — Basic Clinical Sciences, Dentistry, Health Sciences, Pharmaceutical Sciences and Science — operate as standalone faculties with their own departments.',
-    color: '#1E1E1E', faculty_count: 2, department_count: 4, faculty_members_count: 108, provost_name: 'Prof. Philip Eyimina'
+    color: 'var(--color-ink-900)', faculty_count: 2, department_count: 4, faculty_members_count: 108, provost_name: 'Prof. Philip Eyimina'
   }
 ];
 
@@ -64,7 +64,7 @@ function transformCollege(src: ApiCollege): College {
     name: src.name,
     fullName: src.fullName,
     description: src.description,
-    color: src.color || src.primary_color || src.primaryColor || '#1E1E1E',
+    color: src.color || src.primary_color || src.primaryColor || 'var(--color-ink-900)',
     faculty_count: src.faculty_count ?? src.facultyCount ?? src.faculty_count ?? 0,
     department_count: src.department_count ?? src.departmentCount ?? 0,
     faculty_members_count: src.faculty_members_count ?? src.facultyMembersCount ?? 0,
@@ -86,7 +86,7 @@ export const Colleges = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#1E1E1E] animate-spin" />
+        <Loader2 className="w-12 h-12 text-ink-900 animate-spin" />
       </div>
     );
   }
@@ -97,7 +97,7 @@ export const Colleges = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Data</h2>
           <p className="text-gray-600 mb-4">{error instanceof Error ? error.message : 'An error occurred'}</p>
-          <Link to="/academics" className="text-[#1E1E1E] font-medium hover:underline">
+          <Link to="/academics" className="text-ink-900 font-medium hover:underline">
             Back to Academics
           </Link>
         </div>
@@ -112,7 +112,7 @@ export const Colleges = () => {
         <meta name="description" content="Explore BMU's academic colleges and schools." />
       </Helmet>
 
-      <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
+      <section className="relative pt-[180px] pb-20 overflow-hidden bg-ink-900">
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -126,7 +126,7 @@ export const Colleges = () => {
               <span className="text-white font-medium">Colleges</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Our <span className="text-[#A51C30]">Colleges</span>
+              Our <span className="text-primary-600">Colleges</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               {colleges.length > 0 
@@ -154,8 +154,8 @@ export const Colleges = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}
@@ -197,9 +197,9 @@ export const Colleges = () => {
                       <div className="flex items-start gap-4 mb-6">
                         <div 
                           className="w-16 h-16 flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: `${college.color || '#1E1E1E'}15` }}
+                          style={{ backgroundColor: `${college.color || 'var(--color-ink-900)'}15` }}
                         >
-                          <School className="w-8 h-8" style={{ color: college.color || '#1E1E1E' }} />
+                          <School className="w-8 h-8" style={{ color: college.color || 'var(--color-ink-900)' }} />
                         </div>
                         <div className="flex-1">
                           <h3 className="text-title text-gray-900">{college.name}</h3>
@@ -218,13 +218,13 @@ export const Colleges = () => {
                         <div className="flex flex-wrap gap-2">
                           <span 
                             className="px-3 py-1 text-xs font-medium"
-                            style={{ backgroundColor: `${college.color || '#1E1E1E'}15`, color: college.color || '#1E1E1E' }}
+                            style={{ backgroundColor: `${college.color || 'var(--color-ink-900)'}15`, color: college.color || 'var(--color-ink-900)' }}
                           >
                             {college.faculty_count || 0} Faculties
                           </span>
                           <span 
                             className="px-3 py-1 text-xs font-medium"
-                            style={{ backgroundColor: `${college.color || '#1E1E1E'}15`, color: college.color || '#1E1E1E' }}
+                            style={{ backgroundColor: `${college.color || 'var(--color-ink-900)'}15`, color: college.color || 'var(--color-ink-900)' }}
                           >
                             {college.department_count || 0} Departments
                           </span>
@@ -242,14 +242,14 @@ export const Colleges = () => {
                               </div>
                             )}
                             <div>
-                              <div className="text-xs font-semibold text-[#1E1E1E]">Provost</div>
+                              <div className="text-xs font-semibold text-ink-900">Provost</div>
                               <p className="text-xs text-gray-500">{college.provost_name}</p>
                             </div>
                           </div>
                         )}
                         <span 
                           className="inline-flex items-center gap-1 text-sm font-medium transition-colors hover:gap-2 ml-auto"
-                          style={{ color: college.color || '#1E1E1E' }}
+                          style={{ color: college.color || 'var(--color-ink-900)' }}
                         >
                           Learn More <ArrowRight className="w-4 h-4" />
                         </span>
@@ -263,7 +263,7 @@ export const Colleges = () => {
         </div>
       </section>
 
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom text-center">
           <h2 className="text-headline text-white mb-4">Choose Your Path</h2>
           <p className="text-lead text-white/80 max-w-2xl mx-auto mb-8">
@@ -272,13 +272,13 @@ export const Colleges = () => {
           <div className="flex flex-wrap justify-center gap-4">
             <Link 
               to="/academics/programs"
-              className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+              className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
             >
               View All Programs
             </Link>
             <Link 
               to="/apply"
-              className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+              className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
             >
               Apply Now
             </Link>

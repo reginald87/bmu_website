@@ -71,7 +71,7 @@ export const ResultViewer = () => {
       <div>
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="w-8 h-8 border-4 border-[#1E1E1E] border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-4 border-ink-900 border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : results.length === 0 ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -91,8 +91,8 @@ export const ResultViewer = () => {
                     <button onClick={() => setExpandedSemester(isExpanded ? null : key)}
                       className="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition">
                       <div className="flex items-center gap-6">
-                        <div className="w-14 h-14 bg-[#1E1E1E]/5 flex items-center justify-center">
-                          <Award className="w-7 h-7 text-[#1E1E1E]" />
+                        <div className="w-14 h-14 bg-ink-900/5 flex items-center justify-center">
+                          <Award className="w-7 h-7 text-ink-900" />
                         </div>
                         <div className="text-left">
                           <h3 className="text-lg font-bold text-gray-900">{semester.session} - {semester.semester} Semester</h3>
@@ -102,11 +102,11 @@ export const ResultViewer = () => {
                       <div className="flex items-center gap-6">
                         <div className="text-right">
                           <div className="text-sm text-gray-500">GPA</div>
-                          <div className="text-xl font-bold text-[#1E1E1E]">{semester.gpa.toFixed(2)}</div>
+                          <div className="text-xl font-bold text-ink-900">{semester.gpa.toFixed(2)}</div>
                         </div>
                         <div className="text-right">
                           <div className="text-sm text-gray-500">CGPA</div>
-                          <div className="text-xl font-bold text-[#1E1E1E]">{semester.cgpa.toFixed(2)}</div>
+                          <div className="text-xl font-bold text-ink-900">{semester.cgpa.toFixed(2)}</div>
                         </div>
                         <span className={`px-3 py-1 text-xs font-semibold ${STATUS_COLORS[semester.academic_status] || 'bg-gray-100 text-gray-700'}`}>
                           {STATUS_LABELS[semester.academic_status] || semester.academic_status}
@@ -176,8 +176,8 @@ export const ResultViewer = () => {
                             <span className="font-semibold">Total Credit Units:</span> {semester.courses.reduce((s, c) => s + c.credit_units, 0)}
                           </div>
                           <div className="flex items-center gap-6">
-                            <div><span className="text-gray-500">GPA:</span> <span className="font-bold text-[#1E1E1E]">{semester.gpa.toFixed(2)}</span></div>
-                            <div><span className="text-gray-500">CGPA:</span> <span className="font-bold text-[#1E1E1E]">{semester.cgpa.toFixed(2)}</span></div>
+                            <div><span className="text-gray-500">GPA:</span> <span className="font-bold text-ink-900">{semester.gpa.toFixed(2)}</span></div>
+                            <div><span className="text-gray-500">CGPA:</span> <span className="font-bold text-ink-900">{semester.cgpa.toFixed(2)}</span></div>
                           </div>
                         </div>
                       </div>

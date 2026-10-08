@@ -64,7 +64,7 @@ export const Partnerships = () => {
   </Helmet>
 
   {/* Hero */}
-  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
   <div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
   }} />
@@ -77,7 +77,7 @@ export const Partnerships = () => {
  <span className="text-white font-medium">Partnerships</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Global <span className="text-[#A51C30]">Partnerships</span>
+ Global <span className="text-primary-600">Partnerships</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Strategic collaborations with leading universities and healthcare institutions worldwide 
@@ -107,8 +107,8 @@ export const Partnerships = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white p-8 shadow-sm border border-gray-100"
  >
-  <div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center mb-6">
-  {(() => { const Icon = iconMap[type.icon] || GraduationCap; return <Icon className="w-8 h-8 text-[#1E1E1E]" />; })()}
+  <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center mb-6">
+  {(() => { const Icon = iconMap[type.icon] || GraduationCap; return <Icon className="w-8 h-8 text-ink-900" />; })()}
   </div>
  <h3 className="text-title text-gray-900 mb-3">{type.title}</h3>
  <p className="text-body text-gray-600 mb-6">{type.description}</p>
@@ -117,7 +117,7 @@ export const Partnerships = () => {
  <ul className="space-y-1">
   {type.benefits.map((benefit: string, idx: number) => (
  <li key={idx} className="flex items-center gap-2 text-body text-gray-600">
- <div className="w-1.5 h-1.5 bg-[#A51C30]" />
+ <div className="w-1.5 h-1.5 bg-primary-600" />
  <span>{benefit}</span>
  </li>
  ))}
@@ -150,12 +150,12 @@ export const Partnerships = () => {
   className="bg-white p-6 shadow-sm border border-gray-100"
   >
   <div className="flex items-start gap-4">
-  <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0">
-  <Globe className="w-6 h-6 text-[#A51C30]" />
+  <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center flex-shrink-0">
+  <Globe className="w-6 h-6 text-primary-600" />
   </div>
   <div className="flex-1">
   <h3 className="text-title text-gray-900">{partner.name}</h3>
-  <p className="text-small text-[#A51C30]">{partner.country}</p>
+  <p className="text-small text-primary-600">{partner.country}</p>
   <div className="mt-3 space-y-1">
   <p className="text-small text-gray-600"><span className="font-medium">Type:</span> {partner.partner_type_display}</p>
   <p className="text-small text-gray-600"><span className="font-medium">Focus:</span> {partner.focus_areas?.join(', ') || 'N/A'}</p>
@@ -188,8 +188,8 @@ export const Partnerships = () => {
  transition={{ delay: idx * 0.1 }}
  className="flex items-center gap-3"
  >
- <div className="w-8 h-8 bg-[#A51C30]/20 flex items-center justify-center flex-shrink-0">
- <span className="text-sm font-bold text-[#A51C30]">{idx + 1}</span>
+ <div className="w-8 h-8 bg-primary-600/20 flex items-center justify-center flex-shrink-0">
+ <span className="text-sm font-bold text-primary-600">{idx + 1}</span>
  </div>
  <span className="text-body text-gray-700">{benefit}</span>
  </motion.li>
@@ -205,17 +205,17 @@ export const Partnerships = () => {
  </p>
  <div className="space-y-4">
  <div className="flex items-center gap-3">
- <Mail className="w-5 h-5 text-[#A51C30]" />
+ <Mail className="w-5 h-5 text-primary-600" />
  <span className="text-body text-gray-700">international@bmu.edu.ng</span>
  </div>
  <div className="flex items-center gap-3">
- <Phone className="w-5 h-5 text-[#A51C30]" />
+ <Phone className="w-5 h-5 text-primary-600" />
  <span className="text-body text-gray-700">+234 803 111 0020</span>
  </div>
  </div>
  <Link 
  to="/contact"
- className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition"
+ className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
  >
  Contact Us <ArrowRight className="w-4 h-4" />
  </Link>
@@ -225,7 +225,7 @@ export const Partnerships = () => {
  </section>
 
  {/* CTA */}
- <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="container-custom text-center">
  <h2 className="text-headline text-white mb-4">Explore Exchange Programs</h2>
  <p className="text-lead text-white/80 max-w-2xl mx-auto mb-8">
@@ -233,7 +233,7 @@ export const Partnerships = () => {
  </p>
  <Link 
  to="/international/exchange"
- className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  View Exchange Programs <ArrowRight className="w-5 h-5" />
  </Link>

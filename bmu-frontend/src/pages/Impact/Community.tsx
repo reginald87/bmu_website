@@ -56,7 +56,7 @@ export const Community = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#A51C30' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-primary-600)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -69,7 +69,7 @@ export const Community = () => {
               <span className="text-white font-medium">Community Outreach</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Community <span className="text-[#A51C30]">Outreach</span>
+              Community <span className="text-primary-600">Outreach</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               Bringing quality healthcare and education to underserved communities across the Niger Delta through free medical camps, health education, and wellness programs.
@@ -91,8 +91,8 @@ export const Community = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <Heart className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <Heart className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}
@@ -112,7 +112,7 @@ export const Community = () => {
 
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 text-[#A51C30] animate-spin" />
+              <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -129,8 +129,8 @@ export const Community = () => {
                     className="bg-white p-8 shadow-sm border border-gray-100"
                   >
                     <div className="flex items-start gap-4 mb-6">
-                      <div className="w-16 h-16 bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-8 h-8 text-[#A51C30]" />
+                      <div className="w-16 h-16 bg-primary-600/10 flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-8 h-8 text-primary-600" />
                       </div>
                       <div className="flex-1">
                         <h3 className="text-title text-gray-900 mb-2">{program.title}</h3>
@@ -141,7 +141,7 @@ export const Community = () => {
                     <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50">
                       {statsEntries.slice(0, 2).map(([key, val]) => (
                         <div key={key} className="text-center">
-                          <div className="text-stat-sm text-[#1E1E1E]">{val.toLocaleString()}</div>
+                          <div className="text-stat-sm text-ink-900">{val.toLocaleString()}</div>
                           <p className="text-xs text-gray-500">{key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
                         </div>
                       ))}
@@ -154,7 +154,7 @@ export const Community = () => {
                           {program.partners.map((partner, idx) => (
                             <span
                               key={idx}
-                              className="inline-flex items-center gap-1 px-3 py-1 text-xs bg-[#A51C30]/10 text-[#A51C30]"
+                              className="inline-flex items-center gap-1 px-3 py-1 text-xs bg-primary-600/10 text-primary-600"
                             >
                               <MapPin className="w-3 h-3" />
                               {partner}
@@ -191,21 +191,21 @@ export const Community = () => {
                 transition={{ delay: index * 0.1 }}
                 className="bg-white p-6 shadow-sm border border-gray-100"
               >
-                <div className="w-12 h-12 bg-[#A51C30]/20 flex items-center justify-center mb-4">
-                  <Calendar className="w-6 h-6 text-[#A51C30]" />
+                <div className="w-12 h-12 bg-primary-600/20 flex items-center justify-center mb-4">
+                  <Calendar className="w-6 h-6 text-primary-600" />
                 </div>
                 <h3 className="text-title text-gray-900 mb-3">{event.title}</h3>
                 <div className="space-y-2 text-body text-gray-600">
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#A51C30]" />
+                    <Calendar className="w-4 h-4 text-primary-600" />
                     <span>{event.date}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-[#A51C30]" />
+                    <Clock className="w-4 h-4 text-primary-600" />
                     <span>{event.time}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-[#A51C30]" />
+                    <MapPin className="w-4 h-4 text-primary-600" />
                     <span>{event.location}</span>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ export const Community = () => {
       </section>
 
       {/* Get Involved CTA */}
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -227,13 +227,13 @@ export const Community = () => {
               <div className="flex flex-wrap gap-4">
                 <Link 
                   to="/contact"
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
                 >
                   Volunteer With Us <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link 
                   to="/impact/sustainability"
-                  className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+                  className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
                 >
                   Partner With Us
                 </Link>
@@ -249,8 +249,8 @@ export const Community = () => {
                   'Partner as a community organization'
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3 text-white/80">
-                    <div className="w-6 h-6 bg-[#A51C30] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-[#1E1E1E]">{idx + 1}</span>
+                    <div className="w-6 h-6 bg-primary-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-ink-900">{idx + 1}</span>
                     </div>
                     <span className="text-body">{item}</span>
                   </li>

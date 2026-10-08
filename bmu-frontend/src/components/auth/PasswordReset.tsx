@@ -37,9 +37,9 @@ export const PasswordReset = ({ portal, onBack }: PasswordResetProps) => {
  };
 
  const portalColors = {
- student: '#1E1E1E',
- alumni: '#A51C30',
- cpd: '#1E1E1E'
+ student: 'var(--color-ink-900)',
+ alumni: 'var(--color-primary-600)',
+ cpd: 'var(--color-ink-900)'
  };
 
  const handleEmailSubmit = async (e: React.FormEvent) => {

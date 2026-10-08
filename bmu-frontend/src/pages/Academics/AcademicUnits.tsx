@@ -42,12 +42,12 @@ interface GroupedFaculty {
   departments: DepartmentData[];
 }
 
-const standaloneColor = '#1E1E1E';
+const standaloneColor = 'var(--color-ink-900)';
 
 const fallbackGroups: GroupedFaculty[] = [
   {
     id: 1, name: 'Faculty of Basic Medical Sciences', slug: 'faculty-of-basic-medical-sciences',
-    college_name: 'College of Medicine', college_slug: 'college-of-medicine', color: '#1E1E1E',
+    college_name: 'College of Medicine', college_slug: 'college-of-medicine', color: 'var(--color-ink-900)',
     departments: [
       { id: 2, name: 'Biochemistry', slug: 'biochemistry', code: 'BCH', description: 'The study of the chemical processes within and relating to living organisms, essential to understanding health and disease.', faculty_id: 1, faculty_name: 'Faculty of Basic Medical Sciences', faculty_slug: 'faculty-of-basic-medical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: '', staff_count: 5, student_count: 0, is_standalone: false },
       { id: 3, name: 'Human Anatomy', slug: 'human-anatomy', code: 'ANA', description: 'The study of the structure of the human body, providing the foundation for clinical practice.', faculty_id: 1, faculty_name: 'Faculty of Basic Medical Sciences', faculty_slug: 'faculty-of-basic-medical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: '', staff_count: 5, student_count: 0, is_standalone: false },
@@ -63,7 +63,7 @@ const fallbackGroups: GroupedFaculty[] = [
   },
   {
     id: 3, name: 'Faculty of Clinical Sciences', slug: 'faculty-of-clinical-sciences',
-    college_name: 'College of Medicine', college_slug: 'college-of-medicine', color: '#1E1E1E',
+    college_name: 'College of Medicine', college_slug: 'college-of-medicine', color: 'var(--color-ink-900)',
     departments: [
       { id: 5, name: 'Medicine & Surgery', slug: 'medicine-surgery', code: 'MES', description: 'The flagship department training medical doctors through the MBBS programme with comprehensive clinical education.', faculty_id: 3, faculty_name: 'Faculty of Clinical Sciences', faculty_slug: 'faculty-of-clinical-sciences', college_id: 1, college_name: 'College of Medicine', college_slug: 'college-of-medicine', leadership_name: '', staff_count: 5, student_count: 0, is_standalone: false },
     ]
@@ -135,7 +135,7 @@ export const AcademicUnits = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#1E1E1E] animate-spin" />
+        <Loader2 className="w-12 h-12 text-ink-900 animate-spin" />
       </div>
     );
   }
@@ -146,7 +146,7 @@ export const AcademicUnits = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Data</h2>
           <p className="text-gray-600 mb-4">{error instanceof Error ? error.message : 'An error occurred'}</p>
-          <Link to="/academics" className="text-[#1E1E1E] font-medium hover:underline">
+          <Link to="/academics" className="text-ink-900 font-medium hover:underline">
             Back to Academics
           </Link>
         </div>
@@ -161,7 +161,7 @@ export const AcademicUnits = () => {
         <meta name="description" content="Explore all departments organized by faculties and colleges." />
       </Helmet>
 
-      <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
+      <section className="relative pt-[180px] pb-20 overflow-hidden bg-ink-900">
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -175,7 +175,7 @@ export const AcademicUnits = () => {
               <span className="text-white font-medium">Departments</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Our <span className="text-[#A51C30]">Departments</span>
+              Our <span className="text-primary-600">Departments</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               Discover all academic departments across our colleges and standalone faculties, each offering specialized programs.
@@ -257,7 +257,7 @@ export const AcademicUnits = () => {
                             </span>
                             <Link
                               to={`/departments/${dept.slug}`}
-                              className="inline-flex items-center gap-1 text-sm text-[#1E1E1E] font-medium hover:gap-2 transition-all"
+                              className="inline-flex items-center gap-1 text-sm text-ink-900 font-medium hover:gap-2 transition-all"
                             >
                               View
                               <ArrowRight className="w-4 h-4" />
@@ -291,8 +291,8 @@ export const AcademicUnits = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}
@@ -315,7 +315,7 @@ function groupDepartments(departments: DepartmentData[]): GroupedFaculty[] {
         slug: dept.faculty_slug,
         college_name: dept.college_name,
         college_slug: dept.college_slug,
-        color: dept.is_standalone ? standaloneColor : (dept.college_id ? '#1E1E1E' : '#1E1E1E'),
+        color: dept.is_standalone ? standaloneColor : (dept.college_id ? 'var(--color-ink-900)' : 'var(--color-ink-900)'),
         departments: [],
       });
     }

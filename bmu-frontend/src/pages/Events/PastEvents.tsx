@@ -173,11 +173,11 @@ export const PastEvents = () => {
  return (
   <><Helmet><title>Past Events Archive | Bayelsa Medical University</title><meta name="description"content="Browse our archive of past conferences, workshops, ceremonies, and community programs."/></Helmet><div className="min-h-screen bg-gray-50">
   {/* Hero */}
-  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}><div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
   }} /><div className="container-custom relative z-10"><motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}><div className="flex items-center gap-2 text-white/60 text-sm mb-6"><Link to="/" className="hover:text-white transition">Home</Link><span>/</span><Link to="/events" className="hover:text-white transition">Events</Link><span>/</span><span className="text-white font-medium">Past Events</span></div><Link to="/events" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition"><ArrowLeft className="w-4 h-4"/> Back to Events
   </Link><h1 className="text-display text-white mb-6">
-  Past Events <span className="text-[#A51C30]">Archive</span></h1><p className="text-lead text-white/80 max-w-2xl">
+  Past Events <span className="text-primary-600">Archive</span></h1><p className="text-lead text-white/80 max-w-2xl">
   Browse through our archive of past conferences, workshops, and ceremonies
   </p></motion.div></div></section>
 
@@ -185,17 +185,17 @@ export const PastEvents = () => {
   <div className="bg-white border-b sticky top-[140px] z-30"><div className="container-custom py-6"><div className="flex flex-col md:flex-row gap-4"><div className="flex-1 relative"><Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/><input
   type="text" value={searchQuery}
   onChange={(e) => setSearchQuery(e.target.value)}
-  placeholder="Search past events..." className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E]"/></div><select
+  placeholder="Search past events..." className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900"/></div><select
   value={selectedCategory}
   onChange={(e) => setSelectedCategory(e.target.value)}
-  className="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E]">
+  className="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900">
   {categories.map(cat => (
   <option key={cat.id} value={cat.id}>{cat.label}</option>
   ))}
   </select><select
   value={selectedYear}
   onChange={(e) => setSelectedYear(e.target.value)}
-  className="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E]">
+  className="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900">
   {years.map(year => (
   <option key={year} value={year}>{year}</option>
   ))}
@@ -220,7 +220,7 @@ export const PastEvents = () => {
   )}
   </div></div><div className="p-6"><span className="text-xs px-2 py-1 font-medium bg-gray-100 text-gray-600">
   {event.category}
-  </span><h3 className="font-bold text-lg text-gray-900 mt-3 mb-2 group-hover:text-[#1E1E1E] transition line-clamp-2">
+  </span><h3 className="font-bold text-lg text-gray-900 mt-3 mb-2 group-hover:text-ink-900 transition line-clamp-2">
   {event.title}
   </h3><p className="text-gray-600 text-sm mb-4 line-clamp-2">
   {event.description}

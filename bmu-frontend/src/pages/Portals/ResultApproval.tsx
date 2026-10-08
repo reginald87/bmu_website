@@ -149,7 +149,7 @@ export const ResultApproval = ({ stage }: Props) => {
               <div className="p-4 bg-gray-50 border-b flex items-center gap-4">
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={selected.size === pending.length} onChange={toggleAll}
-                    className="w-4 h-4 accent-[#1E1E1E]" />
+                    className="w-4 h-4 accent-ink-900" />
                   Select All ({pending.length} pending)
                 </label>
               </div>
@@ -173,7 +173,7 @@ export const ResultApproval = ({ stage }: Props) => {
                         onClick={() => toggleSelect(p.student_course_id)}>
                         <td className="px-2 py-3 text-center">
                           <input type="checkbox" checked={selected.has(p.student_course_id)} readOnly
-                            className="w-4 h-4 accent-[#1E1E1E]" />
+                            className="w-4 h-4 accent-ink-900" />
                         </td>
                         <td className="px-4 py-3 font-medium text-gray-900">{p.matric_number}</td>
                         <td className="px-4 py-3 text-gray-700">{p.student_name}</td>
@@ -196,7 +196,7 @@ export const ResultApproval = ({ stage }: Props) => {
 
               <div className="px-4 py-4 bg-gray-50 border-t flex items-center gap-3">
                 <button onClick={handleApprove} disabled={approving || selected.size === 0}
-                  className="flex items-center gap-2 px-4 py-2 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition disabled:opacity-50">
+                  className="flex items-center gap-2 px-4 py-2 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition disabled:opacity-50">
                   {approving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
                   Approve Selected ({selected.size})
                 </button>

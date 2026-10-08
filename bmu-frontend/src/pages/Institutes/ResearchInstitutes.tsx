@@ -45,7 +45,7 @@ export const ResearchInstitutes = () => {
  <meta name="description" content="Research Institutes at Bayelsa Medical University - Advancing healthcare through research" />
  </Helmet>
 
- <section className="pt-[180px] pb-12 bg-[#1E1E1E]">
+ <section className="pt-[180px] pb-12 bg-ink-900">
  <div className="container-custom">
  <motion.div
  initial={{ opacity: 0, y: 20 }}
@@ -73,7 +73,7 @@ export const ResearchInstitutes = () => {
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-2 space-y-8">
  <section className="card p-6">
- <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>Overview</h2>
+ <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Overview</h2>
  <p className="text-gray-600 mb-4">
  Our Research Institutes are dedicated to solving critical health challenges facing 
  Nigeria and the African continent. From tropical diseases to maternal health, 
@@ -82,11 +82,11 @@ export const ResearchInstitutes = () => {
  </section>
 
  <section>
- <h2 className="text-2xl font-bold mb-6" style={{ color: '#1E1E1E' }}>Our Institutes</h2>
+ <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-ink-900)' }}>Our Institutes</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
     {institutes.map((institute) => (
       <div key={institute.id} className="card p-6">
-        <h3 className="font-bold text-lg mb-2" style={{ color: '#1E1E1E' }}>
+        <h3 className="font-bold text-lg mb-2" style={{ color: 'var(--color-ink-900)' }}>
           {institute.name}
         </h3>
         <p className="text-sm text-[#00a651] mb-2">{institute.focus}</p>
@@ -106,7 +106,7 @@ export const ResearchInstitutes = () => {
 
  <div className="space-y-6">
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Research Impact</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Research Impact</h3>
  <ul className="space-y-3 text-gray-600">
  <li className="flex justify-between"><span>Active Projects</span><span className="font-bold">45+</span></li>
  <li className="flex justify-between"><span>Publications (2024)</span><span className="font-bold">127</span></li>
@@ -116,7 +116,7 @@ export const ResearchInstitutes = () => {
  </div>
 
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Funding Partners</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Funding Partners</h3>
  <div className="space-y-2 text-sm text-gray-600">
  <p>WHO</p>
  <p>NIH/NIAID</p>

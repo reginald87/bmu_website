@@ -146,12 +146,12 @@ export const FeePayment = () => {
           </div>
 
           {isLoading ? (
-            <div className="flex justify-center py-20"><div className="w-10 h-10 border-4 border-[#A51C30] border-t-transparent rounded-full animate-spin" /></div>
+            <div className="flex justify-center py-20"><div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" /></div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="bg-white shadow-sm border border-gray-100 p-6">
                 <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-[#A51C30]" /> Fee Structure
+                  <DollarSign className="w-5 h-5 text-primary-600" /> Fee Structure
                 </h2>
 
                 {structure && (
@@ -176,12 +176,12 @@ export const FeePayment = () => {
                           <div className="font-medium text-gray-900 text-sm">{item.fee_type}</div>
                           <div className="text-xs text-gray-500">{item.category}</div>
                         </div>
-                        <div className="text-lg font-bold text-[#A51C30]">₦{item.amount.toLocaleString()}</div>
+                        <div className="text-lg font-bold text-primary-600">₦{item.amount.toLocaleString()}</div>
                       </div>
                     ))}
                     <div className="flex items-center justify-between p-3 bg-gray-100 border border-gray-300">
                       <div className="font-bold text-gray-900">Total</div>
-                      <div className="text-lg font-bold text-[#A51C30]">₦{outstanding_total.toLocaleString()}</div>
+                      <div className="text-lg font-bold text-primary-600">₦{outstanding_total.toLocaleString()}</div>
                     </div>
                     <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 text-sm">
                       <div className="font-medium text-blue-900">Installment Due (1 of {structure?.max_installments || 2})</div>
@@ -207,7 +207,7 @@ export const FeePayment = () => {
                         <option value="remita">Remita (Bank/Transfer)</option>
                       </select>
                     </div>
-                    <button onClick={handlePay} disabled={paying} className="w-full py-3 bg-[#A51C30] text-white font-medium hover:bg-[#A51C30]/90 transition disabled:opacity-50 flex items-center justify-center gap-2">
+                    <button onClick={handlePay} disabled={paying} className="w-full py-3 bg-primary-600 text-white font-medium hover:bg-primary-600/90 transition disabled:opacity-50 flex items-center justify-center gap-2">
                       {paying ? <Loader className="w-5 h-5 animate-spin" /> : <CreditCard className="w-5 h-5" />}
                       {paying ? 'Processing...' : `Pay with ${gateway === 'paystack' ? 'Paystack' : 'Remita'}`}
                     </button>
@@ -224,7 +224,7 @@ export const FeePayment = () => {
 
               <div className="bg-white shadow-sm border border-gray-100 p-6">
                 <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <Wallet className="w-5 h-5 text-[#1E1E1E]" /> Payment History
+                  <Wallet className="w-5 h-5 text-ink-900" /> Payment History
                 </h2>
                 {payments.length === 0 ? (
                   <p className="text-sm text-gray-400 text-center py-8">No payment history</p>

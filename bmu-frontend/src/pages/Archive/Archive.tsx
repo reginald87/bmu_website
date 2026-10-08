@@ -211,7 +211,7 @@ export const ArchivePage = () => {
  </Helmet>
 
  {/* Hero Section */}
- <section className="pt-[180px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="pt-[180px] pb-12" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="container-custom">
  <motion.div
  initial={{ opacity: 0, y: 20 }}
@@ -239,28 +239,28 @@ export const ArchivePage = () => {
  </section>
 
  {/* Stats Bar */}
- <div className="bg-[#A51C30] py-4">
+ <div className="bg-primary-600 py-4">
  <div className="container-custom">
  <div className="flex flex-wrap gap-8 text-sm">
  <div className="flex items-center gap-2">
- <FileText className="w-5 h-5 text-[#1E1E1E]" />
- <span className="font-semibold text-[#1E1E1E]">{archivedItems.length}</span>
- <span className="text-[#1E1E1E]/80">Total Items</span>
+ <FileText className="w-5 h-5 text-ink-900" />
+ <span className="font-semibold text-ink-900">{archivedItems.length}</span>
+ <span className="text-ink-900/80">Total Items</span>
  </div>
  <div className="flex items-center gap-2">
- <Newspaper className="w-5 h-5 text-[#1E1E1E]" />
- <span className="font-semibold text-[#1E1E1E]">{archivedItems.filter(i => i.type === 'news').length}</span>
- <span className="text-[#1E1E1E]/80">News Articles</span>
+ <Newspaper className="w-5 h-5 text-ink-900" />
+ <span className="font-semibold text-ink-900">{archivedItems.filter(i => i.type === 'news').length}</span>
+ <span className="text-ink-900/80">News Articles</span>
  </div>
  <div className="flex items-center gap-2">
- <Calendar className="w-5 h-5 text-[#1E1E1E]" />
- <span className="font-semibold text-[#1E1E1E]">{archivedItems.filter(i => i.type === 'event').length}</span>
- <span className="text-[#1E1E1E]/80">Events</span>
+ <Calendar className="w-5 h-5 text-ink-900" />
+ <span className="font-semibold text-ink-900">{archivedItems.filter(i => i.type === 'event').length}</span>
+ <span className="text-ink-900/80">Events</span>
  </div>
  <div className="flex items-center gap-2">
- <Building2 className="w-5 h-5 text-[#1E1E1E]" />
- <span className="font-semibold text-[#1E1E1E]">{categories.length}</span>
- <span className="text-[#1E1E1E]/80">Categories</span>
+ <Building2 className="w-5 h-5 text-ink-900" />
+ <span className="font-semibold text-ink-900">{categories.length}</span>
+ <span className="text-ink-900/80">Categories</span>
  </div>
  </div>
  </div>
@@ -278,7 +278,7 @@ export const ArchivePage = () => {
  placeholder="Search archived items..."
  value={searchTerm}
  onChange={(e) => setSearchTerm(e.target.value)}
- className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+ className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
  />
  </div>
 
@@ -287,7 +287,7 @@ export const ArchivePage = () => {
  <select
  value={selectedType}
  onChange={(e) => setSelectedType(e.target.value)}
- className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+ className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
  >
  <option value="All">All Types</option>
  <option value="news">News</option>
@@ -304,7 +304,7 @@ export const ArchivePage = () => {
  <select
  value={selectedCategory}
  onChange={(e) => setSelectedCategory(e.target.value)}
- className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+ className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
  >
  <option value="All">All Categories</option>
  {categories.map(cat => (
@@ -318,7 +318,7 @@ export const ArchivePage = () => {
  <button
  onClick={() => setViewMode('list')}
  className={`px-4 py-2 rounded-md text-sm font-medium transition ${
- viewMode === 'list' ? 'bg-white text-[#1E1E1E] shadow-sm' : 'text-gray-600'
+ viewMode === 'list' ? 'bg-white text-ink-900 shadow-sm' : 'text-gray-600'
  }`}
  >
  List
@@ -326,7 +326,7 @@ export const ArchivePage = () => {
  <button
  onClick={() => setViewMode('grid')}
  className={`px-4 py-2 rounded-md text-sm font-medium transition ${
- viewMode === 'grid' ? 'bg-white text-[#1E1E1E] shadow-sm' : 'text-gray-600'
+ viewMode === 'grid' ? 'bg-white text-ink-900 shadow-sm' : 'text-gray-600'
  }`}
  >
  Grid
@@ -562,7 +562,7 @@ export const ArchivePage = () => {
 
  <div className="flex gap-3 pt-4 border-t">
  {selectedItem.fileUrl && (
- <button className="flex-1 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition flex items-center justify-center gap-2">
+ <button className="flex-1 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition flex items-center justify-center gap-2">
  <Download className="w-5 h-5" />
  Download File
  </button>
@@ -570,7 +570,7 @@ export const ArchivePage = () => {
  {selectedItem.originalUrl && (
  <Link
  to={selectedItem.originalUrl}
- className="flex-1 py-3 border border-[#1E1E1E] text-[#1E1E1E] font-medium hover:bg-[#1E1E1E]/5 transition flex items-center justify-center gap-2"
+ className="flex-1 py-3 border border-ink-900 text-ink-900 font-medium hover:bg-ink-900/5 transition flex items-center justify-center gap-2"
  >
  <ExternalLink className="w-5 h-5" />
  View Original

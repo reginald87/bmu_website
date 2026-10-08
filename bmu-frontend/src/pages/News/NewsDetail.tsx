@@ -204,7 +204,7 @@ export const NewsDetail = () => {
  <div className="min-h-screen bg-gray-50 pt-[180px]">
  <div className="container-custom py-16">
  <div className="max-w-2xl mx-auto text-center">
- <div className="w-8 h-8 border-4 border-[#1E1E1E] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+ <div className="w-8 h-8 border-4 border-ink-900 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
  <p className="text-gray-600">Loading article...</p>
  </div>
  </div>
@@ -216,7 +216,7 @@ export const NewsDetail = () => {
  if (!article) {
  return (
  <><Helmet><title>Article Not Found | Bayelsa Medical University</title></Helmet><div className="min-h-screen bg-gray-50"><div className="container-custom py-16"><div className="max-w-2xl mx-auto text-center"><Newspaper className="w-16 h-16 text-gray-300 mx-auto mb-4"/><h1 className="text-2xl font-bold text-gray-900 mb-2">Article Not Found</h1><p className="text-gray-600 mb-6">The article you're looking for doesn't exist or has been removed.</p><Link
- to="/news" className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"><ChevronLeft className="w-5 h-5"/>
+ to="/news" className="inline-flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition"><ChevronLeft className="w-5 h-5"/>
  Back to News
  </Link></div></div></div></>
  );
@@ -229,7 +229,7 @@ export const NewsDetail = () => {
  {/* Navigation Bar */}
  <div className="bg-white border-b sticky top-[140px] z-20"><div className="container-custom py-4"><div className="flex items-center justify-between"><button
  onClick={() => navigate(-1)}
- className="flex items-center gap-2 text-gray-600 text-[#1E1E1E] transition"><ChevronLeft className="w-5 h-5"/><span className="hidden sm:inline">Back to News</span></button><div className="flex items-center gap-2"><div className="relative"><button
+ className="flex items-center gap-2 text-gray-600 text-ink-900 transition"><ChevronLeft className="w-5 h-5"/><span className="hidden sm:inline">Back to News</span></button><div className="flex items-center gap-2"><div className="relative"><button
  onClick={() => setShowShareMenu(!showShareMenu)}
  className="p-2 bg-gray-100 transition" title="Share article"><Share2 className="w-5 h-5 text-gray-600"/></button>
  {showShareMenu && (
@@ -255,7 +255,7 @@ export const NewsDetail = () => {
  </div><button
  onClick={() => setIsBookmarked(!isBookmarked)}
  className="p-2 bg-gray-100 transition" title={isBookmarked ? 'Remove bookmark' : 'Bookmark article'}
- ><Bookmark className={`w-5 h-5 ${isBookmarked ? 'text-[#1E1E1E] fill-[#1E1E1E]' : 'text-gray-600'}`} /></button><button
+ ><Bookmark className={`w-5 h-5 ${isBookmarked ? 'text-ink-900 fill-ink-900' : 'text-gray-600'}`} /></button><button
  onClick={handlePrint}
  className="p-2 bg-gray-100 transition" title="Print article"><Printer className="w-5 h-5 text-gray-600"/></button></div></div></div></div>
 
@@ -266,7 +266,7 @@ export const NewsDetail = () => {
  transition={{ duration: 0.5 }}
  >
  {/* Breadcrumb */}
- <div className="flex items-center gap-2 text-gray-600 text-sm mb-6"><Link to="/" className="text-[#1E1E1E] transition">Home</Link><span>/</span><Link to="/news" className="text-[#1E1E1E] transition">News</Link><span>/</span><span className="text-gray-900 font-medium">Article</span></div>
+ <div className="flex items-center gap-2 text-gray-600 text-sm mb-6"><Link to="/" className="text-ink-900 transition">Home</Link><span>/</span><Link to="/news" className="text-ink-900 transition">News</Link><span>/</span><span className="text-gray-900 font-medium">Article</span></div>
  {/* Tags */}
  <div className="flex items-center gap-2 mb-4"><span className={`px-3 py-1 text-sm font-medium ${typeConfig.bg} ${typeConfig.color}`}>
  {typeConfig.label}
@@ -306,11 +306,11 @@ export const NewsDetail = () => {
  className="bg-white p-8 md:p-12 shadow-sm">
  {/* Article Body */}
  <div
- className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-a:text-[#1E1E1E] prose-strong:text-gray-900 prose-ul:text-gray-700 prose-li:marker:text-[#1E1E1E]" dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
+ className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-a:text-ink-900 prose-strong:text-gray-900 prose-ul:text-gray-700 prose-li:marker:text-ink-900" dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
  />
 
  {/* Engagement Section */}
- <div className="mt-12 pt-8 border-t"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><button className="flex items-center gap-2 px-4 py-2 bg-gray-100 bg-red-50 transition group"><Heart className="w-5 h-5 text-gray-600 group- text-red-600 group- fill-red-600"/><span className="text-gray-600 group- text-red-600">Like</span></button><button className="flex items-center gap-2 px-4 py-2 bg-gray-100 bg-[#1E1E1E]/10 transition"><MessageSquare className="w-5 h-5 text-gray-600"/><span className="text-gray-600">Comment</span></button></div><div className="flex items-center gap-2"><span className="text-sm text-gray-500">Share:</span><button
+ <div className="mt-12 pt-8 border-t"><div className="flex items-center justify-between"><div className="flex items-center gap-4"><button className="flex items-center gap-2 px-4 py-2 bg-gray-100 bg-red-50 transition group"><Heart className="w-5 h-5 text-gray-600 group- text-red-600 group- fill-red-600"/><span className="text-gray-600 group- text-red-600">Like</span></button><button className="flex items-center gap-2 px-4 py-2 bg-gray-100 bg-ink-900/10 transition"><MessageSquare className="w-5 h-5 text-gray-600"/><span className="text-gray-600">Comment</span></button></div><div className="flex items-center gap-2"><span className="text-sm text-gray-500">Share:</span><button
  onClick={() => handleShare('facebook')}
  className="p-2 bg-blue-50 transition text-blue-600 font-bold" title="Share on Facebook">
  f
@@ -329,50 +329,50 @@ export const NewsDetail = () => {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.5, delay: 0.3 }}
- className="mt-8 bg-white p-8 shadow-sm"><div className="flex items-start gap-4"><div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0"><User className="w-8 h-8 text-[#1E1E1E]"/></div><div><h3 className="font-bold text-gray-900">{article.author.name}</h3><p className="text-[#1E1E1E] text-sm mb-2">{article.author.role}</p><p className="text-gray-600 text-sm">{article.author.bio}</p></div></div></motion.div>
+ className="mt-8 bg-white p-8 shadow-sm"><div className="flex items-start gap-4"><div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center flex-shrink-0"><User className="w-8 h-8 text-ink-900"/></div><div><h3 className="font-bold text-gray-900">{article.author.name}</h3><p className="text-ink-900 text-sm mb-2">{article.author.role}</p><p className="text-gray-600 text-sm">{article.author.bio}</p></div></div></motion.div>
 
  {/* Newsletter CTA */}
- <div className="mt-8 bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-8 text-white"><div className="flex flex-col md:flex-row items-center gap-6"><div className="flex-1"><h3 className="text-xl font-bold mb-2">Never Miss an Update</h3><p className="text-white/80">Subscribe to our newsletter for the latest news, events, and announcements from BMU.</p></div><div className="flex gap-2 w-full md:w-auto"><input
- type="email" placeholder="Your email" className="flex-1 md:w-48 px-4 py-3 text-gray-900"/><button className="px-6 py-3 bg-[#A51C30] text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition whitespace-nowrap">
+ <div className="mt-8 bg-gradient-to-r from-ink-900 to-primary-600 p-8 text-white"><div className="flex flex-col md:flex-row items-center gap-6"><div className="flex-1"><h3 className="text-xl font-bold mb-2">Never Miss an Update</h3><p className="text-white/80">Subscribe to our newsletter for the latest news, events, and announcements from BMU.</p></div><div className="flex gap-2 w-full md:w-auto"><input
+ type="email" placeholder="Your email" className="flex-1 md:w-48 px-4 py-3 text-gray-900"/><button className="px-6 py-3 bg-primary-600 text-white font-bold hover:bg-white hover:text-ink-900 transition whitespace-nowrap">
  Subscribe
  </button></div></div></div></div>
 
  {/* Sidebar */}
  <div className="lg:col-span-1"><div className="sticky top-24 space-y-6">
  {/* Related Articles */}
- <div className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-[#1E1E1E]"/>
+ <div className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-ink-900"/>
  Related Articles
  </h3><div className="space-y-4">
  {relatedArticlesData.map((related) => (
  <Link
  key={related.id}
  to={`/news/${related.slug}`}
- className="block group"><h4 className="font-medium text-gray-900 text-sm group- text-[#1E1E1E] transition line-clamp-2">
+ className="block group"><h4 className="font-medium text-gray-900 text-sm group- text-ink-900 transition line-clamp-2">
  {related.title}
  </h4><p className="text-xs text-gray-500 mt-1">{related.category} • {related.date}</p></Link>
  ))}
  </div></div>
 
  {/* Categories */}
- <div className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><Tag className="w-5 h-5 text-[#A51C30]"/>
+ <div className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><Tag className="w-5 h-5 text-primary-600"/>
  Categories
  </h3><div className="space-y-2">
  {['Research', 'Events', 'Achievements', 'Partnerships', 'Academics', 'Community'].map((cat) => (
  <Link
  key={cat}
  to={`/news?category=${cat}`}
- className="flex items-center justify-between py-2 text-[#1E1E1E] transition"><span className="text-gray-600">{cat}</span><ChevronRight className="w-4 h-4 text-gray-400"/></Link>
+ className="flex items-center justify-between py-2 text-ink-900 transition"><span className="text-gray-600">{cat}</span><ChevronRight className="w-4 h-4 text-gray-400"/></Link>
  ))}
  </div></div>
 
  {/* Quick Links */}
- <div className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4">Quick Links</h3><div className="space-y-2"><Link to="/events" className="block py-2 text-gray-600 text-[#1E1E1E] transition">
+ <div className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4">Quick Links</h3><div className="space-y-2"><Link to="/events" className="block py-2 text-gray-600 text-ink-900 transition">
  Upcoming Events
- </Link><Link to="/apply" className="block py-2 text-gray-600 text-[#1E1E1E] transition">
+ </Link><Link to="/apply" className="block py-2 text-gray-600 text-ink-900 transition">
  Apply to BMU
- </Link><Link to="/contact" className="block py-2 text-gray-600 text-[#1E1E1E] transition">
+ </Link><Link to="/contact" className="block py-2 text-gray-600 text-ink-900 transition">
  Contact Us
- </Link><Link to="/about" className="block py-2 text-gray-600 text-[#1E1E1E] transition">
+ </Link><Link to="/about" className="block py-2 text-gray-600 text-ink-900 transition">
  About BMU
  </Link></div></div></div></div></div></div>
 
@@ -382,9 +382,9 @@ export const NewsDetail = () => {
  <Link
  key={article.id}
  to={`/news/${article.slug}`}
- className="bg-white overflow-hidden shadow-sm transition group"><div className="bg-gray-200 h-48 flex items-center justify-center"><Newspaper className="w-12 h-12 text-gray-400"/></div><div className="p-6"><span className="text-xs text-[#A51C30] font-medium">{article.category}</span><h3 className="font-bold text-[#1E1E1E] mt-2 mb-2 group- text-[#A51C30] transition line-clamp-2">
+ className="bg-white overflow-hidden shadow-sm transition group"><div className="bg-gray-200 h-48 flex items-center justify-center"><Newspaper className="w-12 h-12 text-gray-400"/></div><div className="p-6"><span className="text-xs text-primary-600 font-medium">{article.category}</span><h3 className="font-bold text-ink-900 mt-2 mb-2 group- text-primary-600 transition line-clamp-2">
  {article.title}
- </h3><p className="text-sm text-[#1E1E1E]/70 line-clamp-2">{article.excerpt}</p><p className="text-sm text-[#1E1E1E]/50 mt-4">{article.date}</p></div></Link>
+ </h3><p className="text-sm text-ink-900/70 line-clamp-2">{article.excerpt}</p><p className="text-sm text-ink-900/50 mt-4">{article.date}</p></div></Link>
  ))}
  </div></div></div></>
  );

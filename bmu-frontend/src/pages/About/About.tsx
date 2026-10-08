@@ -85,7 +85,7 @@ export const About = () => {
       </Helmet>
 
       {/* Hero Section - pt-[180px] to clear fixed navbar */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         {/* Subtle Pattern Overlay */}
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
@@ -106,7 +106,7 @@ export const About = () => {
             </div>
             <h1 className="text-display text-white mb-6">
               About Bayelsa<br />
-              <span className="text-[#A51C30]">Medical University</span>
+              <span className="text-primary-600">Medical University</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               {heroContent}
@@ -128,7 +128,7 @@ export const About = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-stat" style={{ color: '#A51C30' }}>
+                <div className="text-stat" style={{ color: 'var(--color-primary-600)' }}>
                   {stat.value}{stat.suffix}
                 </div>
                 <div className="text-gray-600 text-body mt-1">{stat.label}</div>
@@ -149,8 +149,8 @@ export const About = () => {
               className="bg-white p-8 shadow-sm border border-gray-100"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: '#A51C3020' }}>
-                  <Target className="w-6 h-6" style={{ color: '#A51C30' }} />
+                <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+                  <Target className="w-6 h-6" style={{ color: 'var(--color-primary-600)' }} />
                 </div>
                 <h2 className="text-title text-gray-900">Our Mission</h2>
               </div>
@@ -166,8 +166,8 @@ export const About = () => {
               className="bg-white p-8 shadow-sm border border-gray-100"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: '#1E1E1E20' }}>
-                  <Eye className="w-6 h-6" style={{ color: '#1E1E1E' }} />
+                <div className="w-12 h-12 flex items-center justify-center" style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 12.5%, transparent)' }}>
+                  <Eye className="w-6 h-6" style={{ color: 'var(--color-ink-900)' }} />
                 </div>
                 <h2 className="text-title text-gray-900">Our Vision</h2>
               </div>
@@ -201,8 +201,8 @@ export const About = () => {
                   transition={{ delay: index * 0.1 }}
                   className="bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
                 >
-                  <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ backgroundColor: '#A51C3020' }}>
-                    <Icon className="w-6 h-6" style={{ color: '#1E1E1E' }} />
+                  <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' }}>
+                    <Icon className="w-6 h-6" style={{ color: 'var(--color-ink-900)' }} />
                   </div>
                   <h3 className="text-subtitle text-gray-900 mb-2">{value.title}</h3>
                   <p className="text-gray-600 text-body">{value.description}</p>
@@ -230,8 +230,8 @@ export const About = () => {
                   const Icon = item.icon;
                   return (
                     <div className="flex gap-4" key={index}>
-                      <div className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: index % 2 === 0 ? '#A51C3020' : '#1E1E1E20' }}>
-                        <Icon className="w-4 h-4" style={{ color: index % 2 === 0 ? '#A51C30' : '#1E1E1E' }} />
+                      <div className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: index % 2 === 0 ? 'color-mix(in srgb, var(--color-primary-600) 12.5%, transparent)' : 'color-mix(in srgb, var(--color-ink-900) 12.5%, transparent)' }}>
+                        <Icon className="w-4 h-4" style={{ color: index % 2 === 0 ? 'var(--color-primary-600)' : 'var(--color-ink-900)' }} />
                       </div>
                       <div>
                         <h4 className="text-subtitle text-gray-900">{item.title}</h4>
@@ -247,7 +247,7 @@ export const About = () => {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] p-8 text-white"
+              className="bg-gradient-to-br from-ink-900 to-primary-600 p-8 text-white"
             >
               <h3 className="text-2xl font-bold mb-4">Join Our Community</h3>
               <p className="text-white/90 mb-6">
@@ -257,7 +257,7 @@ export const About = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link 
                   to="/apply" 
-                  className="px-6 py-3 bg-white text-[#1E1E1E] font-semibold text-center hover:bg-gray-100 transition"
+                  className="px-6 py-3 bg-white text-ink-900 font-semibold text-center hover:bg-gray-100 transition"
                 >
                   Apply Now
                 </Link>
@@ -280,28 +280,28 @@ export const About = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Link 
               to="/about/history" 
-              className="p-4 border text-center hover:border-[#A51C30] hover:text-[#A51C30] transition"
+              className="p-4 border text-center hover:border-primary-600 hover:text-primary-600 transition"
               style={{ borderColor: '#e5e4e7' }}
             >
               Our History
             </Link>
             <Link 
               to="/about/leadership" 
-              className="p-4 border text-center hover:border-[#A51C30] hover:text-[#A51C30] transition"
+              className="p-4 border text-center hover:border-primary-600 hover:text-primary-600 transition"
               style={{ borderColor: '#e5e4e7' }}
             >
               Leadership
             </Link>
             <Link 
               to="/about/rankings" 
-              className="p-4 border text-center hover:border-[#A51C30] hover:text-[#A51C30] transition"
+              className="p-4 border text-center hover:border-primary-600 hover:text-primary-600 transition"
               style={{ borderColor: '#e5e4e7' }}
             >
               Rankings & Awards
             </Link>
             <Link 
               to="/about/contact" 
-              className="p-4 border text-center hover:border-[#A51C30] hover:text-[#A51C30] transition"
+              className="p-4 border text-center hover:border-primary-600 hover:text-primary-600 transition"
               style={{ borderColor: '#e5e4e7' }}
             >
               Contact Us

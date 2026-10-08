@@ -137,7 +137,7 @@ export const PageSkeleton = () => (
 
 export const DashboardSkeleton = () => (
  <div className="min-h-screen bg-gray-50">
- <div className="bg-[#1E1E1E] h-16" />
+ <div className="bg-ink-900 h-16" />
  <div className="container-custom py-8">
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
  {Array.from({ length: 4 }).map((_, i) => (

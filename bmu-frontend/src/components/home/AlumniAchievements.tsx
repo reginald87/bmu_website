@@ -84,10 +84,10 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <span className="text-sm font-semibold uppercase tracking-wider mb-2 block text-[#A51C30]">
+          <span className="text-sm font-semibold uppercase tracking-wider mb-2 block text-primary-600">
             {t('home.alumni.subtitle', 'Where Our Graduates Go')}
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#1E1E1E]">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-ink-900">
             {t('home.alumni.title', 'Distinguished Alumni')}
           </h2>
           <p className="text-gray-800 max-w-2xl">
@@ -134,7 +134,7 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
                   <div className="mb-4 p-3 bg-gray-50">
                     <div className="flex items-center gap-2">
                       <Award className="w-5 h-5 text-yellow-600" />
-                      <span className="text-sm font-semibold text-[#1E1E1E]">{alumni.achievement}</span>
+                      <span className="text-sm font-semibold text-ink-900">{alumni.achievement}</span>
                     </div>
                   </div>
                 )}
@@ -144,7 +144,7 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
                     <span className="font-medium">Currently:</span> {alumni.currentRole}
                   </p>
                   <div className="flex items-center gap-1">
-                    <Building2 className="w-4 h-4 text-[#A51C30]" />
+                    <Building2 className="w-4 h-4 text-primary-600" />
                     <span className="text-sm font-medium text-gray-700">{alumni.organization}</span>
                   </div>
                 </div>
@@ -153,7 +153,7 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
                 <Link
                   to="/portals/alumni"
-                  className="flex items-center justify-center gap-2 text-sm font-semibold text-[#A51C30] hover:underline"
+                  className="flex items-center justify-center gap-2 text-sm font-semibold text-primary-600 hover:underline"
                 >
                   Connect with Alumni
                   <ArrowRight className="w-4 h-4" />
@@ -171,11 +171,11 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-[#A51C30]/10 flex items-center justify-center">
-                <Users className="w-8 h-8 text-[#A51C30]" />
+              <div className="w-16 h-16 bg-primary-600/10 flex items-center justify-center">
+                <Users className="w-8 h-8 text-primary-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#1E1E1E]">{alumniTotal}</p>
+                <p className="text-2xl font-bold text-ink-900">{alumniTotal}</p>
                 <p className="text-gray-600">Active Alumni Network</p>
               </div>
             </div>
@@ -183,14 +183,14 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 to="/portals/alumni"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#A51C30] text-white font-semibold hover:bg-[#8a1828] transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors"
               >
                 Alumni Portal
                 <ExternalLink className="w-4 h-4" />
               </Link>
               <Link
                 to="/about/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#1E1E1E] text-[#1E1E1E] font-semibold hover:bg-[#1E1E1E] hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 border-2 border-ink-900 text-ink-900 font-semibold hover:bg-ink-900 hover:text-white transition-colors"
               >
                 Join Network
                 <ArrowRight className="w-4 h-4" />

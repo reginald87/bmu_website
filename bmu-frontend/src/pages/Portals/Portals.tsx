@@ -27,7 +27,7 @@ const fallbackPortals = [
     description: 'Apply for admission, track application status, and manage your admission documents.',
     icon: 'UserCircle',
     to: '/portals/applicant',
-    color: '#1E1E1E',
+    color: 'var(--color-ink-900)',
     audience: 'Prospective Students',
     features: ['Online Application', 'Document Upload', 'Application Tracking', 'Fee Payment']
   },
@@ -37,7 +37,7 @@ const fallbackPortals = [
     description: 'Single sign-on for all roles — students, lecturers, HODs, deans, administrators, and bursary staff.',
     icon: 'GraduationCap',
     to: '/portals/login',
-    color: '#A51C30',
+    color: 'var(--color-primary-600)',
     audience: 'All BMU Community',
     features: ['Single Login', 'Course Registration', 'Grade Management', 'Fee Payments']
   },
@@ -47,7 +47,7 @@ const fallbackPortals = [
     description: 'Connect with fellow graduates, access career resources, and stay updated.',
     icon: 'Users',
     to: '/portals/alumni',
-    color: '#A51C30',
+    color: 'var(--color-primary-600)',
     audience: 'Graduates',
     features: ['Directory Access', 'Job Board', 'Networking', 'Transcript Requests']
   },
@@ -57,7 +57,7 @@ const fallbackPortals = [
     description: 'Professional development courses, certifications, and CME credits for healthcare professionals.',
     icon: 'Stethoscope',
     to: '/portals/cpd',
-    color: '#1E1E1E',
+    color: 'var(--color-ink-900)',
     audience: 'Healthcare Professionals',
     features: ['Online Courses', 'Certifications', 'CME Credits', 'Accredited Programs']
   }
@@ -105,7 +105,7 @@ export const Portals = () => {
 
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+        <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
           <div className="absolute inset-0 opacity-5" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
           }} />
@@ -122,7 +122,7 @@ export const Portals = () => {
                 <span className="text-white font-medium">Portals</span>
               </div>
               <h1 className="text-display text-white mb-6">
-                Access Your <span className="text-[#A51C30]">Portal</span>
+                Access Your <span className="text-primary-600">Portal</span>
               </h1>
               <p className="text-lead text-white/80 max-w-2xl">
                 Secure access points for all BMU stakeholders. Choose your portal below to login or register.
@@ -200,13 +200,13 @@ export const Portals = () => {
                     <div className="flex items-center gap-2 font-semibold group-hover:gap-3 transition-all">
                       <span
                         className="drop-shadow-sm"
-                        style={{ color: portal.color === '#A51C30' ? '#1E1E1E' : portal.color }}
+                        style={{ color: portal.color === 'var(--color-primary-600)' ? 'var(--color-ink-900)' : portal.color }}
                       >
                         Access Portal
                       </span>
                       <ArrowRight
                         className="w-5 h-5"
-                        style={{ color: portal.color === '#A51C30' ? '#1E1E1E' : portal.color }}
+                        style={{ color: portal.color === 'var(--color-primary-600)' ? 'var(--color-ink-900)' : portal.color }}
                       />
                     </div>
                   </div>
@@ -229,14 +229,14 @@ export const Portals = () => {
                 <Link
                   to="/contact"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white transition hover:opacity-90"
-                  style={{ backgroundColor: '#1E1E1E' }}
+                  style={{ backgroundColor: 'var(--color-ink-900)' }}
                 >
                   Contact Support
                 </Link>
                 <Link
                   to="/faq"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold border-2 transition hover:bg-gray-50"
-                  style={{ borderColor: '#1E1E1E', color: '#1E1E1E' }}
+                  style={{ borderColor: 'var(--color-ink-900)', color: 'var(--color-ink-900)' }}
                 >
                   View FAQ
                 </Link>

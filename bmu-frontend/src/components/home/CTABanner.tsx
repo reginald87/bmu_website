@@ -32,7 +32,7 @@ export const CTABanner = ({ stats }: CTABannerProps) => {
   const data = stats ?? fallbackStats;
 
   return (
-    <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+    <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
       <div className="container-custom">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <motion.div
@@ -57,7 +57,7 @@ export const CTABanner = ({ stats }: CTABannerProps) => {
           >
             <Link
               to="/apply"
-              className="px-8 py-4 bg-white text-[#A51C30] font-bold hover:bg-gray-100 transition text-center"
+              className="px-8 py-4 bg-white text-primary-600 font-bold hover:bg-gray-100 transition text-center"
             >
               {t('home.ctaBanner.applyNow')}
             </Link>

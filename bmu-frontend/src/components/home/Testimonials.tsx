@@ -36,7 +36,7 @@ export const Testimonials = ({ sections: homeSections }: { sections?: Array<{ se
   return (
     <section className="py-16 bg-gray-50">
       <div className="container-custom">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-[#1E1E1E]">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-ink-900">
           {t('home.testimonials.title')}
         </h2>
 
@@ -69,7 +69,7 @@ export const Testimonials = ({ sections: homeSections }: { sections?: Array<{ se
                     "{testimonials[activeIndex].quote}"
                   </p>
                   <div>
-                    <h4 className="text-xl font-semibold text-[#A51C30]">
+                    <h4 className="text-xl font-semibold text-primary-600">
                       {testimonials[activeIndex].name}
                     </h4>
                     <p className="text-gray-600">{testimonials[activeIndex].role}</p>
@@ -86,7 +86,7 @@ export const Testimonials = ({ sections: homeSections }: { sections?: Array<{ se
                 onClick={() => setActiveIndex(idx)}
                 className={`h-3 transition-all duration-300 ${
                   idx === activeIndex
-                    ? 'w-8 bg-[#A51C30]'
+                    ? 'w-8 bg-primary-600'
                     : 'w-3 bg-gray-300 hover:bg-gray-400'
                 }`}
                 aria-label={`View testimonial ${idx + 1}`}

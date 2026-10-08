@@ -12,9 +12,9 @@ export const MegaMenu = ({ type }: { type: string }) => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="bg-[#1E1E1E] text-white p-6 lg:p-8 flex flex-col justify-between rounded-lg">
+      <div className="bg-ink-900 text-white p-6 lg:p-8 flex flex-col justify-between rounded-lg">
         <div>
-          <div className="w-12 h-12 rounded-lg bg-[#A51C30] flex items-center justify-center mb-4">
+          <div className="w-12 h-12 rounded-lg bg-primary-600 flex items-center justify-center mb-4">
             <FeatureIcon className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl font-bold mb-2">{t(group.titleKey)}</h3>
@@ -22,7 +22,7 @@ export const MegaMenu = ({ type }: { type: string }) => {
         </div>
         <Link
           to={group.feature.to}
-          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-[#A51C30] transition-colors"
+          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-primary-600 transition-colors"
         >
           {t('megaMenu.featured_cta')}
           <ArrowRight className="w-4 h-4" />
@@ -42,7 +42,7 @@ export const MegaMenu = ({ type }: { type: string }) => {
                 <li key={link.to + link.key}>
                   <Link
                     to={link.to}
-                    className="text-gray-700 hover:text-[#A51C30] transition-colors text-sm font-medium"
+                    className="text-gray-700 hover:text-primary-600 transition-colors text-sm font-medium"
                   >
                     {t(link.key)}
                   </Link>

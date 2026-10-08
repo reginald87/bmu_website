@@ -61,10 +61,10 @@ export const QuickLinks = ({ sections: homeSections }: { sections?: Array<{ sect
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <span className="text-sm font-semibold tracking-[0.15em] uppercase text-[#A51C30]">
+          <span className="text-sm font-semibold tracking-[0.15em] uppercase text-primary-600">
             {t('nav.quickLinks', 'Quick Links')}
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-[#1E1E1E]">
+          <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-ink-900">
             {t('home.quickLinks.title')}
           </h2>
           <p className="text-gray-800 max-w-2xl">
@@ -94,10 +94,10 @@ export const QuickLinks = ({ sections: homeSections }: { sections?: Array<{ sect
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-[#A51C30]" />
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-primary-600" />
 
                   <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8">
-                    <div className="w-14 h-14 bg-[#A51C30] flex items-center justify-center mb-4">
+                    <div className="w-14 h-14 bg-primary-600 flex items-center justify-center mb-4">
                       <Icon className="w-7 h-7 text-white" />
                     </div>
 

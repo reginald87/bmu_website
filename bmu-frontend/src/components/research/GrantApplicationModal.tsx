@@ -77,7 +77,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
               </p>
               <button
                 onClick={() => mutation.reset()}
-                className="px-6 py-2 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition"
+                className="px-6 py-2 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
               >
                 Try Again
               </button>
@@ -89,7 +89,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
                 <input
                   type="text" required value={applicantName}
                   onChange={e => setApplicantName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+                  className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
                 />
               </div>
 
@@ -99,7 +99,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
                   <input
                     type="email" required value={applicantEmail}
                     onChange={e => setApplicantEmail(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+                    className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -107,7 +107,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
                   <input
                     type="tel" value={applicantPhone}
                     onChange={e => setApplicantPhone(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+                    className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
                   />
                 </div>
               </div>
@@ -117,7 +117,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
                 <input
                   type="text" required value={proposalTitle}
                   onChange={e => setProposalTitle(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+                  className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
                 />
               </div>
 
@@ -126,7 +126,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
                 <textarea
                   required rows={5} value={proposalSummary}
                   onChange={e => setProposalSummary(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none resize-y"
+                  className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none resize-y"
                 />
               </div>
 
@@ -138,7 +138,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
                   <input
                     type="number" value={proposedBudget}
                     onChange={e => setProposedBudget(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+                    className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -148,7 +148,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
                   <input
                     type="number" value={durationMonths}
                     onChange={e => setDurationMonths(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+                    className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
                   />
                 </div>
               </div>
@@ -156,7 +156,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
               <div className="flex items-center gap-3 pt-4 border-t">
                 <button
                   type="submit" disabled={mutation.isPending}
-                  className="flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition disabled:opacity-60"
+                  className="flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition disabled:opacity-60"
                 >
                   {mutation.isPending ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

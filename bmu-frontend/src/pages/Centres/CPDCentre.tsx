@@ -52,7 +52,7 @@ export const CPDCentre = () => {
  <meta name="description" content="Continuing Professional Development Centre at BMU - Lifelong learning for healthcare professionals" />
  </Helmet>
 
- <div className="bg-[#1E1E1E] text-white py-16">
+ <div className="bg-ink-900 text-white py-16">
  <div className="container-custom">
  <motion.h1 
  initial={{ opacity: 0, y: 20 }}
@@ -76,7 +76,7 @@ export const CPDCentre = () => {
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-2 space-y-8">
  <section className="card p-6">
- <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>About CPD Centre</h2>
+ <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>About CPD Centre</h2>
  <p className="text-gray-600 mb-4">
  The Continuing Professional Development (CPD) Centre at Bayelsa Medical University 
  is committed to supporting healthcare professionals in maintaining and enhancing their 
@@ -90,7 +90,7 @@ export const CPDCentre = () => {
  </section>
 
  <section>
- <h2 className="text-2xl font-bold mb-6" style={{ color: '#1E1E1E' }}>CPD Programs</h2>
+ <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-ink-900)' }}>CPD Programs</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  {cpdPrograms.map((category) => (
  <div key={category.category} className="card p-6">
@@ -111,7 +111,7 @@ export const CPDCentre = () => {
  </section>
 
  <section className="card p-6">
- <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>Certification & Accreditation</h2>
+ <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Certification & Accreditation</h2>
  <p className="text-gray-600 mb-4">
  All CPD programs are accredited by relevant professional bodies including the 
  Medical and Dental Council of Nigeria (MDCN), Nursing and Midwifery Council of Nigeria (NMCN), 
@@ -127,14 +127,14 @@ export const CPDCentre = () => {
 
  <div className="space-y-6">
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Contact CPD Centre</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Contact CPD Centre</h3>
  <p className="text-gray-600 mb-2">Email: cpd@bmu.edu.ng</p>
  <p className="text-gray-600 mb-2">Phone: +234 xxx xxx xxxx</p>
  <p className="text-gray-600">Sampou Campus</p>
  </div>
 
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Why Choose BMU CPD?</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Why Choose BMU CPD?</h3>
  <ul className="space-y-2 text-gray-600 text-sm">
  <li>Expert faculty & practitioners</li>
  <li>Hands-on training approach</li>
@@ -145,7 +145,7 @@ export const CPDCentre = () => {
  </div>
 
  <div className="card p-6" style={{ backgroundColor: '#00a65115' }}>
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Register for CPD</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Register for CPD</h3>
  <p className="text-gray-600 text-sm mb-4">
  Browse our current program calendar and register for upcoming courses.
  </p>

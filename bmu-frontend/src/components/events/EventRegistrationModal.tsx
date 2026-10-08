@@ -177,7 +177,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
         <input
           type="text" required value={name}
           onChange={e => setName(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+          className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
         />
       </div>
       <div>
@@ -185,7 +185,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
         <input
           type="email" required value={email}
           onChange={e => setEmail(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+          className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
         />
       </div>
       <div>
@@ -193,7 +193,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
         <input
           type="tel" value={phone}
           onChange={e => setPhone(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+          className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
         />
       </div>
       <div>
@@ -201,7 +201,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
         <input
           type="text" value={institution}
           onChange={e => setInstitution(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+          className="w-full px-4 py-2 border border-gray-200 focus:border-ink-900 focus:outline-none"
         />
       </div>
       {isPaid && (
@@ -216,7 +216,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
       <div className="flex items-center gap-3 pt-4 border-t">
         <button
           type="submit"
-          className="flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition"
+          className="flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
         >
           {isPaid ? 'Continue to Payment' : 'Register Now'}
         </button>
@@ -241,13 +241,13 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
         </div>
         <div className="flex items-center justify-between pt-3 border-t">
           <span className="font-semibold text-gray-900">Total</span>
-          <span className="text-xl font-bold text-[#1E1E1E]">{formatFee(event.fee, event.currency)}</span>
+          <span className="text-xl font-bold text-ink-900">{formatFee(event.fee, event.currency)}</span>
         </div>
       </div>
       <button
         onClick={handlePayNow}
         disabled={initPayment.isPending}
-        className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition disabled:opacity-60"
+        className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition disabled:opacity-60"
       >
         {initPayment.isPending ? (
           <Loader2 className="w-5 h-5 animate-spin" />
@@ -267,7 +267,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
 
   const renderProcessing = () => (
     <div className="p-12 text-center">
-      <Loader2 className="w-12 h-12 animate-spin text-[#1E1E1E] mx-auto mb-4" />
+      <Loader2 className="w-12 h-12 animate-spin text-ink-900 mx-auto mb-4" />
       <h3 className="text-title text-gray-900 mb-2">Processing...</h3>
       <p className="text-body text-gray-600">Please wait while we complete your registration.</p>
     </div>
@@ -317,7 +317,7 @@ export const EventRegistrationModal = ({ event, onClose }: Props) => {
       <p className="text-body text-gray-600 mb-6">{errorMsg}</p>
       <button
         onClick={resetForm}
-        className="px-6 py-2 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition"
+        className="px-6 py-2 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
       >
         Try Again
       </button>

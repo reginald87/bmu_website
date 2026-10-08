@@ -146,7 +146,7 @@ const ApplicantLogin = () => {
   };
 
   return (
-    <div className="min-h-screen pt-[180px] bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] flex items-center justify-center p-4">
+    <div className="min-h-screen pt-[180px] bg-gradient-to-br from-ink-900 to-primary-600 flex items-center justify-center p-4">
       <Helmet>
         <title>Applicant Login | Bayelsa Medical University</title>
       </Helmet>
@@ -157,7 +157,7 @@ const ApplicantLogin = () => {
         className="bg-white w-full max-w-md overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-8 text-white text-center">
+        <div className="bg-gradient-to-r from-ink-900 to-primary-600 p-8 text-white text-center">
           <div className="w-16 h-16 bg-white/20 flex items-center justify-center mx-auto mb-4">
             <GraduationCap className="w-8 h-8" />
           </div>
@@ -169,13 +169,13 @@ const ApplicantLogin = () => {
         <div className="flex border-b">
           <button
             onClick={() => setActiveTab('login')}
-            className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'login' ? 'text-[#1E1E1E] border-b-2 border-[#1E1E1E]' : 'text-gray-700 hover:text-gray-900' }`}
+            className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'login' ? 'text-ink-900 border-b-2 border-ink-900' : 'text-gray-700 hover:text-gray-900' }`}
           >
             Sign In
           </button>
           <button
             onClick={() => setActiveTab('register')}
-            className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'register' ? 'text-[#1E1E1E] border-b-2 border-[#1E1E1E]' : 'text-gray-700 hover:text-gray-900' }`}
+            className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'register' ? 'text-ink-900 border-b-2 border-ink-900' : 'text-gray-700 hover:text-gray-900' }`}
           >
             Create Account
           </button>
@@ -201,7 +201,7 @@ const ApplicantLogin = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     placeholder="your@email.com"
                     required
                   />
@@ -218,7 +218,7 @@ const ApplicantLogin = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                    className="w-full pl-10 pr-12 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     placeholder="Enter your password"
                     required
                   />
@@ -234,10 +234,10 @@ const ApplicantLogin = () => {
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center">
-                  <input type="checkbox" className="border-gray-300 text-[#1E1E1E] focus:ring-[#1E1E1E]" />
+                  <input type="checkbox" className="border-gray-300 text-ink-900 focus:ring-ink-900" />
                   <span className="ml-2 text-gray-600">Remember me</span>
                 </label>
-                <Link to="/portals/reset-password" className="text-[#1E1E1E] hover:underline">
+                <Link to="/portals/reset-password" className="text-ink-900 hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -245,7 +245,7 @@ const ApplicantLogin = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition flex items-center justify-center gap-2"
+                className="w-full py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
@@ -267,7 +267,7 @@ const ApplicantLogin = () => {
                     type="text"
                     value={registerData.first_name}
                     onChange={(e) => setRegisterData(prev => ({ ...prev, first_name: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     placeholder="John"
                     required
                   />
@@ -280,7 +280,7 @@ const ApplicantLogin = () => {
                     type="text"
                     value={registerData.last_name}
                     onChange={(e) => setRegisterData(prev => ({ ...prev, last_name: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     placeholder="Doe"
                     required
                   />
@@ -297,7 +297,7 @@ const ApplicantLogin = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     placeholder="your@email.com"
                     required
                   />
@@ -314,7 +314,7 @@ const ApplicantLogin = () => {
                     type="tel"
                     value={registerData.phone}
                     onChange={(e) => setRegisterData(prev => ({ ...prev, phone: e.target.value }))}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     placeholder="+234 801 234 5678"
                     required
                   />
@@ -331,7 +331,7 @@ const ApplicantLogin = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     placeholder="Create a strong password"
                     required
                   />
@@ -342,17 +342,17 @@ const ApplicantLogin = () => {
               </div>
 
               <div className="flex items-start">
-                <input type="checkbox" className="mt-1 border-gray-300 text-[#1E1E1E] focus:ring-[#1E1E1E]" required />
+                <input type="checkbox" className="mt-1 border-gray-300 text-ink-900 focus:ring-ink-900" required />
                 <span className="ml-2 text-sm text-gray-600">
-                  I agree to the <a href="#" className="text-[#1E1E1E] hover:underline">Terms of Service</a> and{' '}
-                  <a href="#" className="text-[#1E1E1E] hover:underline">Privacy Policy</a>
+                  I agree to the <a href="#" className="text-ink-900 hover:underline">Terms of Service</a> and{' '}
+                  <a href="#" className="text-ink-900 hover:underline">Privacy Policy</a>
                 </span>
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition flex items-center justify-center gap-2"
+                className="w-full py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
@@ -368,7 +368,7 @@ const ApplicantLogin = () => {
 
         {/* Footer */}
         <div className="bg-gray-50 p-4 text-center text-sm text-gray-600">
-          Need help? <a href="mailto:admissions@bmu.edu.ng" className="text-[#1E1E1E] hover:underline">Contact Admissions</a>
+          Need help? <a href="mailto:admissions@bmu.edu.ng" className="text-ink-900 hover:underline">Contact Admissions</a>
         </div>
       </motion.div>
     </div>
@@ -527,7 +527,7 @@ const ApplicantDashboard = () => {
       </Helmet>
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] text-white">
+      <div className="bg-gradient-to-r from-ink-900 to-primary-600 text-white">
         <div className="container-custom py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -542,7 +542,7 @@ const ApplicantDashboard = () => {
             <div className="flex items-center gap-4">
               <button aria-label="Notifications" className="p-2 hover:bg-white/10 transition relative">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-[#A51C30]"></span>
+                <span className="absolute top-1 right-1 w-2 h-2 bg-primary-600"></span>
               </button>
               <button
                 onClick={logout}
@@ -564,7 +564,7 @@ const ApplicantDashboard = () => {
             {/* Start New Application CTA */}
             <Link
               to="/apply/portal"
-              className="block w-full p-4 bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] text-white transition group"
+              className="block w-full p-4 bg-gradient-to-r from-ink-900 to-primary-600 text-white transition group"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition">
@@ -580,8 +580,8 @@ const ApplicantDashboard = () => {
             {/* Profile Card */}
             <div className="bg-white shadow-sm border border-gray-100 p-6">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center">
-                  <User className="w-8 h-8 text-[#1E1E1E]" />
+                <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center">
+                  <User className="w-8 h-8 text-ink-900" />
                 </div>
                 <div>
                   <h2 className="font-bold text-gray-900">{user?.full_name || `${user?.first_name || ''} ${user?.last_name || ''}`}</h2>
@@ -602,7 +602,7 @@ const ApplicantDashboard = () => {
                 <h3 className="font-bold text-gray-900">My Applications</h3>
                 <Link
                   to="/apply/portal"
-                  className="flex items-center gap-1 text-sm text-[#1E1E1E] hover:underline"
+                  className="flex items-center gap-1 text-sm text-ink-900 hover:underline"
                 >
                   <Plus className="w-4 h-4" /> New
                 </Link>
@@ -617,7 +617,7 @@ const ApplicantDashboard = () => {
                     <button
                       key={app.id}
                       onClick={() => setSelectedApplication(app.id)}
-                      className={`w-full text-left p-3 transition ${ selectedApplication === app.id || (!selectedApplication && app === applications[0]) ? 'bg-[#1E1E1E]/10 border border-[#1E1E1E]/20' : 'hover:bg-gray-50' }`}
+                      className={`w-full text-left p-3 transition ${ selectedApplication === app.id || (!selectedApplication && app === applications[0]) ? 'bg-ink-900/10 border border-ink-900/20' : 'hover:bg-gray-50' }`}
                     >
                       <div className="flex items-start gap-3">
                         <div className={`w-8 h-8 flex items-center justify-center flex-shrink-0 ${config.bg}`}>
@@ -642,23 +642,23 @@ const ApplicantDashboard = () => {
               <h3 className="font-bold text-gray-900 mb-4">Quick Links</h3>
               <div className="space-y-2">
                 <Link to="/apply/portal" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition">
-                  <Plus className="w-5 h-5 text-[#1E1E1E]" />
+                  <Plus className="w-5 h-5 text-ink-900" />
                   <span className="text-sm">Start Application</span>
                 </Link>
                 {(applications.some(app => app.status === 'draft') || hasPendingApp) && (
-                  <Link to="/apply/portal" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition bg-[#A51C30]/10">
-                    <div className="w-5 h-5 rounded-full bg-[#A51C30] flex items-center justify-center">
+                  <Link to="/apply/portal" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition bg-primary-600/10">
+                    <div className="w-5 h-5 rounded-full bg-primary-600 flex items-center justify-center">
                       <span className="text-white text-xs font-bold">!</span>
                     </div>
-                    <span className="text-sm font-medium text-[#1E1E1E]">Resume Application</span>
+                    <span className="text-sm font-medium text-ink-900">Resume Application</span>
                   </Link>
                 )}
                 <Link to="/academics/admissions" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition">
-                  <FileText className="w-5 h-5 text-[#A51C30]" />
+                  <FileText className="w-5 h-5 text-primary-600" />
                   <span className="text-sm">Requirements</span>
                 </Link>
                 <Link to="/academics/admissions" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition">
-                  <MessageSquare className="w-5 h-5 text-[#A51C30]" />
+                  <MessageSquare className="w-5 h-5 text-primary-600" />
                   <span className="text-sm">FAQs</span>
                 </Link>
               </div>
@@ -677,7 +677,7 @@ const ApplicantDashboard = () => {
                       {statusConfig[application?.status || 'draft'].label}
                     </span>
                   </div>
-                  <p className="text-gray-600">Application ID: <span className="font-mono text-[#1E1E1E]">{application?.id}</span></p>
+                  <p className="text-gray-600">Application ID: <span className="font-mono text-ink-900">{application?.id}</span></p>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-gray-500">
                   <div>
@@ -693,7 +693,7 @@ const ApplicantDashboard = () => {
                 {canEdit && !isEditing && (
                   <button
                     onClick={startEditing}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#1E1E1E] text-white hover:bg-[#1E1E1E]/90 transition"
+                    className="flex items-center gap-2 px-4 py-2 bg-ink-900 text-white hover:bg-ink-900/90 transition"
                   >
                     <Edit3 className="w-4 h-4" />
                     Edit Application
@@ -706,11 +706,11 @@ const ApplicantDashboard = () => {
             <div className="bg-white shadow-sm border border-gray-100 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold text-gray-900">Application Progress</h3>
-                <span className="text-2xl font-bold text-[#1E1E1E]">{application?.progress}%</span>
+                <span className="text-2xl font-bold text-ink-900">{application?.progress}%</span>
               </div>
               <div className="w-full h-3 bg-gray-100 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-ink-900 to-primary-600 transition-all duration-500"
                   style={{ width: `${application?.progress}%` }}
                 />
               </div>
@@ -721,19 +721,19 @@ const ApplicantDashboard = () => {
               <div className="flex border-b">
                 <button
                   onClick={() => setActiveTab('overview')}
-                  className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'overview' ? 'text-[#1E1E1E] border-b-2 border-[#1E1E1E]' : 'text-gray-500 hover:text-gray-700' }`}
+                  className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'overview' ? 'text-ink-900 border-b-2 border-ink-900' : 'text-gray-500 hover:text-gray-700' }`}
                 >
                   Overview
                 </button>
                 <button
                   onClick={() => setActiveTab('documents')}
-                  className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'documents' ? 'text-[#1E1E1E] border-b-2 border-[#1E1E1E]' : 'text-gray-500 hover:text-gray-700' }`}
+                  className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'documents' ? 'text-ink-900 border-b-2 border-ink-900' : 'text-gray-500 hover:text-gray-700' }`}
                 >
                   Documents
                 </button>
                 <button
                   onClick={() => setActiveTab('messages')}
-                  className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'messages' ? 'text-[#1E1E1E] border-b-2 border-[#1E1E1E]' : 'text-gray-500 hover:text-gray-700' }`}
+                  className={`flex-1 py-4 font-medium text-center transition ${ activeTab === 'messages' ? 'text-ink-900 border-b-2 border-ink-900' : 'text-gray-500 hover:text-gray-700' }`}
                 >
                   Messages ({application?.messages.length})
                 </button>
@@ -911,7 +911,7 @@ const ApplicantDashboard = () => {
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="font-semibold text-gray-900">Required Documents</h4>
-                      <button className="flex items-center gap-2 px-4 py-2 bg-[#1E1E1E] text-white hover:bg-[#1E1E1E]/90 transition">
+                      <button className="flex items-center gap-2 px-4 py-2 bg-ink-900 text-white hover:bg-ink-900/90 transition">
                         <Upload className="w-4 h-4" />
                         Upload Document
                       </button>
@@ -955,7 +955,7 @@ const ApplicantDashboard = () => {
                                 ) : (
                                   <button
                                     onClick={() => setReplacingDoc(index)}
-                                    className="text-sm text-[#1E1E1E] hover:underline"
+                                    className="text-sm text-ink-900 hover:underline"
                                   >
                                     Replace
                                   </button>
@@ -995,7 +995,7 @@ const ApplicantDashboard = () => {
             </div>
 
             {/* Support */}
-            <div className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-6 text-white">
+            <div className="bg-gradient-to-r from-ink-900 to-primary-600 p-6 text-white">
               <h3 className="font-bold text-lg mb-2">Need Assistance?</h3>
               <p className="text-white/80 mb-4">Our admissions team is here to help you with your application.</p>
               <div className="flex flex-wrap gap-4">
@@ -1022,7 +1022,7 @@ export const ApplicantPortal = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-10 h-10 border-4 border-[#A51C30] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

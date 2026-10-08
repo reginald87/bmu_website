@@ -10,7 +10,7 @@ export const StaffProfile = () => {
 
   if (isLoading) {
     return (
-      <section className="pt-[180px] min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="text-white text-center">
           <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
           <p>Loading profile...</p>
@@ -33,7 +33,7 @@ export const StaffProfile = () => {
         <meta name="description" content={`${staff.full_name} - ${staff.job_title} at Bayelsa Medical University`} />
       </Helmet>
 
-      <section className="pt-[180px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] pb-12" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -71,7 +71,7 @@ export const StaffProfile = () => {
 
                 <div className="flex flex-wrap gap-4 text-sm">
                   <div className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-[#A51C30]" />
+                    <Building2 className="w-4 h-4 text-primary-600" />
                     <span className="text-white/90">{staff.category_display}</span>
                   </div>
                   {staff.employment_type && (
@@ -82,7 +82,7 @@ export const StaffProfile = () => {
                   )}
                   {staff.office_location && (
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-[#A51C30]" />
+                      <MapPin className="w-4 h-4 text-primary-600" />
                       <span className="text-white/90">{staff.office_location}</span>
                     </div>
                   )}
@@ -95,7 +95,7 @@ export const StaffProfile = () => {
 
       <div className="bg-gray-50 border-b">
         <div className="container-custom py-4">
-          <Link to="/about/staff" className="inline-flex items-center gap-2 text-gray-600 hover:text-[#1E1E1E] transition">
+          <Link to="/about/staff" className="inline-flex items-center gap-2 text-gray-600 hover:text-ink-900 transition">
             <ArrowLeft className="w-4 h-4" />
             Back to Staff Directory
           </Link>
@@ -116,7 +116,7 @@ export const StaffProfile = () => {
                     <ul className="space-y-3 mb-8">
                       {responsibilities.map((r, i) => (
                         <li key={i} className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
                           <span className="text-gray-700">{r}</span>
                         </li>
                       ))}
@@ -127,7 +127,7 @@ export const StaffProfile = () => {
                 {staff.research_interests && (
                   <div className="mb-8">
                     <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <BookOpen className="w-5 h-5 text-[#1E1E1E]" />
+                      <BookOpen className="w-5 h-5 text-ink-900" />
                       Research Interests
                     </h2>
                     <p className="text-gray-700 leading-relaxed">{staff.research_interests}</p>
@@ -137,19 +137,19 @@ export const StaffProfile = () => {
                 {staff.publications && staff.publications.length > 0 && (
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-[#1E1E1E]" />
+                      <FileText className="w-5 h-5 text-ink-900" />
                       Publications
                     </h2>
                     <div className="space-y-4">
                       {staff.publications.map((pub, i) => (
-                        <div key={i} className="border-l-4 border-[#A51C30] pl-4 py-2">
+                        <div key={i} className="border-l-4 border-primary-600 pl-4 py-2">
                           <h4 className="font-semibold text-gray-900">{pub.title}</h4>
                           <p className="text-sm text-gray-600">
                             {pub.journal} • {pub.year}
                             {pub.citations !== undefined && ` • ${pub.citations} citations`}
                           </p>
                           {pub.doi && (
-                            <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[#1E1E1E] hover:underline inline-flex items-center gap-1 mt-1">
+                            <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer" className="text-xs text-ink-900 hover:underline inline-flex items-center gap-1 mt-1">
                               DOI: {pub.doi} <ExternalLink className="w-3 h-3" />
                             </a>
                           )}
@@ -166,24 +166,24 @@ export const StaffProfile = () => {
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+                    <Mail className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm text-gray-500">Email</p>
-                      <a href={`mailto:${staff.email}`} className="text-gray-900 hover:text-[#1E1E1E] transition">{staff.email}</a>
+                      <a href={`mailto:${staff.email}`} className="text-gray-900 hover:text-ink-900 transition">{staff.email}</a>
                     </div>
                   </div>
                   {staff.phone && (
                     <div className="flex items-start gap-3">
-                      <Phone className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+                      <Phone className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-sm text-gray-500">Phone</p>
-                        <a href={`tel:${staff.phone}`} className="text-gray-900 hover:text-[#1E1E1E] transition">{staff.phone}</a>
+                        <a href={`tel:${staff.phone}`} className="text-gray-900 hover:text-ink-900 transition">{staff.phone}</a>
                       </div>
                     </div>
                   )}
                   {staff.office_location && (
                     <div className="flex items-start gap-3">
-                      <MapPin className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+                      <MapPin className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-sm text-gray-500">Office</p>
                         <p className="text-gray-900">{staff.office_location}</p>
@@ -191,7 +191,7 @@ export const StaffProfile = () => {
                     </div>
                   )}
                   <div className="flex items-start gap-3">
-                    <Building2 className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+                    <Building2 className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-sm text-gray-500">Department</p>
                       <p className="text-gray-900">{staff.department_name || 'N/A'}</p>
@@ -199,7 +199,7 @@ export const StaffProfile = () => {
                   </div>
                   {staff.college_name && (
                     <div className="flex items-start gap-3">
-                      <Building2 className="w-5 h-5 text-[#1E1E1E] mt-0.5 flex-shrink-0" />
+                      <Building2 className="w-5 h-5 text-ink-900 mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-sm text-gray-500">College</p>
                         <p className="text-gray-900">{staff.college_name}</p>

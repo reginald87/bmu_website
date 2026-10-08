@@ -49,7 +49,7 @@ export const Publications = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -64,7 +64,7 @@ export const Publications = () => {
  <span className="text-white font-medium">Publications</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Research <span className="text-[#A51C30]">Publications</span>
+ Research <span className="text-primary-600">Publications</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Discover our contributions to medical knowledge through peer-reviewed journals, 
@@ -87,8 +87,8 @@ export const Publications = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -109,7 +109,7 @@ export const Publications = () => {
  placeholder="Search publications..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:border-[#1E1E1E] focus:outline-none"
+ className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:border-ink-900 focus:outline-none"
  />
  </div>
  <div className="flex items-center gap-2">
@@ -125,7 +125,7 @@ export const Publications = () => {
  onClick={() => setSelectedCategory(category)}
  className={`px-4 py-2 text-sm font-medium transition ${
  selectedCategory === category
- ? 'bg-[#1E1E1E] text-white'
+ ? 'bg-ink-900 text-white'
  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
  }`}
  >
@@ -149,7 +149,7 @@ export const Publications = () => {
  <div className="flex flex-col lg:flex-row lg:items-start gap-4">
  <div className="flex-1">
  <div className="flex items-center gap-2 mb-2">
- <span className="px-2 py-1 bg-[#A51C30]/10 text-[#A51C30] text-xs font-medium">
+ <span className="px-2 py-1 bg-primary-600/10 text-primary-600 text-xs font-medium">
  {pub.category}
  </span>
  <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs">
@@ -161,7 +161,7 @@ export const Publications = () => {
  </span>
  </div>
 
- <h3 className="text-title text-gray-900 mb-2 hover:text-[#1E1E1E] transition">
+ <h3 className="text-title text-gray-900 mb-2 hover:text-ink-900 transition">
  {pub.title}
  </h3>
 
@@ -173,7 +173,7 @@ export const Publications = () => {
  {pub.journal}
  {pub.doi && (
  <span className="ml-2">
- DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer" className="text-[#1E1E1E] hover:underline">{pub.doi}</a>
+ DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener noreferrer" className="text-ink-900 hover:underline">{pub.doi}</a>
  </span>
  )}
  </p>
@@ -189,7 +189,7 @@ export const Publications = () => {
  <div className="flex lg:flex-col gap-2">
  <Link
  to={`/research/publications/${pub.id}`}
- className="flex items-center gap-2 px-4 py-2 bg-[#1E1E1E] text-white text-sm font-medium hover:bg-[#1E1E1E]/90 transition"
+ className="flex items-center gap-2 px-4 py-2 bg-ink-900 text-white text-sm font-medium hover:bg-ink-900/90 transition"
  >
  View Paper
  <ArrowUpRight className="w-4 h-4" />
@@ -210,10 +210,10 @@ export const Publications = () => {
  </section>
 
  {/* CTA */}
- <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="container-custom text-center">
  <h2 className="text-headline text-white mb-4">
- Research with <span className="text-[#A51C30]">BMU</span>
+ Research with <span className="text-primary-600">BMU</span>
  </h2>
  <p className="text-lead text-white/80 max-w-2xl mx-auto mb-8">
  Join our research community and contribute to advancing medical knowledge 
@@ -222,7 +222,7 @@ export const Publications = () => {
  <div className="flex flex-wrap justify-center gap-4">
  <a 
  href="mailto:research@bmu.edu.ng"
- className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Collaborate with Us
  </a>

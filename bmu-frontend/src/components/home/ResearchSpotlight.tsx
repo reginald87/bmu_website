@@ -44,9 +44,9 @@ export const ResearchSpotlight = ({ compact }: ResearchSpotlightProps) => {
         <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
       </div>
     );
-    if (compact) return <div style={{ backgroundColor: '#1E1E1E' }} className="p-5 lg:p-6 h-full">{content}</div>;
+    if (compact) return <div style={{ backgroundColor: 'var(--color-ink-900)' }} className="p-5 lg:p-6 h-full">{content}</div>;
     return (
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom">{content}</div>
       </section>
     );
@@ -71,11 +71,11 @@ export const ResearchSpotlight = ({ compact }: ResearchSpotlightProps) => {
                 transition={{ delay: index * 0.1, duration: 0.4 }}
                 className="bg-white p-5 h-full transition-all duration-300 group-hover:-translate-y-1"
               >
-                <div className="w-10 h-10 bg-[#A51C30]/10 flex items-center justify-center mb-3">
+                <div className="w-10 h-10 bg-primary-600/10 flex items-center justify-center mb-3">
                   <span className="text-lg">🔬</span>
                 </div>
 
-                <h3 className="font-bold text-base mb-2 leading-snug text-[#1E1E1E] group-hover:text-[#A51C30] transition-colors duration-300">
+                <h3 className="font-bold text-base mb-2 leading-snug text-ink-900 group-hover:text-primary-600 transition-colors duration-300">
                   {project.title}
                 </h3>
 
@@ -98,7 +98,7 @@ export const ResearchSpotlight = ({ compact }: ResearchSpotlightProps) => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 text-xs font-semibold text-[#A51C30] transition-all duration-300 group-hover:gap-2">
+                <div className="flex items-center gap-1 text-xs font-semibold text-primary-600 transition-all duration-300 group-hover:gap-2">
                   <span>Read full project</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>
@@ -112,7 +112,7 @@ export const ResearchSpotlight = ({ compact }: ResearchSpotlightProps) => {
         <div className="text-center mt-12">
           <Link
             to="/research"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-[#A51C30] text-white font-semibold hover:bg-[#8a1828] transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors"
           >
             {t('home.researchSpotlight.exploreAll')}
             <ArrowRight className="w-4 h-4" />
@@ -123,13 +123,13 @@ export const ResearchSpotlight = ({ compact }: ResearchSpotlightProps) => {
   );
 
   if (compact) return (
-    <div style={{ backgroundColor: '#1E1E1E' }} className="p-5 lg:p-6 h-full">
+    <div style={{ backgroundColor: 'var(--color-ink-900)' }} className="p-5 lg:p-6 h-full">
       {content}
     </div>
   );
 
   return (
-    <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+    <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
       <div className="container-custom">
         {content}
       </div>

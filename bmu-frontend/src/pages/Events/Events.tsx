@@ -67,7 +67,7 @@ export const Events = () => {
         <meta name="description" content="Discover upcoming conferences, workshops, ceremonies, and community events at Bayelsa Medical University." />
       </Helmet>
       <div className="min-h-screen bg-gray-50">
-        <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+        <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
           <div className="absolute inset-0 opacity-5" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
           }} />
@@ -79,7 +79,7 @@ export const Events = () => {
                 <span className="text-white font-medium">Events</span>
               </div>
               <h1 className="text-display text-white mb-6">
-                Upcoming <span className="text-[#A51C30]">Events</span>
+                Upcoming <span className="text-primary-600">Events</span>
               </h1>
               <p className="text-lead text-white/80 max-w-2xl">
                 Join us for conferences, workshops, ceremonies, and community programs that advance healthcare education and research.
@@ -97,7 +97,7 @@ export const Events = () => {
                   type="text" value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search events..."
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent outline-none"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent outline-none"
                 />
               </div>
               <div className="flex items-center gap-2">
@@ -105,7 +105,7 @@ export const Events = () => {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent outline-none"
+                  className="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent outline-none"
                 >
                   {categories.map(cat => (
                     <option key={cat.id} value={cat.id}>{cat.label}</option>
@@ -115,13 +115,13 @@ export const Events = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-3 transition ${viewMode === 'grid' ? 'bg-[#1E1E1E] text-white' : 'bg-gray-100 text-gray-600'}`}
+                  className={`p-3 transition ${viewMode === 'grid' ? 'bg-ink-900 text-white' : 'bg-gray-100 text-gray-600'}`}
                 >
                   <Grid className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-3 transition ${viewMode === 'list' ? 'bg-[#1E1E1E] text-white' : 'bg-gray-100 text-gray-600'}`}
+                  className={`p-3 transition ${viewMode === 'list' ? 'bg-ink-900 text-white' : 'bg-gray-100 text-gray-600'}`}
                 >
                   <CalendarIcon className="w-5 h-5" />
                 </button>
@@ -152,7 +152,7 @@ export const Events = () => {
                   </div>
                   <div className="p-8 flex flex-col justify-center">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="px-3 py-1 text-sm font-medium bg-[#1E1E1E]/10 text-[#1E1E1E]">
+                      <span className="px-3 py-1 text-sm font-medium bg-ink-900/10 text-ink-900">
                         {featuredEvent.category_display}
                       </span>
                       {featuredEvent.registration_open && (
@@ -169,19 +169,19 @@ export const Events = () => {
                     </p>
                     <div className="space-y-3 text-sm text-gray-500 mb-6">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-[#1E1E1E]" />
+                        <Calendar className="w-5 h-5 text-ink-900" />
                         <span>{featuredEvent.event_date}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Clock className="w-5 h-5 text-[#1E1E1E]" />
+                        <Clock className="w-5 h-5 text-ink-900" />
                         <span>{formatTime(featuredEvent.start_time, featuredEvent.end_time)}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <MapPin className="w-5 h-5 text-[#1E1E1E]" />
+                        <MapPin className="w-5 h-5 text-ink-900" />
                         <span>{featuredEvent.location}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Users className="w-5 h-5 text-[#1E1E1E]" />
+                        <Users className="w-5 h-5 text-ink-900" />
                         <span>
                           {featuredEvent.max_attendees
                             ? `${featuredEvent.registered_count} / ${featuredEvent.max_attendees} registered`
@@ -193,14 +193,14 @@ export const Events = () => {
                     <div className="flex gap-4">
                       <Link
                         to={`/events/${featuredEvent.slug}`}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition"
                       >
                         View Details <ArrowRight className="w-5 h-5" />
                       </Link>
                       {featuredEvent.registration_open && (
                         <button
                           onClick={() => setRegisteringEvent(featuredEvent)}
-                          className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#1E1E1E] text-[#1E1E1E] font-semibold hover:bg-[#1E1E1E] hover:text-white transition"
+                          className="inline-flex items-center gap-2 px-6 py-3 border-2 border-ink-900 text-ink-900 font-semibold hover:bg-ink-900 hover:text-white transition"
                         >
                           Register Now
                         </button>
@@ -234,14 +234,14 @@ export const Events = () => {
                         </div>
                         <div className="p-6">
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="text-xs px-2 py-1 font-medium bg-[#1E1E1E]/10 text-[#1E1E1E]">
+                            <span className="text-xs px-2 py-1 font-medium bg-ink-900/10 text-ink-900">
                               {event.category_display}
                             </span>
                             {event.registration_open && (
                               <span className="text-xs px-2 py-1 font-medium bg-green-100 text-green-600">Open</span>
                             )}
                           </div>
-                          <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-[#1E1E1E] transition line-clamp-2">
+                          <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-ink-900 transition line-clamp-2">
                             {event.title}
                           </h3>
                           <p className="text-gray-600 text-sm mb-4 line-clamp-2">
@@ -282,7 +282,7 @@ export const Events = () => {
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs px-2 py-1 font-medium bg-[#1E1E1E]/10 text-[#1E1E1E]">
+                            <span className="text-xs px-2 py-1 font-medium bg-ink-900/10 text-ink-900">
                               {event.category_display}
                             </span>
                             {event.registration_open && (
@@ -291,7 +291,7 @@ export const Events = () => {
                               </span>
                             )}
                           </div>
-                          <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-[#1E1E1E] transition">
+                          <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-ink-900 transition">
                             {event.title}
                           </h3>
                           <p className="text-gray-600 text-sm mb-3 line-clamp-2">
@@ -325,26 +325,26 @@ export const Events = () => {
 
           <section className="mt-16 grid md:grid-cols-3 gap-8">
             <Link to="/events/calendar" className="bg-white p-6 shadow-sm transition group">
-              <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center mb-4 group-hover:bg-[#1E1E1E]/20 transition">
-                <CalendarIcon className="w-6 h-6 text-[#1E1E1E]" />
+              <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center mb-4 group-hover:bg-ink-900/20 transition">
+                <CalendarIcon className="w-6 h-6 text-ink-900" />
               </div>
               <h3 className="font-bold text-lg text-gray-900 mb-2">Event Calendar</h3>
               <p className="text-gray-600 text-sm mb-4">View all events in a calendar format and plan your schedule.</p>
-              <span className="text-[#1E1E1E] font-medium flex items-center gap-1">
+              <span className="text-ink-900 font-medium flex items-center gap-1">
                 View Calendar <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
             <Link to="/events/past" className="bg-white p-6 shadow-sm transition group">
-              <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center mb-4 group-hover:bg-[#A51C30]/20 transition">
-                <Clock className="w-6 h-6 text-[#A51C30]" />
+              <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center mb-4 group-hover:bg-primary-600/20 transition">
+                <Clock className="w-6 h-6 text-primary-600" />
               </div>
               <h3 className="font-bold text-lg text-gray-900 mb-2">Past Events</h3>
               <p className="text-gray-600 text-sm mb-4">Browse through our archive of past conferences and programs.</p>
-              <span className="text-[#A51C30] font-medium flex items-center gap-1">
+              <span className="text-primary-600 font-medium flex items-center gap-1">
                 View Archive <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
-            <div className="bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] p-6 text-white">
+            <div className="bg-gradient-to-br from-ink-900 to-primary-600 p-6 text-white">
               <div className="w-12 h-12 bg-white/20 flex items-center justify-center mb-4">
                 <Users className="w-6 h-6" />
               </div>

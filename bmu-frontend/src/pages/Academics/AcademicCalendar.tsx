@@ -52,7 +52,7 @@ export const AcademicCalendar = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -67,7 +67,7 @@ export const AcademicCalendar = () => {
  <span className="text-white font-medium">Academic Calendar</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Academic <span className="text-[#A51C30]">Calendar</span>
+ Academic <span className="text-primary-600">Calendar</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Academic Year {academicYear} - Important dates, deadlines, and events for the session.
@@ -79,11 +79,11 @@ export const AcademicCalendar = () => {
  {/* Important Deadlines Alert */}
  <section className="py-8" style={{ backgroundColor: '#f8f9fa' }}>
  <div className="container-custom">
- <div className="bg-[#A51C30]/10 border border-[#A51C30]/20 p-6">
+ <div className="bg-primary-600/10 border border-primary-600/20 p-6">
  <div className="flex items-start gap-4">
- <AlertCircle className="w-6 h-6 text-[#A51C30] flex-shrink-0 mt-1" />
+ <AlertCircle className="w-6 h-6 text-primary-600 flex-shrink-0 mt-1" />
  <div>
- <h3 className="font-semibold text-[#A51C30] mb-2">Important Notice</h3>
+ <h3 className="font-semibold text-primary-600 mb-2">Important Notice</h3>
  <p className="text-gray-700">
  All students are advised to adhere strictly to registration and payment deadlines. 
  Late registration attracts a penalty fee. Academic activities proceed as scheduled 
@@ -113,7 +113,7 @@ export const AcademicCalendar = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white shadow-sm border border-gray-100 overflow-hidden"
  >
- <div className="p-6 border-b border-gray-100" style={{ backgroundColor: '#1E1E1E' }}>
+ <div className="p-6 border-b border-gray-100" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <h2 className="text-title text-white">{termName}</h2>
  </div>
  <div className="p-6">
@@ -156,8 +156,8 @@ export const AcademicCalendar = () => {
   viewport={{ once: true }}
   className="bg-white p-6 shadow-sm border border-gray-100 flex items-start gap-4"
   >
-  <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0">
-  <Icon className="w-6 h-6 text-[#A51C30]" />
+  <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center flex-shrink-0">
+  <Icon className="w-6 h-6 text-primary-600" />
   </div>
   <div>
   <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
@@ -171,7 +171,7 @@ export const AcademicCalendar = () => {
  </section>
 
   {/* Download Section */}
-  <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+  <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
   <div className="container-custom text-center">
   <h2 className="text-headline text-white mb-4">Download Calendar</h2>
   <p className="text-lead text-white/80 max-w-2xl mx-auto mb-8">
@@ -180,7 +180,7 @@ export const AcademicCalendar = () => {
   <div className="flex flex-wrap justify-center gap-4">
   <button
   onClick={() => window.open(`/api/v1/academics/calendar/download/?academic_year=${academicYear}`, '_blank')}
-  className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition flex items-center gap-2"
+  className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition flex items-center gap-2"
   >
   <Calendar className="w-5 h-5" />
   Download PDF Calendar

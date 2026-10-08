@@ -55,10 +55,10 @@ export const UniversalLogin = () => {
         <meta name="description" content="Secure universal login for all BMU portals." />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[180px] pb-12 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-ink-900 to-primary-600 pt-[180px] pb-12 px-4">
         <div className="max-w-md mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white overflow-hidden">
-            <div className="bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] p-8 text-center">
+            <div className="bg-gradient-to-br from-ink-900 to-primary-600 p-8 text-center">
               <div className="w-16 h-16 bg-white/20 flex items-center justify-center mx-auto mb-4">
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
@@ -81,7 +81,7 @@ export const UniversalLogin = () => {
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600" />
                     <input type="email" value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent outline-none transition"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent outline-none transition"
                       placeholder="you@bmu.edu.ng" required />
                   </div>
                 </div>
@@ -91,18 +91,18 @@ export const UniversalLogin = () => {
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-600" />
                     <input type="password" value={password}
                       onChange={e => setPassword(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent outline-none transition"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent outline-none transition"
                       placeholder="Enter your password" required />
                   </div>
                 </div>
                 <button type="submit" disabled={isLoading}
-                  className="w-full py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition disabled:opacity-50">
+                  className="w-full py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition disabled:opacity-50">
                   {isLoading ? 'Signing in...' : 'Sign In'}
                 </button>
               </form>
 
               <div className="mt-4 text-center">
-                <Link to="/portals/reset-password" className="text-sm text-[#A51C30] hover:underline">
+                <Link to="/portals/reset-password" className="text-sm text-primary-600 hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -113,7 +113,7 @@ export const UniversalLogin = () => {
                   Role-based access. You will be redirected to your dashboard after login.
                 </div>
                 <p className="text-xs text-gray-400 text-center">
-                  Need help? Contact <a href="mailto:it@bmu.edu.ng" className="text-[#1E1E1E] hover:underline">it@bmu.edu.ng</a>
+                  Need help? Contact <a href="mailto:it@bmu.edu.ng" className="text-ink-900 hover:underline">it@bmu.edu.ng</a>
                 </p>
               </div>
             </div>

@@ -53,12 +53,12 @@ export const StickySectionNav = ({ sections, activeSection }: StickySectionNavPr
                     isActive
                       ? 'opacity-100 mr-0'
                       : 'opacity-0 group-hover:opacity-60 mr-2'
-                  } ${isActive ? 'text-[#A51C30]' : 'text-gray-500'}`}>
+                  } ${isActive ? 'text-primary-600' : 'text-gray-500'}`}>
                     {section.label}
                   </span>
                   <div className={`transition-all duration-300 ${
                     isActive
-                      ? 'w-3 h-3 bg-[#A51C30]'
+                      ? 'w-3 h-3 bg-primary-600'
                       : 'w-2 h-2 bg-gray-300 group-hover:bg-gray-400'
                   }`} />
                 </button>

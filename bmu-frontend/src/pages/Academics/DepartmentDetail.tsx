@@ -290,7 +290,7 @@ hod_photo: response.data.hod_photo ?? null,
  if (isLoading) {
   return (
   <div className="min-h-screen flex items-center justify-center">
-  <div className="animate-spin h-12 w-12 border-b-2 border-[#1E1E1E]"></div>
+  <div className="animate-spin h-12 w-12 border-b-2 border-ink-900"></div>
   </div>
   );
  }
@@ -301,7 +301,7 @@ hod_photo: response.data.hod_photo ?? null,
   <div className="text-center">
   <h2 className="text-2xl font-bold text-gray-900 mb-2">Department Not Found</h2>
   <p className="text-gray-600 mb-4">The department you're looking for doesn't exist.</p>
-  <Link to="/academics" className="text-[#1E1E1E] font-medium hover:underline">
+  <Link to="/academics" className="text-ink-900 font-medium hover:underline">
   Back to Academics
   </Link>
   </div>
@@ -324,7 +324,7 @@ hod_photo: response.data.hod_photo ?? null,
  </Helmet>
 
  {/* Hero Section */}
- <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
+ <section className="relative pt-[180px] pb-20 overflow-hidden bg-ink-900">
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -361,7 +361,7 @@ hod_photo: response.data.hod_photo ?? null,
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
  <div className="lg:col-span-2">
  {department.code && (
- <span className="inline-block px-3 py-1 bg-[#A51C30] text-[#1E1E1E] text-sm font-semibold mb-4">
+ <span className="inline-block px-3 py-1 bg-primary-600 text-ink-900 text-sm font-semibold mb-4">
  {department.code}
  </span>
  )}
@@ -406,7 +406,7 @@ hod_photo: response.data.hod_photo ?? null,
   transition={{ delay: index * 0.1 }}
   className="text-center"
   >
-  <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+  <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
   <p className="text-gray-600 text-body">{stat.label}</p>
   </motion.div>
   ))}
@@ -437,7 +437,7 @@ hod_photo: response.data.hod_photo ?? null,
  className="bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
  >
  <div className="flex items-start gap-4">
- <div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0">
+ <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center flex-shrink-0">
  {member.profile_image ? (
  <img 
  src={member.profile_image} 
@@ -445,12 +445,12 @@ hod_photo: response.data.hod_photo ?? null,
  className="w-full h-full object-cover"
  />
  ) : (
- <Users className="w-8 h-8 text-[#1E1E1E]" />
+ <Users className="w-8 h-8 text-ink-900" />
  )}
  </div>
  <div className="flex-1 min-w-0">
  <h3 className="text-title text-gray-900 mb-1 truncate">{member.full_name}</h3>
- <p className="text-small text-[#1E1E1E] font-medium">{member.title} {member.position}</p>
+ <p className="text-small text-ink-900 font-medium">{member.title} {member.position}</p>
  {member.specialization && (
  <p className="text-small text-gray-500 mt-1">{member.specialization}</p>
  )}
@@ -462,7 +462,7 @@ hod_photo: response.data.hod_photo ?? null,
  )}
  <Link 
  to={`/leadership/${member.id}`}
- className="text-small text-[#1E1E1E] font-medium hover:underline"
+ className="text-small text-ink-900 font-medium hover:underline"
  >
  View Profile
  </Link>
@@ -484,10 +484,10 @@ hod_photo: response.data.hod_photo ?? null,
  initial={{ opacity: 0, y: 20 }}
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
- className="bg-[#1E1E1E]/5 p-8"
+ className="bg-ink-900/5 p-8"
  >
  <div className="flex items-center gap-3 mb-4">
- <div className="w-12 h-12 bg-[#1E1E1E] flex items-center justify-center">
+ <div className="w-12 h-12 bg-ink-900 flex items-center justify-center">
  <Microscope className="w-6 h-6 text-white" />
  </div>
  <h3 className="text-title text-gray-900">Research Focus</h3>
@@ -498,7 +498,7 @@ hod_photo: response.data.hod_photo ?? null,
  </p>
  <Link 
  to="/research"
- className="inline-flex items-center gap-2 text-[#1E1E1E] font-medium hover:gap-3 transition-all"
+ className="inline-flex items-center gap-2 text-ink-900 font-medium hover:gap-3 transition-all"
  >
  View Research <ArrowRight className="w-4 h-4" />
  </Link>
@@ -509,10 +509,10 @@ hod_photo: response.data.hod_photo ?? null,
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ delay: 0.1 }}
- className="bg-[#A51C30]/5 p-8"
+ className="bg-primary-600/5 p-8"
  >
  <div className="flex items-center gap-3 mb-4">
- <div className="w-12 h-12 bg-[#A51C30] flex items-center justify-center">
+ <div className="w-12 h-12 bg-primary-600 flex items-center justify-center">
  <GraduationCap className="w-6 h-6 text-white" />
  </div>
  <h3 className="text-title text-gray-900">Academic Programs</h3>
@@ -523,7 +523,7 @@ hod_photo: response.data.hod_photo ?? null,
  </p>
  <Link 
  to="/academics/programs"
- className="inline-flex items-center gap-2 text-[#A51C30] font-medium hover:gap-3 transition-all"
+ className="inline-flex items-center gap-2 text-primary-600 font-medium hover:gap-3 transition-all"
  >
  Browse Programs <ArrowRight className="w-4 h-4" />
  </Link>
@@ -533,7 +533,7 @@ hod_photo: response.data.hod_photo ?? null,
  </section>
 
  {/* CTA */}
- <section className="py-16 bg-[#1E1E1E]">
+ <section className="py-16 bg-ink-900">
  <div className="container-custom">
  <div className="text-center">
  <h2 className="text-headline text-white mb-4">
@@ -545,13 +545,13 @@ hod_photo: response.data.hod_photo ?? null,
  <div className="flex flex-wrap justify-center gap-4">
  <Link 
  to="/academics/programs"
- className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Browse Programs
  </Link>
  <Link 
  to="/apply"
- className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+ className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
  >
  Apply Now
  </Link>

@@ -88,12 +88,12 @@ const StudentTypeStep = ({ selected, onSelect }: { selected: string | null, onSe
         <button
           key={type.type}
           onClick={() => onSelect(type.type)}
-          className={`p-6 border-2 text-left transition-all ${ selected === type.type ? 'border-[#A51C30] bg-[#A51C30]/5' : 'border-gray-200 hover:border-gray-300' }`}
+          className={`p-6 border-2 text-left transition-all ${ selected === type.type ? 'border-primary-600 bg-primary-600/5' : 'border-gray-200 hover:border-gray-300' }`}
         >
           <div className="text-3xl mb-3">{type.type === 'LOCAL' ? '🇳🇬' : '🌍'}</div>
           <h3 className="text-lg font-bold text-gray-900 mb-1">{type.title}</h3>
           <p className="text-sm text-gray-600 mb-3">{type.description}</p>
-          <div className="text-sm font-semibold text-[#1E1E1E]">
+          <div className="text-sm font-semibold text-ink-900">
             Application Fee: {type.fee}
           </div>
         </button>
@@ -133,7 +133,7 @@ const ProgramStep = ({
           <button
             key={l.id}
             onClick={() => setLevel(l.id)}
-            className={`px-4 py-2 text-sm font-medium transition-all ${ level === l.id ? 'bg-[#1E1E1E] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }`}
+            className={`px-4 py-2 text-sm font-medium transition-all ${ level === l.id ? 'bg-ink-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }`}
           >
             {l.name}
           </button>
@@ -148,7 +148,7 @@ const ProgramStep = ({
           placeholder="Search programs..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30]"
+          className="w-full pl-10 pr-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600"
         />
       </div>
 
@@ -158,7 +158,7 @@ const ProgramStep = ({
           <button
             key={program.id}
             onClick={() => onSelect(program)}
-            className={`w-full text-left p-4 border-2 transition-all ${ selected?.id === program.id ? 'border-[#A51C30] bg-[#A51C30]/5' : 'border-gray-200 hover:border-gray-300' }`}
+            className={`w-full text-left p-4 border-2 transition-all ${ selected?.id === program.id ? 'border-primary-600 bg-primary-600/5' : 'border-gray-200 hover:border-gray-300' }`}
           >
             <div className="flex justify-between items-start">
               <div>
@@ -170,7 +170,7 @@ const ProgramStep = ({
                 </div>
               </div>
               {selected?.id === program.id && (
-                <CheckCircle className="text-[#A51C30] w-6 h-6" />
+                <CheckCircle className="text-primary-600 w-6 h-6" />
               )}
             </div>
           </button>
@@ -216,7 +216,7 @@ const PersonalInfoStep = ({
             type="text"
             value={data.firstName || ''}
             onChange={(e) => onChange('firstName', e.target.value)}
-            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError('firstName') ? 'border-red-500' : '' }`}
+            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('firstName') ? 'border-red-500' : '' }`}
             placeholder="Enter first name"
             aria-invalid={!!getError('firstName')}
             aria-describedby={getError('firstName') ? 'firstName-error' : undefined}
@@ -231,7 +231,7 @@ const PersonalInfoStep = ({
             type="text"
             value={data.lastName || ''}
             onChange={(e) => onChange('lastName', e.target.value)}
-            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError('lastName') ? 'border-red-500' : '' }`}
+            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('lastName') ? 'border-red-500' : '' }`}
             placeholder="Enter last name"
             aria-invalid={!!getError('lastName')}
             aria-describedby={getError('lastName') ? 'lastName-error' : undefined}
@@ -246,7 +246,7 @@ const PersonalInfoStep = ({
             type="email"
             value={data.email || ''}
             onChange={(e) => onChange('email', e.target.value)}
-            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError('email') ? 'border-red-500' : '' }`}
+            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('email') ? 'border-red-500' : '' }`}
             placeholder="your@email.com"
             aria-invalid={!!getError('email')}
             aria-describedby={getError('email') ? 'email-error' : undefined}
@@ -261,7 +261,7 @@ const PersonalInfoStep = ({
             type="tel"
             value={data.phone || ''}
             onChange={(e) => onChange('phone', e.target.value)}
-            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError('phone') ? 'border-red-500' : '' }`}
+            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('phone') ? 'border-red-500' : '' }`}
             placeholder="+234 XXX XXX XXXX"
             aria-invalid={!!getError('phone')}
             aria-describedby={getError('phone') ? 'phone-error' : undefined}
@@ -276,7 +276,7 @@ const PersonalInfoStep = ({
             type="date"
             value={data.dob || ''}
             onChange={(e) => onChange('dob', e.target.value)}
-            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError('dob') ? 'border-red-500' : '' }`}
+            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('dob') ? 'border-red-500' : '' }`}
             aria-invalid={!!getError('dob')}
             aria-describedby={getError('dob') ? 'dob-error' : undefined}
           />
@@ -289,7 +289,7 @@ const PersonalInfoStep = ({
           <select
             value={data.gender || ''}
             onChange={(e) => onChange('gender', e.target.value)}
-            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError('gender') ? 'border-red-500' : '' }`}
+            className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('gender') ? 'border-red-500' : '' }`}
             aria-invalid={!!getError('gender')}
             aria-describedby={getError('gender') ? 'gender-error' : undefined}
           >
@@ -309,7 +309,7 @@ const PersonalInfoStep = ({
         <textarea
           value={data.address || ''}
           onChange={(e) => onChange('address', e.target.value)}
-          className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError('address') ? 'border-red-500' : '' }`}
+          className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('address') ? 'border-red-500' : '' }`}
           rows={3}
           placeholder="Enter your current address"
           aria-invalid={!!getError('address')}
@@ -430,7 +430,7 @@ const AcademicInfoStep = ({
                 type="text"
                 value={record.institution}
                 onChange={(e) => updateRecord(index, 'institution', e.target.value)}
-                className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError(`academicRecords.${index}.institution`) ? 'border-red-500' : '' }`}
+                className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError(`academicRecords.${index}.institution`) ? 'border-red-500' : '' }`}
                 placeholder="Name of school/university"
               />
               {getError(`academicRecords.${index}.institution`) && (
@@ -442,7 +442,7 @@ const AcademicInfoStep = ({
               <select
                 value={record.qualification}
                 onChange={(e) => updateRecord(index, 'qualification', e.target.value)}
-                className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError(`academicRecords.${index}.qualification`) ? 'border-red-500' : '' }`}
+                className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError(`academicRecords.${index}.qualification`) ? 'border-red-500' : '' }`}
               >
                 <option value="">Select qualification</option>
                 {ACADEMIC_TYPES.map(t => (
@@ -459,7 +459,7 @@ const AcademicInfoStep = ({
                 type="number"
                 value={record.gradYear}
                 onChange={(e) => updateRecord(index, 'gradYear', e.target.value)}
-                className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError(`academicRecords.${index}.gradYear`) ? 'border-red-500' : '' }`}
+                className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError(`academicRecords.${index}.gradYear`) ? 'border-red-500' : '' }`}
                 placeholder="YYYY"
               />
               {getError(`academicRecords.${index}.gradYear`) && (
@@ -475,7 +475,7 @@ const AcademicInfoStep = ({
                 <button
                   type="button"
                   onClick={() => addSubject(index)}
-                  className="text-sm text-[#A51C30] hover:underline"
+                  className="text-sm text-primary-600 hover:underline"
                 >
                   + Add Subject
                 </button>
@@ -491,7 +491,7 @@ const AcademicInfoStep = ({
                         type="text"
                         value={subj.subject}
                         onChange={(e) => updateSubject(index, sIdx, 'subject', e.target.value)}
-                        className={`w-full px-4 py-2 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError(`academicRecords.${index}.subjects.${sIdx}.subject`) ? 'border-red-500' : '' }`}
+                        className={`w-full px-4 py-2 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError(`academicRecords.${index}.subjects.${sIdx}.subject`) ? 'border-red-500' : '' }`}
                         placeholder="Subject name"
                       />
                       {getError(`academicRecords.${index}.subjects.${sIdx}.subject`) && (
@@ -502,7 +502,7 @@ const AcademicInfoStep = ({
                       <select
                         value={subj.grade}
                         onChange={(e) => updateSubject(index, sIdx, 'grade', e.target.value)}
-                        className={`w-full px-4 py-2 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError(`academicRecords.${index}.subjects.${sIdx}.grade`) ? 'border-red-500' : '' }`}
+                        className={`w-full px-4 py-2 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError(`academicRecords.${index}.subjects.${sIdx}.grade`) ? 'border-red-500' : '' }`}
                       >
                         <option value="">Grade</option>
                         {SSCE_GRADES.map(g => (
@@ -534,7 +534,7 @@ const AcademicInfoStep = ({
               <select
                 value={record.grade}
                 onChange={(e) => updateRecord(index, 'grade', e.target.value)}
-                className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-[#A51C30] ${ getError(`academicRecords.${index}.grade`) ? 'border-red-500' : '' }`}
+                className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError(`academicRecords.${index}.grade`) ? 'border-red-500' : '' }`}
               >
                 <option value="">Select grade</option>
                 {DEGREE_GRADES.map(g => (
@@ -552,7 +552,7 @@ const AcademicInfoStep = ({
       <button
         type="button"
         onClick={addRecord}
-        className="w-full py-3 border-2 border-dashed border-gray-300 text-gray-500 hover:border-[#A51C30] hover:text-[#A51C30] transition font-medium"
+        className="w-full py-3 border-2 border-dashed border-gray-300 text-gray-500 hover:border-primary-600 hover:text-primary-600 transition font-medium"
       >
         + Add Another Academic Record
       </button>
@@ -590,12 +590,12 @@ const DocumentsStep = ({
           return (
             <div
               key={doc.name}
-              className={`flex items-center justify-between p-4 border-2 ${hasFile ? 'border-[#A51C30] bg-[#A51C30]/5' : 'border-gray-200'}`}
+              className={`flex items-center justify-between p-4 border-2 ${hasFile ? 'border-primary-600 bg-primary-600/5' : 'border-gray-200'}`}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className={`w-10 h-10 flex items-center justify-center shrink-0 ${hasFile ? 'bg-[#A51C30]/20' : 'bg-gray-100'}`}>
+                <div className={`w-10 h-10 flex items-center justify-center shrink-0 ${hasFile ? 'bg-primary-600/20' : 'bg-gray-100'}`}>
                   {hasFile ? (
-                    <CheckCircle className="w-5 h-5 text-[#A51C30]" />
+                    <CheckCircle className="w-5 h-5 text-primary-600" />
                   ) : (
                     <FileText className="w-5 h-5 text-gray-500" />
                   )}
@@ -624,7 +624,7 @@ const DocumentsStep = ({
                 <button
                   type="button"
                   onClick={() => fileInputRefs.current[doc.name]?.click()}
-                  className={`px-4 py-2 text-sm font-medium transition-all ${hasFile ? 'bg-[#A51C30]/20 text-[#1E1E1E]' : 'bg-[#1E1E1E] text-white hover:bg-[#1E1E1E]/90'}`}
+                  className={`px-4 py-2 text-sm font-medium transition-all ${hasFile ? 'bg-primary-600/20 text-ink-900' : 'bg-ink-900 text-white hover:bg-ink-900/90'}`}
                 >
                   {hasFile ? 'Change' : 'Upload'}
                 </button>
@@ -698,7 +698,7 @@ const ReviewPayStep = ({
         </div>
         <div className="flex justify-between items-center pt-2">
           <span className="text-lg font-semibold">Application Fee</span>
-          <span className="text-2xl font-bold text-[#1E1E1E]">{fee}</span>
+          <span className="text-2xl font-bold text-ink-900">{fee}</span>
         </div>
       </div>
 
@@ -706,7 +706,7 @@ const ReviewPayStep = ({
       <div>
         <h3 className="font-semibold text-gray-900 mb-3">Payment Method</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button className="p-4 border-2 border-[#A51C30] bg-[#A51C30]/5 text-left">
+          <button className="p-4 border-2 border-primary-600 bg-primary-600/5 text-left">
             <div className="font-medium">Paystack</div>
             <div className="text-sm text-gray-500">Card, Bank Transfer, USSD</div>
           </button>
@@ -726,7 +726,7 @@ const ReviewPayStep = ({
       <button
         onClick={onSubmit}
         disabled={isSubmitting}
-        className="w-full py-4 bg-[#1E1E1E] text-white font-bold hover:bg-[#1E1E1E]/90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-4 bg-ink-900 text-white font-bold hover:bg-ink-900/90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isSubmitting ? (
           <>
@@ -942,7 +942,7 @@ export const ApplicationPortal = () => {
         <div className="container-custom max-w-4xl">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#1E1E1E] mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-ink-900 mb-2">
               Apply to Bayelsa Medical University
             </h1>
             <p className="text-gray-600">
@@ -956,9 +956,9 @@ export const ApplicationPortal = () => {
               {STEPS.map((step) => (
                 <div 
                   key={step.id}
-                  className={`text-center flex-1 ${currentStep >= step.id ? 'text-[#A51C30]' : 'text-gray-400'}`}
+                  className={`text-center flex-1 ${currentStep >= step.id ? 'text-primary-600' : 'text-gray-400'}`}
                 >
-                  <div className={`w-10 h-10 mx-auto flex items-center justify-center transition-all ${ currentStep > step.id ? 'bg-[#A51C30] text-white' : currentStep === step.id ? 'bg-[#1E1E1E] text-white ring-4 ring-[#1E1E1E]/20' : 'bg-gray-200 text-gray-500' }`}>
+                  <div className={`w-10 h-10 mx-auto flex items-center justify-center transition-all ${ currentStep > step.id ? 'bg-primary-600 text-white' : currentStep === step.id ? 'bg-ink-900 text-white ring-4 ring-ink-900/20' : 'bg-gray-200 text-gray-500' }`}>
                     {currentStep > step.id ? (
                       <CheckCircle className="w-5 h-5" />
                     ) : (
@@ -971,7 +971,7 @@ export const ApplicationPortal = () => {
             </div>
             <div className="w-full bg-gray-200 h-2">
               <div 
-                className="bg-[#A51C30] h-2 transition-all duration-500"
+                className="bg-primary-600 h-2 transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -1088,7 +1088,7 @@ export const ApplicationPortal = () => {
                 <button
                   onClick={handleNext}
                   disabled={!canProceed()}
-                  className="flex items-center gap-2 px-6 py-3 font-medium bg-[#1E1E1E] text-white hover:bg-[#1E1E1E]/90 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="flex items-center gap-2 px-6 py-3 font-medium bg-ink-900 text-white hover:bg-ink-900/90 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 >
                   Continue
                   <ChevronRight className="w-5 h-5" />
@@ -1101,11 +1101,11 @@ export const ApplicationPortal = () => {
           <div className="mt-8 text-center text-sm text-gray-500">
             <p className="mb-2">Need help with your application?</p>
             <div className="flex justify-center gap-4">
-              <a href="tel:+2348031110020" className="flex items-center gap-1 text-[#1E1E1E] hover:underline">
+              <a href="tel:+2348031110020" className="flex items-center gap-1 text-ink-900 hover:underline">
                 <Phone className="w-4 h-4" />
                 +234 803 111 0020
               </a>
-              <a href="mailto:admissions@bmu.edu.ng" className="flex items-center gap-1 text-[#1E1E1E] hover:underline">
+              <a href="mailto:admissions@bmu.edu.ng" className="flex items-center gap-1 text-ink-900 hover:underline">
                 <Mail className="w-4 h-4" />
                 admissions@bmu.edu.ng
               </a>

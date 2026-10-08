@@ -15,12 +15,12 @@ import {
 import { useInnovationPrograms } from '../../services/apiHooks';
 
 const typeMeta: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  digital_health: { label: 'Digital Health', icon: Stethoscope, color: '#A51C30' },
-  medical_devices: { label: 'Medical Devices', icon: Cpu, color: '#1E1E1E' },
-  biotech: { label: 'Biotech & Genomics', icon: Microscope, color: '#1E1E1E' },
-  ai_ml: { label: 'AI & Machine Learning', icon: Brain, color: '#A51C30' },
-  telemedicine: { label: 'Telemedicine', icon: Video, color: '#A51C30' },
-  health_entrepreneurship: { label: 'Health Entrepreneurship', icon: HeartHandshake, color: '#1E1E1E' },
+  digital_health: { label: 'Digital Health', icon: Stethoscope, color: 'var(--color-primary-600)' },
+  medical_devices: { label: 'Medical Devices', icon: Cpu, color: 'var(--color-ink-900)' },
+  biotech: { label: 'Biotech & Genomics', icon: Microscope, color: 'var(--color-ink-900)' },
+  ai_ml: { label: 'AI & Machine Learning', icon: Brain, color: 'var(--color-primary-600)' },
+  telemedicine: { label: 'Telemedicine', icon: Video, color: 'var(--color-primary-600)' },
+  health_entrepreneurship: { label: 'Health Entrepreneurship', icon: HeartHandshake, color: 'var(--color-ink-900)' },
 };
 
 const statusConfig: Record<string, { label: string; color: string }> = {
@@ -53,7 +53,7 @@ export const TechnologyInnovation = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -68,11 +68,11 @@ export const TechnologyInnovation = () => {
               <span className="text-white font-medium">Technology & Innovation</span>
             </div>
             <div className="flex items-center gap-3 mb-4">
-              <Lightbulb className="w-8 h-8 text-[#A51C30]" />
-              <span className="text-small font-semibold text-[#A51C30] uppercase tracking-wide">Innovation-Driven ASPIRE Agenda</span>
+              <Lightbulb className="w-8 h-8 text-primary-600" />
+              <span className="text-small font-semibold text-primary-600 uppercase tracking-wide">Innovation-Driven ASPIRE Agenda</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Technology & <span className="text-[#A51C30]">Innovation</span>
+              Technology & <span className="text-primary-600">Innovation</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               Where healthcare meets technology. BMU is transforming medical education, research and
@@ -96,8 +96,8 @@ export const TechnologyInnovation = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}
@@ -117,14 +117,14 @@ export const TechnologyInnovation = () => {
 
           {isLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-[#A51C30]" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
             </div>
           ) : programs.length === 0 ? (
             <p className="text-center text-gray-500">No innovation programmes found.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {programs.map((program, index) => {
-                const meta = typeMeta[program.program_type] || { label: program.program_type, icon: Lightbulb, color: '#1E1E1E' };
+                const meta = typeMeta[program.program_type] || { label: program.program_type, icon: Lightbulb, color: 'var(--color-ink-900)' };
                 const MetaIcon = meta.icon;
                 const status = statusConfig[program.status] || statusConfig.ongoing;
                 return (
@@ -147,7 +147,7 @@ export const TechnologyInnovation = () => {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-[#1E1E1E]">
+                          <div className="w-full h-full flex items-center justify-center bg-ink-900">
                             <MetaIcon className="w-12 h-12 text-white/60" />
                           </div>
                         )}
@@ -166,7 +166,7 @@ export const TechnologyInnovation = () => {
                         <p className="text-body text-gray-600 mb-4 line-clamp-3">{program.description}</p>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-gray-500">{program.year ? `Since ${program.year}` : program.lead_unit}</span>
-                          <span className="inline-flex items-center gap-1 text-sm font-medium text-[#A51C30] transition group-hover:gap-2">
+                          <span className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 transition group-hover:gap-2">
                             Learn more <ArrowRight className="w-4 h-4" />
                           </span>
                         </div>
@@ -189,15 +189,15 @@ export const TechnologyInnovation = () => {
                 {featured.cover_image ? (
                   <img src={featured.cover_image} alt={featured.title} className="w-full aspect-video object-cover" />
                 ) : (
-                  <div className="w-full aspect-video flex items-center justify-center bg-[#1E1E1E]">
+                  <div className="w-full aspect-video flex items-center justify-center bg-ink-900">
                     <Lightbulb className="w-16 h-16 text-white/60" />
                   </div>
                 )}
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <Lightbulb className="w-6 h-6 text-[#A51C30]" />
-                  <span className="text-small font-semibold text-[#A51C30] uppercase tracking-wide">Featured Programme</span>
+                  <Lightbulb className="w-6 h-6 text-primary-600" />
+                  <span className="text-small font-semibold text-primary-600 uppercase tracking-wide">Featured Programme</span>
                 </div>
                 <h2 className="text-headline text-gray-900 mb-4">{featured.title}</h2>
                 <p className="text-body text-gray-600 mb-4">{featured.subtitle}</p>
@@ -205,7 +205,7 @@ export const TechnologyInnovation = () => {
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   {[featured.stat_1_value, featured.stat_2_value, featured.stat_3_value].map((val, i) => (
                     <div key={i} className="p-4 border border-gray-200 text-center">
-                      <div className="text-stat text-[#A51C30]">{val || '—'}</div>
+                      <div className="text-stat text-primary-600">{val || '—'}</div>
                       <p className="text-xs text-gray-500 mt-1">
                         {[featured.stat_1_label, featured.stat_2_label, featured.stat_3_label][i]}
                       </p>
@@ -214,7 +214,7 @@ export const TechnologyInnovation = () => {
                 </div>
                 <Link
                   to={`/research/innovation/${featured.id}`}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-semibold hover:bg-[#1E1E1E]/90 transition"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-semibold hover:bg-ink-900/90 transition"
                 >
                   Explore This Programme <ArrowRight className="w-5 h-5" />
                 </Link>
@@ -225,16 +225,16 @@ export const TechnologyInnovation = () => {
       )}
 
       {/* CTA */}
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Cpu className="w-6 h-6 text-[#A51C30]" />
-                <span className="text-small font-semibold text-[#A51C30] uppercase tracking-wide">Get Involved</span>
+                <Cpu className="w-6 h-6 text-primary-600" />
+                <span className="text-small font-semibold text-primary-600 uppercase tracking-wide">Get Involved</span>
               </div>
               <h2 className="text-headline text-white mb-4">
-                Partner with BMU on <span className="text-[#A51C30]">Innovation</span>
+                Partner with BMU on <span className="text-primary-600">Innovation</span>
               </h2>
               <p className="text-lead text-white/80 mb-6">
                 Whether you're a student innovator, a technology company, or a development partner,
@@ -244,13 +244,13 @@ export const TechnologyInnovation = () => {
             <div className="flex flex-wrap gap-4 lg:justify-end">
               <Link
                 to="/research/innovation"
-                className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+                className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
               >
                 Explore Programmes
               </Link>
               <Link
                 to="/contact"
-                className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+                className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
               >
                 Contact Us
               </Link>

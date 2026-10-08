@@ -56,7 +56,7 @@ export const TechnologyInnovationDetail = () => {
         <div className="container-custom text-center py-20">
           <Lightbulb className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <p className="text-gray-500 text-lg">Programme not found.</p>
-          <Link to="/research/innovation" className="text-[#A51C30] hover:underline mt-4 inline-block">
+          <Link to="/research/innovation" className="text-primary-600 hover:underline mt-4 inline-block">
             Back to Technology & Innovation
           </Link>
         </div>
@@ -85,11 +85,11 @@ export const TechnologyInnovationDetail = () => {
         <div className="container-custom">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">
-            <Link to="/" className="hover:text-[#A51C30] transition">Home</Link>
+            <Link to="/" className="hover:text-primary-600 transition">Home</Link>
             <span>/</span>
-            <Link to="/research" className="hover:text-[#A51C30] transition">Research</Link>
+            <Link to="/research" className="hover:text-primary-600 transition">Research</Link>
             <span>/</span>
-            <Link to="/research/innovation" className="hover:text-[#A51C30] transition">Technology & Innovation</Link>
+            <Link to="/research/innovation" className="hover:text-primary-600 transition">Technology & Innovation</Link>
             <span>/</span>
             <span className="text-gray-900 font-medium truncate max-w-[200px]">{program.title}</span>
           </div>
@@ -97,7 +97,7 @@ export const TechnologyInnovationDetail = () => {
           {/* Back link */}
           <Link
             to="/research/innovation"
-            className="inline-flex items-center gap-2 text-sm text-[#A51C30] hover:underline mb-6"
+            className="inline-flex items-center gap-2 text-sm text-primary-600 hover:underline mb-6"
           >
             <ArrowLeft size={16} /> Back to Technology & Innovation
           </Link>
@@ -118,7 +118,7 @@ export const TechnologyInnovationDetail = () => {
           {/* Cover image / video */}
           {embedUrl ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-              <div className="relative aspect-video bg-[#1E1E1E] mb-10">
+              <div className="relative aspect-video bg-ink-900 mb-10">
                 <iframe
                   src={embedUrl}
                   title={program.title}
@@ -164,8 +164,8 @@ export const TechnologyInnovationDetail = () => {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
                 {stats.map((s) => (
-                  <div key={s.label} className="p-5 text-center" style={{ backgroundColor: '#1E1E1E' }}>
-                    <div className="text-stat text-[#A51C30] mb-1">{s.value || '—'}</div>
+                  <div key={s.label} className="p-5 text-center" style={{ backgroundColor: 'var(--color-ink-900)' }}>
+                    <div className="text-stat text-primary-600 mb-1">{s.value || '—'}</div>
                     <p className="text-white/70 text-sm">{s.label}</p>
                   </div>
                 ))}
@@ -187,7 +187,7 @@ export const TechnologyInnovationDetail = () => {
                 <ul className="space-y-3">
                   {program.objectives.map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-700">
-                      <Target className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+                      <Target className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -200,7 +200,7 @@ export const TechnologyInnovationDetail = () => {
                 <ul className="space-y-3">
                   {program.achievements.map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-700">
-                      <CheckCircle className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -234,7 +234,7 @@ export const TechnologyInnovationDetail = () => {
                 {program.partners.map((partner) => (
                   <span
                     key={partner}
-                    className="px-4 py-2 text-sm font-medium border border-gray-200 text-[#1E1E1E]"
+                    className="px-4 py-2 text-sm font-medium border border-gray-200 text-ink-900"
                   >
                     {partner}
                   </span>

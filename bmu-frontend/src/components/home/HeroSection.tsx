@@ -145,7 +145,7 @@ export const HeroSection = () => {
 
               <div className="mb-10 max-w-lg" style={{ marginLeft: slide.contentPosition === 'center' ? 'auto' : undefined, marginRight: slide.contentPosition === 'center' ? 'auto' : undefined }}>
                 <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-[#A51C30] transition-colors" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-primary-600 transition-colors" />
                   <input
                     type="text"
                     value={searchQuery}
@@ -156,7 +156,7 @@ export const HeroSection = () => {
                       }
                     }}
                     placeholder="Search programs, faculty, research..."
-                    className="w-full pl-12 pr-4 py-3.5 text-gray-900 placeholder-gray-400 outline-none ring-1 ring-white/20 focus:ring-2 focus:ring-[#A51C30] transition-all"
+                    className="w-full pl-12 pr-4 py-3.5 text-gray-900 placeholder-gray-400 outline-none ring-1 ring-white/20 focus:ring-2 focus:ring-primary-600 transition-all"
                   />
                 </div>
               </div>
@@ -164,14 +164,14 @@ export const HeroSection = () => {
               <div className={`flex flex-col sm:flex-row gap-5 items-start ${slide.contentPosition === 'center' ? 'sm:items-center justify-center' : slide.contentPosition === 'right' ? 'sm:items-end justify-end' : 'sm:items-center'}`}>
                 <Link
                   to={slide.cta.primary === 'Our Research' ? '/research' : slide.cta.primary === 'View Colleges' ? '/academics/colleges' : '/apply'}
-                  className="group inline-flex items-center gap-2 px-8 py-3.5 bg-[#A51C30] text-white font-semibold hover:bg-[#8a1828] transition-colors"
+                  className="group inline-flex items-center gap-2 px-8 py-3.5 bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors"
                 >
                   {slide.cta.primary}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
                   to={slide.cta.secondary === 'Our Story' ? '/about' : slide.cta.secondary === 'Learn More' ? '/about' : '/international'}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 border-2 border-white/30 text-white font-semibold hover:bg-white hover:text-[#1E1E1E] transition-colors"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 border-2 border-white/30 text-white font-semibold hover:bg-white hover:text-ink-900 transition-colors"
                 >
                   {slide.cta.secondary}
                 </Link>

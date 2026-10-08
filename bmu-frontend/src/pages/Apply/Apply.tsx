@@ -86,7 +86,7 @@ export const Apply = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -94,7 +94,7 @@ export const Apply = () => {
         <div className="container-custom relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h1 className="text-display text-white mb-6">
-              Apply to <span className="text-[#A51C30]">BMU</span>
+              Apply to <span className="text-primary-600">BMU</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl mb-8">
               Begin your journey toward a rewarding career in healthcare. 
@@ -104,13 +104,13 @@ export const Apply = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 to="/portals/applicant"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
               >
                 Apply Now - Login / Register <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
                 to="/portals/applicant"
-                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
               >
                 Check Application Status
               </Link>
@@ -132,8 +132,8 @@ export const Apply = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
-                <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+                <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
             ))}
@@ -162,10 +162,10 @@ export const Apply = () => {
                 className="relative"
               >
                 <div className="bg-white p-6 shadow-sm border border-gray-100 h-full">
-                  <div className="w-12 h-12 bg-[#1E1E1E] flex items-center justify-center text-white font-bold mb-4">
+                  <div className="w-12 h-12 bg-ink-900 flex items-center justify-center text-white font-bold mb-4">
                     {item.step}
                   </div>
-                  <item.icon className="w-6 h-6 text-[#A51C30] mb-3" />
+                  <item.icon className="w-6 h-6 text-primary-600 mb-3" />
                   <h3 className="text-title text-gray-900 mb-2">{item.title}</h3>
                   <p className="text-body text-gray-600">{item.description}</p>
                 </div>
@@ -196,14 +196,14 @@ export const Apply = () => {
                     transition={{ delay: idx * 0.1 }}
                     className="flex items-start gap-3"
                   >
-                    <CheckCircle className="w-5 h-5 text-[#A51C30] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                     <span className="text-body text-gray-700">{req}</span>
                   </motion.li>
                 ))}
               </ul>
               <Link 
                 to="/academics/admissions"
-                className="inline-flex items-center gap-2 mt-6 text-[#1E1E1E] font-medium hover:underline"
+                className="inline-flex items-center gap-2 mt-6 text-ink-900 font-medium hover:underline"
               >
                 View detailed requirements <ArrowRight className="w-4 h-4" />
               </Link>
@@ -240,7 +240,7 @@ export const Apply = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
         <div className="container-custom text-center">
           <h2 className="text-headline text-white mb-4">Ready to Begin?</h2>
           <p className="text-lead text-white/80 max-w-2xl mx-auto mb-8">
@@ -250,13 +250,13 @@ export const Apply = () => {
           <div className="flex flex-wrap justify-center gap-4">
             <Link 
               to="/apply/portal"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
             >
               Apply Now <ArrowRight className="w-5 h-5" />
             </Link>
             <Link 
               to="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#A51C30] transition"
+              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-primary-600 transition"
             >
               <HelpCircle className="w-5 h-5" />
               Get Help

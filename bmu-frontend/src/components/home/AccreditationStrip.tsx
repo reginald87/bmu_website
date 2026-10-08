@@ -27,7 +27,7 @@ export const AccreditationStrip = () => {
     : fallbackAccreditations;
 
   return (
-    <section className="relative py-20 bg-[#1E1E1E] overflow-hidden">
+    <section className="relative py-20 bg-ink-900 overflow-hidden">
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
       
       <div className="container-custom relative">
@@ -37,7 +37,7 @@ export const AccreditationStrip = () => {
           viewport={{ once: true }}
           className="mb-14"
         >
-          <span className="inline-block text-sm font-bold tracking-[0.25em] uppercase text-[#A51C30] mb-3">
+          <span className="inline-block text-sm font-bold tracking-[0.25em] uppercase text-primary-600 mb-3">
             {t('home.accreditation.subtitle', 'Our Standards')}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -61,9 +61,9 @@ export const AccreditationStrip = () => {
                 transition={{ duration: 0.6, delay: index * 0.15 }}
                 className="group relative"
               >
-                <div className="relative bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/[0.08] hover:border-[#A51C30]/30 transition-all duration-500">
+                <div className="relative bg-white/[0.04] backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/[0.08] hover:border-primary-600/30 transition-all duration-500">
                   <div className="flex items-center gap-2 mb-5">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#A51C30] to-[#c4254a] flex items-center justify-center shadow-lg shadow-[#A51C30]/20 group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-500 flex items-center justify-center shadow-lg shadow-primary-600/20 group-hover:scale-110 transition-transform duration-300">
                       {acc.logo_url ? (
                         <img src={acc.logo_url} alt={acc.accrediting_body} className="w-10 h-10 object-contain" />
                       ) : (
@@ -94,7 +94,7 @@ export const AccreditationStrip = () => {
                     )}
                   </div>
 
-                  <div className="absolute bottom-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#A51C30]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </motion.div>
             );

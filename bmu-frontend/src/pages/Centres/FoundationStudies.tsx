@@ -40,7 +40,7 @@ export const FoundationStudies = () => {
  <meta name="description" content="Centre for Foundation Studies at BMU - Preparing students for success in medical education" />
  </Helmet>
 
- <div className="bg-[#1E1E1E] text-white py-16">
+ <div className="bg-ink-900 text-white py-16">
  <div className="container-custom">
  <motion.h1 
  initial={{ opacity: 0, y: 20 }}
@@ -64,7 +64,7 @@ export const FoundationStudies = () => {
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-2 space-y-8">
  <section className="card p-6">
- <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>About the Centre</h2>
+ <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>About the Centre</h2>
  <p className="text-gray-600 mb-4">
  The Centre for Foundation Studies provides comprehensive preparatory programs designed 
  to equip students with the academic foundation and skills necessary for success in 
@@ -78,12 +78,12 @@ export const FoundationStudies = () => {
  </section>
 
  <section>
- <h2 className="text-2xl font-bold mb-6" style={{ color: '#1E1E1E' }}>Foundation Pathways</h2>
+ <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-ink-900)' }}>Foundation Pathways</h2>
  <div className="space-y-4">
  {pathways.map((pathway) => (
  <div key={pathway.name} className="card p-6">
  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
- <h3 className="font-bold text-lg" style={{ color: '#1E1E1E' }}>{pathway.name}</h3>
+ <h3 className="font-bold text-lg" style={{ color: 'var(--color-ink-900)' }}>{pathway.name}</h3>
  <span className="text-sm font-medium px-3 py-1 bg-gray-100">
  {pathway.duration}
  </span>
@@ -100,7 +100,7 @@ export const FoundationStudies = () => {
  </section>
 
  <section className="card p-6">
- <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>Admission Requirements</h2>
+ <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Admission Requirements</h2>
  <ul className="space-y-2 text-gray-600 list-disc list-inside">
  <li>5 O'level credits including English, Mathematics, Biology, Chemistry</li>
  <li>UTME score of 180+ (for Pre-Medicine pathway)</li>
@@ -119,14 +119,14 @@ export const FoundationStudies = () => {
 
  <div className="space-y-6">
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Contact Us</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Contact Us</h3>
  <p className="text-gray-600 mb-2">Email: foundation@bmu.edu.ng</p>
  <p className="text-gray-600 mb-2">Phone: +234 xxx xxx xxxx</p>
  <p className="text-gray-600">Yenagoa Campus</p>
  </div>
 
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Quick Facts</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Quick Facts</h3>
  <ul className="space-y-2 text-gray-600">
  <li>4 Foundation Pathways</li>
  <li>Small Class Sizes (30 max)</li>
@@ -136,7 +136,7 @@ export const FoundationStudies = () => {
  </div>
 
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Important Dates</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Important Dates</h3>
  <ul className="space-y-3 text-sm text-gray-600">
  <li className="flex justify-between">
  <span>Application Opens</span>

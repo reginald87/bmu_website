@@ -59,7 +59,7 @@ export const LecturerPortal = () => {
             <div className="flex flex-wrap items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <span className="text-gray-500">Role:</span>
-                <span className="font-semibold text-[#1E1E1E]">{user?.role_display || user?.role}</span>
+                <span className="font-semibold text-ink-900">{user?.role_display || user?.role}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-gray-500">Assigned Courses:</span>
@@ -79,8 +79,8 @@ export const LecturerPortal = () => {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               className="bg-white p-6 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 flex items-center justify-center bg-[#A51C30]/20">
-                  <BookOpen className="w-5 h-5 text-[#A51C30]" />
+                <div className="w-10 h-10 flex items-center justify-center bg-primary-600/20">
+                  <BookOpen className="w-5 h-5 text-primary-600" />
                 </div>
                 <span className="text-sm text-gray-500">My Courses</span>
               </div>
@@ -89,8 +89,8 @@ export const LecturerPortal = () => {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
               className="bg-white p-6 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 flex items-center justify-center bg-[#1E1E1E]/20">
-                  <FileSpreadsheet className="w-5 h-5 text-[#1E1E1E]" />
+                <div className="w-10 h-10 flex items-center justify-center bg-ink-900/20">
+                  <FileSpreadsheet className="w-5 h-5 text-ink-900" />
                 </div>
                 <span className="text-sm text-gray-500">Pending Approvals</span>
               </div>
@@ -99,8 +99,8 @@ export const LecturerPortal = () => {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
               className="bg-white p-6 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 flex items-center justify-center bg-[#A51C30]/20">
-                  <Award className="w-5 h-5 text-[#A51C30]" />
+                <div className="w-10 h-10 flex items-center justify-center bg-primary-600/20">
+                  <Award className="w-5 h-5 text-primary-600" />
                 </div>
                 <span className="text-sm text-gray-500">Current Session</span>
               </div>
@@ -120,15 +120,15 @@ export const LecturerPortal = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}>
                     <Link to={link.link}
-                      className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-[#1E1E1E] transition group">
-                      <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1E1E1E]/20 transition">
-                        <link.icon className="w-6 h-6 text-[#1E1E1E]" />
+                      className="flex items-start gap-4 p-4 bg-white shadow-sm border border-gray-100 hover:border-ink-900 transition group">
+                      <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ink-900/20 transition">
+                        <link.icon className="w-6 h-6 text-ink-900" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 group-hover:text-[#1E1E1E] transition">{link.title}</h3>
+                        <h3 className="font-semibold text-gray-900 group-hover:text-ink-900 transition">{link.title}</h3>
                         <p className="text-sm text-gray-500">{link.description}</p>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#1E1E1E] transition" />
+                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-ink-900 transition" />
                     </Link>
                   </motion.div>
                 ))}
@@ -140,15 +140,15 @@ export const LecturerPortal = () => {
                 <div className="bg-white shadow-sm border border-gray-100">
                   {courses.length > 0 ? courses.map((c, i) => (
                     <div key={c.id} className={`flex items-center gap-4 p-4 ${i !== courses.length - 1 ? 'border-b' : ''}`}>
-                      <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center flex-shrink-0">
-                        <BookOpen className="w-6 h-6 text-[#1E1E1E]" />
+                      <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-6 h-6 text-ink-900" />
                       </div>
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900">{c.code} - {c.title}</h3>
                         <p className="text-sm text-gray-500">{c.credit_units} credit units</p>
                       </div>
                       <Link to="/portals/lecturer/grade-entry"
-                        className="px-3 py-1.5 text-sm font-medium bg-[#1E1E1E] text-white hover:bg-[#1E1E1E]/90 transition">
+                        className="px-3 py-1.5 text-sm font-medium bg-ink-900 text-white hover:bg-ink-900/90 transition">
                         Enter Grades
                       </Link>
                     </div>
@@ -165,7 +165,7 @@ export const LecturerPortal = () => {
             <div className="space-y-6">
               <div className="bg-white shadow-sm border border-gray-100 p-4">
                 <div className="flex items-center gap-2 mb-4">
-                  <Bell className="w-5 h-5 text-[#A51C30]" />
+                  <Bell className="w-5 h-5 text-primary-600" />
                   <h2 className="font-bold text-gray-900">Notifications</h2>
                 </div>
                 <div className="space-y-4">
@@ -180,7 +180,7 @@ export const LecturerPortal = () => {
 
               <div className="bg-white shadow-sm border border-gray-100 p-4">
                 <div className="flex items-center gap-2 mb-4">
-                  <Clock className="w-5 h-5 text-[#A51C30]" />
+                  <Clock className="w-5 h-5 text-primary-600" />
                   <h2 className="font-bold text-gray-900">Important Dates</h2>
                 </div>
                 <ul className="space-y-3 text-sm">
@@ -199,11 +199,11 @@ export const LecturerPortal = () => {
                 </ul>
               </div>
 
-              <div className="bg-[#1E1E1E] p-4 text-white">
+              <div className="bg-ink-900 p-4 text-white">
                 <h2 className="font-bold mb-2">Need Help?</h2>
                 <p className="text-sm text-white/80 mb-4">Contact IT support for assistance</p>
                 <div className="space-y-2 text-sm">
-                  <a href="mailto:it@bmu.edu.ng" className="flex items-center gap-2 hover:text-[#A51C30] transition">
+                  <a href="mailto:it@bmu.edu.ng" className="flex items-center gap-2 hover:text-primary-600 transition">
                     <Mail className="w-4 h-4" /> it@bmu.edu.ng
                   </a>
                 </div>

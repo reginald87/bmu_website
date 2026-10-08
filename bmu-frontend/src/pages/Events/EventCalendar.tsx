@@ -33,7 +33,7 @@ const fallbackEvents = [
  time: '9:00 AM - 5:00 PM',
  location: 'BMU Main Auditorium',
  category: 'Academic',
- color: '#1E1E1E'
+ color: 'var(--color-ink-900)'
  },
  {
  id: 2,
@@ -43,7 +43,7 @@ const fallbackEvents = [
  time: '10:00 AM - 1:00 PM',
  location: 'Convocation Arena',
  category: 'Academic',
- color: '#A51C30'
+ color: 'var(--color-primary-600)'
  },
  {
  id: 3,
@@ -53,7 +53,7 @@ const fallbackEvents = [
  time: '2:00 PM - 6:00 PM',
  location: 'Research Center',
  category: 'Research',
- color: '#A51C30'
+ color: 'var(--color-primary-600)'
  },
  {
  id: 4,
@@ -63,7 +63,7 @@ const fallbackEvents = [
  time: '9:00 AM - 4:00 PM',
  location: 'College of Health Sciences',
  category: 'Professional',
- color: '#1E1E1E'
+ color: 'var(--color-ink-900)'
  },
  {
  id: 5,
@@ -73,7 +73,7 @@ const fallbackEvents = [
  time: '8:00 AM - 4:00 PM',
  location: 'Community Centers',
  category: 'Community',
- color: '#A51C30'
+ color: 'var(--color-primary-600)'
  },
  {
  id: 6,
@@ -83,7 +83,7 @@ const fallbackEvents = [
  time: '5:00 PM - 11:00 PM',
  location: 'University Grand Hall',
  category: 'Alumni',
- color: '#A51C30'
+ color: 'var(--color-primary-600)'
  }
 ];
 
@@ -108,7 +108,7 @@ export const EventCalendar = () => {
          time: [item.start_time, item.end_time].filter(Boolean).join(' - ') || 'All day',
          location: (item.location || '') as string,
          category: (item.category_display || item.category || 'General') as string,
-         color: item.category === 'academic' || item.category === 'Academic' ? '#1E1E1E' : '#A51C30',
+         color: item.category === 'academic' || item.category === 'Academic' ? 'var(--color-ink-900)' : 'var(--color-primary-600)',
        }));
      }
      return fallbackEvents;
@@ -171,10 +171,10 @@ export const EventCalendar = () => {
  return (
   <><Helmet><title>Event Calendar | Bayelsa Medical University</title><meta name="description"content="View all upcoming events at Bayelsa Medical University in calendar format."/></Helmet><div className="min-h-screen bg-gray-50">
   {/* Hero */}
-  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}><div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} /><div className="container-custom relative z-10"><motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}><div className="flex items-center gap-2 text-white/60 text-sm mb-6"><Link to="/" className="hover:text-white transition">Home</Link><span>/</span><Link to="/events" className="hover:text-white transition">Events</Link><span>/</span><span className="text-white font-medium">Calendar</span></div><h1 className="text-display text-white mb-6">
-  Event <span className="text-[#A51C30]">Calendar</span></h1><p className="text-lead text-white/80 max-w-2xl">
+  Event <span className="text-primary-600">Calendar</span></h1><p className="text-lead text-white/80 max-w-2xl">
   View all events in calendar format and plan your schedule.
   </p></motion.div></div></section>
 
@@ -189,7 +189,7 @@ export const EventCalendar = () => {
   onClick={prevMonth} aria-label="Previous month"
   className="p-2 hover:bg-gray-100 transition"><ChevronLeft className="w-5 h-5"/></button><button
   onClick={() => setCurrentDate(new Date())}
-  className="px-4 py-2 text-sm font-medium text-[#1E1E1E] hover:bg-[#1E1E1E]/10 transition">
+  className="px-4 py-2 text-sm font-medium text-ink-900 hover:bg-ink-900/10 transition">
   Today
   </button><button
   onClick={nextMonth} aria-label="Next month"
@@ -218,7 +218,7 @@ export const EventCalendar = () => {
   className={`
   aspect-square p-2 text-left transition relative
   ${dayInfo.type === 'current' ? 'bg-white hover:bg-gray-50' : 'bg-gray-50 text-gray-400'}
-  ${isSelected ? 'ring-2 ring-[#1E1E1E]' : ''}
+  ${isSelected ? 'ring-2 ring-ink-900' : ''}
   ${hasEvents ? 'cursor-pointer' : 'cursor-default'}
   `}
   ><span className={`text-sm font-medium ${dayInfo.type === 'current' ? 'text-gray-900' : ''}`}>
@@ -244,10 +244,10 @@ export const EventCalendar = () => {
   {['Academic', 'Research', 'Community', 'Professional', 'Alumni'].map((cat) => (
   <div key={cat} className="flex items-center gap-2"><div
   className="w-3 h-3" style={{
-  backgroundColor: cat === 'Academic' ? '#1E1E1E' :
-  cat === 'Research' ? '#A51C30' :
-  cat === 'Community' ? '#A51C30' :
-  cat === 'Professional' ? '#1E1E1E' : '#A51C30'
+  backgroundColor: cat === 'Academic' ? 'var(--color-ink-900)' :
+  cat === 'Research' ? 'var(--color-primary-600)' :
+  cat === 'Community' ? 'var(--color-primary-600)' :
+  cat === 'Professional' ? 'var(--color-ink-900)' : 'var(--color-primary-600)'
   }}
   /><span className="text-sm text-gray-600">{cat}</span></div>
   ))}
@@ -262,8 +262,8 @@ export const EventCalendar = () => {
   key={event.id}
   to={`/events/${event.slug}`}
   className="block p-4 hover:bg-gray-50 transition group"><div className="flex items-start gap-3"><div
-  className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: event.color || '#1E1E1E' }}
-  /><div className="flex-1"><h4 className="font-medium text-gray-900 group-hover:text-[#1E1E1E] transition line-clamp-2">
+  className="w-2 h-2 mt-2 flex-shrink-0" style={{ backgroundColor: event.color || 'var(--color-ink-900)' }}
+  /><div className="flex-1"><h4 className="font-medium text-gray-900 group-hover:text-ink-900 transition line-clamp-2">
   {event.title}
   </h4><div className="mt-2 space-y-1 text-sm text-gray-500"><div className="flex items-center gap-1"><Calendar className="w-3 h-3"/>
   {event.date}
@@ -271,10 +271,10 @@ export const EventCalendar = () => {
   {event.time}
   </div><div className="flex items-center gap-1"><MapPin className="w-3 h-3"/>
   {event.location}
-  </div></div></div><ArrowRight className="w-5 h-5 text-gray-300 self-center group-hover:text-[#1E1E1E] transition"/></div></Link>
+  </div></div></div><ArrowRight className="w-5 h-5 text-gray-300 self-center group-hover:text-ink-900 transition"/></div></Link>
   ))}
   </div><Link
-  to="/events" className="block mt-6 text-center text-[#1E1E1E] font-medium hover:underline">
+  to="/events" className="block mt-6 text-center text-ink-900 font-medium hover:underline">
   View All Events
   </Link></div></div></div></div></div></>
  );

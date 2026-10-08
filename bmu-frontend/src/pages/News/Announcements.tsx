@@ -202,10 +202,10 @@ export const Announcements = () => {
   return (
   <><Helmet><title>Official Announcements | Bayelsa Medical University</title><meta name="description"content="Official announcements for students, staff, and the BMU community."/></Helmet><div className="min-h-screen bg-gray-50">
   {/* Hero */}
-  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}><div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
   }} /><div className="container-custom relative z-10"><motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}><div className="flex items-center gap-2 text-white/60 text-sm mb-6"><Link to="/" className="text-white transition">Home</Link><span>/</span><Link to="/news" className="text-white transition">News</Link><span>/</span><span className="text-white font-medium">Announcements</span></div><h1 className="text-display text-white mb-6">
-  Official <span className="text-[#A51C30]">Announcements</span></h1><p className="text-lead text-white/80 max-w-2xl">
+  Official <span className="text-primary-600">Announcements</span></h1><p className="text-lead text-white/80 max-w-2xl">
   Important notices and updates for the BMU community
   </p></motion.div></div></section>
 
@@ -215,13 +215,13 @@ export const Announcements = () => {
   <div className="flex-1 relative"><Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/><input
   type="text" value={searchQuery}
   onChange={(e) => setSearchQuery(e.target.value)}
-  placeholder="Search announcements..." className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent"/></div>
+  placeholder="Search announcements..." className="w-full pl-12 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"/></div>
 
   {/* Category Filter */}
   <div className="flex items-center gap-2"><select
   value={selectedCategory}
   onChange={(e) => setSelectedCategory(e.target.value)}
-  className="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent">
+  className="px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent">
   {categories.map(cat => (
   <option key={cat.id} value={cat.id}>{cat.label}</option>
   ))}
@@ -234,12 +234,12 @@ export const Announcements = () => {
   <motion.section
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
-  className="mb-12"><div className="flex items-center gap-2 mb-6"><Bell className="w-5 h-5 text-[#1E1E1E]"/><h2 className="text-xl font-bold text-gray-900">Important Announcements</h2></div><div className="grid md:grid-cols-2 gap-6">
+  className="mb-12"><div className="flex items-center gap-2 mb-6"><Bell className="w-5 h-5 text-ink-900"/><h2 className="text-xl font-bold text-gray-900">Important Announcements</h2></div><div className="grid md:grid-cols-2 gap-6">
   {pinnedAnnouncements.map((announcement) => {
   return (
   <div
   key={announcement.id}
-  className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-6 text-white relative overflow-hidden"><div className="absolute top-4 right-4"><Bell className="w-5 h-5 text-white/60"/></div><div className="flex items-center gap-2 mb-3"><span className={`px-2 py-1 text-xs font-medium ${priorityConfig[announcement.priority].bg} ${priorityConfig[announcement.priority].color}`}>
+  className="bg-gradient-to-r from-ink-900 to-primary-600 p-6 text-white relative overflow-hidden"><div className="absolute top-4 right-4"><Bell className="w-5 h-5 text-white/60"/></div><div className="flex items-center gap-2 mb-3"><span className={`px-2 py-1 text-xs font-medium ${priorityConfig[announcement.priority].bg} ${priorityConfig[announcement.priority].color}`}>
   {announcement.priority.toUpperCase()}
   </span><span className="text-xs text-white/60">{announcement.category}</span></div><h3 className="font-bold text-xl mb-2">{announcement.title}</h3><p className="text-white/80 text-sm line-clamp-2 mb-4">{announcement.content}</p><div className="flex items-center justify-between"><div className="flex items-center gap-2 text-sm text-white/60"><Calendar className="w-4 h-4"/>
   {announcement.date}
@@ -271,7 +271,7 @@ export const Announcements = () => {
   transition={{ delay: index * 0.05 }}
   className="bg-white p-6 shadow-sm transition group"><div className="flex items-start gap-4"><div className={`w-12 h-12 flex items-center justify-center flex-shrink-0 ${priorityConfig[announcement.priority].bg}`}><PriorityIcon className={`w-6 h-6 ${priorityConfig[announcement.priority].color}`} /></div><div className="flex-1 min-w-0"><div className="flex items-center gap-2 mb-2"><span className={`px-2 py-0.5 text-xs font-medium ${priorityConfig[announcement.priority].bg} ${priorityConfig[announcement.priority].color}`}>
   {announcement.priority.toUpperCase()}
-  </span><span className="text-xs text-gray-400">{announcement.category}</span></div><h3 className="font-bold text-lg text-gray-900 group-hover:text-[#1E1E1E] transition line-clamp-1">
+  </span><span className="text-xs text-gray-400">{announcement.category}</span></div><h3 className="font-bold text-lg text-gray-900 group-hover:text-ink-900 transition line-clamp-1">
   {announcement.title}
   </h3><p className="text-gray-600 mt-1 line-clamp-2">{announcement.content}</p><div className="mt-3 flex items-center gap-4 text-sm text-gray-400"><span className="flex items-center gap-1"><Calendar className="w-4 h-4"/> {announcement.date}
   </span><span className="flex items-center gap-1"><Clock className="w-4 h-4"/> Valid until {announcement.expiryDate}
@@ -283,7 +283,7 @@ export const Announcements = () => {
   ))}
   </div></div><Link
    to={`/news/${announcement.slug}`}
-   className="self-center p-2 bg-gray-100 transition"><ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#1E1E1E] transition"/></Link></div></motion.article>
+   className="self-center p-2 bg-gray-100 transition"><ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-ink-900 transition"/></Link></div></motion.article>
   );
   })}
   </div>
@@ -294,11 +294,11 @@ export const Announcements = () => {
 
   {/* Quick Links */}
   <section className="mt-16 grid md:grid-cols-3 gap-6"><Link
-  to="/news" className="bg-white p-6 shadow-sm transition group"><div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center mb-4 group-hover:bg-[#1E1E1E]/20 transition"><Bell className="w-6 h-6 text-[#1E1E1E]"/></div><h3 className="font-bold text-lg text-gray-900 mb-2">All News</h3><p className="text-gray-600 text-sm mb-4">View all news, articles, and updates from BMU.</p><span className="text-[#1E1E1E] font-medium flex items-center gap-1">
+  to="/news" className="bg-white p-6 shadow-sm transition group"><div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center mb-4 group-hover:bg-ink-900/20 transition"><Bell className="w-6 h-6 text-ink-900"/></div><h3 className="font-bold text-lg text-gray-900 mb-2">All News</h3><p className="text-gray-600 text-sm mb-4">View all news, articles, and updates from BMU.</p><span className="text-ink-900 font-medium flex items-center gap-1">
   View News <ArrowRight className="w-4 h-4"/></span></Link><Link
-  to="/news/press-releases" className="bg-white p-6 shadow-sm transition group"><div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center mb-4 group-hover:bg-[#A51C30]/20 transition"><Megaphone className="w-6 h-6 text-[#A51C30]"/></div><h3 className="font-bold text-lg text-gray-900 mb-2">Press Releases</h3><p className="text-gray-600 text-sm mb-4">Official statements and press releases from the university.</p><span className="text-[#A51C30] font-medium flex items-center gap-1">
-  View Press Releases <ArrowRight className="w-4 h-4"/></span></Link><div className="bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] p-6 text-white"><div className="w-12 h-12 bg-white/20 flex items-center justify-center mb-4"><Info className="w-6 h-6"/></div><h3 className="font-bold text-lg mb-2">Need Help?</h3><p className="text-white/80 text-sm mb-4">Have questions about an announcement? Contact the relevant department.</p><a
-  href="mailto:info@bmu.edu.ng" className="text-[#A51C30] font-medium flex items-center gap-1 underline">
+  to="/news/press-releases" className="bg-white p-6 shadow-sm transition group"><div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center mb-4 group-hover:bg-primary-600/20 transition"><Megaphone className="w-6 h-6 text-primary-600"/></div><h3 className="font-bold text-lg text-gray-900 mb-2">Press Releases</h3><p className="text-gray-600 text-sm mb-4">Official statements and press releases from the university.</p><span className="text-primary-600 font-medium flex items-center gap-1">
+  View Press Releases <ArrowRight className="w-4 h-4"/></span></Link><div className="bg-gradient-to-br from-ink-900 to-primary-600 p-6 text-white"><div className="w-12 h-12 bg-white/20 flex items-center justify-center mb-4"><Info className="w-6 h-6"/></div><h3 className="font-bold text-lg mb-2">Need Help?</h3><p className="text-white/80 text-sm mb-4">Have questions about an announcement? Contact the relevant department.</p><a
+  href="mailto:info@bmu.edu.ng" className="text-primary-600 font-medium flex items-center gap-1 underline">
   Contact Us <ArrowRight className="w-4 h-4"/></a></div></section></div></div></>
   );
 };

@@ -28,10 +28,10 @@ export const CollegePreview = ({ colleges }: CollegePreviewProps) => {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <span className="text-sm font-semibold tracking-wider uppercase text-[#A51C30]">
+          <span className="text-sm font-semibold tracking-wider uppercase text-primary-600">
             {t('home.collegePreview.institutions')}
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-[#1E1E1E]">
+          <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-ink-900">
             {t('nav.colleges')}
           </h2>
           <p className="text-gray-800 max-w-2xl">
@@ -59,7 +59,7 @@ export const CollegePreview = ({ colleges }: CollegePreviewProps) => {
                     style={{ backgroundImage: `url(${college.previewImage || defaultPreviewImage})` }}
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1E1E1E]/90 via-[#1E1E1E]/60 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/60 to-transparent" />
 
                   <div className="absolute inset-0 flex flex-col justify-end p-6">
                     <div className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center bg-white/20">
@@ -110,7 +110,7 @@ export const CollegePreview = ({ colleges }: CollegePreviewProps) => {
         >
           <Link
             to="/colleges"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-white font-semibold hover:bg-[#8a1828] transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors"
           >
             {t('home.quickLinks.viewAll')}
             <ArrowRight className="w-5 h-5" />

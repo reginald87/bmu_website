@@ -56,22 +56,22 @@ export const AdminDashboard = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="w-10 h-10 border-4 border-[#A51C30] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   const stats = [
-    { label: 'Total Users', value: data?.total_users ?? 0, icon: Users, color: '#1E1E1E' },
-    { label: 'Students', value: data?.total_students ?? 0, icon: GraduationCap, color: '#A51C30' },
-    { label: 'Faculty', value: data?.total_faculty ?? 0, icon: Briefcase, color: '#1E1E1E' },
-    { label: 'Staff', value: data?.total_staff ?? 0, icon: User, color: '#A51C30' },
-    { label: 'Applications', value: data?.total_applications ?? 0, icon: FileText, color: '#1E1E1E' },
-    { label: 'Pending Apps', value: data?.pending_applications ?? 0, icon: Clock, color: '#A51C30' },
-    { label: 'Events', value: data?.total_events ?? 0, icon: Calendar, color: '#1E1E1E' },
-    { label: 'News', value: data?.total_news ?? 0, icon: Bell, color: '#A51C30' },
-    { label: 'Programs', value: data?.total_programs ?? 0, icon: BookOpen, color: '#1E1E1E' },
-    { label: 'Colleges', value: data?.total_colleges ?? 0, icon: Building, color: '#A51C30' },
+    { label: 'Total Users', value: data?.total_users ?? 0, icon: Users, color: 'var(--color-ink-900)' },
+    { label: 'Students', value: data?.total_students ?? 0, icon: GraduationCap, color: 'var(--color-primary-600)' },
+    { label: 'Faculty', value: data?.total_faculty ?? 0, icon: Briefcase, color: 'var(--color-ink-900)' },
+    { label: 'Staff', value: data?.total_staff ?? 0, icon: User, color: 'var(--color-primary-600)' },
+    { label: 'Applications', value: data?.total_applications ?? 0, icon: FileText, color: 'var(--color-ink-900)' },
+    { label: 'Pending Apps', value: data?.pending_applications ?? 0, icon: Clock, color: 'var(--color-primary-600)' },
+    { label: 'Events', value: data?.total_events ?? 0, icon: Calendar, color: 'var(--color-ink-900)' },
+    { label: 'News', value: data?.total_news ?? 0, icon: Bell, color: 'var(--color-primary-600)' },
+    { label: 'Programs', value: data?.total_programs ?? 0, icon: BookOpen, color: 'var(--color-ink-900)' },
+    { label: 'Colleges', value: data?.total_colleges ?? 0, icon: Building, color: 'var(--color-primary-600)' },
   ];
 
   return (
@@ -165,12 +165,12 @@ export const AdminDashboard = () => {
             <h2 className="font-bold text-gray-900 mb-2">Quick Actions</h2>
             <p className="text-sm text-gray-500 mb-4">Manage your university from the Django admin panel</p>
             <div className="flex flex-wrap gap-3">
-              <a href="/admin/" className="px-4 py-2 bg-[#1E1E1E] text-white text-sm font-medium hover:bg-[#1E1E1E]/90 transition">Django Admin</a>
-              <a href="/api/docs" className="px-4 py-2 border border-[#1E1E1E] text-[#1E1E1E] text-sm font-medium hover:bg-gray-50 transition">API Docs</a>
-              <a href="/portals/admin/analytics" className="px-4 py-2 bg-[#A51C30] text-white text-sm font-medium hover:bg-[#A51C30]/90 transition flex items-center gap-2">
+              <a href="/admin/" className="px-4 py-2 bg-ink-900 text-white text-sm font-medium hover:bg-ink-900/90 transition">Django Admin</a>
+              <a href="/api/docs" className="px-4 py-2 border border-ink-900 text-ink-900 text-sm font-medium hover:bg-gray-50 transition">API Docs</a>
+              <a href="/portals/admin/analytics" className="px-4 py-2 bg-primary-600 text-white text-sm font-medium hover:bg-primary-600/90 transition flex items-center gap-2">
                 <Activity className="w-4 h-4" /> Analytics Dashboard
               </a>
-              <a href="/portals/admin/defaulter-report" className="px-4 py-2 bg-[#A51C30] text-white text-sm font-medium hover:bg-[#A51C30]/90 transition flex items-center gap-2">
+              <a href="/portals/admin/defaulter-report" className="px-4 py-2 bg-primary-600 text-white text-sm font-medium hover:bg-primary-600/90 transition flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4" /> Defaulter Report
               </a>
             </div>

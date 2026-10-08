@@ -70,7 +70,7 @@ const collegesData: Record<string, CollegeData> = {
  location: 'Main Campus, Yenagoa'
  },
  icon: Stethoscope,
- color: '#1E1E1E',
+ color: 'var(--color-ink-900)',
  dean: {
  name: 'Prof. Emmanuel Ekanem',
  title: 'Dean, College of Medicine',
@@ -114,7 +114,7 @@ const collegesData: Record<string, CollegeData> = {
  location: 'Health Sciences Campus'
  },
  icon: Heart,
- color: '#A51C30',
+ color: 'var(--color-primary-600)',
  dean: {
  name: 'Prof. Helen Douglas',
  title: 'Dean, School of Nursing',
@@ -158,7 +158,7 @@ const collegesData: Record<string, CollegeData> = {
  location: 'Health Sciences Campus'
  },
  icon: Microscope,
- color: '#A51C30',
+ color: 'var(--color-primary-600)',
  dean: {
  name: 'Prof. Gift Ebi',
  title: 'Dean, School of Allied Health',
@@ -202,7 +202,7 @@ const collegesData: Record<string, CollegeData> = {
  location: 'Research Campus'
  },
  icon: FlaskConical,
- color: '#1E1E1E',
+ color: 'var(--color-ink-900)',
  dean: {
  name: 'Prof. Emmanuel Ekanem',
  title: 'Director, Institute of Public Health',
@@ -223,7 +223,7 @@ const defaultCollegeData = (slug: string, name: string, description: string): Co
 	stats: [],
 	contact: { email: '', phone: '', location: '' },
 	icon: Stethoscope,
-	color: '#1E1E1E',
+	color: 'var(--color-ink-900)',
 	dean: { name: '', title: '', message: '' },
 });
 
@@ -297,7 +297,7 @@ export const CollegeDetail = () => {
  <div className="container-custom py-20 text-center">
  <h1 className="text-headline text-gray-900 mb-4">College Not Found</h1>
  <p className="text-lead text-gray-600 mb-6">The college you are looking for does not exist.</p>
- <Link to="/colleges" className="text-[#1E1E1E] font-medium hover:underline">
+ <Link to="/colleges" className="text-ink-900 font-medium hover:underline">
  ← Back to Colleges
  </Link>
  </div>
@@ -369,7 +369,7 @@ export const CollegeDetail = () => {
  <div className="w-16 h-16 bg-gray-200 flex-shrink-0" />
  <div>
  <h2 className="text-title text-gray-900 mb-2">{college.dean.name}</h2>
- <p className="text-small text-[#A51C30] mb-4">{college.dean.title}</p>
+ <p className="text-small text-primary-600 mb-4">{college.dean.title}</p>
  <p className="text-body text-gray-600 italic">"{college.dean.message}"</p>
  </div>
  </div>
@@ -444,7 +444,7 @@ export const CollegeDetail = () => {
  >
  <div className="w-20 h-20 bg-gray-200 mx-auto mb-4" />
  <h3 className="font-semibold text-gray-900">{member.name}</h3>
- <p className="text-small text-[#A51C30]">{member.title}</p>
+ <p className="text-small text-primary-600">{member.title}</p>
  <p className="text-small text-gray-500 mt-2">{member.specialization}</p>
  </motion.div>
  ))}
@@ -479,13 +479,13 @@ export const CollegeDetail = () => {
  <div className="flex flex-wrap gap-4">
  <Link 
  to="/academics/admissions"
- className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Admission Requirements
  </Link>
  <Link 
  to="/apply"
- className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+ className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-ink-900 transition"
  >
  Apply Now
  </Link>

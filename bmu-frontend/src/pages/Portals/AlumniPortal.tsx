@@ -108,7 +108,7 @@ export const AlumniPortal = () => {
           <meta name="description" content="Login to BMU Alumni Portal to connect with fellow graduates and access alumni resources." />
         </Helmet>
 
-        <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[180px] pb-12 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-ink-900 to-primary-600 pt-[180px] pb-12 px-4">
           <div className="max-w-md mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -116,7 +116,7 @@ export const AlumniPortal = () => {
               className="bg-white overflow-hidden"
             >
               {/* Header */}
-              <div className="bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] p-8 text-center">
+              <div className="bg-gradient-to-br from-ink-900 to-primary-600 p-8 text-center">
                 <div className="w-16 h-16 bg-white/20 flex items-center justify-center mx-auto mb-4">
                   <GraduationCap className="w-8 h-8 text-white" />
                 </div>
@@ -141,7 +141,7 @@ export const AlumniPortal = () => {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent outline-none transition"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent outline-none transition"
                         placeholder="alumni@bmu.edu.ng"
                         required
                       />
@@ -156,7 +156,7 @@ export const AlumniPortal = () => {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#1E1E1E] focus:border-transparent outline-none transition"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent outline-none transition"
                         placeholder="Enter your password"
                         required
                       />
@@ -166,16 +166,16 @@ export const AlumniPortal = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3 bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
+                    className="w-full py-3 bg-gradient-to-r from-ink-900 to-primary-600 text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
                   >
                     {isLoading ? 'Signing in...' : 'Sign In'}
                   </button>
                 </form>
 
                 <div className="mt-6 text-center space-y-3">
-                  <a href="#" className="text-sm text-[#1E1E1E] hover:underline block">Forgot password?</a>
+                  <a href="#" className="text-sm text-ink-900 hover:underline block">Forgot password?</a>
                   <p className="text-sm text-gray-800">
-                    Need help? Contact <a href="mailto:alumni@bmu.edu.ng" className="text-[#1E1E1E] hover:underline">alumni@bmu.edu.ng</a>
+                    Need help? Contact <a href="mailto:alumni@bmu.edu.ng" className="text-ink-900 hover:underline">alumni@bmu.edu.ng</a>
                   </p>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export const AlumniPortal = () => {
 
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] text-white">
+        <div className="bg-gradient-to-r from-ink-900 to-primary-600 text-white">
           <div className="container-custom py-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -210,7 +210,7 @@ export const AlumniPortal = () => {
               <div className="flex items-center gap-4">
                 <button aria-label="Notifications" className="p-2 hover:bg-white/10 transition relative">
                   <Bell className="w-5 h-5" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-[#A51C30]"></span>
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-primary-600"></span>
                 </button>
                 <button className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 transition">
                   <User className="w-5 h-5" />
@@ -232,12 +232,12 @@ export const AlumniPortal = () => {
               {/* Profile Card */}
               <div className="bg-white shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-20 h-20 bg-[#1E1E1E]/10 flex items-center justify-center text-2xl">
+                  <div className="w-20 h-20 bg-ink-900/10 flex items-center justify-center text-2xl">
                     👩‍⚕️
                   </div>
                   <div>
                     <h2 className="font-bold text-lg text-gray-900">{user?.full_name || 'Dr. Sarah Johnson'}</h2>
-                    <p className="text-sm text-[#A51C30]">{dashboard?.profile?.program || 'MBBS (Medicine & Surgery)'}</p>
+                    <p className="text-sm text-primary-600">{dashboard?.profile?.program || 'MBBS (Medicine & Surgery)'}</p>
                     <p className="text-xs text-gray-500">Class of {dashboard?.profile?.grad_year || '2019'}</p>
                   </div>
                 </div>
@@ -255,7 +255,7 @@ export const AlumniPortal = () => {
                     <span>{user?.email || 'alumni@bmu.edu.ng'}</span>
                   </div>
                 </div>
-                <button className="w-full mt-4 py-2 border border-[#1E1E1E] text-[#1E1E1E] font-medium hover:bg-[#1E1E1E] hover:text-white transition">
+                <button className="w-full mt-4 py-2 border border-ink-900 text-ink-900 font-medium hover:bg-ink-900 hover:text-white transition">
                   Edit Profile
                 </button>
               </div>
@@ -278,15 +278,15 @@ export const AlumniPortal = () => {
                       key={section.title}
                       className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 transition text-left group"
                     >
-                      <div className="w-10 h-10 bg-[#1E1E1E]/10 flex items-center justify-center group-hover:bg-[#1E1E1E]/20 transition">
-                        <Icon className="w-5 h-5 text-[#1E1E1E]" />
+                      <div className="w-10 h-10 bg-ink-900/10 flex items-center justify-center group-hover:bg-ink-900/20 transition">
+                        <Icon className="w-5 h-5 text-ink-900" />
                       </div>
                       <div className="flex-1">
                         <div className="font-medium text-gray-900">{section.title}</div>
                         <div className="text-xs text-gray-500">{section.description}</div>
                       </div>
                       {section.count && (
-                        <span className="text-xs bg-[#A51C30]/20 text-[#1E1E1E] px-2 py-1 font-medium">
+                        <span className="text-xs bg-primary-600/20 text-ink-900 px-2 py-1 font-medium">
                           {section.count}
                         </span>
                       )}
@@ -339,15 +339,15 @@ export const AlumniPortal = () => {
                     { title: 'Alumni Homecoming 2024', date: 'February 14, 2025', location: 'BMU Campus', type: 'Homecoming' }
                   ]).map((event, index) => (
                     <div key={index} className="flex items-center gap-4 p-3 bg-gray-50">
-                      <div className="w-12 h-12 bg-[#A51C30]/10 flex items-center justify-center flex-shrink-0">
-                        <Calendar className="w-6 h-6 text-[#A51C30]" />
+                      <div className="w-12 h-12 bg-primary-600/10 flex items-center justify-center flex-shrink-0">
+                        <Calendar className="w-6 h-6 text-primary-600" />
                       </div>
                       <div className="flex-1">
                         <p className="font-medium text-gray-900">{event.title}</p>
                         <p className="text-sm text-gray-500">{event.location}</p>
                       </div>
                       <div className="text-right">
-                        <span className="inline-block px-2 py-1 bg-[#1E1E1E]/10 text-[#1E1E1E] text-xs font-medium mb-1">
+                        <span className="inline-block px-2 py-1 bg-ink-900/10 text-ink-900 text-xs font-medium mb-1">
                           {event.type}
                         </span>
                         <p className="text-xs text-gray-500">{event.date}</p>
@@ -355,7 +355,7 @@ export const AlumniPortal = () => {
                     </div>
                   ))}
                 </div>
-                <button className="w-full mt-4 py-2 text-[#1E1E1E] font-medium hover:underline">
+                <button className="w-full mt-4 py-2 text-ink-900 font-medium hover:underline">
                   View All Events
                 </button>
               </div>
@@ -379,7 +379,7 @@ export const AlumniPortal = () => {
                       <div className="flex-1">
                         <p className="font-medium text-gray-900 text-sm">{alumnus.name}</p>
                         <p className="text-xs text-gray-500">{alumnus.role}</p>
-                        <p className="text-xs text-[#A51C30]">{alumnus.organization}</p>
+                        <p className="text-xs text-primary-600">{alumnus.organization}</p>
                       </div>
                       <span className="text-xs text-gray-400">'{alumnus.year}</span>
                     </div>
@@ -388,13 +388,13 @@ export const AlumniPortal = () => {
               </div>
 
               {/* Give Back CTA */}
-              <div className="bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] p-6 text-white">
+              <div className="bg-gradient-to-br from-ink-900 to-primary-600 p-6 text-white">
                 <Award className="w-8 h-8 mb-3" />
                 <h3 className="font-bold text-lg mb-2">Give Back to BMU</h3>
                 <p className="text-sm text-white/80 mb-4">Support the next generation of healthcare professionals through mentorship, donations, or career opportunities.</p>
                 <button
                   onClick={() => setShowDonate(true)}
-                  className="w-full py-2 bg-[#A51C30] text-white font-bold hover:bg-white hover:text-[#1E1E1E] transition"
+                  className="w-full py-2 bg-primary-600 text-white font-bold hover:bg-white hover:text-ink-900 transition"
                 >
                   Get Involved
                 </button>
@@ -405,15 +405,15 @@ export const AlumniPortal = () => {
                 <h3 className="font-bold text-gray-900 mb-4">Stay Connected</h3>
                 <div className="space-y-3">
                   <a href="#" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition">
-                    <Globe className="w-5 h-5 text-[#1E1E1E]" />
+                    <Globe className="w-5 h-5 text-ink-900" />
                     <span className="text-sm">Alumni Website</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition">
-                    <Users className="w-5 h-5 text-[#A51C30]" />
+                    <Users className="w-5 h-5 text-primary-600" />
                     <span className="text-sm">LinkedIn Group</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 p-3 hover:bg-gray-50 transition">
-                    <Mail className="w-5 h-5 text-[#A51C30]" />
+                    <Mail className="w-5 h-5 text-primary-600" />
                     <span className="text-sm">Alumni Newsletter</span>
                   </a>
                 </div>
@@ -423,11 +423,11 @@ export const AlumniPortal = () => {
               <div className="bg-gray-50 p-4">
                 <h3 className="font-bold text-gray-900 mb-3">Alumni Office</h3>
                 <div className="space-y-2 text-sm">
-                  <a href="tel:+2348031110020" className="flex items-center gap-2 text-gray-600 hover:text-[#1E1E1E] transition">
+                  <a href="tel:+2348031110020" className="flex items-center gap-2 text-gray-600 hover:text-ink-900 transition">
                     <Phone className="w-4 h-4" />
                     +234 803 111 0020
                   </a>
-                  <a href="mailto:alumni@bmu.edu.ng" className="flex items-center gap-2 text-gray-600 hover:text-[#1E1E1E] transition">
+                  <a href="mailto:alumni@bmu.edu.ng" className="flex items-center gap-2 text-gray-600 hover:text-ink-900 transition">
                     <Mail className="w-4 h-4" />
                     alumni@bmu.edu.ng
                   </a>
@@ -442,7 +442,7 @@ export const AlumniPortal = () => {
       {showDonate && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowDonate(false)}>
           <div className="bg-white w-full max-w-md" onClick={(e) => e.stopPropagation()}>
-            <div className="bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-6 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-ink-900 to-primary-600 p-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Award className="w-6 h-6 text-white" />
                 <h3 className="font-bold text-white">Give Back to BMU</h3>
@@ -468,7 +468,7 @@ export const AlumniPortal = () => {
                   value={donationAmount}
                   onChange={(e) => setDonationAmount(e.target.value)}
                   placeholder="e.g. 50000"
-                  className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#A51C30] focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-primary-600 focus:border-transparent outline-none transition"
                 />
               </div>
               <div>
@@ -476,7 +476,7 @@ export const AlumniPortal = () => {
                 <select
                   value={donationPurpose}
                   onChange={(e) => setDonationPurpose(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-[#A51C30] focus:border-transparent outline-none transition"
+                  className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-primary-600 focus:border-transparent outline-none transition"
                 >
                   <option>General Fund</option>
                   <option>ASAA Endowment Fund</option>
@@ -488,7 +488,7 @@ export const AlumniPortal = () => {
               <button
                 type="submit"
                 disabled={isDonating}
-                className="w-full py-3 bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
+                className="w-full py-3 bg-gradient-to-r from-ink-900 to-primary-600 text-white font-semibold hover:opacity-90 transition disabled:opacity-50"
               >
                 {isDonating ? 'Processing...' : 'Donate'}
               </button>

@@ -6,12 +6,12 @@ import { Search, Mail, BookOpen, Award, ExternalLink, GraduationCap, Quote } fro
 import { useFaculty } from '../../services/apiHooks';
 
 const positionGradients: Record<string, string> = {
-  professor: 'from-[#1E1E1E] to-[#A51C30]',
-  associate_professor: 'from-[#2a2a3d] to-[#7a1a28]',
-  senior_lecturer: 'from-[#1a2a3a] to-[#A51C30]',
-  lecturer: 'from-[#1E1E1E] to-[#5a1018]',
-  assistant_lecturer: 'from-[#2a1a2a] to-[#7a1018]',
-  visiting_professor: 'from-[#1a1a2e] to-[#A51C30]',
+  professor: 'from-ink-900 to-primary-600',
+  associate_professor: 'from-[#2a2a3d] to-primary-800',
+  senior_lecturer: 'from-[#1a2a3a] to-primary-600',
+  lecturer: 'from-ink-900 to-primary-900',
+  assistant_lecturer: 'from-[#2a1a2a] to-primary-900',
+  visiting_professor: 'from-[#1a1a2e] to-primary-600',
 };
 
 const formatPosition = (pos: string) =>
@@ -58,7 +58,7 @@ export const Faculty = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -73,7 +73,7 @@ export const Faculty = () => {
               <span className="text-white font-medium">Faculty</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              Our <span className="text-[#A51C30]">Faculty</span>
+              Our <span className="text-primary-600">Faculty</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               Meet our distinguished educators and researchers dedicated to advancing healthcare education and innovation.
@@ -100,7 +100,7 @@ export const Faculty = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-3xl md:text-4xl font-bold" style={{ color: '#A51C30' }}>
+                <div className="text-3xl md:text-4xl font-bold" style={{ color: 'var(--color-primary-600)' }}>
                   {stat.value}
                 </div>
                 <div className="text-gray-600 text-sm mt-1">{stat.label}</div>
@@ -122,13 +122,13 @@ export const Faculty = () => {
                   placeholder="Search faculty..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1E1E1E] w-full sm:w-64"
+                  className="pl-10 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ink-900 w-full sm:w-64"
                 />
               </div>
               <select
                 value={collegeFilter}
                 onChange={e => setCollegeFilter(e.target.value)}
-                className="px-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1E1E1E]"
+                className="px-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ink-900"
               >
                 {colleges.map(college => (
                   <option key={college} value={college}>{college}</option>
@@ -137,7 +137,7 @@ export const Faculty = () => {
               <select
                 value={departmentFilter}
                 onChange={e => setDepartmentFilter(e.target.value)}
-                className="px-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1E1E1E]"
+                className="px-4 py-2.5 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-ink-900"
               >
                 {departments.map(dept => (
                   <option key={dept} value={dept}>{dept}</option>
@@ -153,7 +153,7 @@ export const Faculty = () => {
         <div className="container-custom">
           {isLoading ? (
             <div className="text-center py-20">
-              <div className="w-10 h-10 border-4 border-gray-300 border-t-[#A51C30] rounded-full animate-spin mx-auto mb-4" />
+              <div className="w-10 h-10 border-4 border-gray-300 border-t-primary-600 rounded-full animate-spin mx-auto mb-4" />
               <p className="text-gray-500">Loading faculty...</p>
             </div>
           ) : (
@@ -168,7 +168,7 @@ export const Faculty = () => {
                   className="group bg-white shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
                 >
                   <Link to={`/academics/faculty/${faculty.id}`} className="block">
-                    <div className={`h-24 bg-gradient-to-r ${positionGradients[faculty.position] || 'from-[#1E1E1E] to-[#A51C30]'} relative`}>
+                    <div className={`h-24 bg-gradient-to-r ${positionGradients[faculty.position] || 'from-ink-900 to-primary-600'} relative`}>
                       <div className="absolute -bottom-10 left-6">
                         <div className="w-20 h-20 bg-white p-1">
                           {faculty.profileImage ? (
@@ -193,11 +193,11 @@ export const Faculty = () => {
                   <div className="pt-12 pb-6 px-6">
                     <div className="mb-4">
                       <Link to={`/academics/faculty/${faculty.id}`}>
-                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#1E1E1E] transition-colors">
+                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-ink-900 transition-colors">
                           {faculty.firstName} {faculty.lastName}
                         </h3>
                       </Link>
-                      <p className="text-sm font-medium" style={{ color: '#A51C30' }}>{faculty.title}</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--color-primary-600)' }}>{faculty.title}</p>
                       <p className="text-xs text-gray-500 mt-1">{faculty.department || faculty.college}</p>
                     </div>
 
@@ -213,7 +213,7 @@ export const Faculty = () => {
                           <span
                             key={i}
                             className="px-2 py-1 text-xs"
-                            style={{ backgroundColor: '#1E1E1E10', color: '#1E1E1E' }}
+                            style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 6%, transparent)', color: 'var(--color-ink-900)' }}
                           >
                             {interest.trim()}
                           </span>
@@ -240,7 +240,7 @@ export const Faculty = () => {
                       <Link
                         to={`/academics/faculty/${faculty.id}`}
                         className="flex-1 flex items-center justify-center gap-2 px-4 py-2 font-medium transition-all"
-                        style={{ backgroundColor: '#1E1E1E', color: 'white' }}
+                        style={{ backgroundColor: 'var(--color-ink-900)', color: 'white' }}
                       >
                         View Profile
                         <ExternalLink className="w-4 h-4" />
@@ -273,9 +273,9 @@ export const Faculty = () => {
       )}
 
       {/* CTA */}
-      <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="container-custom text-center">
-          <Award className="w-12 h-12 mx-auto mb-4" style={{ color: '#A51C30' }} />
+          <Award className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--color-primary-600)' }} />
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Join Our Distinguished Faculty
           </h2>
@@ -285,7 +285,7 @@ export const Faculty = () => {
           <Link
             to="/careers"
             className="inline-flex items-center gap-2 px-8 py-4 font-semibold transition-all"
-            style={{ backgroundColor: '#A51C30', color: '#1E1E1E' }}
+            style={{ backgroundColor: 'var(--color-primary-600)', color: 'var(--color-ink-900)' }}
           >
             View Career Opportunities
           </Link>

@@ -55,7 +55,7 @@ export const StudentProgression = () => {
       <div>
           {isLoading ? (
             <div className="flex justify-center py-20">
-              <div className="w-10 h-10 border-4 border-[#A51C30] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : !data ? (
             <div className="bg-white p-8 text-center shadow-sm border border-gray-100">
@@ -78,14 +78,14 @@ export const StudentProgression = () => {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-white p-4 shadow-sm border border-gray-100">
                   <div className="flex items-center gap-2 mb-2">
-                    <Award className="w-4 h-4 text-[#A51C30]" />
+                    <Award className="w-4 h-4 text-primary-600" />
                     <span className="text-xs text-gray-500 font-medium">GPA</span>
                   </div>
                   <div className="text-xl font-bold text-gray-900">{data.gpa?.toFixed(2) || '-'}</div>
                 </div>
                 <div className="bg-white p-4 shadow-sm border border-gray-100">
                   <div className="flex items-center gap-2 mb-2">
-                    <TrendingUp className="w-4 h-4 text-[#1E1E1E]" />
+                    <TrendingUp className="w-4 h-4 text-ink-900" />
                     <span className="text-xs text-gray-500 font-medium">CGPA</span>
                   </div>
                   <div className="text-xl font-bold text-gray-900">{data.cgpa?.toFixed(2) || '-'}</div>

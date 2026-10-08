@@ -48,7 +48,7 @@ export const InnovationCentre = () => {
  <meta name="description" content="Innovation & Technology Centre at BMU - Where healthcare meets technology" />
  </Helmet>
 
- <div className="bg-[#1E1E1E] text-white py-16">
+ <div className="bg-ink-900 text-white py-16">
  <div className="container-custom">
  <motion.h1 
  initial={{ opacity: 0, y: 20 }}
@@ -72,7 +72,7 @@ export const InnovationCentre = () => {
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-2 space-y-8">
  <section className="card p-6">
- <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>About the Centre</h2>
+ <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>About the Centre</h2>
  <p className="text-gray-600 mb-4">
  The Innovation & Technology Centre (ITC) is BMU's hub for healthcare innovation, 
  bringing together researchers, technologists, entrepreneurs, and healthcare professionals 
@@ -86,11 +86,11 @@ export const InnovationCentre = () => {
  </section>
 
  <section>
- <h2 className="text-2xl font-bold mb-6" style={{ color: '#1E1E1E' }}>Innovation Pillars</h2>
+ <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-ink-900)' }}>Innovation Pillars</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  {innovationPillars.map((pillar) => (
  <div key={pillar.title} className="card p-6">
- <h3 className="font-bold text-lg mb-2" style={{ color: '#1E1E1E' }}>
+ <h3 className="font-bold text-lg mb-2" style={{ color: 'var(--color-ink-900)' }}>
  {pillar.title}
  </h3>
  <p className="text-gray-600 text-sm mb-3">{pillar.description}</p>
@@ -103,7 +103,7 @@ export const InnovationCentre = () => {
  </section>
 
  <section className="card p-6">
- <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>Our Facilities</h2>
+ <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Our Facilities</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {facilities.map((facility) => (
  <div key={facility} className="flex items-center gap-3 p-3 bg-gray-50 ">
@@ -115,7 +115,7 @@ export const InnovationCentre = () => {
  </section>
 
  <section className="card p-6">
- <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>Partnerships & Collaboration</h2>
+ <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Partnerships & Collaboration</h2>
  <p className="text-gray-600 mb-4">
  We collaborate with technology companies, healthcare organizations, and academic 
  institutions to accelerate innovation. Our partners include:
@@ -124,8 +124,8 @@ export const InnovationCentre = () => {
  {partners.map((partner: string) => (
  <span 
  key={partner} 
- className="px-4 py-2 bg-[#1E1E1E15] text-sm font-medium"
- style={{ color: '#1E1E1E' }}
+ className="px-4 py-2 bg-ink-900/8 text-sm font-medium"
+ style={{ color: 'var(--color-ink-900)' }}
  >
  {partner}
  </span>
@@ -136,14 +136,14 @@ export const InnovationCentre = () => {
 
  <div className="space-y-6">
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Contact Us</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Contact Us</h3>
  <p className="text-gray-600 mb-2">Email: innovation@bmu.edu.ng</p>
  <p className="text-gray-600 mb-2">Phone: +234 xxx xxx xxxx</p>
  <p className="text-gray-600">Yenagoa Campus - Innovation Hub</p>
  </div>
 
  <div className="card p-6">
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Impact Stats</h3>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Impact Stats</h3>
  <ul className="space-y-3 text-gray-600">
  <li className="flex justify-between">
  <span>Innovation Projects</span>
@@ -164,14 +164,14 @@ export const InnovationCentre = () => {
  </ul>
  </div>
 
- <div className="card p-6" style={{ backgroundColor: '#1E1E1E15' }}>
- <h3 className="font-bold mb-4" style={{ color: '#1E1E1E' }}>Get Involved</h3>
+ <div className="card p-6" style={{ backgroundColor: 'color-mix(in srgb, var(--color-ink-900) 8%, transparent)' }}>
+ <h3 className="font-bold mb-4" style={{ color: 'var(--color-ink-900)' }}>Get Involved</h3>
  <p className="text-gray-600 text-sm mb-4">
  Partner with us, join our innovation challenges, or access our facilities.
  </p>
  <button 
  className="w-full py-3 text-white font-semibold hover:opacity-90 transition"
- style={{ backgroundColor: '#1E1E1E' }}
+ style={{ backgroundColor: 'var(--color-ink-900)' }}
  >
  Partner With Us
  </button>

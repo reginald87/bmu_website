@@ -15,7 +15,7 @@ const typeColors: Record<string, string> = {
   alert: '#DC2626',
   admission: '#2563EB',
   event: '#7C3AED',
-  general: '#1E1E1E',
+  general: 'var(--color-ink-900)',
 };
 
 const typeLabels: Record<string, string> = {
@@ -36,7 +36,7 @@ export const SiteAnnouncements = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -48,7 +48,7 @@ export const SiteAnnouncements = () => {
               <span className="text-white font-medium">Announcements</span>
             </div>
             <h1 className="text-display text-white mb-6">
-              <span className="text-[#A51C30]">Announcements</span>
+              <span className="text-primary-600">Announcements</span>
             </h1>
             <p className="text-lead text-white/80 max-w-2xl">
               Official notices, admissions information, and important updates from Bayelsa Medical University.
@@ -69,7 +69,7 @@ export const SiteAnnouncements = () => {
             <div className="space-y-6 max-w-4xl mx-auto">
               {announcements.map((a) => {
                 const Icon = typeIcons[a.announcement_type] || Megaphone;
-                const color = typeColors[a.announcement_type] || '#1E1E1E';
+                const color = typeColors[a.announcement_type] || 'var(--color-ink-900)';
                 return (
                   <motion.div
                     key={a.id}

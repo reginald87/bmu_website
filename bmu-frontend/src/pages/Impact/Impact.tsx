@@ -20,7 +20,7 @@ const fallbackImpactAreas = [
  description: 'BMU actively contributes to 12 of the 17 UN Sustainable Development Goals through research, education, and community engagement.',
  icon: Globe,
  link: '/impact/sdg-dashboard',
- color: '#1E1E1E',
+ color: 'var(--color-ink-900)',
  stat: '12/17 SDGs',
  image: '/images/impact/sdgs.jpg'
  },
@@ -29,7 +29,7 @@ const fallbackImpactAreas = [
  description: 'Free medical camps, health screenings, and wellness programs serving over 50,000 community members annually.',
  icon: HeartPulse,
  link: '/impact/community',
- color: '#A51C30',
+ color: 'var(--color-primary-600)',
  stat: '50,000+ Served',
  image: '/images/impact/health.jpg'
  },
@@ -38,7 +38,7 @@ const fallbackImpactAreas = [
  description: 'Green campus initiatives, waste management programs, and renewable energy projects reducing our carbon footprint.',
  icon: TreePine,
  link: '/impact/sustainability',
- color: '#A51C30',
+ color: 'var(--color-primary-600)',
  stat: '40% Carbon Reduction',
  image: '/images/impact/sustainability.jpg'
  }
@@ -88,7 +88,7 @@ export const Impact = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -101,7 +101,7 @@ export const Impact = () => {
  <span className="text-white font-medium">Impact</span>
  </div>
  <h1 className="text-display text-white mb-6">
- Our <span className="text-[#A51C30]">Impact</span>
+ Our <span className="text-primary-600">Impact</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Transforming lives through healthcare excellence, education, and sustainable community development in the Niger Delta.
@@ -123,8 +123,8 @@ export const Impact = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <stat.icon className="w-8 h-8 text-[#A51C30] mx-auto mb-2" />
- <div className="text-stat text-[#1E1E1E] mb-1">{stat.value}</div>
+ <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
  ))}
@@ -209,13 +209,13 @@ export const Impact = () => {
  className="bg-white p-6 shadow-sm border border-gray-100"
  >
  <div className="flex items-start gap-4">
- <div className="w-12 h-12 bg-[#A51C30]/20 flex items-center justify-center flex-shrink-0">
- <TrendingUp className="w-6 h-6 text-[#A51C30]" />
+ <div className="w-12 h-12 bg-primary-600/20 flex items-center justify-center flex-shrink-0">
+ <TrendingUp className="w-6 h-6 text-primary-600" />
  </div>
  <div className="flex-1">
  <h3 className="text-title text-gray-900 mb-2">{item.title}</h3>
  <p className="text-body text-gray-600 mb-3">{item.description}</p>
- <p className="text-small font-semibold text-[#1E1E1E]">{item.impact}</p>
+ <p className="text-small font-semibold text-ink-900">{item.impact}</p>
  </div>
  </div>
  </motion.div>
@@ -225,7 +225,7 @@ export const Impact = () => {
  </section>
 
  {/* CTA */}
- <section className="py-16" style={{ backgroundColor: '#A51C30' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-primary-600)' }}>
  <div className="container-custom text-center">
  <h2 className="text-headline text-white mb-4">Partner With Us</h2>
  <p className="text-lead text-white/80 max-w-2xl mx-auto mb-8">
@@ -234,13 +234,13 @@ export const Impact = () => {
  <div className="flex flex-wrap justify-center gap-4">
  <Link 
  to="/contact"
- className="px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Contact Us
  </Link>
  <Link 
  to="/research/collaborations"
- className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-[#A51C30] transition"
+ className="px-8 py-4 border-2 border-white text-white font-bold hover:bg-white hover:text-primary-600 transition"
  >
  Research Partnerships
  </Link>

@@ -28,7 +28,7 @@ export const PublicationDetail = () => {
   if (isLoading) {
     return (
       <div className="pt-[180px] pb-20 text-center">
-        <div className="animate-spin w-8 h-8 border-4 border-[#A51C30] border-t-transparent mx-auto" />
+        <div className="animate-spin w-8 h-8 border-4 border-primary-600 border-t-transparent mx-auto" />
       </div>
     );
   }
@@ -70,7 +70,7 @@ export const PublicationDetail = () => {
  </Helmet>
 
  {/* Hero Section */}
- <section className="pt-[180px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="pt-[180px] pb-12" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="container-custom">
  <motion.div
  initial={{ opacity: 0, y: 20 }}
@@ -99,7 +99,7 @@ export const PublicationDetail = () => {
 
  {/* Publication Type Badge */}
  <div className="flex items-center gap-3 mb-4">
- <span className="px-3 py-1 bg-[#A51C30] text-[#1E1E1E] text-sm font-semibold">
+ <span className="px-3 py-1 bg-primary-600 text-ink-900 text-sm font-semibold">
  {publication.type === 'journal' ? 'Journal Article' : publication.type}
  </span>
  <span className="px-3 py-1 bg-white/20 text-white text-sm">
@@ -117,7 +117,7 @@ export const PublicationDetail = () => {
  <Users className="w-5 h-5" />
  {publication.authors.map((author, index) => (
  <span key={author}>
- <Link to={`/research/faculty/${author.toLowerCase().replace(/[^a-z]/g, '-')}`} className="hover:text-[#A51C30] transition">
+ <Link to={`/research/faculty/${author.toLowerCase().replace(/[^a-z]/g, '-')}`} className="hover:text-primary-600 transition">
  {author}
  </Link>
  {index < publication.authors.length - 1 && <span className="text-white/50">, </span>}
@@ -152,7 +152,7 @@ export const PublicationDetail = () => {
  {/* Download Button */}
  <button
  onClick={handleDownload}
- className="flex items-center gap-2 px-6 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition"
+ className="flex items-center gap-2 px-6 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
  >
  <FileDown className="w-5 h-5" />
  Download PDF
@@ -195,7 +195,7 @@ export const PublicationDetail = () => {
  href={`https://doi.org/${publication.doi}`}
  target="_blank"
  rel="noopener noreferrer"
- className="flex items-center gap-2 px-4 py-3 border border-[#1E1E1E] text-[#1E1E1E] font-medium hover:bg-[#1E1E1E]/5 transition ml-auto"
+ className="flex items-center gap-2 px-4 py-3 border border-ink-900 text-ink-900 font-medium hover:bg-ink-900/5 transition ml-auto"
  >
  <ExternalLink className="w-5 h-5" />
  View on Publisher Site
@@ -219,7 +219,7 @@ export const PublicationDetail = () => {
  >
  {/* Abstract */}
  <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
- <FileText className="w-5 h-5 text-[#1E1E1E]" />
+ <FileText className="w-5 h-5 text-ink-900" />
  Abstract
  </h2>
  <p className="text-gray-700 leading-relaxed mb-8">
@@ -248,17 +248,17 @@ export const PublicationDetail = () => {
  <h3 className="text-sm font-semibold text-gray-900 mb-4">Publication Metrics</h3>
  <div className="grid grid-cols-3 gap-4">
  <div className="text-center p-4 bg-gray-50 ">
- <Award className="w-6 h-6 text-[#1E1E1E] mx-auto mb-2" />
+ <Award className="w-6 h-6 text-ink-900 mx-auto mb-2" />
  <div className="text-2xl font-bold text-gray-900">{publication.citations}</div>
  <div className="text-sm text-gray-600">Citations</div>
  </div>
  <div className="text-center p-4 bg-gray-50 ">
- <Download className="w-6 h-6 text-[#1E1E1E] mx-auto mb-2" />
+ <Download className="w-6 h-6 text-ink-900 mx-auto mb-2" />
  <div className="text-2xl font-bold text-gray-900">{publication.downloadCount || 0}</div>
  <div className="text-sm text-gray-600">Downloads</div>
  </div>
  <div className="text-center p-4 bg-gray-50 ">
- <Calendar className="w-6 h-6 text-[#1E1E1E] mx-auto mb-2" />
+ <Calendar className="w-6 h-6 text-ink-900 mx-auto mb-2" />
  <div className="text-2xl font-bold text-gray-900">{publication.year}</div>
  <div className="text-sm text-gray-600">Published</div>
  </div>
@@ -283,7 +283,7 @@ export const PublicationDetail = () => {
  <div>
  <span className="text-gray-500 block mb-1">DOI</span>
  <div className="flex items-center gap-2">
- <span className="text-[#1E1E1E] font-medium">{publication.doi}</span>
+ <span className="text-ink-900 font-medium">{publication.doi}</span>
  <button
  onClick={() => {
  navigator.clipboard.writeText(publication.doi!);
@@ -355,7 +355,7 @@ export const PublicationDetail = () => {
  to={`/research/faculty/${author.toLowerCase().replace(/[^a-z]/g, '-')}`}
  className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 transition"
  >
- <div className="w-10 h-10 bg-[#1E1E1E] flex items-center justify-center text-white font-medium text-sm">
+ <div className="w-10 h-10 bg-ink-900 flex items-center justify-center text-white font-medium text-sm">
  {author.split(' ').map(n => n[0]).join('')}
  </div>
  <span className="text-gray-900 font-medium">{author}</span>
@@ -369,7 +369,7 @@ export const PublicationDetail = () => {
  initial={{ opacity: 0, x: 20 }}
  animate={{ opacity: 1, x: 0 }}
  transition={{ delay: 0.4 }}
- className="bg-[#1E1E1E] p-6 text-white"
+ className="bg-ink-900 p-6 text-white"
  >
  <h3 className="text-lg font-bold mb-3">How to Cite</h3>
  <p className="text-white/80 text-sm leading-relaxed mb-4">

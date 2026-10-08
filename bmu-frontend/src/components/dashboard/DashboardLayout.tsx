@@ -33,7 +33,7 @@ export const DashboardLayout = ({
     <>
       <Helmet><title>{title} - Bayelsa Medical University</title></Helmet>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-[#1E1E1E] text-white">
+        <div className="bg-ink-900 text-white">
           <div className="container-custom py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -89,7 +89,7 @@ export const DashboardLayout = ({
               {notifications && (
                 <div className="bg-white shadow-sm border border-gray-100 p-4">
                   <div className="flex items-center gap-2 mb-4">
-                    <Bell className="w-5 h-5 text-[#A51C30]" />
+                    <Bell className="w-5 h-5 text-primary-600" />
                     <h2 className="font-bold text-gray-900">Notifications</h2>
                   </div>
                   <div className="space-y-4">
@@ -109,7 +109,7 @@ export const DashboardLayout = ({
               {importantDates && (
                 <div className="bg-white shadow-sm border border-gray-100 p-4">
                   <div className="flex items-center gap-2 mb-4">
-                    <Clock className="w-5 h-5 text-[#A51C30]" />
+                    <Clock className="w-5 h-5 text-primary-600" />
                     <h2 className="font-bold text-gray-900">Important Dates</h2>
                   </div>
                   <ul className="space-y-3 text-sm">
@@ -123,11 +123,11 @@ export const DashboardLayout = ({
                 </div>
               )}
               {!hideHelp && (
-                <div className="bg-[#1E1E1E] p-4 text-white">
+                <div className="bg-ink-900 p-4 text-white">
                   <h2 className="font-bold mb-2">Need Help?</h2>
                   <p className="text-sm text-white/80 mb-4">Contact IT support for assistance</p>
                   <div className="space-y-2 text-sm">
-                    <a href="mailto:it@bmu.edu.ng" className="flex items-center gap-2 hover:text-[#A51C30] transition">
+                    <a href="mailto:it@bmu.edu.ng" className="flex items-center gap-2 hover:text-primary-600 transition">
                       <Mail className="w-4 h-4" /> it@bmu.edu.ng
                     </a>
                   </div>

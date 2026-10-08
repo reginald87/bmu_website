@@ -14,7 +14,7 @@ export const SDGSnapshot = ({ sections: homeSections }: { sections?: Array<{ sec
 
   return (
     <div className="bg-white p-6">
-      <h3 className="text-xl font-bold mb-2 text-[#1E1E1E]">
+      <h3 className="text-xl font-bold mb-2 text-ink-900">
         {t('home.sdg.title')}
       </h3>
       <p className="text-sm text-gray-700 mb-4">
@@ -39,7 +39,7 @@ export const SDGSnapshot = ({ sections: homeSections }: { sections?: Array<{ sec
 
       <a
         href="/impact/sdg-dashboard"
-        className="mt-4 block w-full text-center py-2 font-medium text-white bg-[#A51C30] hover:bg-[#8a1828] transition-colors"
+        className="mt-4 block w-full text-center py-2 font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
       >
         {t('home.sdg.viewDashboard')}
       </a>

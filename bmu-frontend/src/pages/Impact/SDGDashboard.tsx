@@ -216,7 +216,7 @@ const ImpactMap = () => {
  const loc = outreachLocations.find(l => l.name === hoveredLocation);
  return loc ? (
  <>
- <h4 className="font-bold text-[#1E1E1E]">{loc.name}</h4>
+ <h4 className="font-bold text-ink-900">{loc.name}</h4>
   <p className="text-sm text-gray-700">Patients treated: {loc.patients.toLocaleString()}</p>
   <p className="text-sm text-gray-700">Campaigns: {loc.campaigns}</p>
  </>
@@ -228,7 +228,7 @@ const ImpactMap = () => {
  {/* Map Legend */}
  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur p-3 shadow-sm">
  <div className="flex items-center gap-2 text-sm">
- <div className="w-3 h-3 bg-[#1E1E1E] border-2 border-[#A51C30]" />
+ <div className="w-3 h-3 bg-ink-900 border-2 border-primary-600" />
  <span className="text-gray-700">Outreach Locations</span>
  </div>
  </div>
@@ -243,7 +243,7 @@ const ImpactMap = () => {
  onMouseEnter={() => setHoveredLocation(location.name)}
  onMouseLeave={() => setHoveredLocation(null)}
  >
- <MapPin className="w-4 h-4 text-[#A51C30]" />
+ <MapPin className="w-4 h-4 text-primary-600" />
  <span>{location.name}</span>
  </div>
  ))}
@@ -305,7 +305,7 @@ export const SDGDashboard = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -318,7 +318,7 @@ export const SDGDashboard = () => {
  <span className="text-white font-medium">SDG Dashboard</span>
  </div>
  <h1 className="text-display text-white mb-6">
- SDG <span className="text-[#A51C30]">Impact Dashboard</span>
+ SDG <span className="text-primary-600">Impact Dashboard</span>
  </h1>
  <p className="text-lead text-white/80 max-w-2xl">
  Tracking Bayelsa Medical University's contribution to the UN 2030 Agenda for Sustainable Development
@@ -345,7 +345,7 @@ export const SDGDashboard = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <div className="text-stat text-[#1E1E1E] mb-1">{item.value}%</div>
+ <div className="text-stat text-ink-900 mb-1">{item.value}%</div>
   <p className="text-gray-800 text-body">{item.label}</p>
   <p className="text-xs text-gray-500 mt-1">Target: {item.target}%</p>
  </motion.div>
@@ -408,7 +408,7 @@ export const SDGDashboard = () => {
  onClick={() => setActiveTab(tab.id as typeof activeTab)}
  className={`px-6 py-3 font-semibold transition-all ${
  activeTab === tab.id 
- ? 'bg-[#1E1E1E] text-white' 
+ ? 'bg-ink-900 text-white' 
   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
  }`}
  >
@@ -446,7 +446,7 @@ export const SDGDashboard = () => {
  <div className="bg-white p-6 shadow-sm">
  <div className="flex justify-between items-center mb-6">
  <h3 className="text-title text-gray-900 flex items-center gap-2">
- <BarChart3 className="w-5 h-5 text-[#A51C30]" />
+ <BarChart3 className="w-5 h-5 text-primary-600" />
  Monthly Outreach Trends
  </h3>
  <div className="flex gap-2">
@@ -455,7 +455,7 @@ export const SDGDashboard = () => {
  key={range}
  onClick={() => setTimeRange(range)}
  className={`px-3 py-1 text-xs capitalize ${
-  timeRange === range ? 'bg-[#1E1E1E] text-white' : 'bg-gray-100 text-gray-700'
+  timeRange === range ? 'bg-ink-900 text-white' : 'bg-gray-100 text-gray-700'
  }`}
  >
  {range}
@@ -476,11 +476,11 @@ export const SDGDashboard = () => {
  </ResponsiveContainer>
  <div className="flex justify-center gap-6 mt-4">
  <div className="flex items-center gap-2">
- <div className="w-3 h-3 bg-[#1E1E1E]" />
+ <div className="w-3 h-3 bg-ink-900" />
   <span className="text-small text-gray-700">Patients</span>
   </div>
   <div className="flex items-center gap-2">
-  <div className="w-3 h-3 bg-[#A51C30]" />
+  <div className="w-3 h-3 bg-primary-600" />
   <span className="text-small text-gray-700">Campaigns</span>
  </div>
  </div>
@@ -489,7 +489,7 @@ export const SDGDashboard = () => {
  {/* Disease Breakdown */}
  <div className="bg-white p-6 shadow-sm">
  <h3 className="text-title text-gray-900 flex items-center gap-2 mb-6">
- <PieChartIcon className="w-5 h-5 text-[#A51C30]" />
+ <PieChartIcon className="w-5 h-5 text-primary-600" />
  Disease Burden Treated
  </h3>
  <ResponsiveContainer width="100%" height={220}>
@@ -523,7 +523,7 @@ export const SDGDashboard = () => {
  {/* Impact Stories */}
  <div className="mt-8 bg-white p-6 shadow-sm">
  <h3 className="text-title text-gray-900 flex items-center gap-2 mb-4">
- <Calendar className="w-5 h-5 text-[#A51C30]" />
+ <Calendar className="w-5 h-5 text-primary-600" />
  Recent Impact Stories
  </h3>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -534,11 +534,11 @@ export const SDGDashboard = () => {
  whileInView={{ opacity: 1, x: 0 }}
  viewport={{ once: true }}
  transition={{ delay: idx * 0.1 }}
- className="border-l-4 border-[#A51C30] pl-4 py-2 bg-gray-50 rounded-r-lg"
+ className="border-l-4 border-primary-600 pl-4 py-2 bg-gray-50 rounded-r-lg"
  >
  <p className="font-semibold text-gray-800">{story.title}</p>
   <p className="text-sm text-gray-700">{story.date} • {story.location}</p>
- <p className="text-sm text-[#1E1E1E]">{story.patients} patients served</p>
+ <p className="text-sm text-ink-900">{story.patients} patients served</p>
  </motion.div>
  ))}
  </div>
@@ -798,11 +798,11 @@ export const SDGDashboard = () => {
   whileInView={{ opacity: 1, y: 0 }}
   viewport={{ once: true }}
   transition={{ delay: index * 0.1 }}
-  className="bg-gray-50 p-6 border border-gray-100 hover:border-[#1E1E1E] transition-colors"
+  className="bg-gray-50 p-6 border border-gray-100 hover:border-ink-900 transition-colors"
   >
   <div className="flex items-center gap-3 mb-4">
-  <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center">
-  <FileText className="w-6 h-6 text-[#1E1E1E]" />
+  <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center">
+  <FileText className="w-6 h-6 text-ink-900" />
   </div>
   <div>
   <h3 className="text-title text-gray-900">{report.title}</h3>
@@ -822,7 +822,7 @@ export const SDGDashboard = () => {
   <a
     href={downloadUrl}
     download
-    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#1E1E1E] text-white font-medium hover:bg-[#1E1E1E]/90 transition"
+    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
   >
   <Download className="w-4 h-4" />
   Download
@@ -841,7 +841,7 @@ export const SDGDashboard = () => {
  <div className="container-custom">
  <div className="bg-white p-6 shadow-sm">
  <div className="flex items-center gap-3 mb-4">
- <Info className="w-6 h-6 text-[#A51C30]" />
+ <Info className="w-6 h-6 text-primary-600" />
  <h3 className="text-title text-gray-900">Data Sources & Methodology</h3>
  </div>
   <p className="text-body text-gray-800 mb-4">
@@ -861,7 +861,7 @@ export const SDGDashboard = () => {
  </section>
 
  {/* CTA */}
- <section className="py-16" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="py-16" style={{ backgroundColor: 'var(--color-ink-900)' }}>
  <div className="container-custom">
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
  <div>
@@ -871,14 +871,14 @@ export const SDGDashboard = () => {
  </p>
  <Link 
  to="/research/collaborations"
- className="inline-flex items-center gap-2 px-8 py-4 bg-[#A51C30] text-[#1E1E1E] font-bold hover:bg-white transition"
+ className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-ink-900 font-bold hover:bg-white transition"
  >
  Explore Partnerships <ArrowRight className="w-5 h-5" />
  </Link>
  </div>
  <div className="bg-white/10 backdrop-blur p-8">
  <div className="flex items-center gap-4 mb-4">
- <TrendingUp className="w-8 h-8 text-[#A51C30]" />
+ <TrendingUp className="w-8 h-8 text-primary-600" />
  <div>
  <div className="text-3xl font-bold text-white">12/17</div>
  <p className="text-white/80">Active SDGs</p>
