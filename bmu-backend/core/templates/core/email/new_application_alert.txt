@@ -1,0 +1,14 @@
+{{ university_name|default:"Bayelsa Medical University" }} — Admissions alert
+
+A new application has just been submitted on the online portal.
+
+Application ID:  {{ application_id }}
+Applicant:       {{ full_name }}
+Email:           {{ email }}
+Phone:           {{ phone }}
+Programme:       {{ program }}
+Student type:    {{ student_type }}
+Submitted:       {{ submitted_at }}
+
+Review in admin:
+{% if admin_url %}{{ admin_url }}{% endif %}

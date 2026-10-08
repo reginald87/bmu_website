@@ -196,6 +196,10 @@ nav, .nav, [role="navigation"], .menu, .navbar, .dropdown {
 }
 
 /* Component classes */
+.hero-section {
+  padding-top: 176px;
+}
+
 .container-custom {
   margin-inline: auto;
   padding-inline: 1rem;

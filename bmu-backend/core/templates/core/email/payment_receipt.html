@@ -1,0 +1,38 @@
+{% extends "core/email/base.html" %}
+
+{% block preheader %}Payment received for application {{ application_id }}.{% endblock %}
+
+{% block heading %}Payment confirmation{% endblock %}
+
+{% block content %}
+<p style="margin:0 0 12px 0;">Dear {{ first_name }},</p>
+<p style="margin:0 0 12px 0;">
+  We have received your application fee payment. Thank you!
+</p>
+<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="background-color:#f9f9fa; border:1px solid #e5e4e7; border-radius:6px; margin:16px 0; font-size:14px;">
+  <tr>
+    <td style="color:#71717a; width:160px;">Application ID</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ application_id }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Amount paid</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ currency }} {{ amount }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Payment method</td>
+    <td style="color:#1E1E1E;">{{ payment_method }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Reference</td>
+    <td style="color:#1E1E1E;">{{ payment_reference }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Date</td>
+    <td style="color:#1E1E1E;">{{ paid_at }}</td>
+  </tr>
+</table>
+<p style="margin:0 0 12px 0;">
+  Keep this receipt for your records. Your application is now complete and will
+  be reviewed by the admissions office.
+</p>
+{% endblock %}

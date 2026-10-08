@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
   Globe, 
@@ -49,9 +49,9 @@ export const Collaborations = () => {
     'Shared research infrastructure'
   ];
 
-  const stats = (sections?.find(s => s.section_key === 'stats')?.data as any[] || fallbackStats);
-  const benefits = (sections?.find(s => s.section_key === 'benefits')?.data as any[] || fallbackBenefits);
-  const whyPartner = (sections?.find(s => s.section_key === 'why_partner')?.data as any[] || fallbackWhyPartner);
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
+  const benefits = (sections?.find(s => s.section_key === 'benefits')?.data as typeof fallbackBenefits) || fallbackBenefits;
+  const whyPartner = (sections?.find(s => s.section_key === 'why_partner')?.data as typeof fallbackWhyPartner) || fallbackWhyPartner;
 
   const internationalPartners: Partner[] = partners
     .filter(p => p.country !== 'Nigeria')
@@ -83,7 +83,7 @@ export const Collaborations = () => {
   </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />

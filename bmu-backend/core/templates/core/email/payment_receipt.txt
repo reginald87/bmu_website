@@ -1,0 +1,14 @@
+{{ university_name|default:"Bayelsa Medical University" }} — Office of Admissions
+
+Dear {{ first_name }},
+
+We have received your application fee payment. Thank you!
+
+Application ID: {{ application_id }}
+Amount paid:    {{ currency }} {{ amount }}
+Payment method: {{ payment_method }}
+Reference:      {{ payment_reference }}
+Date:           {{ paid_at }}
+
+Keep this receipt for your records. Your application is now complete and will
+be reviewed by the admissions office.

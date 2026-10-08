@@ -1,0 +1,44 @@
+{% extends "core/email/base.html" %}
+
+{% block preheader %}{{ preheader }}{% endblock %}
+
+{% block heading %}{{ heading }}{% endblock %}
+
+{% block content %}
+<p style="margin:0 0 12px 0;">Dear {{ name }},</p>
+<p style="margin:0 0 12px 0;">{{ body }}</p>
+{% if details %}
+<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="background-color:#f9f9fa; border:1px solid #e5e4e7; border-radius:6px; margin:16px 0; font-size:14px;">
+  {% for row in details %}
+  <tr>
+    <td style="color:#71717a; width:160px;">{{ row.label }}</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ row.value }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% if next_steps %}
+<p style="margin:0 0 12px 0;"><strong>Next step:</strong> {{ next_steps }}</p>
+{% endif %}
+{% endblock %}
+
+{% block action %}
+{% if action_url %}
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:24px;">
+  <tr>
+    <td style="background-color:#A51C30; border-radius:6px;">
+      <a href="{{ action_url }}" style="display:inline-block; padding:12px 24px; color:#ffffff; font-size:14px; font-weight:bold; text-decoration:none;">
+        {{ action_label|default:"Open your portal" }}
+      </a>
+    </td>
+  </tr>
+</table>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+<p style="margin:0;">
+  This is an automated message from {{ university_name|default:"Bayelsa Medical University" }}.
+  Please do not reply to this email. For enquiries, contact the Student Affairs office.
+</p>
+{% endblock %}

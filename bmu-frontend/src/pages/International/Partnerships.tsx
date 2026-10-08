@@ -1,49 +1,60 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
- Globe,
- Building,
- Microscope,
- GraduationCap,
- ArrowRight,
- Mail,
- Phone
+  Globe,
+  Building,
+  Microscope,
+  GraduationCap,
+  ArrowRight,
+  Mail,
+  Phone
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useInternationalPartners } from '../../services/apiHooks';
+import { useInternationalPartners, usePageSections } from '../../services/apiHooks';
 
-const partnershipTypes = [
- {
- title: 'Academic Exchange',
- description: 'Student and faculty exchange programs, joint degree programs, and study abroad opportunities.',
- icon: GraduationCap,
- benefits: ['Student mobility', 'Faculty sabbaticals', 'Joint degrees', 'Credit transfer']
- },
- {
- title: 'Research Collaboration',
- description: 'Joint research projects, shared laboratories, and collaborative funding applications.',
- icon: Microscope,
- benefits: ['Joint publications', 'Shared facilities', 'Grant partnerships', 'Knowledge transfer']
- },
- {
- title: 'Institutional Partnerships',
- description: 'Strategic alliances with universities, hospitals, and healthcare organizations worldwide.',
- icon: Building,
- benefits: ['MOU agreements', 'Visiting scholars', 'Dual appointments', 'Resource sharing']
- }
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  GraduationCap, Microscope, Building, Globe,
+};
+
+const fallbackPartnershipTypes = [
+  {
+    title: 'Academic Exchange',
+    description: 'Student and faculty exchange programs, joint degree programs, and study abroad opportunities.',
+    icon: 'GraduationCap',
+    benefits: ['Student mobility', 'Faculty sabbaticals', 'Joint degrees', 'Credit transfer']
+  },
+  {
+    title: 'Research Collaboration',
+    description: 'Joint research projects, shared laboratories, and collaborative funding applications.',
+    icon: 'Microscope',
+    benefits: ['Joint publications', 'Shared facilities', 'Grant partnerships', 'Knowledge transfer']
+  },
+  {
+    title: 'Institutional Partnerships',
+    description: 'Strategic alliances with universities, hospitals, and healthcare organizations worldwide.',
+    icon: 'Building',
+    benefits: ['MOU agreements', 'Visiting scholars', 'Dual appointments', 'Resource sharing']
+  }
 ];
 
-const partnershipBenefits = [
- 'Access to international research networks',
- 'Student exchange opportunities',
- 'Joint degree program development',
- 'Shared resources and facilities',
- 'International faculty development',
- 'Global health impact initiatives'
+const fallbackPartnershipBenefits = [
+  'Access to international research networks',
+  'Student exchange opportunities',
+  'Joint degree program development',
+  'Shared resources and facilities',
+  'International faculty development',
+  'Global health impact initiatives'
 ];
 
 export const Partnerships = () => {
   const { data: partners } = useInternationalPartners();
+  const { data: sections = [] } = usePageSections('partnerships');
+
+  const getSection = (key: string) => sections.find(s => s.section_key === key);
+  const typesData = getSection('partnership_types')?.data;
+  const partnershipTypes = Array.isArray(typesData) && typesData.length ? typesData : fallbackPartnershipTypes;
+  const benefitsData = getSection('partnership_benefits')?.data;
+  const partnershipBenefits = Array.isArray(benefitsData) && benefitsData.length ? benefitsData : fallbackPartnershipBenefits;
 
   return (
   <>
@@ -53,7 +64,7 @@ export const Partnerships = () => {
   </Helmet>
 
   {/* Hero */}
-  <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
   <div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
   }} />
@@ -96,15 +107,15 @@ export const Partnerships = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white p-8 shadow-sm border border-gray-100"
  >
- <div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center mb-6">
- <type.icon className="w-8 h-8 text-[#1E1E1E]" />
- </div>
+  <div className="w-16 h-16 bg-[#1E1E1E]/10 flex items-center justify-center mb-6">
+  {(() => { const Icon = iconMap[type.icon] || GraduationCap; return <Icon className="w-8 h-8 text-[#1E1E1E]" />; })()}
+  </div>
  <h3 className="text-title text-gray-900 mb-3">{type.title}</h3>
  <p className="text-body text-gray-600 mb-6">{type.description}</p>
  <div className="space-y-2">
  <p className="text-small font-semibold text-gray-700">Key Benefits:</p>
  <ul className="space-y-1">
- {type.benefits.map((benefit, idx) => (
+  {type.benefits.map((benefit: string, idx: number) => (
  <li key={idx} className="flex items-center gap-2 text-body text-gray-600">
  <div className="w-1.5 h-1.5 bg-[#A51C30]" />
  <span>{benefit}</span>

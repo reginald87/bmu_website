@@ -563,6 +563,7 @@ class StudentCourse(models.Model):
     RESULT_STATUS_CHOICES = [
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
+        ('rejected', 'Rejected'),
         ('hod_approved', 'HOD Approved'),
         ('dean_approved', 'Dean Approved'),
         ('senate_approved', 'Senate Approved'),

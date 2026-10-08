@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
  Globe, 
@@ -62,9 +62,9 @@ const fallbackStats = [
 
 export const International = () => {
  const { data: sections } = usePageSections('international');
- const quickLinks = (sections?.find(s => s.section_key === 'quick_links')?.data as any[] || fallbackQuickLinks);
- const partnerCountries = (sections?.find(s => s.section_key === 'partner_countries')?.data as any[] || fallbackPartnerCountries);
- const stats = (sections?.find(s => s.section_key === 'stats')?.data as any[] || fallbackStats);
+ const quickLinks = (sections?.find(s => s.section_key === 'quick_links')?.data as typeof fallbackQuickLinks) || fallbackQuickLinks;
+ const partnerCountries = (sections?.find(s => s.section_key === 'partner_countries')?.data as typeof fallbackPartnerCountries) || fallbackPartnerCountries;
+ const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
  return (
  <>
  <Helmet>
@@ -73,7 +73,7 @@ export const International = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />

@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -211,7 +211,7 @@ export const ArchivePage = () => {
  </Helmet>
 
  {/* Hero Section */}
- <section className="pt-[140px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="pt-[180px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
  <div className="container-custom">
  <motion.div
  initial={{ opacity: 0, y: 20 }}

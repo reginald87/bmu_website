@@ -4,15 +4,18 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import UserActivity, Notification, PasswordResetToken
 from .serializers import (
     UserSerializer, UserCreateSerializer, UserProfileUpdateSerializer,
     UserActivitySerializer, NotificationSerializer, LoginSerializer,
-    ChangePasswordSerializer, PasswordResetRequestSerializer
+    ChangePasswordSerializer, PasswordResetRequestSerializer,
+    PasswordResetConfirmSerializer
 )
 import uuid
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -40,7 +43,24 @@ class UserRegistrationView(generics.CreateAPIView):
             ).update(applicant=user)
         except Exception:
             pass
+        self.send_verification_email(user)
         return user
+
+    def send_verification_email(self, user):
+        """Email a verification link; failures never break registration."""
+        try:
+            from django.contrib.auth.tokens import default_token_generator
+            from django.utils.http import urlsafe_base64_encode
+            from django.utils.encoding import force_bytes
+            from .emails import send_verification_email
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            send_verification_email(user, uid, token)
+        except Exception:
+            import logging
+            logging.getLogger(__name__).exception(
+                'Verification email failed for user %s', user.pk
+            )
 
 
 class UserLoginView(generics.GenericAPIView):
@@ -162,7 +182,9 @@ class ChangePasswordView(generics.GenericAPIView):
         # Set new password
         user.set_password(serializer.validated_data['new_password'])
         user.save()
-        
+        from core.tokens import blacklist_user_refresh_tokens
+        blacklist_user_refresh_tokens(user)
+
         # Log activity
         UserActivity.objects.create(
             user=user,
@@ -170,40 +192,129 @@ class ChangePasswordView(generics.GenericAPIView):
             description='Password changed'
         )
         
+        from .emails import send_password_changed_email
+        send_password_changed_email(user)
+        
         return Response({'message': 'Password changed successfully'})
 
 
 class PasswordResetRequestView(generics.GenericAPIView):
-    """Request password reset"""
+    """Request password reset (emails a 6-digit code)"""
     serializer_class = PasswordResetRequestSerializer
     permission_classes = [permissions.AllowAny]
-    
+
+    RESET_CODE_TTL_MINUTES = 30
+
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         email = serializer.validated_data['email']
-        
+
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=email, is_active=True)
         except User.DoesNotExist:
             # Don't reveal if email exists
-            return Response({'message': 'If the email exists, a reset link has been sent'})
-        
-        # Create reset token
-        token = str(uuid.uuid4())
-        expires_at = datetime.now() + timedelta(hours=24)
-        
+            return Response({'message': 'If the email exists, a reset code has been sent'})
+
+        # Invalidate any outstanding codes, then issue a fresh one
+        from django.utils import timezone
+        PasswordResetToken.objects.filter(user=user, is_used=False).update(is_used=True)
+
+        code = f'{uuid.uuid4().int % 1000000:06d}'
         PasswordResetToken.objects.create(
             user=user,
-            token=token,
-            expires_at=expires_at
+            token=code,
+            expires_at=timezone.now() + timedelta(minutes=self.RESET_CODE_TTL_MINUTES),
         )
-        
-        # TODO: Send email with reset link
-        # send_password_reset_email(user, token)
-        
-        return Response({'message': 'If the email exists, a reset link has been sent'})
+
+        from .emails import send_password_reset_code
+        send_password_reset_code(user, code, expires_minutes=self.RESET_CODE_TTL_MINUTES)
+
+        return Response({'message': 'If the email exists, a reset code has been sent'})
+
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    """Confirm password reset with the emailed code and set a new password"""
+    serializer_class = PasswordResetConfirmSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data['email']
+        code = serializer.validated_data['code']
+
+        invalid_response = Response(
+            {'error': 'Invalid or expired reset code'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+        try:
+            user = User.objects.get(email=email, is_active=True)
+        except User.DoesNotExist:
+            return invalid_response
+
+        from django.utils import timezone
+        reset_token = PasswordResetToken.objects.filter(
+            user=user, token=code, is_used=False, expires_at__gt=timezone.now()
+        ).first()
+        if not reset_token:
+            return invalid_response
+
+        user.set_password(serializer.validated_data['new_password'])
+        user.save()
+        from core.tokens import blacklist_user_refresh_tokens
+        blacklist_user_refresh_tokens(user)
+
+        reset_token.is_used = True
+        reset_token.save(update_fields=['is_used'])
+        # Any other outstanding codes are now invalid too
+        PasswordResetToken.objects.filter(user=user, is_used=False).update(is_used=True)
+
+        UserActivity.objects.create(
+            user=user,
+            action='password_change',
+            description='Password reset via email code'
+        )
+
+        from .emails import send_password_changed_email
+        send_password_changed_email(user)
+
+        return Response({'message': 'Password has been reset successfully'})
+
+
+def verify_email(request):
+    """GET /accounts/verify-email/?uid=...&token=... — confirms the address.
+
+    Returns JSON so the SPA can call it; safe to open directly from an email
+    client too.
+    """
+    uid = request.GET.get('uid', '')
+    token = request.GET.get('token', '')
+
+    try:
+        from django.utils.http import urlsafe_base64_decode
+        from django.contrib.auth.tokens import default_token_generator
+        user_pk = urlsafe_base64_decode(uid).decode()
+        user = User.objects.get(pk=user_pk)
+    except Exception:
+        user = None
+
+    if user is None or not default_token_generator.check_token(user, token):
+        return JsonResponse({'error': 'Invalid or expired verification link'}, status=400)
+
+    if not user.is_email_verified:
+        user.is_email_verified = True
+        user.save(update_fields=['is_email_verified'])
+        UserActivity.objects.create(
+            user=user,
+            action='profile_update',
+            description='Email address verified'
+        )
+
+    return JsonResponse({'message': 'Email verified successfully'})
 
 
 class UserActivityListView(generics.ListAPIView):
@@ -231,7 +342,7 @@ def mark_notification_read(request, pk):
     try:
         notification = Notification.objects.get(pk=pk, user=request.user)
         notification.is_read = True
-        notification.read_at = datetime.now()
+        notification.read_at = timezone.now()
         notification.save()
         return Response({'message': 'Notification marked as read'})
     except Notification.DoesNotExist:

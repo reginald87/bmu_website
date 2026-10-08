@@ -60,6 +60,10 @@ const FacultyDetail = lazyNamed('FacultyDetail', () => import('./pages/Academics
 const DepartmentDetail = lazyNamed('DepartmentDetail', () => import('./pages/Academics/DepartmentDetail'));
 const AcademicUnits = lazyNamed('AcademicUnits', () => import('./pages/Academics/AcademicUnits'));
 const Research = lazyNamed('Research', () => import('./pages/Research/Research'));
+const TechnologyInnovation = lazyNamed('TechnologyInnovation', () => import('./pages/Research/TechnologyInnovation'));
+const TechnologyInnovationDetail = lazyNamed('TechnologyInnovationDetail', () => import('./pages/Research/TechnologyInnovationDetail'));
+const UniversityProjects = lazyNamed('UniversityProjects', () => import('./pages/Research/UniversityProjects'));
+const UniversityProjectDetail = lazyNamed('UniversityProjectDetail', () => import('./pages/Research/UniversityProjectDetail'));
 const ResearchAndDevelopment = lazyNamed('ResearchAndDevelopment', () => import('./pages/Research/ResearchAndDevelopment'));
 const Publications = lazyNamed('Publications', () => import('./pages/Research/Publications'));
 const PublicationDetail = lazyNamed('PublicationDetail', () => import('./pages/Research/PublicationDetail'));
@@ -137,6 +141,8 @@ const DeanDashboard = lazyNamed('DeanDashboard', () => import('./pages/Portals/D
 const VCDashboard = lazyNamed('VCDashboard', () => import('./pages/Portals/VCDashboard'));
 const RegistrarDashboard = lazyNamed('RegistrarDashboard', () => import('./pages/Portals/RegistrarDashboard'));
 const UniversalLogin = lazyNamed('UniversalLogin', () => import('./pages/Portals/UniversalLogin'));
+const PasswordResetPage = lazyNamed('PasswordResetPage', () => import('./components/auth/PasswordResetPage'));
+const VerifyEmail = lazyNamed('VerifyEmail', () => import('./components/auth/VerifyEmail'));
 const BursaryDashboard = lazyNamed('BursaryDashboard', () => import('./pages/Portals/BursaryDashboard'));
 
 const queryClient = new QueryClient();
@@ -195,6 +201,10 @@ function App() {
                       <Route path="research/collaborations" element={<Collaborations />} />
                       <Route path="research/faculty" element={<FacultyDirectory />} />
                       <Route path="research/faculty/:id" element={<FacultyProfile />} />
+                      <Route path="research/innovation" element={<TechnologyInnovation />} />
+                      <Route path="research/innovation/:programId" element={<TechnologyInnovationDetail />} />
+                      <Route path="research/university-projects" element={<UniversityProjects />} />
+                      <Route path="research/university-projects/:projectId" element={<UniversityProjectDetail />} />
 
                       <Route path="impact" element={<Impact />} />
                       <Route path="impact/sdg-dashboard" element={<SDGDashboard />} />
@@ -245,6 +255,8 @@ function App() {
 
                       {/* Portal routes (non-student) */}
                       <Route path="portals/login" element={<UniversalLogin />} />
+                      <Route path="portals/reset-password" element={<PasswordResetPage />} />
+                      <Route path="verify-email" element={<VerifyEmail />} />
                       <Route path="portals" element={<Portals />} />
                       <Route path="portals/applicant" element={<ApplicantPortal />} />
                       <Route path="portals/alumni" element={<ProtectedRoute allowedRoles={['alumni']}><AlumniPortal /></ProtectedRoute>} />

@@ -62,7 +62,7 @@ export const Contact = () => {
       details: ['Monday - Friday', '8:00 AM - 5:00 PM WAT'],
     },
   ];
-  const rawContactInfo = (sections?.find(s => s.section_key === 'contact_info')?.data as any[] || fallbackContactInfo);
+  const rawContactInfo = (sections?.find(s => s.section_key === 'contact_info')?.data as typeof fallbackContactInfo) || fallbackContactInfo;
   const iconByTitle: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
     'Main Campus': MapPin,
     'Address': MapPin,
@@ -87,9 +87,9 @@ export const Contact = () => {
     { name: 'Public Relations', email: 'pro@bmu.edu.ng', phone: '+234 803 123 4572' },
     { name: 'Webmaster', email: 'webmaster@bmu.edu.ng', phone: '+234 803 123 4573' },
   ];
-  const departmentContacts = (sections?.find(s => s.section_key === 'department_contacts')?.data as any[] || fallbackDepartments);
+  const departmentContacts = (sections?.find(s => s.section_key === 'department_contacts')?.data as typeof fallbackDepartments) || fallbackDepartments;
 
-  const mapData = sections?.find(s => s.section_key === 'map_coords')?.data as any[] | undefined;
+  const mapData = sections?.find(s => s.section_key === 'map_coords')?.data as { lat: number | string; lng: number | string }[] | undefined;
   const mapCenter: [number, number] = mapData?.[0]?.lat && mapData?.[0]?.lng
     ? [Number(mapData[0].lat), Number(mapData[0].lng)]
     : DEFAULT_COORDS;
@@ -101,8 +101,8 @@ export const Contact = () => {
         <meta name="description" content="Get in touch with Bayelsa Medical University. Find our campus location, phone numbers, email addresses, and office hours." />
       </Helmet>
 
-      {/* Hero - pt-[140px] to clear fixed navbar */}
-      <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      {/* Hero - pt-[180px] to clear fixed navbar */}
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
         {/* Subtle Pattern Overlay */}
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,

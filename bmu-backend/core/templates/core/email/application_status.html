@@ -1,0 +1,36 @@
+{% extends "core/email/base.html" %}
+
+{% block preheader %}Update on your application {{ application_id }}: {{ status_display }}{% endblock %}
+
+{% block heading %}{{ headline }}{% endblock %}
+
+{% block content %}
+<p style="margin:0 0 12px 0;">Dear {{ first_name }},</p>
+<p style="margin:0 0 12px 0;">{{ body }}</p>
+<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="background-color:#f9f9fa; border:1px solid #e5e4e7; border-radius:6px; margin:16px 0; font-size:14px;">
+  <tr>
+    <td style="color:#71717a; width:160px;">Application ID</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ application_id }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Programme</td>
+    <td style="color:#1E1E1E;">{{ program }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">New status</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ status_display }}</td>
+  </tr>
+  {% if matric_number %}
+  <tr>
+    <td style="color:#71717a;">Matriculation number</td>
+    <td style="color:#A51C30; font-weight:bold;">{{ matric_number }}</td>
+  </tr>
+  {% endif %}
+</table>
+{% if next_steps %}
+<p style="margin:0 0 12px 0;"><strong>Next step:</strong> {{ next_steps }}</p>
+{% endif %}
+<p style="margin:0 0 12px 0;">
+  Sign in below to view the full details of your application.
+</p>
+{% endblock %}

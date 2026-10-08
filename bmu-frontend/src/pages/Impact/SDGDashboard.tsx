@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { 
@@ -17,7 +17,8 @@ import {
   Calendar
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useSDGMetrics, usePublicDocuments } from '../../services/apiHooks';
+import { useSDGMetrics, useSDGs, usePublicDocuments } from '../../services/apiHooks';
+import type { SDGMetric } from '../../services/mockData';
 
 // Recharts imports for data visualization
 import { 
@@ -60,11 +61,13 @@ const monthlyOutreachData = [
 ];
 
 const diseaseBreakdown = [
- { name: 'Malaria', value: 45, color: '#ef4444' },
- { name: 'Hypertension', value: 25, color: '#f59e0b' },
- { name: 'Respiratory', value: 15, color: '#10b981' },
- { name: 'Diabetes', value: 10, color: '#3b82f6' },
- { name: 'Other', value: 5, color: '#6366f1' },
+  { name: 'Malaria', value: 52, color: '#ef4444' },
+  { name: 'Hypertension', value: 48, color: '#f59e0b' },
+  { name: 'Tuberculosis', value: 46, color: '#10b981' },
+  { name: 'Other Respiratory', value: 46, color: '#059669' },
+  { name: 'Diabetes', value: 39, color: '#3b82f6' },
+  { name: 'Parasitic Infections', value: 41, color: '#8b5cf6' },
+  { name: 'Eye Conditions', value: 28, color: '#6366f1' },
 ];
 
 // Chart data for SDG 4 - Education
@@ -85,8 +88,8 @@ const enrollmentData = [
 
 // Chart data for SDG 5 - Gender Equality
 const facultyGenderData = [
- { name: 'Female', value: 45, color: '#A51C30' },
- { name: 'Male', value: 55, color: '#1E1E1E' },
+  { name: 'Female', value: 52, color: '#A51C30' },
+  { name: 'Male', value: 48, color: '#1E1E1E' },
 ];
 
 const studentGenderData = [
@@ -95,29 +98,30 @@ const studentGenderData = [
 ];
 
 const leadershipGenderData = [
- { level: 'Deans', male: 6, female: 4 },
- { level: 'Heads of Dept', male: 18, female: 15 },
- { level: 'Senior Faculty', male: 35, female: 28 },
+  { level: 'Deans', male: 6, female: 4 },
+  { level: 'Heads of Dept', male: 18, female: 15 },
+  { level: 'Senior Faculty', male: 25, female: 28 },
+  { level: 'Non-Teaching Staff', male: 32, female: 70 },
 ];
 
 // Impact Map - Niger Delta Outreach Locations
 const outreachLocations = [
- { name: "Yenagoa", patients: 5000, campaigns: 12, coordinates: { x: 50, y: 45 } },
- { name: "Ogbia", patients: 3200, campaigns: 8, coordinates: { x: 65, y: 40 } },
- { name: "Sagbama", patients: 2800, campaigns: 6, coordinates: { x: 35, y: 55 } },
- { name: "Ekeremor", patients: 2100, campaigns: 5, coordinates: { x: 25, y: 70 } },
- { name: "Kolokuma/Opokuma", patients: 1900, campaigns: 4, coordinates: { x: 55, y: 50 } },
- { name: "Southern Ijaw", patients: 1600, campaigns: 4, coordinates: { x: 40, y: 75 } },
- { name: "Nembe", patients: 1400, campaigns: 3, coordinates: { x: 75, y: 35 } },
- { name: "Brass", patients: 1200, campaigns: 3, coordinates: { x: 85, y: 30 } },
+  { name: "Yenagoa", patients: 300, campaigns: 1, coordinates: { x: 50, y: 45 } },
+  { name: "Ogbia", patients: 180, campaigns: 1, coordinates: { x: 65, y: 40 } },
+  { name: "Sagbama", patients: 180, campaigns: 1, coordinates: { x: 35, y: 55 } },
+  { name: "Ekeremor", patients: 180, campaigns: 1, coordinates: { x: 25, y: 70 } },
+  { name: "Kolokuma/Opokuma", patients: 180, campaigns: 1, coordinates: { x: 55, y: 50 } },
+  { name: "Southern Ijaw", patients: 180, campaigns: 1, coordinates: { x: 40, y: 75 } },
+  { name: "Nembe", patients: 180, campaigns: 1, coordinates: { x: 75, y: 35 } },
+  { name: "Brass", patients: 180, campaigns: 1, coordinates: { x: 85, y: 30 } },
 ];
 
 // Impact Stories
 const impactStories = [
- { title: "Free Malaria Screening Camp", date: "Nov 15, 2024", location: "Ogbia LGA", patients: 450 },
- { title: "Maternal Health Workshop", date: "Oct 28, 2024", location: "Sagbama", patients: 120 },
- { title: "Diabetes Awareness Drive", date: "Oct 12, 2024", location: "Yenagoa Central", patients: 320 },
- { title: "Hypertension Screening", date: "Sep 30, 2024", location: "Ekeremor", patients: 280 },
+  { title: "Free Medical Outreach — ASPIRE Administration Anniversary", date: "Nov 15, 2024", location: "Yenagoa LGA", patients: 300 },
+  { title: "Malaria Screening & Treatment Camp", date: "Nov 15, 2024", location: "Yenagoa Central", patients: 52 },
+  { title: "Eye Health Initiative — Free Medicated Glasses", date: "Nov 15, 2024", location: "University Gate, Yenagoa", patients: 28 },
+  { title: "Tuberculosis Early Detection & Chest X-ray Drive", date: "Nov 15, 2024", location: "Yenagoa LGA", patients: 46 },
 ];
 
 // Live counter animation hook
@@ -248,7 +252,7 @@ const ImpactMap = () => {
  );
 };
 
-const MetricCard = ({ metric, color }: { metric: any; color: string }) => {
+const MetricCard = ({ metric, color }: { metric: SDGMetric; color: string }) => {
   const value = metric.current_value ?? metric.value ?? 0;
   const target = metric.target_value ?? metric.target ?? 1;
   const animatedValue = useAnimatedCounter(value, 2000);
@@ -290,6 +294,7 @@ export const SDGDashboard = () => {
   const [timeRange, setTimeRange] = useState<'month' | 'quarter' | 'year'>('month');
   
   const { data: sdgData } = useSDGMetrics();
+  const { data: sdgList } = useSDGs();
   const { data: impactReports } = usePublicDocuments('strategic');
  
  return (
@@ -300,7 +305,7 @@ export const SDGDashboard = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
@@ -346,10 +351,38 @@ export const SDGDashboard = () => {
  </motion.div>
  ))}
  </div>
- </div>
- </section>
+  </div>
+  </section>
 
- {/* Interactive Map */}
+  {/* SDG Contributions */}
+  <section className="py-16" style={{ backgroundColor: '#ffffff' }}>
+  <div className="container-custom">
+  <h2 className="text-headline text-gray-900 mb-8 text-center">Our SDG Contributions</h2>
+  {(!sdgList || sdgList.length === 0) ? (
+  <p className="text-center text-gray-500">Loading contributions…</p>
+  ) : (
+  <div className="space-y-10">
+  {sdgList.map((sdg) => (
+  <div key={sdg.id} className="border-b pb-6" style={{ borderColor: '#e5e4e7' }}>
+  <div className="flex items-center gap-3 mb-4">
+  <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: `${sdg.color}20` }}>
+  <span className="text-lg font-bold" style={{ color: sdg.color }}>SDG {sdg.number}</span>
+  </div>
+  <h3 className="text-title text-gray-900">{sdg.title}</h3>
+  </div>
+  <ul className="list-disc list-inside space-y-1 text-gray-700 text-body">
+  {sdg.contributions.map((contribution, idx) => (
+  <li key={idx}>{contribution}</li>
+  ))}
+  </ul>
+  </div>
+  ))}
+  </div>
+  )}
+  </div>
+  </section>
+
+  {/* Interactive Map */}
  <section className="py-16" style={{ backgroundColor: '#f8f9fa' }}>
  <div className="container-custom">
  <div className="text-center mb-8">
@@ -402,7 +435,7 @@ export const SDGDashboard = () => {
 
         {/* Live Counters */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {sdgData?.sdg3?.metrics?.map((metric: any, idx: number) => (
+          {sdgData?.sdg3?.metrics?.map((metric, idx) => (
             <MetricCard key={idx} metric={metric} color="#4c9f38" />
           ))}
         </div>
@@ -515,7 +548,7 @@ export const SDGDashboard = () => {
         <div className="mt-8 bg-white p-6 shadow-sm">
           <h3 className="text-title text-gray-900 mb-4">Progress Toward SDG 3 Targets</h3>
           <div className="space-y-4">
-            {sdgData?.sdg3?.metrics?.map((m: any, idx: number) => {
+            {sdgData?.sdg3?.metrics?.map((m, idx) => {
               const val = m.current_value ?? m.value ?? 0;
               const tgt = m.target_value ?? m.target ?? 1;
               const pct = Math.min(100, (val / (tgt || 1)) * 100);
@@ -553,7 +586,7 @@ export const SDGDashboard = () => {
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {sdgData?.sdg4?.metrics?.map((metric: any, idx: number) => (
+          {sdgData?.sdg4?.metrics?.map((metric, idx) => (
             <MetricCard key={idx} metric={metric} color="#c5192d" />
           ))}
         </div>
@@ -612,7 +645,7 @@ export const SDGDashboard = () => {
   {/* Dynamic Metrics from API */}
   {sdgData?.sdg5?.metrics && sdgData.sdg5.metrics.length > 0 && (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      {sdgData.sdg5.metrics.map((metric: any, idx: number) => (
+      {sdgData.sdg5.metrics.map((metric, idx) => (
         <MetricCard key={idx} metric={metric} color="#ff3a21" />
       ))}
     </div>
@@ -699,30 +732,45 @@ export const SDGDashboard = () => {
  </div>
  </div>
 
- {/* Gender Initiatives */}
- <div className="mt-8 bg-white p-6 shadow-sm">
- <h3 className="text-title text-gray-900 mb-4">Gender Equality Initiatives</h3>
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
- {[
- { title: "Women in STEM", desc: "Scholarships & mentorship for women in medicine" },
- { title: "Safe Campus Policy", desc: "Zero tolerance for gender-based violence" },
- { title: "Equal Pay Policy", desc: "Gender-neutral compensation framework" },
- { title: "Women's Leadership", desc: "Development programs for female faculty" }
- ].map((initiative, idx) => (
- <motion.div
- key={idx}
- initial={{ opacity: 0, y: 10 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ delay: idx * 0.1 }}
- className="bg-gray-50 p-4"
- >
- <h4 className="font-semibold text-[#ff3a21] mb-1">{initiative.title}</h4>
-  <p className="text-small text-gray-800">{initiative.desc}</p>
- </motion.div>
- ))}
- </div>
- </div>
+  {/* Gender Initiatives — from SDG 5 contributions */}
+  <div className="mt-8 bg-white p-6 shadow-sm">
+  <h3 className="text-title text-gray-900 mb-4">Gender Equality Initiatives</h3>
+  {(() => {
+  const sdg5 = sdgList?.find(s => s.number === 5);
+  const contributions = sdg5?.contributions ?? [];
+  const items = contributions.length > 0
+    ? contributions
+    : [
+      "Women in STEM scholarship and mentorship programmes support female students in medicine, pharmacy, and dentistry.",
+      "Zero-tolerance policy on gender-based violence fully implemented across all campuses.",
+      "Equal Pay Policy ensures gender-neutral compensation across all staff categories.",
+      "Women's Leadership Development Programme provides mentorship and advancement opportunities for female faculty and staff.",
+    ];
+  const initiativeLabels = [
+    "Women in STEM",
+    "Safe Campus Policy",
+    "Equal Pay Policy",
+    "Women's Leadership",
+  ];
+  return (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  {items.map((initiative: string, idx: number) => (
+  <motion.div
+  key={idx}
+  initial={{ opacity: 0, y: 10 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ delay: idx * 0.1 }}
+  className="bg-gray-50 p-4"
+  >
+  <h4 className="font-semibold text-[#ff3a21] mb-1">{initiativeLabels[idx] || `Initiative ${idx + 1}`}</h4>
+   <p className="text-small text-gray-800">{initiative}</p>
+  </motion.div>
+  ))}
+  </div>
+  );
+  })()}
+  </div>
  </div>
  </section>
  )}

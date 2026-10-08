@@ -35,7 +35,7 @@ export const LeaderProfile = () => {
 
   if (isLoading) {
     return (
-      <section className="pt-[140px] min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1E1E1E' }}>
         <div className="text-white text-center">
           <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
           <p>Loading profile...</p>
@@ -50,7 +50,7 @@ export const LeaderProfile = () => {
         <Helmet>
           <title>Profile Not Found | Bayelsa Medical University</title>
         </Helmet>
-        <section className="pt-[140px] min-h-screen" style={{ backgroundColor: '#1E1E1E' }}>
+        <section className="pt-[180px] min-h-screen" style={{ backgroundColor: '#1E1E1E' }}>
           <div className="container-custom text-center py-20">
             <h1 className="text-3xl font-bold text-white mb-4">Profile Not Found</h1>
             <p className="text-white/70 mb-8">The leadership profile you're looking for does not exist.</p>
@@ -75,7 +75,7 @@ export const LeaderProfile = () => {
         <meta name="description" content={`${leader.full_name} - ${leader.position_display}`} />
       </Helmet>
 
-      <section className="pt-[140px] pb-16" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] pb-16" style={{ backgroundColor: '#1E1E1E' }}>
         <div className="container-custom">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-2 text-white/60 text-sm mb-6">

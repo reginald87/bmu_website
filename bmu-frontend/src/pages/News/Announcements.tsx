@@ -13,7 +13,8 @@ import {
   AlertTriangle,
   Info,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
+  type LucideIcon
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
 
@@ -149,7 +150,7 @@ const categories = [
   { id: 'Health', label: 'Health' }
 ];
 
-const priorityConfig: Record<string, { color: string; bg: string; icon: any }> = {
+const priorityConfig: Record<string, { color: string; bg: string; icon: LucideIcon }> = {
   high: { color: 'text-red-600', bg: 'bg-red-50', icon: AlertTriangle },
   medium: { color: 'text-amber-600', bg: 'bg-amber-50', icon: Info },
   low: { color: 'text-green-600', bg: 'bg-green-50', icon: CheckCircle }
@@ -201,7 +202,7 @@ export const Announcements = () => {
   return (
   <><Helmet><title>Official Announcements | Bayelsa Medical University</title><meta name="description"content="Official announcements for students, staff, and the BMU community."/></Helmet><div className="min-h-screen bg-gray-50">
   {/* Hero */}
-  <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
   }} /><div className="container-custom relative z-10"><motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}><div className="flex items-center gap-2 text-white/60 text-sm mb-6"><Link to="/" className="text-white transition">Home</Link><span>/</span><Link to="/news" className="text-white transition">News</Link><span>/</span><span className="text-white font-medium">Announcements</span></div><h1 className="text-display text-white mb-6">
   Official <span className="text-[#A51C30]">Announcements</span></h1><p className="text-lead text-white/80 max-w-2xl">

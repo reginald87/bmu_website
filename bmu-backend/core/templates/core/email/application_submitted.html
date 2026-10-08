@@ -1,0 +1,31 @@
+{% extends "core/email/base.html" %}
+
+{% block preheader %}We have received your application {{ application_id }}.{% endblock %}
+
+{% block heading %}Application received{% endblock %}
+
+{% block content %}
+<p style="margin:0 0 12px 0;">Dear {{ first_name }},</p>
+<p style="margin:0 0 12px 0;">
+  Thank you for applying to {{ university_name|default:"Bayelsa Medical University" }}.
+  We have received your application and it has been submitted for review.
+</p>
+<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="background-color:#f9f9fa; border:1px solid #e5e4e7; border-radius:6px; margin:16px 0; font-size:14px;">
+  <tr>
+    <td style="color:#71717a; width:160px;">Application ID</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ application_id }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Programme</td>
+    <td style="color:#1E1E1E;">{{ program }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Status</td>
+    <td style="color:#1E1E1E;">{{ status_display }}</td>
+  </tr>
+</table>
+<p style="margin:0 0 12px 0;">
+  Keep your application ID safe — you will need it to check your admission status at any time.
+  We will notify you by email whenever your application status changes.
+</p>
+{% endblock %}

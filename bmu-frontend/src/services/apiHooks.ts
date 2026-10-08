@@ -12,8 +12,9 @@ import {
   fetchFaculties,
   fetchPrograms,
   fetchProgramBySlug,
-  fetchSDGMetrics,
-  fetchResearchCenters,
+   fetchSDGMetrics,
+   fetchSDGs,
+   fetchResearchCenters,
   fetchPublications,
   fetchResearchGrants,
   fetchLeadership,
@@ -28,6 +29,10 @@ import {
   fetchFundingOrganizations,
   fetchFundedProjects,
   fetchFundingStats,
+  fetchInnovationPrograms,
+  fetchInnovationProgramById,
+  fetchUniversityProjects,
+  fetchUniversityProjectById,
   submitContactEnquiry,
   submitApplication,
   checkApplicationStatus,
@@ -46,7 +51,8 @@ import {
   fetchCampusStats,
   fetchCampusTestimonials,
   fetchCampusContact,
-  fetchCampusImages,
+   fetchCampusImages,
+  fetchCampusGallery,
   fetchCampusVideo,
   fetchContactInfo,
   fetchJobs,
@@ -175,6 +181,14 @@ export function useSDGMetrics() {
   return useQuery({
     queryKey: ['sdgMetrics'],
     queryFn: fetchSDGMetrics,
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useSDGs() {
+  return useQuery({
+    queryKey: ['sdgs'],
+    queryFn: fetchSDGs,
     staleTime: 10 * 60 * 1000,
   });
 }
@@ -404,6 +418,38 @@ export function useFundedProjects() {
   });
 }
 
+export function useInnovationPrograms() {
+  return useQuery({
+    queryKey: ['innovationPrograms'],
+    queryFn: () => fetchInnovationPrograms(),
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useInnovationProgram(programId: number) {
+  return useQuery({
+    queryKey: ['innovationProgram', programId],
+    queryFn: () => fetchInnovationProgramById(programId),
+    enabled: !!programId,
+  });
+}
+
+export function useUniversityProjects() {
+  return useQuery({
+    queryKey: ['universityProjects'],
+    queryFn: () => fetchUniversityProjects(),
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useUniversityProject(projectId: number) {
+  return useQuery({
+    queryKey: ['universityProject', projectId],
+    queryFn: () => fetchUniversityProjectById(projectId),
+    enabled: !!projectId,
+  });
+}
+
 export function useFundingStats() {
   return useQuery({
     queryKey: ['fundingStats'],
@@ -573,6 +619,14 @@ export function useCampusImages() {
   return useQuery({
     queryKey: ['campusImages'],
     queryFn: fetchCampusImages,
+    staleTime: 10 * 60 * 1000,
+  });
+}
+
+export function useCampusGallery() {
+  return useQuery({
+    queryKey: ['campusGallery'],
+    queryFn: fetchCampusGallery,
     staleTime: 10 * 60 * 1000,
   });
 }

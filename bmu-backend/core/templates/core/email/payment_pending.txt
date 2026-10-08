@@ -1,0 +1,15 @@
+Dear {{ first_name }},
+
+We have recorded the details of your bank deposit payment for the application fee.
+
+Application ID: {{ application_id }}
+Amount: {{ currency }} {{ amount }}
+Payment method: {{ payment_method }}
+Reference: {{ payment_reference }}
+Status: Pending confirmation
+
+Your payment is pending confirmation by the Bursary. Once verified, your application
+will be submitted automatically and you will receive another email.
+
+This is an automated message from {{ university_name|default:"Bayelsa Medical University" }}.
+Please do not reply to this email.

@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.99.0",
     "axios": "^1.15.0",
+    "dompurify": "^3.4.16",
     "framer-motion": "^12.38.0",
     "html5-qrcode": "^2.3.8",
     "i18next": "^26.0.5",

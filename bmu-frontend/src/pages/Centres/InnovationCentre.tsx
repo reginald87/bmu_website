@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { usePageSections } from '../../services/apiHooks';
 
@@ -38,9 +38,9 @@ const fallbackPartners = ['Microsoft', 'Google Health', 'IBM Research', 'NITDA',
 
 export const InnovationCentre = () => {
  const { data: sections } = usePageSections('centres/innovation');
- const innovationPillars = (sections?.find(s => s.section_key === 'innovation_pillars')?.data as any[] || fallbackPillars);
- const facilities = (sections?.find(s => s.section_key === 'facilities')?.data as any[] || fallbackFacilities);
- const partners = (sections?.find(s => s.section_key === 'partners')?.data as any[] || fallbackPartners);
+ const innovationPillars = (sections?.find(s => s.section_key === 'innovation_pillars')?.data as typeof fallbackPillars) || fallbackPillars;
+ const facilities = (sections?.find(s => s.section_key === 'facilities')?.data as typeof fallbackFacilities) || fallbackFacilities;
+ const partners = (sections?.find(s => s.section_key === 'partners')?.data as typeof fallbackPartners) || fallbackPartners;
  return (
  <>
  <Helmet>

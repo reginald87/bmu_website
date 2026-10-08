@@ -107,6 +107,8 @@ export const megaGroups: Record<string, MegaGroup> = {
           { key: 'megaMenu.research_link3', to: '/research/centers' },
           { key: 'megaMenu.research_link5', to: '/research/funding' },
           { key: 'megaMenu.research_link6', to: '/research/collaborations' },
+          { key: 'nav.research_innovation', to: '/research/innovation' },
+          { key: 'nav.research_universityProjects', to: '/research/university-projects' },
         ],
       },
     ],

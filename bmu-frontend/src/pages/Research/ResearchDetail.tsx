@@ -1,4 +1,4 @@
-﻿import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
@@ -144,7 +144,7 @@ export const ResearchDetail = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="pt-[140px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="pt-[180px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
  <div className="container-custom">
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
  <Link to="/research" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6">

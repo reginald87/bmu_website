@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
   DollarSign, 
@@ -52,7 +52,7 @@ export const ResearchFunding = () => {
     { step: 4, title: 'Review Process', desc: 'Applications reviewed by expert panels, results within 6 weeks' }
   ];
 
-  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as any[] || fallbackApplicationSteps);
+  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as typeof fallbackApplicationSteps) || fallbackApplicationSteps;
 
   const stats = useMemo(() => {
     const activeGrants = grants.filter(g => g.status === 'active').length;
@@ -74,7 +74,7 @@ export const ResearchFunding = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />

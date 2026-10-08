@@ -2,6 +2,7 @@
 Django Ninja API for Accounts and Alumni
 """
 from ninja import Router, Schema, Field
+from ninja.errors import HttpError
 from ninja.files import UploadedFile
 from typing import List, Optional
 from django.shortcuts import get_object_or_404
@@ -146,7 +147,24 @@ def register(request, data: UserCreateSchema):
     
     # Link any existing applications with matching email to this user
     _link_applications_by_email(user)
-    
+
+    # Send verification email (failure never breaks registration)
+    try:
+        from django.contrib.auth.tokens import default_token_generator
+        from django.utils.http import urlsafe_base64_encode
+        from django.utils.encoding import force_bytes
+        from .emails import send_verification_email
+        send_verification_email(
+            user,
+            urlsafe_base64_encode(force_bytes(user.pk)),
+            default_token_generator.make_token(user),
+        )
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception(
+            'Verification email failed for user %s', user.pk
+        )
+
     return user
 
 
@@ -156,11 +174,11 @@ def login(request, data: LoginSchema):
     try:
         user = User.objects.get(email=data.email)
     except User.DoesNotExist:
-        return {"error": "Invalid credentials"}
-    
+        raise HttpError(401, "Invalid credentials")
+
     user = authenticate(username=user.username, password=data.password)
     if not user or not user.is_active:
-        return {"error": "Invalid credentials"}
+        raise HttpError(401, "Invalid credentials")
     
     # Link any existing applications with matching email to this user
     _link_applications_by_email(user)
@@ -203,11 +221,13 @@ def change_password(request, data: PasswordChangeSchema):
     """Change user password"""
     user = request.user
     if not user.check_password(data.old_password):
-        return {"error": "Current password is incorrect"}
+        raise HttpError(400, "Current password is incorrect")
     
     user.set_password(data.new_password)
     user.save()
-    
+    from core.tokens import blacklist_user_refresh_tokens
+    blacklist_user_refresh_tokens(user)
+
     UserActivity.objects.create(
         user=user,
         action='password_change',
@@ -228,10 +248,10 @@ def list_notifications(request, unread_only: bool = False):
 @router.post("/notifications/{id}/read")
 def mark_notification_read(request, id: int):
     """Mark notification as read"""
-    from datetime import datetime
+    from django.utils import timezone
     notification = get_object_or_404(Notification, id=id, user=request.user)
     notification.is_read = True
-    notification.read_at = datetime.now()
+    notification.read_at = timezone.now()
     notification.save()
     return {"message": "Notification marked as read"}
 

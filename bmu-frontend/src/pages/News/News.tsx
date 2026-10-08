@@ -182,13 +182,13 @@ export const News = () => {
             slug: String(item.slug || ''),
             title: String(item.title || ''),
             excerpt: String(item.excerpt || ''),
-            category: (item as any).category_display || String(item.category || ''),
-            type: (item as any).type || 'news',
+            category: typeof item.category_display === 'string' && item.category_display ? item.category_display : String(item.category || ''),
+            type: typeof item.type === 'string' && item.type ? item.type : 'news',
             author: String(item.author || ''),
-            date: (item as any).published_at ? (item as any).published_at.split('T')[0] : '',
+            date: typeof item.published_at === 'string' ? item.published_at.split('T')[0] : '',
             readTime: '3 min',
-            image: (item as any).featured_image || '',
-            featured: !!(item as any).is_featured,
+            image: typeof item.featured_image === 'string' ? item.featured_image : '',
+            featured: Boolean(item.is_featured),
             tags: [],
           }));
         }
@@ -224,7 +224,7 @@ export const News = () => {
   return (
     <><Helmet><title>Latest News | Bayelsa Medical University</title><meta name="description"content="Stay updated with the latest news, announcements, and achievements from Bayelsa Medical University."/></Helmet><div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
       }} /><div className="container-custom relative z-10"><motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}><div className="flex items-center gap-2 text-white/60 text-sm mb-6"><Link to="/" className="hover:text-white transition">Home</Link><span>/</span><span className="text-white font-medium">News</span></div><h1 className="text-display text-white mb-6">
         Latest <span className="text-[#A51C30]">News</span></h1><p className="text-lead text-white/80 max-w-2xl">

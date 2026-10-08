@@ -173,7 +173,7 @@ export const PastEvents = () => {
  return (
   <><Helmet><title>Past Events Archive | Bayelsa Medical University</title><meta name="description"content="Browse our archive of past conferences, workshops, ceremonies, and community programs."/></Helmet><div className="min-h-screen bg-gray-50">
   {/* Hero */}
-  <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
   }} /><div className="container-custom relative z-10"><motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}><div className="flex items-center gap-2 text-white/60 text-sm mb-6"><Link to="/" className="hover:text-white transition">Home</Link><span>/</span><Link to="/events" className="hover:text-white transition">Events</Link><span>/</span><span className="text-white font-medium">Past Events</span></div><Link to="/events" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition"><ArrowLeft className="w-4 h-4"/> Back to Events
   </Link><h1 className="text-display text-white mb-6">

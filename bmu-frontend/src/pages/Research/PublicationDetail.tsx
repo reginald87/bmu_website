@@ -1,4 +1,4 @@
-﻿import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
@@ -27,7 +27,7 @@ export const PublicationDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="pt-[140px] pb-20 text-center">
+      <div className="pt-[180px] pb-20 text-center">
         <div className="animate-spin w-8 h-8 border-4 border-[#A51C30] border-t-transparent mx-auto" />
       </div>
     );
@@ -70,7 +70,7 @@ export const PublicationDetail = () => {
  </Helmet>
 
  {/* Hero Section */}
- <section className="pt-[140px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
+ <section className="pt-[180px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
  <div className="container-custom">
  <motion.div
  initial={{ opacity: 0, y: 20 }}

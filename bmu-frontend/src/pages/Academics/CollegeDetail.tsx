@@ -223,7 +223,7 @@ export const CollegeDetail = () => {
 
       {/* Hero Section */}
       <section
-        className="relative pt-[140px] pb-20 overflow-hidden"
+        className="relative pt-[180px] pb-20 overflow-hidden"
         style={{ backgroundColor: primaryColor }}
       >
         <div className="absolute inset-0 opacity-5" style={{

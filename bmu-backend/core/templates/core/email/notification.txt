@@ -1,0 +1,14 @@
+Dear {{ name }},
+
+{{ body }}{% if details %}
+
+Details:
+{% for row in details %}- {{ row.label }}: {{ row.value }}
+{% endfor %}{% endif %}{% if next_steps %}
+
+Next step: {{ next_steps }}{% endif %}{% if action_url %}
+
+{{ action_label|default:"Open your portal" }}: {{ action_url }}{% endif %}
+
+This is an automated message from {{ university_name|default:"Bayelsa Medical University" }}.
+Please do not reply to this email. For enquiries, contact the Student Affairs office.

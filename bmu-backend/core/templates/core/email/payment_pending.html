@@ -1,0 +1,38 @@
+{% extends "core/email/base.html" %}
+
+{% block preheader %}Bank deposit recorded for application {{ application_id }} — pending confirmation.{% endblock %}
+
+{% block heading %}Deposit recorded{% endblock %}
+
+{% block content %}
+<p style="margin:0 0 12px 0;">Dear {{ first_name }},</p>
+<p style="margin:0 0 12px 0;">
+  We have recorded the details of your bank deposit payment for the application fee.
+</p>
+<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="background-color:#f9f9fa; border:1px solid #e5e4e7; border-radius:6px; margin:16px 0; font-size:14px;">
+  <tr>
+    <td style="color:#71717a; width:160px;">Application ID</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ application_id }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Amount</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ currency }} {{ amount }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Payment method</td>
+    <td style="color:#1E1E1E;">{{ payment_method }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Reference</td>
+    <td style="color:#1E1E1E;">{{ payment_reference }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Status</td>
+    <td style="color:#1E1E1E; font-weight:bold;">Pending confirmation</td>
+  </tr>
+</table>
+<p style="margin:0 0 12px 0;">
+  Your payment is <strong>pending confirmation</strong> by the Bursary. Once verified,
+  your application will be submitted automatically and you will receive another email.
+</p>
+{% endblock %}

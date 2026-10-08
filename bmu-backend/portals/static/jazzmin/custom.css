@@ -1,0 +1,138 @@
+/* ===========================================================================
+   BMU Brand Custom CSS for Jazzmin Admin
+   Brand colours:
+     Dark:      #1E1E1E  (primary text / sidebar background)
+     Brand Red: #A51C30  (accent / buttons / links)
+     SDG Green: #4c9f38  (success / positive indicators)
+     SDG Orange: #ff3a21 (warning / highlights)
+   =========================================================================== */
+
+/* Override Bootstrap primary colour to BMU brand red */
+:root {
+  --bs-primary: #A51C30;
+  --bs-primary-rgb: 165, 28, 48;
+  --bs-primary-hover: #8a1626;
+  --bs-primary-rgb-hover: 138, 22, 38;
+}
+
+/* Sidebar — dark theme with brand red accents */
+.sidebar-dark {
+  background-color: #1E1E1E;
+}
+
+.sidebar-dark .nav-link {
+  color: #f0f0f0;
+}
+
+.sidebar-dark .nav-link:hover {
+  color: #ffffff;
+}
+
+.sidebar-dark .nav-link.active {
+  color: #A51C30;
+  background-color: rgba(165, 28, 48, 0.15);
+}
+
+.sidebar-dark .nav-link:not(.active) > .nav-icon {
+  color: #c0c0c0;
+}
+
+.sidebar-dark .nav-link.active > .nav-icon {
+  color: #A51C30;
+}
+
+.sidebar-dark .user-panel .image img,
+.sidebar-dark .user-panel .info a {
+  color: #f0f0f0;
+}
+
+/* Brand / navbar */
+.navbar-dark .navbar-brand {
+  color: #A51C30;
+  font-weight: 700;
+}
+
+/* Top navbar */
+.navbar.navbar-white {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e4e7;
+}
+
+.navbar .nav-link {
+  color: #1E1E1E;
+}
+
+/* Buttons — primary uses brand red */
+.btn-primary {
+  background-color: #A51C30;
+  border-color: #A51C30;
+}
+
+.btn-primary:hover {
+  background-color: #8a1626;
+  border-color: #8a1626;
+}
+
+.btn-success {
+  background-color: #4c9f38;
+  border-color: #4c9f38;
+}
+
+.btn-success:hover {
+  background-color: #3a7d2b;
+  border-color: #3a7d2b;
+}
+
+/* Links */
+.text-primary, .text-primary-emphasis {
+  color: #A51C30 !important;
+}
+
+/* Tables — striped with subtle brand hint */
+.table-striped > tbody > tr:nth-child(odd) {
+  background-color: rgba(255, 58, 33, 0.03);
+}
+
+.table-striped > tbody > tr:hover {
+  background-color: rgba(165, 28, 48, 0.05);
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+  background-color: transparent;
+}
+
+/* Cards / widgets */
+.card {
+  border: 1px solid #e5e4e7;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Footer */
+.footer {
+  background-color: #ffffff;
+  border-top: 1px solid #e5e4e7;
+  color: #1E1E1E;
+}
+
+/* Progress bars */
+.progress-bar.bg-primary {
+  background-color: #A51C30 !important;
+}
+
+.progress-bar.bg-success {
+  background-color: #4c9f38 !important;
+}
+
+/* Alerts */
+.alert-primary {
+  background-color: rgba(165, 28, 48, 0.1);
+  border-color: #A51C30;
+  color: #1E1E1E;
+}
+
+.alert-success {
+  background-color: rgba(76, 159, 56, 0.1);
+  border-color: #4c9f38;
+  color: #1E1E1E;
+}

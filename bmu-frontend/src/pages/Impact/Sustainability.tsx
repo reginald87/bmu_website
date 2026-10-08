@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
   Leaf,
@@ -12,9 +12,9 @@ import {
   Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useImpactPrograms } from '../../services/apiHooks';
+import { useImpactPrograms, usePageSections } from '../../services/apiHooks';
 
-const carbonTargets = [
+const fallbackCarbonTargets = [
   { year: '2020', baseline: '100%', reduction: '0%' },
   { year: '2024', baseline: '60%', reduction: '40%' },
   { year: '2028', baseline: '35%', reduction: '65%' },
@@ -22,7 +22,7 @@ const carbonTargets = [
   { year: '2040', baseline: '0%', reduction: '100%' }
 ];
 
-const researchAreas = [
+const fallbackResearchAreas = [
   'Climate change health impacts in the Niger Delta',
   'Renewable energy solutions for healthcare facilities',
   'Environmental health monitoring systems',
@@ -47,7 +47,14 @@ const statLabels: Record<string, string> = {
 
 export const Sustainability = () => {
   const { data: programs, isLoading } = useImpactPrograms('environment');
+  const { data: sections = [] } = usePageSections('sustainability');
   const program = programs?.[0];
+
+  const getSection = (key: string) => sections.find(s => s.section_key === key);
+  const ctData = getSection('carbon_targets')?.data;
+  const carbonTargets = Array.isArray(ctData) && ctData.length ? ctData : fallbackCarbonTargets;
+  const raData = getSection('research_areas')?.data;
+  const researchAreas = Array.isArray(raData) && raData.length ? raData : fallbackResearchAreas;
 
   if (isLoading) {
     return (
@@ -65,7 +72,7 @@ export const Sustainability = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#A51C30' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#A51C30' }}>
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />

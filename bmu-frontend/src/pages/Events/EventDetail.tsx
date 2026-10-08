@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { sanitizeHtml } from '../../utils/sanitize';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
@@ -21,7 +22,6 @@ import {
 } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { EventRegistrationModal } from '../../components/events/EventRegistrationModal';
-import type { EventData } from '../../services/mockData';
 
 interface EventOrganizer {
   name: string;
@@ -284,7 +284,7 @@ export const EventDetail = () => {
   </div><button onClick={() => setIsBookmarked(!isBookmarked)} className="p-2 bg-gray-100 transition"><Bookmark className={`w-5 h-5 ${isBookmarked ? 'text-[#1E1E1E] fill-[#1E1E1E]' : 'text-gray-600'}`} /></button><button onClick={handlePrint} className="p-2 bg-gray-100 transition"><Printer className="w-5 h-5 text-gray-600"/></button></div></div></div></div>
 
  {/* Hero */}
- <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} /><div className="container-custom relative z-10"><motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}><div className="flex items-center gap-2 text-white/60 text-sm mb-6"><Link to="/" className="text-white transition">Home</Link><span>/</span><Link to="/events" className="text-white transition">Events</Link><span>/</span><span className="text-white font-medium">Event Details</span></div><div className="flex items-center gap-3 mb-6"><span className="px-3 py-1 text-sm font-medium bg-white/20">
   {event.category}
@@ -320,7 +320,7 @@ export const EventDetail = () => {
   animate={{ opacity: 1, y: 0 }}
   transition={{ delay: 0.1 }}
   className="bg-white p-8 shadow-sm"><h2 className="text-2xl font-bold text-gray-900 mb-4">About This Event</h2><div
-  className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-a:text-[#1E1E1E] prose-strong:text-gray-900 prose-ul:text-gray-700"dangerouslySetInnerHTML={{ __html: event.longDescription }}
+  className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-a:text-[#1E1E1E] prose-strong:text-gray-900 prose-ul:text-gray-700"dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.longDescription) }}
   /></motion.div>
 
  {/* Agenda */}
@@ -421,9 +421,26 @@ export const EventDetail = () => {
       {showRegistrationModal && (
         <EventRegistrationModal
           event={{
-            ...(event as any),
+            id: event.id,
+            slug: event.slug,
+            title: event.title,
+            description: event.description,
+            event_date: event.date,
+            start_time: event.time,
+            end_time: event.endDate ?? null,
+            event_type: event.type || 'other',
+            event_type_display: event.type || '',
+            category: event.category,
+            category_display: event.category,
+            location: event.venue || event.location,
+            featured_image: event.image || null,
+            registration_open: event.registrationOpen,
+            registered_count: event.attendees ?? 0,
+            max_attendees: event.maxAttendees ?? null,
+            is_featured: event.featured ?? false,
             fee: event.fee || (event.price ? parseNumericFee(event.price) : null),
-          } as EventData}
+            currency: 'NGN',
+          }}
           onClose={() => setShowRegistrationModal(false)}
         />
       )}

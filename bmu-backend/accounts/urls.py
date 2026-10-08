@@ -6,6 +6,7 @@ urlpatterns = [
     path('register/', views.UserRegistrationView.as_view(), name='user-register'),
     path('login/', views.login_view, name='user-login'),
     path('logout/', views.logout_view_html, name='user-logout'),
+    path('verify-email/', views.verify_email, name='verify-email'),
     
     # Profile
     path('profile/', views.UserProfileView.as_view(), name='user-profile'),
@@ -14,6 +15,7 @@ urlpatterns = [
     # Password
     path('password/change/', views.ChangePasswordView.as_view(), name='password-change'),
     path('password/reset/', views.PasswordResetRequestView.as_view(), name='password-reset-request'),
+    path('password/reset/confirm/', views.PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
     
     # Activity & Notifications
     path('activities/', views.UserActivityListView.as_view(), name='user-activities'),

@@ -429,6 +429,12 @@ class GpaService:
             result_status__in=['senate_approved', 'published'],
         ).update(is_published=True, result_status='published')
 
+        try:
+            from .emails import notify_results_published
+            notify_results_published(student, session, semester, gpa)
+        except Exception:
+            pass
+
         return result
 
 

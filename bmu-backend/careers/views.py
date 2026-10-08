@@ -70,6 +70,24 @@ class JobApplicationCreateView(generics.CreateAPIView):
         job.applications_count += 1
         job.save(update_fields=['applications_count'])
         
+        from core.email import send_templated_email
+        send_templated_email(
+            subject=f'Application received — {job.title}',
+            template='acknowledgement',
+            context={
+                'university_name': 'Bayelsa Medical University',
+                'name': application.first_name,
+                'heading': 'Your application has been received',
+                'body': (f'Thank you for applying for the position of {job.title}. '
+                         'We have received your application and will review it; '
+                         'shortlisted candidates will be contacted directly.'),
+                'reference': f'JOB-{application.id:05d}',
+                'subject_line': job.title,
+                'contact_email': 'careers@bmu.edu.ng',
+            },
+            recipient_list=[application.email],
+        )
+        
         return application
 
 

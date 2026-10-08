@@ -84,8 +84,8 @@ export const About = () => {
         <meta name="description" content="Bayelsa Medical University (BMU) is a premier institution dedicated to excellence in healthcare education, research, and community service in Nigeria." />
       </Helmet>
 
-      {/* Hero Section - pt-[140px] to clear fixed navbar */}
-      <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      {/* Hero Section - pt-[180px] to clear fixed navbar */}
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
         {/* Subtle Pattern Overlay */}
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,

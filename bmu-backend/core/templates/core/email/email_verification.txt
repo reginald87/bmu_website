@@ -1,0 +1,8 @@
+{{ university_name|default:"Bayelsa Medical University" }}
+
+Dear {{ first_name }},
+
+Thank you for registering with {{ university_name|default:"Bayelsa Medical University" }}.
+Please confirm that {{ email }} is your email address by visiting:
+
+{{ verify_url }}

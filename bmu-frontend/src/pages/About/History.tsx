@@ -153,8 +153,8 @@ export const History = () => {
                   ))}
                 </div>
               ) : introImage ? (
-                <div className="bg-gray-100 overflow-hidden">
-                  <img src={introImage} alt={introImageCaption} className="w-full aspect-video object-cover" />
+                <div className="w-full overflow-hidden">
+                  <img src={introImage} alt={introImageCaption} className="w-full h-[480px] object-cover object-top" />
                 </div>
               ) : (
                 <div className="bg-gray-100 aspect-video flex items-center justify-center">

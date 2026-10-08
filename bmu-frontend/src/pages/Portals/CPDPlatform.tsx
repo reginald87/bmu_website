@@ -121,7 +121,7 @@ const CPDLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[140px] pb-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[180px] pb-12 px-4">
       <div className="max-w-md mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -209,7 +209,7 @@ const CPDDashboard = () => {
   const progressPercentage = (cpdUserData.totalHours / cpdUserData.requiredHours) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-[140px]">
+    <div className="min-h-screen bg-gray-50 pt-[180px]">
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-40">
         <div className="container-custom py-4">

@@ -1,13 +1,17 @@
 from django.contrib import admin
 from django import forms
 from django.utils.html import format_html
+from django.conf import settings
+from django.utils import timezone
+from core.email import send_templated_email
 from .models import (
     NewsItem, Event, PageContent, Testimonial, Partner, FAQ, ContactEnquiry,
     PublicDocument, GalleryImage, HeroSlide, SDG, ImpactProgram,
     InternationalPartner, MOUAgreement, ExchangeProgram, StudentSupportService,
     UniversityRanking, KeyMetric, EventRegistration,
-    CampusFeature, CampusStat, CampusTestimonial, CampusContactInfo, CampusImage, CampusVideo,
+    CampusFeature, CampusStat, CampusTestimonial, CampusContactInfo, CampusImage, CampusVideo, CampusGalleryImage,
     FundingOrganization, FundedProject, FundedProjectImage,
+    InnovationProgram, InnovationProgramImage, UniversityProject, UniversityProjectImage,
     AboutPage, AboutStat, AboutCoreValue,
     HistoryPage, HistoryIntroImage, TimelineEvent,
     VisionMissionPage, VisionMissionPillar, VisionMissionValue,
@@ -96,6 +100,43 @@ class ContactEnquiryAdmin(admin.ModelAdmin):
             'classes': ['collapse']
         }),
     ]
+
+    def save_model(self, request, obj, form, change):
+        obj.full_clean()
+        old = None
+        if change and obj.pk:
+            try:
+                old = type(obj).objects.get(pk=obj.pk)
+            except type(obj).DoesNotExist:
+                old = None
+        super().save_model(request, obj, form, change)
+        if change and old is not None and old.status != obj.status and obj.status == 'responded':
+            obj.responded_at = timezone.now()
+            type(obj).objects.filter(pk=obj.pk).update(responded_at=obj.responded_at)
+            try:
+                send_templated_email(
+                    subject=f'Re: {obj.subject}',
+                    template='notification',
+                    context={
+                        'name': obj.name,
+                        'heading': 'We Have Responded',
+                        'body': (obj.response_message
+                                 or 'Thank you for contacting Bayelsa Medical University. '
+                                     'Your enquiry has been reviewed and addressed by our team.'),
+                        'details': [
+                            {'label': 'Subject', 'value': obj.subject},
+                            {'label': 'Your message', 'value': obj.message},
+                            {'label': 'Our response', 'value': obj.response_message or 'See details above'},
+                        ],
+                        'preheader': 'Your enquiry has been responded to',
+                        'action_url': (getattr(settings, 'FRONTEND_URL', 'https://bmu.edu.ng')
+                                       or 'https://bmu.edu.ng') + '/contact',
+                        'action_label': 'Contact us',
+                    },
+                    recipient_list=[obj.email],
+                )
+            except Exception:
+                pass
 
 
 @admin.register(PublicDocument)
@@ -298,6 +339,21 @@ class CampusContactInfoAdmin(admin.ModelAdmin):
     list_display = ['address', 'phone', 'email', 'office_hours']
 
 
+@admin.register(CampusGalleryImage)
+class CampusGalleryImageAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'image_tag', 'display_order', 'is_active']
+    list_filter = ['category', 'is_active']
+    search_fields = ['title', 'category']
+    list_editable = ['display_order', 'is_active']
+
+    def image_tag(self, obj):
+        if obj.image:
+            return f'<img src="{obj.image.url}" style="max-height:50px;max-width:80px;object-fit:cover;" />'
+        return '-'
+    image_tag.short_description = 'Preview'
+    image_tag.allow_tags = True
+
+
 @admin.register(ContactInfo)
 class ContactInfoAdmin(admin.ModelAdmin):
     list_display = ['address', 'phone', 'email', 'emergency_phone']
@@ -345,6 +401,64 @@ class FundedProjectAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description']
     list_editable = ['status', 'display_order']
     inlines = [FundedProjectImageInline]
+
+
+# ============================================================================
+# Technology & Innovation
+# ============================================================================
+
+class InnovationProgramImageInline(admin.TabularInline):
+    model = InnovationProgramImage
+    extra = 1
+    fields = ['image', 'caption', 'order']
+
+
+@admin.register(InnovationProgram)
+class InnovationProgramAdmin(admin.ModelAdmin):
+    list_display = ['title', 'program_type', 'status', 'year', 'lead_unit', 'is_featured', 'display_order']
+    list_filter = ['program_type', 'status', 'is_active', 'is_featured']
+    search_fields = ['title', 'subtitle', 'description', 'lead_unit']
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ['is_featured', 'display_order']
+    inlines = [InnovationProgramImageInline]
+    fieldsets = [
+        ('Basic Info', {'fields': ['title', 'slug', 'subtitle', 'program_type', 'status', 'year', 'lead_unit', 'description']}),
+        ('Media', {'fields': ['cover_image', 'thumbnail', 'video_url']}),
+        ('Content', {'fields': ['objectives', 'achievements', 'partners']}),
+        ('Statistics', {'fields': [
+            ('stat_1_label', 'stat_1_value'),
+            ('stat_2_label', 'stat_2_value'),
+            ('stat_3_label', 'stat_3_value'),
+        ]}),
+        ('Display', {'fields': ['display_order', 'is_active', 'is_featured']}),
+    ]
+
+
+# ============================================================================
+# University Projects
+# ============================================================================
+
+class UniversityProjectImageInline(admin.TabularInline):
+    model = UniversityProjectImage
+    extra = 1
+    fields = ['image', 'caption', 'order']
+
+
+@admin.register(UniversityProject)
+class UniversityProjectAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'status', 'year', 'lead_unit', 'is_featured', 'display_order']
+    list_filter = ['category', 'status', 'is_active', 'is_featured']
+    search_fields = ['title', 'subtitle', 'description', 'lead_unit']
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ['is_featured', 'display_order']
+    inlines = [UniversityProjectImageInline]
+    fieldsets = [
+        ('Basic Info', {'fields': ['title', 'slug', 'subtitle', 'category', 'status', 'year', 'lead_unit', 'description']}),
+        ('Media', {'fields': ['image', 'video_url']}),
+        ('Content', {'fields': ['highlights']}),
+        ('Budget', {'fields': ['budget', 'completion_date']}),
+        ('Display', {'fields': ['display_order', 'is_active', 'is_featured']}),
+    ]
 
 
 # ============================================================================

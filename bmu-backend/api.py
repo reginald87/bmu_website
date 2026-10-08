@@ -1,6 +1,10 @@
 """
 Django Ninja API for BMU Backend
 """
+import types, logging, re, json
+
+from core.throttle import ratelimit
+
 from ninja import NinjaAPI, Router, Schema, Field
 from ninja.pagination import paginate
 from ninja_auth import JWTAuth
@@ -49,8 +53,9 @@ from content.models import (
     NewsItem, Event, Testimonial, Partner, ContactEnquiry, PublicDocument, PageContent, GalleryImage,
     HeroSlide, SDG, ImpactProgram, InternationalPartner, MOUAgreement, ExchangeProgram,
     StudentSupportService, UniversityRanking, KeyMetric, EventRegistration,
-    CampusFeature, CampusStat, CampusTestimonial, CampusContactInfo, CampusImage, CampusVideo,
+    CampusFeature, CampusStat, CampusTestimonial, CampusContactInfo, CampusImage, CampusVideo, CampusGalleryImage,
     FundingOrganization, FundedProject,
+    InnovationProgram, InnovationProgramImage, UniversityProject, UniversityProjectImage,
     AboutPage, HistoryPage, VisionMissionPage, GovernancePage,
     Announcement, MenuItem, UtilityLink,
     PageSection, PortalDefinition, CentrePage, ArchivedContent, InstitutePage,
@@ -690,8 +695,6 @@ class ContactResponseSchema(Schema):
     status: str
     status_display: str = Field(..., alias="get_status_display")
     created_at: datetime
-    is_featured: bool
-    created_at: datetime
 
 
 class PageContentSchema(Schema):
@@ -883,6 +886,27 @@ class CampusImageSchema(Schema):
     caption: Optional[str] = None
     image: str
     display_order: int
+
+
+class CampusGalleryImageSchema(Schema):
+    id: int
+    title: str
+    category: Optional[str] = None
+    image_url: str
+    thumbnail_url: Optional[str] = None
+    display_order: int
+
+    @staticmethod
+    def resolve_image_url(obj):
+        if obj.image:
+            return obj.image.url
+        return None
+
+    @staticmethod
+    def resolve_thumbnail_url(obj):
+        if obj.thumbnail:
+            return obj.thumbnail.url
+        return None
 
 
 class CampusVideoSchema(Schema):
@@ -1156,6 +1180,7 @@ class EventRegistrationInput(Schema):
 
 
 @public_router.post("/event-registrations", response=EventRegistrationSchema)
+@ratelimit('event_register', limit=10, window=60)
 def register_for_event(request, data: EventRegistrationInput):
     """Register for a free event"""
     from ninja.errors import HttpError
@@ -1208,6 +1233,7 @@ class PaymentInitializeResponse(Schema):
 
 
 @public_router.post("/event-registrations/initialize-payment", response=PaymentInitializeResponse)
+@ratelimit('event_pay_init', limit=10, window=60)
 def initialize_event_payment(request, data: PaymentInitializeInput):
     """Initialize Paystack payment for a paid event"""
     import json, os
@@ -1239,8 +1265,8 @@ def initialize_event_payment(request, data: PaymentInitializeInput):
         payment_status='pending',
     )
 
-    secret_key = os.getenv('PAYSTACK_SECRET_KEY', '')
-    if not secret_key or os.getenv('PAYSTACK_TEST_MODE', 'True') == 'True':
+    secret_key = settings.PAYSTACK_SECRET_KEY
+    if not secret_key or settings.PAYSTACK_TEST_MODE:
         return {
             'authorization_url': f'/events/{event.slug}?payment_demo=1&registration_id={registration.id}',
             'access_code': 'demo_access_code',
@@ -1299,6 +1325,7 @@ class PaymentVerifyResponse(Schema):
 
 
 @public_router.get("/event-registrations/verify-payment", response=PaymentVerifyResponse)
+@ratelimit('event_pay_verify', limit=30, window=60)
 def verify_event_payment(request, reference: str):
     """Verify Paystack payment and confirm registration"""
     import os
@@ -1334,10 +1361,10 @@ def verify_event_payment(request, reference: str):
             'registration': registration,
         }
 
-    secret_key = os.getenv('PAYSTACK_SECRET_KEY', '')
-    if not secret_key or os.getenv('PAYSTACK_TEST_MODE', 'True') == 'True':
+    secret_key = settings.PAYSTACK_SECRET_KEY
+    if not secret_key or settings.PAYSTACK_TEST_MODE:
         registration.payment_status = 'completed'
-        registration.paid_at = datetime.now()
+        registration.paid_at = timezone.now()
         registration.status = 'registered'
         registration.save(update_fields=['payment_status', 'paid_at', 'status'])
         registration._send_confirmation()
@@ -1366,8 +1393,20 @@ def verify_event_payment(request, reference: str):
             'registration': registration,
         }
 
+    # Verify the amount actually charged matches the event fee (kobo on Paystack)
+    paid_kobo = int(result['data'].get('amount') or 0)
+    expected_kobo = int(float(registration.amount_paid or 0) * 100)
+    if paid_kobo != expected_kobo:
+        registration.payment_status = 'failed'
+        registration.save(update_fields=['payment_status'])
+        return {
+            'status': 'failed',
+            'message': 'Payment amount mismatch',
+            'registration': registration,
+        }
+
     registration.payment_status = 'completed'
-    registration.paid_at = datetime.now()
+    registration.paid_at = timezone.now()
     registration.status = 'registered'
     registration.save(update_fields=['payment_status', 'paid_at', 'status'])
     registration._send_confirmation()
@@ -1887,6 +1926,7 @@ def list_important_dates(request, status: Optional[str] = None):
 
 
 @public_router.post("/contact", response=ContactResponseSchema)
+@ratelimit('contact', limit=5, window=60)
 def submit_contact(request, data: ContactCreateSchema):
     """Submit a contact form enquiry"""
     enquiry = ContactEnquiry.objects.create(
@@ -1896,6 +1936,52 @@ def submit_contact(request, data: ContactCreateSchema):
         message=data.message,
         status='new'
     )
+
+    from django.conf import settings as django_settings
+    from core.email import send_templated_email
+    base = (django_settings.FRONTEND_URL or '').rstrip('/')
+    send_templated_email(
+        subject='We have received your enquiry',
+        template='acknowledgement',
+        context={
+            'university_name': 'Bayelsa Medical University',
+            'name': data.name,
+            'heading': 'Thank you for contacting us',
+            'body': ('We have received your message and a member of our team '
+                     'will respond to you shortly.'),
+            'reference': f'ENQ-{enquiry.id:05d}',
+            'subject_line': dict(ContactEnquiry.SUBJECT_CHOICES).get(data.subject, data.subject),
+            'contact_email': 'info@bmu.edu.ng',
+        },
+        recipient_list=[data.email],
+    )
+
+    office_email = (
+        getattr(django_settings, 'CONTACT_OFFICE_EMAIL', '')
+        or getattr(django_settings, 'ADMISSIONS_OFFICE_EMAIL', '')
+        or 'info@bmu.edu.ng'
+    )
+    send_templated_email(
+        subject=f'New contact enquiry — {dict(ContactEnquiry.SUBJECT_CHOICES).get(data.subject, data.subject)}',
+        template='notification',
+        context={
+            'name': 'Team',
+            'heading': 'New Contact Enquiry',
+            'body': f'{data.name} <{data.email}> submitted a new enquiry via the website.',
+            'details': [
+                {'label': 'Name', 'value': data.name},
+                {'label': 'Email', 'value': data.email},
+                {'label': 'Subject', 'value': dict(ContactEnquiry.SUBJECT_CHOICES).get(data.subject, data.subject)},
+                {'label': 'Message', 'value': data.message},
+                {'label': 'Reference', 'value': f'ENQ-{enquiry.id:05d}'},
+            ],
+            'preheader': 'New contact form enquiry',
+            'action_url': f'{base}/admin/content/contactenquiry/{enquiry.id}/change/',
+            'action_label': 'View in admin',
+        },
+        recipient_list=[office_email],
+    )
+
     return enquiry
 
 
@@ -2240,6 +2326,137 @@ def get_funded_project(request, id: int):
     )
 
 
+class InnovationProgramImageSchema(Schema):
+    image: str
+    caption: str = ''
+    order: int
+
+
+class InnovationProgramSchema(Schema):
+    id: int
+    title: str
+    slug: str
+    subtitle: str = ''
+    description: str
+    program_type: str
+    status: str = 'ongoing'
+    year: Optional[int] = None
+    lead_unit: str = ''
+    cover_image: Optional[str] = None
+    thumbnail: Optional[str] = None
+    video_url: str = ''
+    objectives: list = []
+    achievements: list = []
+    partners: list = []
+    stat_1_label: str = ''
+    stat_1_value: str = ''
+    stat_2_label: str = ''
+    stat_2_value: str = ''
+    stat_3_label: str = ''
+    stat_3_value: str = ''
+    is_featured: bool = False
+    gallery_images: List[InnovationProgramImageSchema] = []
+
+    @staticmethod
+    def resolve_cover_image(obj):
+        return obj.cover_image.url if obj.cover_image else None
+
+    @staticmethod
+    def resolve_thumbnail(obj):
+        return obj.thumbnail.url if obj.thumbnail else None
+
+    @staticmethod
+    def resolve_gallery_images(obj):
+        images = obj.gallery_images.all() if hasattr(obj.gallery_images, 'all') else obj.gallery_images
+        return [
+            InnovationProgramImageSchema(image=img.image.url, caption=img.caption, order=img.order)
+            for img in images
+        ]
+
+
+@public_router.get("/innovation-programs", response=List[InnovationProgramSchema])
+def list_innovation_programs(request, program_type: Optional[str] = None, featured: Optional[bool] = None):
+    """List innovation programs, optionally filtered by type"""
+    qs = InnovationProgram.objects.filter(is_active=True).prefetch_related('gallery_images')
+    if program_type:
+        qs = qs.filter(program_type=program_type)
+    if featured:
+        qs = qs.filter(is_featured=True)
+    return qs.order_by('display_order')
+
+
+@public_router.get("/innovation-programs/{program_id}", response=InnovationProgramSchema)
+def get_innovation_program(request, program_id: int):
+    """Get a specific innovation program with its gallery images"""
+    program = get_object_or_404(
+        InnovationProgram.objects.prefetch_related('gallery_images'),
+        id=program_id, is_active=True
+    )
+    return program
+
+
+class UniversityProjectImageSchema(Schema):
+    image: str
+    caption: str = ''
+    order: int
+
+
+class UniversityProjectSchema(Schema):
+    id: int
+    title: str
+    slug: str
+    subtitle: str = ''
+    description: str
+    category: str
+    status: str = 'ongoing'
+    year: Optional[int] = None
+    completion_date: Optional[str] = None
+    lead_unit: str = ''
+    budget: Optional[Decimal] = None
+    image: Optional[str] = None
+    video_url: str = ''
+    highlights: list = []
+    is_featured: bool = False
+    gallery_images: List[UniversityProjectImageSchema] = []
+
+    @staticmethod
+    def resolve_image(obj):
+        return obj.image.url if obj.image else None
+
+    @staticmethod
+    def resolve_completion_date(obj):
+        return obj.completion_date.isoformat() if obj.completion_date else None
+
+    @staticmethod
+    def resolve_gallery_images(obj):
+        images = obj.gallery_images.all() if hasattr(obj.gallery_images, 'all') else obj.gallery_images
+        return [
+            UniversityProjectImageSchema(image=img.image.url, caption=img.caption, order=img.order)
+            for img in images
+        ]
+
+
+@public_router.get("/university-projects", response=List[UniversityProjectSchema])
+def list_university_projects(request, category: Optional[str] = None, status: Optional[str] = None):
+    """List university projects, optionally filtered by category or status"""
+    qs = UniversityProject.objects.filter(is_active=True).prefetch_related('gallery_images')
+    if category:
+        qs = qs.filter(category=category)
+    if status:
+        qs = qs.filter(status=status)
+    return qs.order_by('-year', 'display_order')
+
+
+@public_router.get("/university-projects/{project_id}", response=UniversityProjectSchema)
+def get_university_project(request, project_id: int):
+    """Get a specific university project with its gallery images"""
+    project = get_object_or_404(
+        UniversityProject.objects.prefetch_related('gallery_images'),
+        id=project_id, is_active=True
+    )
+    return project
+
+
 @public_router.get("/funding-stats")
 def funding_stats(request):
     """Aggregate stats for the External Partners page"""
@@ -2498,6 +2715,12 @@ def get_contact_info(request):
 def list_campus_images(request):
     """List campus images for the Experience BMU carousel"""
     return CampusImage.objects.filter(is_active=True).order_by('display_order')
+
+
+@public_router.get("/campus-gallery", response=List[CampusGalleryImageSchema])
+def list_campus_gallery(request):
+    """List campus gallery images for the Campus Life page"""
+    return CampusGalleryImage.objects.filter(is_active=True).order_by('display_order')
 
 
 @public_router.get("/campus-video", response=Optional[CampusVideoSchema])
@@ -3212,6 +3435,7 @@ def get_chat_conversation(request, session_id: str):
 
 
 @public_router.post("/chat/conversations/{session_id}/contact")
+@ratelimit('chat_contact', limit=10, window=60)
 def update_chat_contact(request, session_id: str, data: ContactUpdateSchema):
     """Update contact info for a chat session"""
     try:
@@ -3400,16 +3624,17 @@ auth_router = Router(auth=JWTAuth())
 
 
 @auth_router.post("/login", response=LoginResponseSchema, auth=None)
+@ratelimit('login', limit=10, window=60)
 def login(request, data: LoginSchema):
     """User login with email and password"""
     try:
         user = User.objects.get(email=data.email)
     except User.DoesNotExist:
-        return {"error": "Invalid credentials"}
-    
+        raise HttpError(401, "Invalid credentials")
+
     user = authenticate(username=user.username, password=data.password)
     if not user or not user.is_active:
-        return {"error": "Invalid credentials"}
+        raise HttpError(401, "Invalid credentials")
     
     from accounts.models import UserActivity
     refresh = RefreshToken.for_user(user)
@@ -3420,6 +3645,31 @@ def login(request, data: LoginSchema):
         "access": str(refresh.access_token),
         "user": user
     }
+
+
+class TokenRefreshInput(Schema):
+    refresh: str
+
+
+class TokenRefreshResponse(Schema):
+    access: str
+    refresh: str
+
+
+@auth_router.post("/token/refresh", response=TokenRefreshResponse, auth=None)
+def refresh_access_token(request, data: TokenRefreshInput):
+    """Exchange a refresh token for a new access token (rotates the refresh token)."""
+    from rest_framework_simplejwt.exceptions import TokenError
+    try:
+        old_refresh = RefreshToken(data.refresh)
+        user = old_refresh.user
+        old_refresh.blacklist()
+    except TokenError:
+        raise HttpError(401, 'Invalid or expired refresh token')
+    except Exception:
+        raise HttpError(401, 'Invalid or expired refresh token')
+    new_refresh = RefreshToken.for_user(user)
+    return {"access": str(new_refresh.access_token), "refresh": str(new_refresh)}
 
 
 @auth_router.get("/profile", response=UserSchema)
@@ -3699,15 +3949,23 @@ def verify_student_payment(request, data: PaymentCallbackSchema):
             body = resp.json()
             payment.gateway_response = body
             payment.save(update_fields=['gateway_response'])
-            if body.get('data', {}).get('status') == 'success':
-                payment.status = 'completed'
-                payment.paid_at = timezone.now()
-                payment.save(update_fields=['status', 'paid_at'])
+            gw = body.get('data', {})
+            if gw.get('status') == 'success':
+                # Amount charged must equal the expected fee (kobo on Paystack)
+                paid_kobo = int(gw.get('amount') or 0)
+                expected_kobo = int(float(payment.amount or 0) * 100)
+                if paid_kobo == expected_kobo and (gw.get('currency') or 'NGN') == 'NGN':
+                    payment.status = 'completed'
+                    payment.paid_at = timezone.now()
+                    payment.save(update_fields=['status', 'paid_at'])
+                else:
+                    payment.status = 'failed'
+                    payment.save(update_fields=['status'])
             return {
                 'status': payment.status,
                 'payment_id': payment.id,
                 'reference': data.reference,
-                'paystack_data': body.get('data', {}),
+                'paystack_data': gw,
             }
         except Exception as e:
             return {'error': str(e)}
@@ -3837,6 +4095,8 @@ def bursary_verify_scholarship(request, data: ScholarshipVerifySchema):
         rec.verified_at = timezone.now()
         rec.notes = data.notes or 'Verified by bursary'
         rec.save()
+        from portals.emails import notify_scholarship_updated
+        notify_scholarship_updated(rec, verified=True, note=data.notes)
 
         return {'message': 'Scholarship verified', 'id': rec.id, 'status': 'verified'}
     elif data.action == 'reject':
@@ -3845,6 +4105,8 @@ def bursary_verify_scholarship(request, data: ScholarshipVerifySchema):
         rec.verified_at = timezone.now()
         rec.notes = data.notes or 'Rejected by bursary'
         rec.save()
+        from portals.emails import notify_scholarship_updated
+        notify_scholarship_updated(rec, verified=False, note=data.notes)
         return {'message': 'Scholarship rejected', 'id': rec.id, 'status': 'rejected'}
     else:
         from django.http import JsonResponse
@@ -4101,6 +4363,7 @@ class SearchResponse(Schema):
 
 # Site-wide Search Endpoint
 @public_router.get("/search", response=SearchResponse)
+@ratelimit('site_search', limit=30, window=60)
 def site_search(request, q: str = "", limit: int = 20):
     """
     Site-wide search across authors, publications, programs, news, events, and more.
@@ -4801,6 +5064,9 @@ def advisor_pending_registrations(request):
 @auth_router.post("/advisor/approve-registration")
 def advisor_approve_registration(request, data: RegistrationActionInput):
     """Approve a registration (advisor)"""
+    if request.user.role not in ('faculty', 'staff', 'admin'):
+        from django.http import JsonResponse
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
     from portals.models import Registration
     reg = get_object_or_404(Registration, id=data.registration_id, status='submitted')
 
@@ -4808,6 +5074,8 @@ def advisor_approve_registration(request, data: RegistrationActionInput):
     svc = RegistrationService(reg)
     try:
         svc.approve_by_advisor(request.user)
+        from portals.emails import notify_registration_approved
+        notify_registration_approved(reg, 'Academic Advisor')
         return {"message": "Registration approved by advisor", "status": "advisor_approved"}
     except Exception as e:
         return {"error": str(e)}
@@ -4816,6 +5084,9 @@ def advisor_approve_registration(request, data: RegistrationActionInput):
 @auth_router.post("/advisor/approve-course")
 def advisor_approve_course(request, data: ApproveCourseInput):
     """Approve or reject a specific course within a registration"""
+    if request.user.role not in ('faculty', 'staff', 'admin'):
+        from django.http import JsonResponse
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
     from portals.models import RegistrationCourse
     rc = get_object_or_404(
         RegistrationCourse,
@@ -4829,6 +5100,10 @@ def advisor_approve_course(request, data: ApproveCourseInput):
         rc.rejection_reason = data.rejection_reason
     rc.save(update_fields=['approval_status', 'approved_by', 'rejection_reason'])
 
+    if data.action == 'rejected':
+        from portals.emails import notify_course_rejected
+        notify_course_rejected(rc.registration, rc.course.code, data.rejection_reason)
+
     return {"message": f"Course {rc.course.code} {data.action}", "course_id": rc.id}
 
 
@@ -4839,7 +5114,7 @@ def advisor_approve_course(request, data: ApproveCourseInput):
 def hod_pending_registrations(request):
     """List registrations awaiting HOD approval"""
     from portals.models import Registration
-    if request.user.role not in ('faculty', 'staff', 'admin'):
+    if request.user.role not in ('hod', 'faculty', 'staff', 'admin'):
         return []
 
     return Registration.objects.filter(status='advisor_approved').order_by('-advisor_approved_at')
@@ -4848,6 +5123,9 @@ def hod_pending_registrations(request):
 @auth_router.post("/hod/approve-registration")
 def hod_approve_registration(request, data: RegistrationActionInput):
     """Approve a registration (HOD)"""
+    if request.user.role not in ('hod', 'faculty', 'staff', 'admin'):
+        from django.http import JsonResponse
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
     from portals.models import Registration
     reg = get_object_or_404(Registration, id=data.registration_id, status='advisor_approved')
 
@@ -4855,6 +5133,8 @@ def hod_approve_registration(request, data: RegistrationActionInput):
     svc = RegistrationService(reg)
     try:
         svc.approve_by_hod(request.user)
+        from portals.emails import notify_registration_approved
+        notify_registration_approved(reg, 'Head of Department')
         return {"message": "Registration approved by HOD", "status": "hod_approved"}
     except Exception as e:
         return {"error": str(e)}
@@ -4867,7 +5147,7 @@ def hod_approve_registration(request, data: RegistrationActionInput):
 def dean_pending_registrations(request):
     """List registrations awaiting Dean approval"""
     from portals.models import Registration
-    if request.user.role not in ('faculty', 'staff', 'admin'):
+    if request.user.role not in ('dean', 'faculty', 'staff', 'admin'):
         return []
 
     return Registration.objects.filter(status='hod_approved').order_by('-hod_approved_at')
@@ -4876,6 +5156,9 @@ def dean_pending_registrations(request):
 @auth_router.post("/dean/approve-registration")
 def dean_approve_registration(request, data: RegistrationActionInput):
     """Approve a registration (Dean)"""
+    if request.user.role not in ('dean', 'faculty', 'staff', 'admin'):
+        from django.http import JsonResponse
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
     from portals.models import Registration
     reg = get_object_or_404(Registration, id=data.registration_id, status='hod_approved')
 
@@ -4883,6 +5166,8 @@ def dean_approve_registration(request, data: RegistrationActionInput):
     svc = RegistrationService(reg)
     try:
         svc.approve_by_dean(request.user)
+        from portals.emails import notify_registration_approved
+        notify_registration_approved(reg, 'Dean')
         return {"message": "Registration approved by Dean", "status": "dean_approved"}
     except Exception as e:
         return {"error": str(e)}
@@ -4891,6 +5176,9 @@ def dean_approve_registration(request, data: RegistrationActionInput):
 @auth_router.post("/dean/finalize-registration")
 def dean_finalize_registration(request, data: RegistrationActionInput):
     """Finalize registration - create StudentCourse records"""
+    if request.user.role not in ('dean', 'faculty', 'staff', 'admin'):
+        from django.http import JsonResponse
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
     from portals.models import Registration
     reg = get_object_or_404(Registration, id=data.registration_id, status='dean_approved')
 
@@ -4898,6 +5186,15 @@ def dean_finalize_registration(request, data: RegistrationActionInput):
     svc = RegistrationService(reg)
     try:
         created = svc.finalize()
+        from portals.emails import notify_registration_finalized
+        from portals.models import RegistrationCourse
+        approved_courses = list(RegistrationCourse.objects.filter(
+            registration=reg, approval_status='approved',
+        ).select_related('course'))
+        try:
+            notify_registration_finalized(reg, len(approved_courses), approved_courses)
+        except Exception:
+            pass
         return {
             "message": f"Registration finalized. {created} courses enrolled.",
             "status": "registered",
@@ -5723,6 +6020,36 @@ def hod_pending_results(request, session: str, semester: str, course_id: Optiona
     return qs
 
 
+def _notify_submitting_lecturers(student_course_ids, rejection_reason, author_label):
+    """Email the lecturers who submitted the rejected result rows (never raises)."""
+    try:
+        from portals.models import StudentCourse
+        from portals.emails import notify_results_rejected
+        rows = list(StudentCourse.objects.filter(id__in=student_course_ids)
+                    .exclude(submitted_by=None)
+                    .select_related('submitted_by', 'course', 'student'))
+        if not rows:
+            return
+        sample = rows[0]
+        by_lecturer = {}
+        for row in rows:
+            by_lecturer.setdefault(row.submitted_by, []).append(row)
+        for lecturer, lst in by_lecturer.items():
+            notify_results_rejected(
+                recipient=lecturer.email,
+                student_name=lst[0].student.full_name,
+                course_codes=sorted({r.course.code for r in lst}),
+                data=types.SimpleNamespace(
+                    session=sample.session,
+                    semester=sample.semester,
+                    rejection_reason=rejection_reason,
+                ),
+                author_label=author_label,
+            )
+    except Exception:
+        pass
+
+
 @auth_router.post("/hod/approve-results")
 def hod_approve_results(request, data: ResultApprovalSchema):
     """HOD approves/rejects submitted results"""
@@ -5730,17 +6057,24 @@ def hod_approve_results(request, data: ResultApprovalSchema):
         from django.http import JsonResponse
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     from django.utils import timezone
+    if data.rejection_reason:
+        # Rejection: move to 'rejected' (lecturer can correct + resubmit)
+        updated = StudentCourse.objects.filter(
+            id__in=data.student_course_ids, result_status='submitted'
+        ).update(
+            result_status='rejected',
+            rejection_reason=data.rejection_reason,
+        )
+        _notify_submitting_lecturers(data.student_course_ids, data.rejection_reason, 'Head of Department')
+        return {'rejected': updated, 'message': f'{updated} results rejected'}
     updated = StudentCourse.objects.filter(
         id__in=data.student_course_ids, result_status='submitted'
     ).update(
         result_status='hod_approved',
         hod_approved_by=request.user,
         hod_approved_at=timezone.now(),
+        rejection_reason='',
     )
-    if data.rejection_reason:
-        StudentCourse.objects.filter(
-            id__in=data.student_course_ids
-        ).update(rejection_reason=data.rejection_reason)
     return {'approved': updated, 'message': f'{updated} results approved'}
 
 
@@ -5767,12 +6101,22 @@ def dean_approve_results(request, data: ResultApprovalSchema):
         from django.http import JsonResponse
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     from django.utils import timezone
+    if data.rejection_reason:
+        updated = StudentCourse.objects.filter(
+            id__in=data.student_course_ids, result_status='hod_approved'
+        ).update(
+            result_status='rejected',
+            rejection_reason=data.rejection_reason,
+        )
+        _notify_submitting_lecturers(data.student_course_ids, data.rejection_reason, 'Dean')
+        return {'rejected': updated, 'message': f'{updated} results rejected'}
     updated = StudentCourse.objects.filter(
         id__in=data.student_course_ids, result_status='hod_approved'
     ).update(
         result_status='dean_approved',
         dean_approved_by=request.user,
         dean_approved_at=timezone.now(),
+        rejection_reason='',
     )
     return {'approved': updated, 'message': f'{updated} results approved'}
 
@@ -5800,12 +6144,22 @@ def senate_approve_results(request, data: ResultApprovalSchema):
         from django.http import JsonResponse
         return JsonResponse({'error': 'Unauthorized'}, status=403)
     from django.utils import timezone
+    if data.rejection_reason:
+        updated = StudentCourse.objects.filter(
+            id__in=data.student_course_ids, result_status='dean_approved'
+        ).update(
+            result_status='rejected',
+            rejection_reason=data.rejection_reason,
+        )
+        _notify_submitting_lecturers(data.student_course_ids, data.rejection_reason, 'Senate')
+        return {'rejected': updated, 'message': f'{updated} results rejected'}
     updated = StudentCourse.objects.filter(
         id__in=data.student_course_ids, result_status='dean_approved'
     ).update(
         result_status='senate_approved',
         senate_approved_by=request.user,
         senate_approved_at=timezone.now(),
+        rejection_reason='',
     )
     return {'approved': updated, 'message': f'{updated} results senate-approved'}
 
@@ -5934,10 +6288,11 @@ class ApplicationSubmitSchema(Schema):
 
 class ApplicationStatusSchema(Schema):
     id: str
-    first_name: str
-    last_name: str
-    email: str
-    phone: str
+    public_id: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
     program: str
     student_type: str
     status: str
@@ -5947,6 +6302,7 @@ class ApplicationStatusSchema(Schema):
     submitted_at: Optional[str] = None
 
 @public_router.post("/applications", response=ApplicationStatusSchema)
+@ratelimit('application_submit', limit=5, window=60)
 def submit_application(request, data: ApplicationSubmitSchema):
     """Submit a new application (creates a draft)"""
     from admissions.models import Application
@@ -5987,8 +6343,12 @@ def submit_application(request, data: ApplicationSubmitSchema):
             subjects=subjects_list,
         )
 
+    from admissions.emails import notify_application_submitted
+    notify_application_submitted(app)
+
     return {
         'id': app.id,
+        'public_id': str(app.public_id),
         'first_name': app.first_name,
         'last_name': app.last_name,
         'email': app.email,
@@ -6003,17 +6363,36 @@ def submit_application(request, data: ApplicationSubmitSchema):
     }
 
 @public_router.get("/applications/{application_id}/status", response=ApplicationStatusSchema)
+@ratelimit('application_status', limit=30, window=60)
 def get_application_status(request, application_id: str):
-    """Check application status by application ID"""
+    """Check application status.
+
+    Accepts the unguessable ``public_id`` (UUID) and returns full details.
+    Legacy sequential IDs (BMU-YYYY-XXXX) are still honoured for old email
+    links but return only non-sensitive status fields — those IDs are
+    enumerable and must never expose applicant PII.
+    """
+    import uuid as uuid_lib
     from admissions.models import Application
-    app = get_object_or_404(Application, id=application_id)
+    from ninja.errors import HttpError
+
+    app = None
+    expose_pii = False
+    try:
+        pid = uuid_lib.UUID(str(application_id))
+        app = Application.objects.filter(public_id=pid).first()
+        expose_pii = app is not None
+    except (ValueError, AttributeError, TypeError):
+        pass
+    if app is None:
+        app = Application.objects.filter(id=application_id).first()
+    if app is None:
+        raise HttpError(404, 'Application not found')
+
     status_display = dict(Application.STATUS_CHOICES).get(app.status, app.status)
-    return {
+    payload = {
         'id': app.id,
-        'first_name': app.first_name,
-        'last_name': app.last_name,
-        'email': app.email,
-        'phone': app.phone,
+        'public_id': str(app.public_id),
         'program': app.program.title,
         'student_type': app.student_type,
         'status': app.status,
@@ -6022,6 +6401,14 @@ def get_application_status(request, application_id: str):
         'payment_status': app.payment_status,
         'submitted_at': app.submitted_at.isoformat() if app.submitted_at else None,
     }
+    if expose_pii:
+        payload.update({
+            'first_name': app.first_name,
+            'last_name': app.last_name,
+            'email': app.email,
+            'phone': app.phone,
+        })
+    return payload
 
 
 DOCUMENT_TYPE_CHOICES = [
@@ -6031,11 +6418,24 @@ DOCUMENT_TYPE_CHOICES = [
 
 
 @public_router.post("/applications/{application_id}/documents")
+@ratelimit('application_doc', limit=15, window=60)
 def upload_application_document(request, application_id: str):
-    """Upload a document for an existing application (public, no auth)"""
-    from admissions.models import Application, ApplicationDocument
+    """Upload a document for an existing application (public, no auth).
 
-    app = get_object_or_404(Application, id=application_id)
+    Only accepts the unguessable public_id (UUID) — the sequential
+    application ID is enumerable and must not authorise uploads.
+    """
+    import uuid as uuid_lib
+    from admissions.models import Application, ApplicationDocument
+    from ninja.errors import HttpError
+
+    try:
+        pid = uuid_lib.UUID(str(application_id))
+    except (ValueError, AttributeError, TypeError):
+        raise HttpError(404, 'Application not found')
+    app = Application.objects.filter(public_id=pid).first()
+    if app is None:
+        raise HttpError(404, 'Application not found')
     document_type = request.POST.get('document_type', 'other')
     uploaded_file = request.FILES.get('file')
 

@@ -181,13 +181,23 @@ const ProgramStep = ({
 };
 
 // Step 3: Personal Info
+interface PersonalInfoForm {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  dob?: string;
+  gender?: string;
+  address?: string;
+}
+
 const PersonalInfoStep = ({ 
   data, 
   onChange,
   errors,
   touched
 }: { 
-  data: any, 
+  data: PersonalInfoForm, 
   onChange: (field: string, value: string) => void,
   errors: ValidationError[],
   touched: Record<string, boolean>
@@ -349,7 +359,7 @@ const AcademicInfoStep = ({
   touched 
 }: { 
   data: AcademicRecordForm[], 
-  onChange: (field: string, value: any) => void,
+  onChange: (field: string, value: AcademicRecordForm[]) => void,
   errors: ValidationError[],
   touched: Record<string, boolean>
 }) => {
@@ -363,7 +373,7 @@ const AcademicInfoStep = ({
     onChange('academicRecords', data.filter((_, i) => i !== index));
   };
 
-  const updateRecord = (index: number, field: string, value: any) => {
+  const updateRecord = (index: number, field: string, value: string) => {
     const updated = [...data];
     if (field === 'qualification') {
       updated[index] = { ...updated[index], qualification: value, grade: '', subjects: [{ subject: '', grade: '' }] };
@@ -474,7 +484,7 @@ const AcademicInfoStep = ({
                 <p className="text-sm text-red-600">{getError(`academicRecords.${index}.subjects`)}</p>
               )}
               <div className="space-y-2">
-                {record.subjects.map((subj: any, sIdx: number) => (
+                {record.subjects.map((subj, sIdx) => (
                   <div key={sIdx} className="flex gap-3 items-start">
                     <div className="flex-1">
                       <input
@@ -654,7 +664,7 @@ const ReviewPayStep = ({
   isSubmitting,
   submitError
 }: { 
-  data: { studentType: string | null, program: typeof programs[0] | null, personal: any, academic: any },
+  data: { studentType: string | null, program: typeof programs[0] | null, personal: PersonalInfoForm },
   onSubmit: () => void,
   isSubmitting?: boolean,
   submitError?: string | null
@@ -737,24 +747,34 @@ const ReviewPayStep = ({
 
 const DRAFT_KEY = 'bmu_application_draft';
 
-function loadDraft() {
+interface ApplicationFormData {
+  studentType: string | null;
+  program: (typeof programs)[number] | null;
+  personal: PersonalInfoForm;
+  academicRecords: AcademicRecordForm[];
+  documents: Record<string, File>;
+}
+
+function loadDraft(): ApplicationFormData | null {
   try {
     const saved = localStorage.getItem(DRAFT_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
       // Don't restore File objects (can't be serialized)
-      const { documents, ...rest } = parsed;
-      return { ...rest, documents: {} };
+      return { ...parsed, documents: {} } as ApplicationFormData;
     }
-  } catch {}
+  } catch {
+    // corrupted draft in storage — ignore and start fresh
+  }
   return null;
 }
 
-function saveDraft(data: any) {
+function saveDraft(data: ApplicationFormData) {
   try {
-    const { documents, ...rest } = data;
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(rest));
-  } catch {}
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(data, (key, value) => (key === 'documents' ? undefined : value)));
+  } catch {
+    // storage unavailable (private mode / quota) — draft saving is best-effort
+  }
 }
 
 function clearDraft() {
@@ -771,12 +791,12 @@ export const ApplicationPortal = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const savedDraft = loadDraft();
-  const [formData, setFormData] = useState(() => savedDraft || {
-    studentType: null as string | null,
-    program: null as typeof programs[0] | null,
-    personal: {} as any,
-    academicRecords: [] as any[],
-    documents: {} as Record<string, File>
+  const [formData, setFormData] = useState<ApplicationFormData>(() => savedDraft || {
+    studentType: null,
+    program: null,
+    personal: {},
+    academicRecords: [],
+    documents: {}
   });
 
   const progress = ((currentStep - 1) / (STEPS.length - 1)) * 100;
@@ -861,13 +881,13 @@ export const ApplicationPortal = () => {
         qualification: r.qualification,
         year_of_completion: parseInt(r.gradYear),
         grade: r.qualification === 'ssce' ? '' : (r.grade || ''),
-        subjects: r.qualification === 'ssce' ? (r.subjects || []).filter((s: any) => s.subject && s.grade).map((s: any) => ({ subject: s.subject, grade: s.grade })) : undefined,
+        subjects: r.qualification === 'ssce' ? (r.subjects || []).filter(s => s.subject && s.grade).map(s => ({ subject: s.subject, grade: s.grade })) : undefined,
       }));
       const result = await submitApplication.mutateAsync({
-        first_name: formData.personal.firstName,
-        last_name: formData.personal.lastName,
-        email: formData.personal.email,
-        phone: formData.personal.phone,
+        first_name: formData.personal.firstName || '',
+        last_name: formData.personal.lastName || '',
+        email: formData.personal.email || '',
+        phone: formData.personal.phone || '',
         date_of_birth: formData.personal.dob || '',
         gender: formData.personal.gender || '',
         address: formData.personal.address || '',
@@ -876,18 +896,20 @@ export const ApplicationPortal = () => {
         academic_records: academicRecordsPayload,
       });
 
-      // Upload documents after application is created
-      const appId = result.id;
+      // Upload documents after application is created.
+      // public_id (UUID) is required — the sequential ID is not accepted
+      // by the public upload/status endpoints.
+      const appKey = result.public_id || result.id;
       const uploadPromises = Object.entries(formData.documents).map(async ([docName, file]) => {
         const docType = DOCUMENT_TYPE_MAP[docName];
         if (docType && file instanceof File) {
-          return uploadApplicationDocument(appId, docType, file);
+          return uploadApplicationDocument(appKey, docType, file);
         }
       });
       await Promise.all(uploadPromises);
 
       clearDraft();
-      navigate(`/apply/status/${appId}`);
+      navigate(`/apply/status/${appKey}`);
     } catch {
       setSubmitError('Failed to submit application. Please try again.');
     } finally {
@@ -900,7 +922,7 @@ export const ApplicationPortal = () => {
       case 1: return !!formData.studentType;
       case 2: return !!formData.program;
       case 3: return !!(formData.personal.firstName && formData.personal.lastName && formData.personal.email);
-      case 4: return formData.academicRecords.length > 0 && formData.academicRecords.some((r: any) => r.institution && r.qualification);
+      case 4: return formData.academicRecords.length > 0 && formData.academicRecords.some(r => r.institution && r.qualification);
       case 5: {
         const requiredDocNames = requiredDocuments.filter(d => d.required).map(d => d.name);
         return requiredDocNames.every(name => formData.documents[name] instanceof File);
@@ -1012,7 +1034,7 @@ export const ApplicationPortal = () => {
                       // Mark all relevant fields as touched
                       if (Array.isArray(value)) {
                         const newTouched: Record<string, boolean> = {};
-                        value.forEach((_: any, idx: number) => {
+                        value.forEach((_, idx) => {
                           newTouched[`academicRecords.${idx}.institution`] = true;
                           newTouched[`academicRecords.${idx}.qualification`] = true;
                           newTouched[`academicRecords.${idx}.gradYear`] = true;

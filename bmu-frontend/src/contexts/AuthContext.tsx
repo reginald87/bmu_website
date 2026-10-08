@@ -71,12 +71,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const tryRefresh = useCallback(async (refreshToken: string) => {
     try {
-      const res = await axios.post(`${API_URL}/v1/auth/login/`, {
+      const res = await axios.post(`${API_URL}/auth/token/refresh`, {
         refresh: refreshToken,
       });
       const newTokens: AuthTokens = {
         access: res.data.access,
-        refresh: refreshToken,
+        refresh: res.data.refresh || refreshToken,
       };
       storeTokens(newTokens);
       return true;

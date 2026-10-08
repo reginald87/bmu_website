@@ -121,7 +121,7 @@ export const ListItemSkeleton = ({ count = 3 }: { count?: number }) => (
 );
 
 export const PageSkeleton = () => (
- <div className="min-h-screen bg-gray-50 pt-[140px] pb-12">
+ <div className="min-h-screen bg-gray-50 pt-[180px] pb-12">
  <div className="container-custom">
  <div className="space-y-8">
  <SkeletonPulse className="h-8 w-1/3" />

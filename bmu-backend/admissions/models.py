@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class Application(models.Model):
@@ -45,6 +46,10 @@ class Application(models.Model):
     
     # Application ID: BMU-YYYY-XXXX format
     id = models.CharField(max_length=20, primary_key=True, editable=False)
+    # Unguessable token used in public links/endpoints (status check, uploads).
+    # The sequential `id` above must never be accepted on unauthenticated
+    # endpoints — it is enumerable and would expose applicant PII.
+    public_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, null=True)
     
     # Applicant (can be registered user or guest)
     applicant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
@@ -103,18 +108,22 @@ class Application(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            # Generate application ID: BMU-YYYY-XXXX
-            year = self.created_at.year if self.created_at else 2025
+            # Application ID: BMU-YYYY-XXXX (created_at is None until saved)
+            year = timezone.now().year
             last_app = Application.objects.filter(
-                id__startswith=f'BMU{year}'
+                id__startswith=f'BMU{year}-'
             ).order_by('-id').first()
-            
+
             if last_app:
-                last_num = int(last_app.id.split('-')[-1])
-                new_num = last_num + 1
+                try:
+                    new_num = int(str(last_app.id).split('-')[-1]) + 1
+                except (TypeError, ValueError):
+                    new_num = Application.objects.filter(
+                        id__startswith=f'BMU{year}-'
+                    ).count() + 1
             else:
                 new_num = 1
-            
+
             self.id = f'BMU{year}-{new_num:04d}'
         else:
             # Existing application - recompute progress dynamically

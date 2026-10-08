@@ -1,48 +1,57 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
- Plane,
- GraduationCap,
- Calendar,
- CheckCircle,
- ArrowRight,
- BookOpen,
- Home,
- DollarSign,
- MapPin,
- Clock,
- Users,
- Loader2
+  Plane,
+  GraduationCap,
+  Calendar,
+  CheckCircle,
+  ArrowRight,
+  BookOpen,
+  Home,
+  DollarSign,
+  MapPin,
+  Clock,
+  Users,
+  Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useExchangePrograms } from '../../services/apiHooks';
+import { useExchangePrograms, usePageSections } from '../../services/apiHooks';
 
-const requirements = [
- 'Minimum GPA of 3.0',
- 'Good academic standing',
- 'English proficiency (IELTS 6.5 or equivalent)',
- 'Recommendation from faculty advisor',
- 'Valid passport and visa eligibility',
- 'Health insurance coverage'
+const fallbackRequirements = [
+  'Minimum GPA of 3.0',
+  'Good academic standing',
+  'English proficiency (IELTS 6.5 or equivalent)',
+  'Recommendation from faculty advisor',
+  'Valid passport and visa eligibility',
+  'Health insurance coverage'
 ];
 
-const processSteps = [
- { step: 1, title: 'Information Session', description: 'Attend mandatory pre-application briefing' },
- { step: 2, title: 'Online Application', description: 'Submit application with required documents' },
- { step: 3, title: 'Interview', description: 'Panel interview with selection committee' },
- { step: 4, title: 'Nomination', description: 'Selected students nominated to partner institution' },
- { step: 5, title: 'Visa & Travel', description: 'Apply for visa and arrange travel logistics' },
- { step: 6, title: 'Pre-Departure', description: 'Attend orientation and finalize preparations' }
+const fallbackProcessSteps = [
+  { step: 1, title: 'Information Session', description: 'Attend mandatory pre-application briefing' },
+  { step: 2, title: 'Online Application', description: 'Submit application with required documents' },
+  { step: 3, title: 'Interview', description: 'Panel interview with selection committee' },
+  { step: 4, title: 'Nomination', description: 'Selected students nominated to partner institution' },
+  { step: 5, title: 'Visa & Travel', description: 'Apply for visa and arrange travel logistics' },
+  { step: 6, title: 'Pre-Departure', description: 'Attend orientation and finalize preparations' }
 ];
 
-const upcomingDeadlines = [
- { program: 'Fall Semester Exchange 2025', deadline: 'March 15, 2025', status: 'Open' },
- { program: 'Summer Research 2025', deadline: 'January 31, 2025', status: 'Open' },
- { program: 'Spring Semester Exchange 2026', deadline: 'September 30, 2025', status: 'Upcoming' }
+const fallbackUpcomingDeadlines = [
+  { program: 'Fall Semester Exchange 2025', deadline: 'March 15, 2025', status: 'Open' },
+  { program: 'Summer Research 2025', deadline: 'January 31, 2025', status: 'Open' },
+  { program: 'Spring Semester Exchange 2026', deadline: 'September 30, 2025', status: 'Upcoming' }
 ];
 
 export const Exchange = () => {
- const { data: programs, isLoading } = useExchangePrograms();
+  const { data: programs, isLoading } = useExchangePrograms();
+  const { data: sections = [] } = usePageSections('exchange');
+
+  const getSection = (key: string) => sections.find(s => s.section_key === key);
+  const reqData = getSection('requirements')?.data;
+  const requirements = Array.isArray(reqData) && reqData.length ? reqData : fallbackRequirements;
+  const procData = getSection('process_steps')?.data;
+  const processSteps = Array.isArray(procData) && procData.length ? procData : fallbackProcessSteps;
+  const dlData = getSection('upcoming_deadlines')?.data;
+  const upcomingDeadlines = Array.isArray(dlData) && dlData.length ? dlData : fallbackUpcomingDeadlines;
 
  return (
   <>
@@ -52,7 +61,7 @@ export const Exchange = () => {
   </Helmet>
 
   {/* Hero */}
-  <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#A51C30' }}>
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
   <div className="absolute inset-0 opacity-5" style={{
   backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
   }} />

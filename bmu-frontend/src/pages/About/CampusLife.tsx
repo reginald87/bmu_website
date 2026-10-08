@@ -8,6 +8,7 @@ import {
   useCampusStats,
   useCampusTestimonials,
   useCampusContact,
+  useCampusGallery,
 } from '../../services/apiHooks';
 import { iconMap as iconRegistry } from '../../lib/icons';
 
@@ -26,14 +27,14 @@ const fallbackStats = [
 ];
 
 const fallbackGallery = [
-  { src: 'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80', title: 'Main Campus Building', category: 'Architecture' },
-  { src: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80', title: 'Students in Library', category: 'Academic Life' },
-  { src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80', title: 'Medical Laboratory', category: 'Facilities' },
-  { src: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80', title: 'Sports Event', category: 'Student Life' },
-  { src: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=800&q=80', title: 'Graduation Ceremony', category: 'Events' },
-  { src: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80', title: 'Hospital Wing', category: 'Facilities' },
-  { src: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80', title: 'Student Discussion', category: 'Academic Life' },
-  { src: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=80', title: 'Research Lab', category: 'Research' },
+  { id: 1, image_url: 'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80', title: 'Main Campus Building', category: 'Architecture' },
+  { id: 2, image_url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80', title: 'Students in Library', category: 'Academic Life' },
+  { id: 3, image_url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80', title: 'Medical Laboratory', category: 'Facilities' },
+  { id: 4, image_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80', title: 'Sports Event', category: 'Student Life' },
+  { id: 5, image_url: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=800&q=80', title: 'Graduation Ceremony', category: 'Events' },
+  { id: 6, image_url: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80', title: 'Hospital Wing', category: 'Facilities' },
+  { id: 7, image_url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80', title: 'Student Discussion', category: 'Academic Life' },
+  { id: 8, image_url: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=80', title: 'Research Lab', category: 'Research' },
 ];
 
 const SECTION_META: Record<string, { title: string; subtitle: string }> = {
@@ -94,6 +95,8 @@ export const CampusLife = () => {
   const { data: testimonials = [] } = useCampusTestimonials();
   const { data: contactInfo } = useCampusContact();
   const { data: tourFeatures = [] } = useCampusFeatures('virtual_tour');
+  const { data: galleryImages = [] } = useCampusGallery();
+  const displayGallery = galleryImages.length ? galleryImages : fallbackGallery;
 
   const heroContent = 'More than just academics — discover a vibrant community where learning meets life, friendships flourish, and future leaders are shaped.';
 
@@ -107,7 +110,7 @@ export const CampusLife = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[140px] pb-20 overflow-hidden bg-[#1E1E1E]">
+      <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
@@ -228,16 +231,16 @@ export const CampusLife = () => {
             <p className="text-gray-600 max-w-2xl mx-auto">Experience the beauty and vibrancy of Bayelsa Medical University through our lens</p>
           </div>
           <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
-            {fallbackGallery.map((photo, i) => (
+            {displayGallery.map((photo, i) => (
               <motion.div
-                key={photo.title}
+                key={photo.id || photo.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
                 className="relative group break-inside-avoid overflow-hidden cursor-pointer"
               >
-                <img src={photo.src} alt={photo.title} className="w-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ minHeight: i % 3 === 0 ? '320px' : i % 3 === 1 ? '240px' : '280px' }} />
+                <img src={photo.image_url} alt={photo.title} className="w-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ minHeight: i % 3 === 0 ? '320px' : i % 3 === 1 ? '240px' : '280px' }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1E1E1E]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                   <span className="text-xs font-semibold uppercase tracking-wider text-[#A51C30]">{photo.category}</span>

@@ -1,0 +1,26 @@
+{% extends "core/email/base.html" %}
+
+{% block preheader %}We have received your message.{% endblock %}
+
+{% block heading %}{{ heading }}{% endblock %}
+
+{% block content %}
+<p style="margin:0 0 12px 0;">Dear {{ name }},</p>
+<p style="margin:0 0 12px 0;">{{ body }}</p>
+{% if reference %}
+<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="background-color:#f9f9fa; border:1px solid #e5e4e7; border-radius:6px; margin:16px 0; font-size:14px;">
+  <tr>
+    <td style="color:#71717a; width:160px;">Reference</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ reference }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Subject</td>
+    <td style="color:#1E1E1E;">{{ subject_line }}</td>
+  </tr>
+</table>
+{% endif %}
+<p style="margin:0 0 12px 0;">
+  We will get back to you as soon as possible. For urgent enquiries you can
+  reach us at <a href="mailto:{{ contact_email }}" style="color:#A51C30;">{{ contact_email }}</a>.
+</p>
+{% endblock %}

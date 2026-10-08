@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
@@ -32,7 +32,7 @@ const fallbackPathways = [
 
 export const FoundationStudies = () => {
  const { data: sections } = usePageSections('centres/foundation');
- const pathways = (sections?.find(s => s.section_key === 'pathways')?.data as any[] || fallbackPathways);
+ const pathways = (sections?.find(s => s.section_key === 'pathways')?.data as typeof fallbackPathways) || fallbackPathways;
  return (
  <>
  <Helmet>

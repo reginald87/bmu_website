@@ -11,7 +11,7 @@ export const validateEmail = (email: string): string | null => {
 };
 
 export const validatePhone = (phone: string): string | null => {
-  const phoneRegex = /^[\+]?[\d\s\-\(\)]{10,}$/;
+  const phoneRegex = /^[+]?[\d\s\-()]{10,}$/;
   if (!phone) return 'Phone number is required';
   if (!phoneRegex.test(phone)) return 'Please enter a valid phone number';
   return null;
@@ -67,7 +67,15 @@ export const validatePersonalInfo = (data: {
   return errors;
 };
 
-export function validateAcademicInfo(records: any[]): ValidationError[] {
+interface AcademicRecordInput {
+  institution?: string;
+  qualification?: string;
+  gradYear?: string | number;
+  grade?: string;
+  subjects?: { subject?: string; grade?: string }[];
+}
+
+export function validateAcademicInfo(records: AcademicRecordInput[]): ValidationError[] {
   const errors: ValidationError[] = [];
 
   if (!records || records.length === 0) {
@@ -85,7 +93,7 @@ export function validateAcademicInfo(records: any[]): ValidationError[] {
     if (qualError) errors.push({ field: `${prefix}.qualification`, message: qualError });
 
     if (record.gradYear) {
-      const year = parseInt(record.gradYear);
+      const year = parseInt(String(record.gradYear));
       const curYear = new Date().getFullYear();
       if (isNaN(year) || year < 1970 || year > curYear + 5) {
         errors.push({ field: `${prefix}.gradYear`, message: `Enter a valid year between 1970 and ${curYear + 5}` });
@@ -99,7 +107,7 @@ export function validateAcademicInfo(records: any[]): ValidationError[] {
       if (subjects.length === 0) {
         errors.push({ field: `${prefix}.subjects`, message: 'At least one subject is required for SSCE' });
       } else {
-        subjects.forEach((s: any, sIdx: number) => {
+        subjects.forEach((s, sIdx) => {
           if (!s.subject?.trim()) {
             errors.push({ field: `${prefix}.subjects.${sIdx}.subject`, message: 'Subject name is required' });
           }

@@ -12,6 +12,7 @@ from .serializers import (
     DocumentReplaceSerializer
 )
 from accounts.models import UserActivity, Notification
+from django.utils import timezone
 
 
 class ApplicationCreateView(generics.CreateAPIView):
@@ -178,7 +179,12 @@ class DocumentUploadView(generics.CreateAPIView):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def submit_application_payment(request, application_id):
-    """Submit payment for an application"""
+    """Submit payment for an application.
+
+    Paystack payments are verified against the gateway (reference + amount
+    must match the programme fee) before the payment is marked completed.
+    Bank deposits are recorded as pending awaiting bursary confirmation.
+    """
     try:
         application = Application.objects.get(
             id=application_id,
@@ -189,45 +195,132 @@ def submit_application_payment(request, application_id):
             {'error': 'Application not found'},
             status=status.HTTP_404_NOT_FOUND
         )
-    
+
+    if application.payment_status == 'completed':
+        return Response({
+            'message': 'Payment already completed',
+            'application_id': application.id,
+            'status': application.status,
+        })
+
     serializer = ApplicationPaymentSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    
-    # Update application payment info
-    application.payment_method = serializer.validated_data['payment_method']
-    application.payment_reference = serializer.validated_data.get('payment_reference', '')
-    
-    # For now, simulate successful payment
-    # In production, verify with payment gateway
-    application.payment_status = 'completed'
-    application.paid_at = __import__('datetime').datetime.now()
-    application.payment_amount = (
-        application.program.application_fee_local 
-        if application.student_type == 'LOCAL' 
+
+    from django.conf import settings as django_settings
+    from decimal import Decimal
+    from django.utils import timezone as tz
+
+    method = serializer.validated_data['payment_method']
+    reference = serializer.validated_data.get('payment_reference', '')
+    expected_amount = (
+        application.program.application_fee_local
+        if application.student_type == 'LOCAL'
         else application.program.application_fee_intl
     )
+
+    application.payment_method = method
+    application.payment_reference = reference
+    application.payment_amount = expected_amount
+
+    if method == 'bank_deposit':
+        # Manual flow: record the deposit, bursary confirms it later.
+        application.payment_status = 'pending'
+        application.save()
+        UserActivity.objects.create(
+            user=request.user,
+            action='payment',
+            description=f'Bank deposit recorded for {application.id} (awaiting confirmation)'
+        )
+        from .emails import send_payment_pending
+        send_payment_pending(application)
+        return Response({
+            'message': 'Bank deposit recorded. Your payment will be confirmed by the bursary.',
+            'application_id': application.id,
+            'status': application.status,
+            'payment_status': application.payment_status,
+        })
+
+    # ── Paystack ──
+    if not reference:
+        return Response(
+            {'error': 'payment_reference is required for Paystack payments'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    simulate = django_settings.PAYSTACK_TEST_MODE or (
+        django_settings.DEBUG and not django_settings.PAYSTACK_SECRET_KEY
+    )
+    if not simulate:
+        import requests as http_requests
+        try:
+            resp = http_requests.get(
+                f'https://api.paystack.co/transaction/verify/{reference}',
+                headers={'Authorization': f'Bearer {django_settings.PAYSTACK_SECRET_KEY}'},
+                timeout=30,
+            )
+            body = resp.json()
+        except Exception:
+            return Response(
+                {'error': 'Unable to verify payment with the gateway. Please try again.'},
+                status=status.HTTP_502_BAD_GATEWAY
+            )
+
+        gw = body.get('data') or {}
+        if not body.get('status') or gw.get('status') != 'success':
+            application.payment_status = 'failed'
+            application.save(update_fields=['payment_status'])
+            return Response(
+                {'error': 'Payment verification failed'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Amount charged must equal the programme application fee (kobo on Paystack)
+        expected_kobo = int(Decimal(str(expected_amount)) * 100)
+        if int(gw.get('amount') or 0) != expected_kobo:
+            application.payment_status = 'failed'
+            application.save(update_fields=['payment_status'])
+            return Response(
+                {'error': 'Payment amount does not match the application fee'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if (gw.get('currency') or 'NGN') != (application.payment_currency or 'NGN'):
+            application.payment_status = 'failed'
+            application.save(update_fields=['payment_status'])
+            return Response(
+                {'error': 'Payment currency mismatch'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    application.payment_status = 'completed'
+    application.paid_at = tz.now()
     application.save()
-    
+
     # Update payment step
     payment_step = application.steps.filter(name='payment_verified').first()
     if payment_step:
         payment_step.status = 'completed'
-        payment_step.completed_at = __import__('datetime').datetime.now()
+        payment_step.completed_at = tz.now()
         payment_step.save()
-    
-    # Update application status
+
+    # Update application status (and notify the office — a payment without the
+    # submitted confirmation would leave the admissions alert missing)
     if application.status == 'draft':
         application.status = 'submitted'
-        application.submitted_at = __import__('datetime').datetime.now()
+        application.submitted_at = tz.now()
         application.save()
-    
+        from .emails import notify_application_submitted
+        notify_application_submitted(application)
+
     # Create notification
     UserActivity.objects.create(
         user=request.user,
         action='payment',
         description=f'Payment completed for {application.id}'
     )
-    
+
+    from .emails import send_payment_receipt
+    send_payment_receipt(application)
+
     return Response({
         'message': 'Payment processed successfully',
         'application_id': application.id,
@@ -261,7 +354,7 @@ def submit_application(request, application_id):
     was_revision = application.status == 'revision_requested'
     application.status = 'submitted'
     if not was_revision:
-        application.submitted_at = __import__('datetime').datetime.now()
+        application.submitted_at = timezone.now()
     application.save()
     
     # Create notification
@@ -271,6 +364,9 @@ def submit_application(request, application_id):
         title='Application Submitted',
         message=f'Your application {application.id} has been submitted successfully.'
     )
+    
+    from .emails import notify_application_submitted
+    notify_application_submitted(application)
     
     return Response({
         'message': 'Application submitted successfully',
@@ -289,8 +385,7 @@ class ApplicationAdminListView(generics.ListAPIView):
 
 def generate_matric_number(year=None):
     """Generate matriculation number in format UG/YY/XXXX"""
-    from datetime import datetime
-    yy = (str(year) if year else str(datetime.now().year))[-2:]
+    yy = (str(year) if year else str(timezone.now().year))[-2:]
     
     from accounts.models import StudentProfile
     last_profile = StudentProfile.objects.filter(
@@ -412,6 +507,9 @@ def update_application_status(request, application_id):
         from_name='Admissions Office'
     )
     
+    from .emails import notify_application_status_change
+    notify_application_status_change(application, old_status, matric_number=matric_number)
+    
     response_data = {
         'message': 'Status updated successfully',
         'new_status': application.status,
@@ -456,8 +554,11 @@ class ApplicationUpdateView(generics.RetrieveUpdateAPIView):
         application = serializer.save()
         if application.status == 'revision_requested':
             application.status = 'submitted'
-            application.submitted_at = __import__('datetime').datetime.now()
+            application.submitted_at = timezone.now()
             application.save()
+
+            from .emails import notify_application_submitted
+            notify_application_submitted(application)
 
 
 @api_view(['PATCH'])

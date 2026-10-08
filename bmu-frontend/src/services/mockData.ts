@@ -12,24 +12,27 @@ export interface Program {
 }
 
 export interface Faculty {
- id: number;
- title: string;
- firstName: string;
- lastName: string;
- email: string;
- department: string;
- college: string;
- position: string;
- researchInterests: string;
- bio: string;
- orcidId?: string;
- googleScholarUrl?: string;
- researchgateUrl?: string;
- citations: number;
- hIndex: number;
- i10Index: number;
- profileImage: string;
- publications?: { title: string; year: number; journal: string; citations: number }[];
+  id: number;
+  title: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  department: string;
+  college: string;
+  position: string;
+  positionDisplay?: string;
+  researchInterests: string;
+  bio: string;
+  orcidId?: string;
+  googleScholarUrl?: string;
+  researchgateUrl?: string;
+  citations: number;
+  hIndex: number;
+  i10Index: number;
+  profileImage: string;
+  publications?: { title: string; year: number; journal: string; citations: number }[];
+  customLinks?: { id: number; label: string; url: string; display_order: number }[];
+  fullName?: string;
 }
 
 export interface College {
@@ -59,19 +62,36 @@ export interface College {
     description: string;
     department_count: number;
     dean_name?: string;
+    staff_count?: number;
+    student_count?: number;
   }>;
 }
 
 export interface SDGMetric {
- label: string;
- value: number;
- target: number;
- unit: string;
+  label: string;
+  value: number;
+  target: number;
+  unit: string;
+  current_value?: number;
+  target_value?: number;
 }
 
 export interface SDGData {
- title: string;
- metrics: SDGMetric[];
+  title: string;
+  metrics: SDGMetric[];
+}
+
+export interface SDGRichData {
+  id: number;
+  number: number;
+  title: string;
+  short_title: string | null;
+  color: string;
+  icon: string | null;
+  description: string | null;
+  contributions: string[];
+  metrics: { label: string; value: string; target: string }[];
+  progress_data: Record<string, unknown>[];
 }
 
 export interface NewsItem {
@@ -911,8 +931,9 @@ export const mockFaculty: Faculty[] = [
  email: "jokonkwo@bmu.edu.ng",
  department: "Community Medicine",
  college: "College of Medicine",
- position: "Professor of Public Health",
- researchInterests: "Malaria elimination, Health systems strengthening, Maternal mortality",
+  position: "Professor of Public Health",
+  positionDisplay: "Professor",
+  researchInterests: "Malaria elimination, Health systems strengthening, Maternal mortality",
  bio: "Professor Okonkwo has over 20 years of experience in public health research...",
  orcidId: "0000-0001-2345-6789",
  googleScholarUrl: "https://scholar.google.com/citations?user=xxx",
@@ -934,7 +955,8 @@ export const mockFaculty: Faculty[] = [
  email: "anwosu@bmu.edu.ng",
  department: "Paediatrics",
  college: "College of Medicine",
- position: "Senior Lecturer",
+  position: "Senior Lecturer",
+  positionDisplay: "Senior Lecturer",
  researchInterests: "Child nutrition, Neonatal health, Vaccine preventable diseases",
  bio: "Dr. Nwosu is a paediatrician with focus on child survival in the Niger Delta...",
  googleScholarUrl: "https://scholar.google.com/citations?user=yyy",
@@ -994,6 +1016,66 @@ export const mockSDGMetrics: Record<string, SDGData> = {
  ]
  }
 };
+
+export const mockSDGs: SDGRichData[] = [
+  {
+    id: 1,
+    number: 3,
+    title: "Good Health and Well-being",
+    short_title: "Good Health",
+    color: "#4c9f38",
+    icon: "HeartPulse",
+    description: "Ensure healthy lives and promote well-being for all at all ages.",
+    contributions: [
+      "Free medical outreach treating 300+ patients in Yenagoa with BP screening, malaria testing, deworming, eye exams, TB screening, and chest X-rays — replicated across all Bayelsa State LGAs.",
+      "Early detection and intervention services for malaria, tuberculosis, hypertension, and diabetes.",
+      "Partnership with Health Care for the Vulnerable Initiatives to reach underserved communities.",
+    ],
+    metrics: [
+      { label: "Patients treated in free clinics", value: "13,147", target: "20,000" },
+      { label: "Malaria tests and treatments", value: "270", target: "324" },
+    ],
+    progress_data: [
+      { month: "Jan", patients: 850, campaigns: 3 },
+      { month: "Feb", patients: 920, campaigns: 4 },
+      { month: "Mar", patients: 1100, campaigns: 5 },
+      { month: "Apr", patients: 980, campaigns: 3 },
+      { month: "May", patients: 1250, campaigns: 6 },
+      { month: "Jun", patients: 1400, campaigns: 5 },
+      { month: "Jul", patients: 1350, campaigns: 4 },
+      { month: "Aug", patients: 1500, campaigns: 6 },
+      { month: "Sep", patients: 1600, campaigns: 5 },
+      { month: "Oct", patients: 1550, campaigns: 5 },
+      { month: "Nov", patients: 1700, campaigns: 6 },
+      { month: "Dec", patients: 1800, campaigns: 7 },
+    ],
+  },
+  {
+    id: 2,
+    number: 5,
+    title: "Gender Equality",
+    short_title: "Gender Equality",
+    color: "#ff3a21",
+    icon: "Users",
+    description: "Achieve gender equality and empower all women and girls.",
+    contributions: [
+      "Women outnumber men across student enrollment (62% female) and non-teaching staff (68% female), and hold 52% of academic faculty positions.",
+      "Zero-tolerance policy on gender-based violence fully implemented across all campuses.",
+    ],
+    metrics: [
+      { label: "Female student enrollment", value: "62%", target: "65%" },
+      { label: "Female faculty", value: "52%", target: "55%" },
+      { label: "Female leadership", value: "48%", target: "50%" },
+    ],
+    progress_data: [
+      { year: "2020", female_students: 55, female_faculty: 38, female_leadership: 35 },
+      { year: "2021", female_students: 58, female_faculty: 42, female_leadership: 39 },
+      { year: "2022", female_students: 60, female_faculty: 46, female_leadership: 42 },
+      { year: "2023", female_students: 61, female_faculty: 49, female_leadership: 45 },
+      { year: "2024", female_students: 62, female_faculty: 52, female_leadership: 48 },
+    ],
+  },
+];
 
 export const mockNews: NewsItem[] = [
  {
@@ -2218,6 +2300,333 @@ export const mockFundingStats: FundingStatsData = {
   ],
 };
 
+export interface InnovationProgramImageData {
+  image: string;
+  caption: string;
+  order: number;
+}
+
+export interface InnovationProgramData {
+  id: number;
+  title: string;
+  slug: string;
+  subtitle: string;
+  description: string;
+  program_type: string;
+  status: string;
+  year: number | null;
+  lead_unit: string;
+  cover_image: string | null;
+  thumbnail: string | null;
+  video_url: string;
+  objectives: string[];
+  achievements: string[];
+  partners: string[];
+  stat_1_label: string;
+  stat_1_value: string;
+  stat_2_label: string;
+  stat_2_value: string;
+  stat_3_label: string;
+  stat_3_value: string;
+  is_featured: boolean;
+  gallery_images: InnovationProgramImageData[];
+}
+
+export const mockInnovationPrograms: InnovationProgramData[] = [
+  {
+    id: 1,
+    title: 'Digital Health Innovation Programme',
+    slug: 'digital-health-innovation',
+    subtitle: 'Telemedicine, health informatics and AI-powered diagnostics',
+    description: 'A flagship programme driving the digitisation of healthcare delivery in the Niger Delta through telemedicine platforms, electronic health records, and AI-assisted diagnostic tools developed with BMU clinical and engineering teams.',
+    program_type: 'digital_health',
+    status: 'ongoing',
+    year: 2022,
+    lead_unit: 'Innovation & Technology Centre',
+    cover_image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80',
+    thumbnail: null,
+    video_url: '',
+    objectives: ['Deploy telemedicine hubs across rural health centres', 'Develop locally-tuned AI diagnostic assistants', 'Build an interoperable electronic health record system'],
+    achievements: ['12 rural health centres connected to telemedicine hubs', 'AI malaria microscopy model achieving 96% accuracy', '8,000+ patient consultations delivered remotely'],
+    partners: ['NITDA', 'TETFUND', 'Google Health', 'Bayelsa State Ministry of Health'],
+    stat_1_label: 'Communities Connected', stat_1_value: '12',
+    stat_2_label: 'Remote Consultations', stat_2_value: '8,000+',
+    stat_3_label: 'Diagnostic Accuracy', stat_3_value: '96%',
+    is_featured: true,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80', caption: 'Telemedicine hub consultation', order: 0 },
+      { image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80', caption: 'AI diagnostics workbench', order: 1 },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Affordable Medical Devices & Prototyping',
+    slug: 'medical-devices-prototyping',
+    subtitle: 'Design and prototyping of low-cost medical equipment',
+    description: 'Using our makerspace and 3D printing facilities, the programme designs, prototypes and pilots low-cost medical equipment for resource-limited settings, including oxygen concentrators, incubator sensors and point-of-care diagnostics.',
+    program_type: 'medical_devices',
+    status: 'ongoing',
+    year: 2023,
+    lead_unit: 'Innovation & Technology Centre',
+    cover_image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?w=1200&q=80',
+    thumbnail: null,
+    video_url: '',
+    objectives: ['Prototype low-cost vital-signs monitors', 'Pilot locally manufactured neonatal incubator components', 'Transfer designs to local manufacturers'],
+    achievements: ['5 medical device prototypes developed', '2 designs licensed to local manufacturers', 'Patent application filed for oxygen monitor'],
+    partners: ['NCDMB', 'Medical Engineering Hub', 'Federal Ministry of Science'],
+    stat_1_label: 'Prototypes Built', stat_1_value: '5',
+    stat_2_label: 'Patents Filed', stat_2_value: '1',
+    stat_3_label: 'Designs Licensed', stat_3_value: '2',
+    is_featured: false,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80', caption: 'Prototyping lab', order: 0 },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Biotech & Genomics Research Programme',
+    slug: 'biotech-genomics-research',
+    subtitle: 'Molecular diagnostics, genomics and personalised medicine',
+    description: 'A research-driven programme applying genomic sequencing and molecular diagnostics to infectious disease surveillance, pharmacogenomics and personalised medicine for the Bayelsa population.',
+    program_type: 'biotech',
+    status: 'ongoing',
+    year: 2021,
+    lead_unit: 'Research Institutes',
+    cover_image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=1200&q=80',
+    thumbnail: null,
+    video_url: '',
+    objectives: ['Sequence circulating pathogens of regional importance', 'Establish a genomic surveillance database', 'Train postgraduate researchers in bioinformatics'],
+    achievements: ['Genomic lab commissioned with NextSeq capability', '3 regional pathogen datasets published', '20 postgraduate researchers trained in bioinformatics'],
+    partners: ['WHO', 'TETFUND', 'Niger Delta University', 'Broad Institute'],
+    stat_1_label: 'Genomes Sequenced', stat_1_value: '1,200+',
+    stat_2_label: 'Publications', stat_2_value: '18',
+    stat_3_label: 'Researchers Trained', stat_3_value: '20',
+    is_featured: false,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80', caption: 'Genomics laboratory', order: 0 },
+    ],
+  },
+  {
+    id: 4,
+    title: 'AI & Machine Learning for Health',
+    slug: 'ai-machine-learning-health',
+    subtitle: 'Applied artificial intelligence in medical education and care',
+    description: 'The university is embedding artificial intelligence across medical education, clinical decision support and administration, including simulation-based training, automated assessment and AI tutors.',
+    program_type: 'ai_ml',
+    status: 'proposed',
+    year: 2025,
+    lead_unit: 'Innovation & Technology Centre',
+    cover_image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80',
+    thumbnail: null,
+    video_url: '',
+    objectives: ['Deploy AI-assisted virtual patient simulations', 'Build an institutional AI usage policy and ethics framework', 'Launch an AI literacy programme for faculty and students'],
+    achievements: [],
+    partners: ['Microsoft', 'NITDA', 'TETFUND'],
+    stat_1_label: 'Planned Pilots', stat_1_value: '3',
+    stat_2_label: 'Faculty Training', stat_2_value: '150',
+    stat_3_label: 'Simulation Modules', stat_3_value: '12',
+    is_featured: false,
+    gallery_images: [],
+  },
+  {
+    id: 5,
+    title: 'Niger Delta Telemedicine Network',
+    slug: 'telemedicine-niger-delta',
+    subtitle: 'Specialist care delivered to underserved communities',
+    description: 'A collaborative network linking BMU specialists with community health centres across Bayelsa State, enabling remote consultations, second opinions and continuous professional development for rural clinicians.',
+    program_type: 'telemedicine',
+    status: 'ongoing',
+    year: 2023,
+    lead_unit: 'Community Health & Innovation & Technology Centre',
+    cover_image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',
+    thumbnail: null,
+    video_url: '',
+    objectives: ['Connect every LGA health centre to a specialist hub', 'Deliver CPD to rural clinicians via the network', 'Reduce referral travel burden on patients'],
+    achievements: ['5 telemedicine hubs operational', '3,400 remote consultations completed', '60 rural clinicians onboarded'],
+    partners: ['Bayelsa State Government', 'Nigerian Medical Association'],
+    stat_1_label: 'Hubs Operational', stat_1_value: '5',
+    stat_2_label: 'Remote Consultations', stat_2_value: '3,400+',
+    stat_3_label: 'Clinicians Onboarded', stat_3_value: '60',
+    is_featured: false,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80', caption: 'Remote consultation session', order: 0 },
+    ],
+  },
+  {
+    id: 6,
+    title: 'Health Entrepreneurship & Startup Support',
+    slug: 'health-entrepreneurship-hub',
+    subtitle: 'Nurturing the next generation of health-tech startups',
+    description: 'A startup incubation programme supporting student and community entrepreneurs building health solutions, offering co-working space, mentorship, seed funding and access to clinical validation partners.',
+    program_type: 'health_entrepreneurship',
+    status: 'ongoing',
+    year: 2022,
+    lead_unit: 'Innovation & Technology Centre',
+    cover_image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80',
+    thumbnail: null,
+    video_url: '',
+    objectives: ['Incubate 10 health-tech startups annually', 'Provide seed grants and business mentorship', 'Bridge startups with clinical validation partners'],
+    achievements: ['15 startups supported', '2 startups raised external funding', '120 jobs created in the local innovation ecosystem'],
+    partners: ['NITDA', 'Bank of Industry', 'Venco Hub'],
+    stat_1_label: 'Startups Supported', stat_1_value: '15',
+    stat_2_label: 'External Funding Raised', stat_2_value: '₦120M',
+    stat_3_label: 'Jobs Created', stat_3_value: '120',
+    is_featured: false,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80', caption: 'Incubation co-working space', order: 0 },
+    ],
+  },
+];
+
+export interface UniversityProjectImageData {
+  image: string;
+  caption: string;
+  order: number;
+}
+
+export interface UniversityProjectData {
+  id: number;
+  title: string;
+  slug: string;
+  subtitle: string;
+  description: string;
+  category: string;
+  status: string;
+  year: number | null;
+  completion_date: string | null;
+  lead_unit: string;
+  budget: number | null;
+  image: string | null;
+  video_url: string;
+  highlights: string[];
+  is_featured: boolean;
+  gallery_images: UniversityProjectImageData[];
+}
+
+export const mockUniversityProjects: UniversityProjectData[] = [
+  {
+    id: 1,
+    title: 'University Teaching Hospital Development',
+    slug: 'university-teaching-hospital',
+    subtitle: 'A 350-bed teaching hospital complex',
+    description: 'The flagship infrastructure project of Bayelsa Medical University, establishing a modern teaching hospital complex supporting clinical training, specialist care and community services across the Niger Delta.',
+    category: 'infrastructure',
+    status: 'ongoing',
+    year: 2020,
+    completion_date: null,
+    lead_unit: 'Office of the Vice-Chancellor',
+    budget: 25000000000,
+    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1200&q=80',
+    video_url: '',
+    highlights: ['350-bed capacity with dedicated maternity, surgical and ICU wings', 'Full radiology suite (MRI, CT, ultrasound and X-ray)', 'Clinical skills and simulation laboratories'],
+    is_featured: true,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800&q=80', caption: 'Hospital complex', order: 0 },
+      { image: 'https://images.unsplash.com/photo-1629425733761-caae3b5f2e50?w=800&q=80', caption: 'Ward block', order: 1 },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Computer-Based Testing (CBT) Centre',
+    slug: 'computer-based-testing-centre',
+    subtitle: 'A digital examination centre for seamless assessments',
+    description: 'A purpose-built computer-based testing centre supporting university examinations, professional examinations and JUPEB assessments, reinforcing BMU\u2019s technology-driven ASPIRE agenda.',
+    category: 'technology',
+    status: 'completed',
+    year: 2024,
+    completion_date: '2024-08-01',
+    lead_unit: 'Centre for Foundation Studies',
+    budget: 350000000,
+    image: 'https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?w=1200&q=80',
+    video_url: '',
+    highlights: ['300 workstations with continuous power backup', 'Proctoring software and secure assessment platform', 'Served 172 JUPEB students in the first Physics CBT session'],
+    is_featured: true,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80', caption: 'CBT workstations', order: 0 },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Sampou Campus Development',
+    slug: 'sampou-campus-development',
+    subtitle: 'Expanding the specialised campus at Sampou',
+    description: 'Development of the Sampou campus, housing the Pharmacognosy/Herbal Medicine Laboratory, Pharmaceutical/Medicine Chemistry Laboratory, Clinical Pharmacy Laboratory and faculty buildings, visited by the TETFUND delegation in 2026.',
+    category: 'infrastructure',
+    status: 'ongoing',
+    year: 2021,
+    completion_date: null,
+    lead_unit: 'Sampou Campus Administration',
+    budget: 12000000000,
+    image: 'https://images.unsplash.com/photo-1562774053-701939374585?w=1200&q=80',
+    video_url: '',
+    highlights: ['Pharmacognosy and herbal medicine laboratory', 'Pharmaceutical and medicine chemistry laboratories', 'Clinical pharmacy laboratory and faculty buildings'],
+    is_featured: false,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80', caption: 'Academic buildings', order: 0 },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Artemisinin Resistance Surveillance Network',
+    slug: 'malaria-research-network',
+    subtitle: 'Monitoring antimalarial drug resistance in the Niger Delta',
+    description: 'A WHO-supported surveillance network monitoring antimalarial drug resistance patterns across the Niger Delta, providing data that informs national malaria treatment guidelines.',
+    category: 'research',
+    status: 'ongoing',
+    year: 2022,
+    completion_date: null,
+    lead_unit: 'Centre for Malaria Research',
+    budget: 120000000,
+    image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=1200&q=80',
+    video_url: '',
+    highlights: ['Molecular surveillance across 8 LGAs', 'Critical data for national treatment guidelines', 'Collaboration with the WHO and national malaria programme'],
+    is_featured: true,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800&q=80', caption: 'Molecular surveillance lab', order: 0 },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Free Medical Outreach Programme',
+    slug: 'free-medical-outreach',
+    subtitle: 'Annual free medical missions to underserved communities',
+    description: 'The university\u2019s flagship community outreach, delivering free consultations, surgeries and medications to underserved communities, including the ASPIRE anniversary outreach attended by over 300 registered patients at the University Gate.',
+    category: 'community',
+    status: 'completed',
+    year: 2025,
+    completion_date: null,
+    lead_unit: 'Community Health Outreach Directorate',
+    budget: 150000000,
+    image: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1200&q=80',
+    video_url: '',
+    highlights: ['300+ patients registered at the Yenagoa anniversary outreach', 'Screening for blood pressure, malaria, eye and TB conditions', 'Replicated statewide across the 8 LGAs of Bayelsa'],
+    is_featured: false,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80', caption: 'Community medical outreach', order: 0 },
+    ],
+  },
+  {
+    id: 6,
+    title: 'Smart Classrooms & AI Integration',
+    slug: 'smart-classroom-ai-integration',
+    subtitle: 'Technology-enhanced learning across all programmes',
+    description: 'Rollout of smart classrooms, virtual reality medical training suites and AI-assisted learning platforms, providing students with technology-enhanced, hands-on training aligned to BMU\u2019s innovation-driven agenda.',
+    category: 'technology',
+    status: 'ongoing',
+    year: 2023,
+    completion_date: null,
+    lead_unit: 'Academic Affairs',
+    budget: 800000000,
+    image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=1200&q=80',
+    video_url: '',
+    highlights: ['VR/AR medical simulation suite commissioned', 'Smart boards and lecture capture in lecture halls', 'AI tutors piloted for anatomy and physiology'],
+    is_featured: false,
+    gallery_images: [
+      { image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80', caption: 'Smart classroom', order: 0 },
+    ],
+  },
+];
+
 export const mockCampusContactInfo: CampusContactInfoData = {
   id: 1,
   address: 'Student Affairs Division, BMU Main Campus, Elebele, Yenagoa',
@@ -2239,6 +2648,25 @@ export const mockCampusImages: CampusImageData[] = [
   { id: 2, title: 'University Library', caption: 'A modern library with extensive medical collections', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=600&fit=crop', display_order: 2 },
   { id: 3, title: 'Medical Laboratory', caption: 'State-of-the-art laboratory facilities for research and training', image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=1200&h=600&fit=crop', display_order: 3 },
   { id: 4, title: 'Campus Garden', caption: 'Lush green spaces for relaxation and study', image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200&h=600&fit=crop', display_order: 4 },
+];
+
+export interface CampusGalleryImageData {
+  id: number;
+  title: string;
+  category: string | null;
+  image_url: string;
+  display_order: number;
+}
+
+export const mockCampusGalleryImages: CampusGalleryImageData[] = [
+  { id: 1, title: 'Main Campus Building', category: 'Architecture', image_url: 'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80', display_order: 1 },
+  { id: 2, title: 'Students in Library', category: 'Academic Life', image_url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80', display_order: 2 },
+  { id: 3, title: 'Medical Laboratory', category: 'Facilities', image_url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80', display_order: 3 },
+  { id: 4, title: 'Sports Event', category: 'Student Life', image_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80', display_order: 4 },
+  { id: 5, title: 'Graduation Ceremony', category: 'Events', image_url: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=800&q=80', display_order: 5 },
+  { id: 6, title: 'Hospital Wing', category: 'Facilities', image_url: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80', display_order: 6 },
+  { id: 7, title: 'Student Discussion', category: 'Academic Life', image_url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80', display_order: 7 },
+  { id: 8, title: 'Research Lab', category: 'Research', image_url: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=80', display_order: 8 },
 ];
 
 export interface CampusVideoData {
@@ -2496,10 +2924,11 @@ export const mockImpactPrograms: ImpactProgramData[] = [
 
 export interface ApplicationData {
   id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
+  public_id?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  email?: string | null;
+  phone?: string | null;
   program: string;
   student_type: string;
   status: string;

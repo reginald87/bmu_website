@@ -23,7 +23,7 @@ export const FundedProjectDetail = () => {
 
   if (isLoading) {
     return (
-      <section className="pt-[140px] pb-20 min-h-screen">
+      <section className="pt-[180px] pb-20 min-h-screen">
         <div className="container-custom">
           <div className="animate-pulse space-y-6">
             <div className="h-8 w-48 bg-gray-200" />
@@ -39,7 +39,7 @@ export const FundedProjectDetail = () => {
 
   if (!project) {
     return (
-      <section className="pt-[140px] pb-20 min-h-screen">
+      <section className="pt-[180px] pb-20 min-h-screen">
         <div className="container-custom text-center py-20">
           <Building2 className="w-16 h-16 mx-auto mb-4 text-gray-300" />
           <p className="text-gray-500 text-lg">Project not found.</p>
@@ -70,7 +70,7 @@ export const FundedProjectDetail = () => {
         <meta name="description" content={project.description.slice(0, 160)} />
       </Helmet>
 
-      <section className="pt-[140px] pb-20">
+      <section className="pt-[180px] pb-20">
         <div className="container-custom">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">

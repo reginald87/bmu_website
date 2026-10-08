@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
@@ -12,7 +12,7 @@ const fallbackLanguages = [
 
 export const ForeignLanguages = () => {
  const { data: sections } = usePageSections('institutes/languages');
- const languages = (sections?.find(s => s.section_key === 'language_programs')?.data as any[] || fallbackLanguages);
+ const languages = (sections?.find(s => s.section_key === 'language_programs')?.data as typeof fallbackLanguages) || fallbackLanguages;
  return (
  <>
  <Helmet>
@@ -20,7 +20,7 @@ export const ForeignLanguages = () => {
  <meta name="description" content="Institute of Foreign Languages at Bayelsa Medical University - Learn French, Spanish, German and more" />
  </Helmet>
 
- <section className="pt-[140px] pb-12 bg-[#1E1E1E]">
+ <section className="pt-[180px] pb-12 bg-[#1E1E1E]">
  <div className="container-custom">
  <motion.div
  initial={{ opacity: 0, y: 20 }}
@@ -62,7 +62,7 @@ export const ForeignLanguages = () => {
  <section className="card p-6">
  <h2 className="text-2xl font-bold mb-4" style={{ color: '#1E1E1E' }}>Programs Offered</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
- {languages.map((prog: any) => (
+ {languages.map((prog) => (
  <div key={prog.lang} className="p-4 border ">
  <h3 className="font-bold text-lg" style={{ color: '#1E1E1E' }}>{prog.lang}</h3>
  <p className="text-sm text-gray-500">{prog.level}</p>

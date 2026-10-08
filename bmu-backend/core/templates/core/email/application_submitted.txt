@@ -1,0 +1,18 @@
+{{ university_name|default:"Bayelsa Medical University" }} — Office of Admissions
+
+Dear {{ first_name }},
+
+Thank you for applying to {{ university_name|default:"Bayelsa Medical University" }}.
+We have received your application and it has been submitted for review.
+
+Application ID: {{ application_id }}
+Programme:      {{ program }}
+Status:         {{ status_display }}
+
+Keep your application ID safe — you will need it to check your admission status at any time.
+We will notify you by email whenever your application status changes.
+
+Track your application:
+{% if status_url %}{{ status_url }}{% endif %}
+
+This is an automated message. Please do not reply to this email.

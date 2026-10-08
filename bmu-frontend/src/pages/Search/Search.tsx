@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -10,12 +10,13 @@ import {
   BookOpen,
   ChevronRight,
   Filter,
-  Loader2
+  Loader2,
+  type LucideIcon
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useSearchResults } from '../../services/apiHooks';
 
-const typeIcons: Record<string, any> = {
+const typeIcons: Record<string, LucideIcon> = {
   page: FileText,
   event: Calendar,
   news: BookOpen,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -69,21 +69,21 @@ export const ResultApproval = ({ stage }: Props) => {
   const [session] = useState('2024/2025');
   const [semester] = useState('First');
 
+  const loadPending = useCallback(() => {
+    setLoading(true);
+    config.fetchPending(session, semester)
+      .then(setPending)
+      .catch(() => toast.error('Failed to load pending results'))
+      .finally(() => setLoading(false));
+  }, [config, session, semester]);
+
   useEffect(() => {
     if (!isAuthenticated || user?.role !== config.role) {
       navigate('/portals/student', { replace: true });
       return;
     }
     loadPending();
-  }, [isAuthenticated, user, config.role, navigate]);
-
-  const loadPending = () => {
-    setLoading(true);
-    config.fetchPending(session, semester)
-      .then(setPending)
-      .catch(() => toast.error('Failed to load pending results'))
-      .finally(() => setLoading(false));
-  };
+  }, [isAuthenticated, user, config.role, navigate, loadPending]);
 
   const toggleSelect = (id: number) => {
     setSelected(prev => {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sanitizeHtml } from '../../utils/sanitize';
 import { Helmet } from 'react-helmet-async';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -200,7 +201,7 @@ export const NewsDetail = () => {
  <Helmet>
  <title>Loading... | Bayelsa Medical University</title>
  </Helmet>
- <div className="min-h-screen bg-gray-50 pt-[140px]">
+ <div className="min-h-screen bg-gray-50 pt-[180px]">
  <div className="container-custom py-16">
  <div className="max-w-2xl mx-auto text-center">
  <div className="w-8 h-8 border-4 border-[#1E1E1E] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
@@ -224,7 +225,7 @@ export const NewsDetail = () => {
  const typeConfig = typeLabels[article.type];
 
  return (
- <><Helmet><title>{article.title} | Bayelsa Medical University</title><meta name="description"content={article.excerpt} /><meta property="og:title"content={article.title} /><meta property="og:description"content={article.excerpt} /></Helmet><div className="min-h-screen bg-gray-50 pt-[140px]">
+ <><Helmet><title>{article.title} | Bayelsa Medical University</title><meta name="description"content={article.excerpt} /><meta property="og:title"content={article.title} /><meta property="og:description"content={article.excerpt} /></Helmet><div className="min-h-screen bg-gray-50 pt-[180px]">
  {/* Navigation Bar */}
  <div className="bg-white border-b sticky top-[140px] z-20"><div className="container-custom py-4"><div className="flex items-center justify-between"><button
  onClick={() => navigate(-1)}
@@ -305,7 +306,7 @@ export const NewsDetail = () => {
  className="bg-white p-8 md:p-12 shadow-sm">
  {/* Article Body */}
  <div
- className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-a:text-[#1E1E1E] prose-strong:text-gray-900 prose-ul:text-gray-700 prose-li:marker:text-[#1E1E1E]" dangerouslySetInnerHTML={{ __html: article.content }}
+ className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-a:text-[#1E1E1E] prose-strong:text-gray-900 prose-ul:text-gray-700 prose-li:marker:text-[#1E1E1E]" dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
  />
 
  {/* Engagement Section */}

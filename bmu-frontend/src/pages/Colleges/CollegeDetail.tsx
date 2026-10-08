@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -227,16 +227,26 @@ const defaultCollegeData = (slug: string, name: string, description: string): Co
 	dean: { name: '', title: '', message: '' },
 });
 
+interface ApiCollegeDetail {
+	slug: string;
+	name: string;
+	description: string;
+	primary_color?: string;
+	student_count?: number;
+	faculty_count?: number;
+	faculty_members_count?: number;
+}
+
 export const CollegeDetail = () => {
 	const { collegeSlug } = useParams<{ collegeSlug: string }>();
 	const [college, setCollege] = useState<CollegeData | null>(null);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(() => Boolean(collegeSlug));
 
 	useEffect(() => {
-		if (!collegeSlug) { setLoading(false); return; }
+		if (!collegeSlug) return;
 
 		fetchCollegeBySlug(collegeSlug)
-			.then((apiCollege: any) => {
+			.then((apiCollege: ApiCollegeDetail | undefined) => {
 				if (apiCollege) {
 					const hardcoded = collegesData[collegeSlug];
 					if (hardcoded) {
@@ -305,7 +315,7 @@ export const CollegeDetail = () => {
  </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: college.color }}>
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: college.color }}>
  <div className="absolute inset-0 opacity-5" style={{
  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />

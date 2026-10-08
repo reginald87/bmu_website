@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
@@ -44,7 +44,7 @@ const fallbackCpdPrograms = [
 
 export const CPDCentre = () => {
  const { data: sections } = usePageSections('centres/cpd');
- const cpdPrograms = (sections?.find(s => s.section_key === 'cpd_programs')?.data as any[] || fallbackCpdPrograms);
+ const cpdPrograms = (sections?.find(s => s.section_key === 'cpd_programs')?.data as typeof fallbackCpdPrograms) || fallbackCpdPrograms;
  return (
  <>
  <Helmet>
@@ -92,13 +92,13 @@ export const CPDCentre = () => {
  <section>
  <h2 className="text-2xl font-bold mb-6" style={{ color: '#1E1E1E' }}>CPD Programs</h2>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- {cpdPrograms.map((category: any) => (
+ {cpdPrograms.map((category) => (
  <div key={category.category} className="card p-6">
  <h3 className="font-bold text-lg mb-4" style={{ color: '#00a651' }}>
  {category.category}
  </h3>
  <ul className="space-y-2">
- {category.courses.map((course: any) => (
+ {category.courses.map((course) => (
  <li key={course} className="text-gray-600 text-sm flex items-start gap-2">
  <span style={{ color: '#00a651' }}>•</span>
  {course}

@@ -108,7 +108,7 @@ export const AlumniPortal = () => {
           <meta name="description" content="Login to BMU Alumni Portal to connect with fellow graduates and access alumni resources." />
         </Helmet>
 
-        <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[140px] pb-12 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[180px] pb-12 px-4">
           <div className="max-w-md mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

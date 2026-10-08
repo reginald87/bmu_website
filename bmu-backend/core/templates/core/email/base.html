@@ -1,0 +1,60 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ subject }}</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f5; font-family:Arial, Helvetica, sans-serif;">
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0;">
+    {% block preheader %}{% if preheader %}{{ preheader }}{% endif %}{% endblock %}
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f5; padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:100%; background-color:#ffffff; border-radius:8px; overflow:hidden; border:1px solid #e5e4e7;">
+          <tr>
+            <td style="background-color:#A51C30; padding:20px 32px;">
+              <div style="color:#ffffff; font-size:18px; font-weight:bold; letter-spacing:0.5px;">
+                {{ university_name|default:"Bayelsa Medical University" }}
+              </div>
+              <div style="color:#f6d5dc; font-size:12px; margin-top:4px;">Office of Admissions</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px;">
+              <h1 style="margin:0 0 16px 0; font-size:20px; color:#1E1E1E;">{% block heading %}{% endblock %}</h1>
+              <div style="font-size:15px; line-height:1.6; color:#3f3f46;">
+                {% block content %}{% endblock %}
+              </div>
+              {% block action %}
+              {% if status_url %}
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:24px;">
+                <tr>
+                  <td style="background-color:#A51C30; border-radius:6px;">
+                    <a href="{{ status_url }}" style="display:inline-block; padding:12px 24px; color:#ffffff; font-size:14px; font-weight:bold; text-decoration:none;">
+                      {% block button_label %}Track your application{% endblock %}
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              {% endif %}
+              {% endblock %}
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#f9f9fa; padding:20px 32px; border-top:1px solid #e5e4e7; font-size:12px; color:#71717a; line-height:1.6;">
+              {% block footer %}
+              <p style="margin:0;">
+                This is an automated message from {{ university_name|default:"Bayelsa Medical University" }}.
+                Please do not reply to this email. For enquiries, contact the Admissions Office.
+              </p>
+              {% endblock %}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

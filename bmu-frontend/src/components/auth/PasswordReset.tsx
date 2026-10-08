@@ -2,11 +2,24 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
+import { authApi } from '../../services/api';
 
 interface PasswordResetProps {
  portal: 'student' | 'alumni' | 'cpd';
  onBack: () => void;
 }
+
+const apiErrorMessage = (err: unknown, fallback: string): string => {
+ const e = err as {
+   response?: { data?: { error?: string; message?: string; detail?: string } };
+ };
+ return (
+   e?.response?.data?.error ||
+   e?.response?.data?.message ||
+   e?.response?.data?.detail ||
+   fallback
+ );
+};
 
 export const PasswordReset = ({ portal, onBack }: PasswordResetProps) => {
  const [step, setStep] = useState<'email' | 'code' | 'password' | 'success'>('email');
@@ -32,36 +45,33 @@ export const PasswordReset = ({ portal, onBack }: PasswordResetProps) => {
  const handleEmailSubmit = async (e: React.FormEvent) => {
  e.preventDefault();
  setError(null);
- setIsLoading(true);
-
- // Simulate API call
- await new Promise(resolve => setTimeout(resolve, 1500));
 
  if (!email.includes('@')) {
- setError('Please enter a valid email address');
- setIsLoading(false);
- return;
+   setError('Please enter a valid email address');
+   return;
  }
 
- setIsLoading(false);
- setStep('code');
+ setIsLoading(true);
+ try {
+   await authApi.requestPasswordReset(email);
+   setStep('code');
+ } catch (err) {
+   setError(apiErrorMessage(err, 'Could not send the reset code. Please try again.'));
+ } finally {
+   setIsLoading(false);
+ }
  };
 
  const handleCodeSubmit = async (e: React.FormEvent) => {
  e.preventDefault();
  setError(null);
- setIsLoading(true);
-
- // Simulate API call
- await new Promise(resolve => setTimeout(resolve, 1000));
 
  if (code.length !== 6) {
- setError('Please enter the 6-digit verification code');
- setIsLoading(false);
- return;
+   setError('Please enter the 6-digit verification code');
+   return;
  }
 
- setIsLoading(false);
+ // The code is verified together with the new password
  setStep('password');
  };
 
@@ -70,22 +80,30 @@ export const PasswordReset = ({ portal, onBack }: PasswordResetProps) => {
  setError(null);
 
  if (password.length < 8) {
- setError('Password must be at least 8 characters long');
- return;
+   setError('Password must be at least 8 characters long');
+   return;
  }
 
  if (password !== confirmPassword) {
- setError('Passwords do not match');
- return;
+   setError('Passwords do not match');
+   return;
  }
 
  setIsLoading(true);
-
- // Simulate API call
- await new Promise(resolve => setTimeout(resolve, 1500));
-
- setIsLoading(false);
- setStep('success');
+ try {
+   await authApi.confirmPasswordReset(email, code, password, confirmPassword);
+   setStep('success');
+ } catch (err) {
+   const message = apiErrorMessage(err, 'Could not reset the password. Please try again.');
+   setError(message);
+   // Invalid/expired code — send the user back to re-enter it
+   if (message.toLowerCase().includes('code')) {
+     setCode('');
+     setStep('code');
+   }
+ } finally {
+   setIsLoading(false);
+ }
  };
 
  return (
@@ -98,7 +116,7 @@ export const PasswordReset = ({ portal, onBack }: PasswordResetProps) => {
  <motion.div
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
- className="min-h-screen bg-gray-50 pt-[140px] pb-12 px-4"
+ className="min-h-screen bg-gray-50 pt-[180px] pb-12 px-4"
  >
  <div className="max-w-md mx-auto">
  <div className="bg-white p-8">

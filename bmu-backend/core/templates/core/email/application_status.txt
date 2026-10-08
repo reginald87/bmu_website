@@ -1,0 +1,20 @@
+{{ university_name|default:"Bayelsa Medical University" }} — Office of Admissions
+
+Dear {{ first_name }},
+
+{{ body }}
+
+Application ID: {{ application_id }}
+Programme:      {{ program }}
+New status:     {{ status_display }}
+{% if matric_number %}
+Matriculation number: {{ matric_number }}
+{% endif %}
+
+{% if next_steps %}
+Next step: {{ next_steps }}
+{% endif %}
+Track your application:
+{% if status_url %}{{ status_url }}{% endif %}
+
+This is an automated message. Please do not reply to this email.

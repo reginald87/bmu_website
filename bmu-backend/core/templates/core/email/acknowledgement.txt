@@ -1,0 +1,11 @@
+{{ university_name|default:"Bayelsa Medical University" }}
+
+Dear {{ name }},
+
+{{ body }}
+
+{% if reference %}
+Reference:   {{ reference }}
+Subject:     {{ subject_line }}
+{% endif %}
+For urgent enquiries you can reach us at {{ contact_email }}.

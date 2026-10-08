@@ -73,10 +73,10 @@ const fallbackStats = [
 
 export const Apply = () => {
   const { data: sections } = usePageSections('apply');
-  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as any[] || fallbackSteps);
-  const upcomingDeadlines = (sections?.find(s => s.section_key === 'deadlines')?.data as any[] || fallbackDeadlines);
-  const requirements = (sections?.find(s => s.section_key === 'requirements')?.data as any[] || fallbackRequirements);
-  const stats = (sections?.find(s => s.section_key === 'stats')?.data as any[] || fallbackStats);
+  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as typeof fallbackSteps) || fallbackSteps;
+  const upcomingDeadlines = (sections?.find(s => s.section_key === 'deadlines')?.data as typeof fallbackDeadlines) || fallbackDeadlines;
+  const requirements = (sections?.find(s => s.section_key === 'requirements')?.data as typeof fallbackRequirements) || fallbackRequirements;
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
 
   return (
     <>
@@ -86,7 +86,7 @@ export const Apply = () => {
       </Helmet>
 
       {/* Hero */}
-      <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />

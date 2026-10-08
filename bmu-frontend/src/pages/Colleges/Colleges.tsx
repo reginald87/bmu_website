@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { 
   GraduationCap,
@@ -36,7 +36,28 @@ const fallbackColleges: College[] = [
   }
 ];
 
-function transformCollege(src: any): College {
+interface ApiCollege {
+  id: number;
+  slug: string;
+  name: string;
+  fullName?: string;
+  description: string;
+  color?: string;
+  primary_color?: string;
+  primaryColor?: string;
+  faculty_count?: number;
+  facultyCount?: number;
+  department_count?: number;
+  departmentCount?: number;
+  faculty_members_count?: number;
+  facultyMembersCount?: number;
+  provost_name?: string;
+  deanName?: string;
+  leadership_name?: string;
+  provost_photo?: string | null;
+}
+
+function transformCollege(src: ApiCollege): College {
   return {
     id: src.id,
     slug: src.slug,
@@ -91,7 +112,7 @@ export const Colleges = () => {
         <meta name="description" content="Explore BMU's academic colleges and schools." />
       </Helmet>
 
-      <section className="relative pt-[140px] pb-20 overflow-hidden bg-[#1E1E1E]">
+      <section className="relative pt-[180px] pb-20 overflow-hidden bg-[#1E1E1E]">
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />

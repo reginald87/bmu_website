@@ -89,6 +89,7 @@ export function useChatWebSocket() {
   const [conversationEnded, setConversationEnded] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const sessionIdRef = useRef(generateSessionId());
+  const [sessionId, setSessionId] = useState(generateSessionId);
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const reconnectAttempts = useRef(0);
   const MAX_RECONNECT = 10;
@@ -105,6 +106,7 @@ export function useChatWebSocket() {
     setIsConnected(false);
   }, []);
 
+  const connectRef = useRef<() => void>(() => {});
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN || wsRef.current?.readyState === WebSocket.CONNECTING) {
       return;
@@ -123,7 +125,7 @@ export function useChatWebSocket() {
       if (reconnectAttempts.current < MAX_RECONNECT) {
         const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
         reconnectAttempts.current++;
-        reconnectTimeoutRef.current = setTimeout(connect, delay);
+        reconnectTimeoutRef.current = setTimeout(() => connectRef.current(), delay);
       }
     };
 
@@ -206,6 +208,10 @@ export function useChatWebSocket() {
     wsRef.current = ws;
   }, []);
 
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
+
   const loadHistory = useCallback(async (sessionId: string) => {
     const history = await fetchChatHistory(sessionId);
     if (history.messages.length > 0) {
@@ -277,6 +283,7 @@ export function useChatWebSocket() {
     setAgentJoined(false);
     setAgentName('');
     sessionIdRef.current = generateSessionId();
+    setSessionId(sessionIdRef.current);
     reconnectAttempts.current = 0;
     connect();
   }, [connect, disconnect]);
@@ -295,7 +302,7 @@ export function useChatWebSocket() {
     startConversation,
     endConversation,
     startNewChat,
-    sessionId: sessionIdRef.current,
+    sessionId,
     retryConnection,
   };
 }

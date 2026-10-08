@@ -1220,6 +1220,27 @@ class CampusImage(models.Model):
         return self.title
 
 
+class CampusGalleryImage(models.Model):
+    """Gallery images for the Campus Life page"""
+
+    title = models.CharField(max_length=200)
+    category = models.CharField(max_length=100, blank=True,
+                               help_text="e.g. 'Architecture', 'Academic Life'")
+    image = models.ImageField(upload_to='campus_gallery/')
+    thumbnail = models.ImageField(upload_to='campus_gallery/thumbnails/', blank=True, null=True)
+    display_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Campus Gallery Image"
+        verbose_name_plural = "Campus Gallery Images"
+        ordering = ['display_order']
+
+    def __str__(self):
+        return f"{self.title} ({self.category})"
+
+
 class FundingOrganization(models.Model):
     """Organizations that provide funding to the university"""
 
@@ -1293,6 +1314,161 @@ class FundedProjectImage(models.Model):
     class Meta:
         verbose_name = 'Project Image'
         verbose_name_plural = 'Project Images'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.caption or f'Image {self.order}'
+
+
+# ============================================================================
+# Technology & Innovation
+# ============================================================================
+
+class InnovationProgram(models.Model):
+    """Technological innovation programs showcased on the Technology & Innovation page"""
+
+    PROGRAM_TYPE_CHOICES = [
+        ('digital_health', 'Digital Health'),
+        ('medical_devices', 'Medical Devices'),
+        ('biotech', 'Biotech & Genomics'),
+        ('ai_ml', 'AI & Machine Learning'),
+        ('telemedicine', 'Telemedicine'),
+        ('health_entrepreneurship', 'Health Entrepreneurship'),
+    ]
+
+    STATUS_CHOICES = [
+        ('ongoing', 'Ongoing'),
+        ('completed', 'Completed'),
+        ('proposed', 'Proposed'),
+    ]
+
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    subtitle = models.CharField(max_length=300, blank=True)
+    description = models.TextField()
+
+    program_type = models.CharField(max_length=40, choices=PROGRAM_TYPE_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ongoing')
+    year = models.PositiveIntegerField(blank=True, null=True, help_text="Year the program started")
+    lead_unit = models.CharField(max_length=200, blank=True, help_text="e.g. Innovation & Technology Centre")
+
+    # Media
+    cover_image = models.ImageField(upload_to='innovation/covers/', blank=True, null=True)
+    thumbnail = models.ImageField(upload_to='innovation/thumbnails/', blank=True, null=True)
+    video_url = models.URLField(blank=True, help_text="YouTube/Vimeo embed URL for a program video")
+
+    # Content sections (stored as JSON)
+    objectives = models.JSONField(default=list, blank=True)
+    achievements = models.JSONField(default=list, blank=True)
+    partners = models.JSONField(default=list, blank=True)
+
+    # Key statistics
+    stat_1_label = models.CharField(max_length=100, blank=True)
+    stat_1_value = models.CharField(max_length=50, blank=True)
+    stat_2_label = models.CharField(max_length=100, blank=True)
+    stat_2_value = models.CharField(max_length=50, blank=True)
+    stat_3_label = models.CharField(max_length=100, blank=True)
+    stat_3_value = models.CharField(max_length=50, blank=True)
+
+    display_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    is_featured = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Innovation Program"
+        verbose_name_plural = "Innovation Programs"
+        ordering = ['display_order']
+
+    def __str__(self):
+        return self.title
+
+
+class InnovationProgramImage(models.Model):
+    """Gallery images for an innovation program"""
+
+    program = models.ForeignKey(InnovationProgram, on_delete=models.CASCADE, related_name='gallery_images')
+    image = models.ImageField(upload_to='innovation/gallery/')
+    caption = models.CharField(max_length=200, blank=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Innovation Program Image"
+        verbose_name_plural = "Innovation Program Images"
+        ordering = ['order']
+
+    def __str__(self):
+        return self.caption or f'Image {self.order}'
+
+
+# ============================================================================
+# University Projects
+# ============================================================================
+
+class UniversityProject(models.Model):
+    """Projects undertaken by the University, showcased on the University Projects page"""
+
+    CATEGORY_CHOICES = [
+        ('infrastructure', 'Infrastructure'),
+        ('research', 'Research'),
+        ('community', 'Community & Outreach'),
+        ('technology', 'Technology & Digital'),
+        ('academic', 'Academic & Student'),
+    ]
+
+    STATUS_CHOICES = [
+        ('ongoing', 'Ongoing'),
+        ('completed', 'Completed'),
+        ('proposed', 'Proposed'),
+    ]
+
+    title = models.CharField(max_length=300)
+    slug = models.SlugField(unique=True)
+    subtitle = models.CharField(max_length=300, blank=True)
+    description = models.TextField()
+
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ongoing')
+    year = models.PositiveIntegerField(blank=True, null=True, help_text="Year the project started")
+    completion_date = models.DateField(blank=True, null=True)
+    lead_unit = models.CharField(max_length=200, blank=True, help_text="Unit/office leading the project")
+    budget = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True, help_text="Budget in NGN")
+
+    # Media
+    image = models.ImageField(upload_to='projects/covers/', blank=True, null=True)
+    video_url = models.URLField(blank=True, help_text="YouTube/Vimeo embed URL for a project video")
+
+    highlights = models.JSONField(default=list, blank=True)
+
+    display_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    is_featured = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "University Project"
+        verbose_name_plural = "University Projects"
+        ordering = ['-year', 'display_order']
+
+    def __str__(self):
+        return f"{self.title} ({self.get_status_display()})"
+
+
+class UniversityProjectImage(models.Model):
+    """Gallery images for a university project"""
+
+    project = models.ForeignKey(UniversityProject, on_delete=models.CASCADE, related_name='gallery_images')
+    image = models.ImageField(upload_to='projects/gallery/')
+    caption = models.CharField(max_length=200, blank=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "University Project Image"
+        verbose_name_plural = "University Project Images"
         ordering = ['order']
 
     def __str__(self):

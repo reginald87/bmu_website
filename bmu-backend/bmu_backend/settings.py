@@ -28,6 +28,7 @@ ALLOWED_HOSTS = [
 # ── Application definition ────────────────────────────────────────────────────
 INSTALLED_APPS = [
     'daphne',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'channels',
     'chat',
+    'core',
     'accounts',
     'admissions',
     'academics',
@@ -190,13 +192,32 @@ AUTH_USER_MODEL = 'accounts.User'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ── Email ─────────────────────────────────────────────────────────────────────
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@bmu.edu.ng')
+# Supports both EMAIL_* and SMTP_* env var names (SMTP_* checked as fallback).
+EMAIL_HOST = os.getenv('EMAIL_HOST') or os.getenv('SMTP_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT') or os.getenv('SMTP_PORT', '587'))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') or os.getenv('SMTP_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') or os.getenv('SMTP_PASS', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL') or os.getenv('SMTP_FROM', 'noreply@bmu.edu.ng')
+# Port 465 => implicit SSL; anything else (587/25) => STARTTLS.
+EMAIL_USE_SSL = (os.getenv('EMAIL_USE_SSL', 'True' if EMAIL_PORT == 465 else 'False') == 'True')
+EMAIL_USE_TLS = (os.getenv('EMAIL_USE_TLS', 'False' if EMAIL_USE_SSL else 'True') == 'True')
+# Use real SMTP when credentials are configured, otherwise print to console (dev).
+EMAIL_BACKEND = os.getenv(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend' if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD
+    else 'django.core.mail.backends.console.EmailBackend',
+)
+# Frontend origin used to build absolute links in outgoing emails
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+# Internal alerts (comma-separated). Applicant replies should go elsewhere.
+ADMISSIONS_OFFICE_EMAIL = os.getenv('ADMISSIONS_OFFICE_EMAIL', 'admissions@bmu.edu.ng')
+
+# ── Payments (Paystack) ───────────────────────────────────────────────────────
+PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY', '')
+PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY', '')
+# Demo/simulation mode is an explicit opt-in only. When the secret key is set,
+# payments are ALWAYS verified against the gateway unless this is True.
+PAYSTACK_TEST_MODE = os.getenv('PAYSTACK_TEST_MODE', 'False') == 'True'
 
 # ── Celery ────────────────────────────────────────────────────────────────────
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
@@ -216,3 +237,137 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '0'))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False') == 'True'
     SECURE_HSTS_PRELOAD = os.getenv('SECURE_HSTS_PRELOAD', 'False') == 'True'
+
+# ── Jazzmin Admin Configuration ──────────────────────────────────────────────
+# BMU brand colours
+#   Primary dark:  #1E1E1E  (almost-black)
+#   Brand red:     #A51C30  (burgundy)
+#   SDG green:     #4c9f38
+#   SDG orange:    #ff3a21
+#   Light background: #FDFDFD / #ffffff
+#   Muted:         #e5e4e7
+JAZZMIN_SETTINGS = {
+    "site_title": "BMU Admin",
+    "site_header": "Bayelsa Medical University",
+    "site_brand": "BMU",
+    "site_logo": None,
+    "site_icon": None,
+    "site_title_logo": None,
+    "welcome_sign": "Welcome to Bayelsa Medical University Admin",
+    "copyright": "Bayelsa Medical University © 2024 ASPIRE Administration",
+    "user_avatar": None,
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "accounts.User": "fas fa-user",
+        "accounts.StudentProfile": "fas fa-user-graduate",
+        "accounts.AlumniProfile": "fas fa-user-tie",
+        "content.NewsItem": "fas fa-newspaper",
+        "content.Event": "fas fa-calendar-alt",
+        "content.PublicDocument": "fas fa-file-pdf",
+        "content.SDG": "fas fa-bullseye",
+        "content.ImpactProgram": "fas fa-hands-helping",
+        "content.HeroSlide": "fas fa-images",
+        "content.Testimonial": "fas fa-quote-left",
+        "content.Partner": "fas fa-handshake",
+        "content.FAQ": "fas fa-question-circle",
+        "content.ContactEnquiry": "fas fa-envelope",
+        "content.MenuItems": "fas fa-sitemap",
+        "content.PageContent": "fas fa-layer-group",
+        "academics.College": "fas fa-university",
+        "academics.Department": "fas fa-building",
+        "academics.Program": "fas fa-chalkboard",
+        "academics.Faculty": "fas fa-chalkboard-teacher",
+        "academics.Course": "fas fa-book",
+        "academics.SDGMetric": "fas fa-chart-line",
+        "academics.HomeStats": "fas fa-tachometer-alt",
+        "academics.Leadership": "fas fa-user-tie",
+        "admissions.Application": "fas fa-file-alt",
+        "admissions.AdmissionRequirement": "fas fa-clipboard-list",
+        "research.FundedProject": "fas fa-flask",
+        "research.ResearchPublication": "fas fa-microscope",
+        "research.ResearchGrant": "fas fa-grant",
+        "careers.JobPosting": "fas fa-briefcase",
+        "library.Book": "fas fa-book-open",
+        "library.DigitalResource": "fas fa-desktop",
+        "portals.Announcement": "fas fa-bell",
+        "portals.MenuItems": "fas fa-sitemap",
+    },
+    "order_with_respect_to": [
+        "accounts", "content", "academics",
+        "admissions", "research", "careers",
+        "library", "portals", "archive",
+    ],
+    "language_chooser": False,
+    "show_ui_toggle": True,
+    "navbar_compact_style": False,
+    "navbar_fixed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "custom_css": "jazzmin/custom.css",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "title_small_text": False,
+    "body_small_text": False,
+    "inline_small_text": False,
+    "input_small_text": False,
+    "body_class": "bg-white",
+    "dark_mode_class": "",
+    "icon_color": "#A51C30",
+    "accent": "accent-red-700",
+    "primary": "primary",  # uses brand color below
+    "success": "success",  # #4c9f38 SDG green
+    "info": "info",
+    "warning": "warning",
+    "danger": "danger",   # #A51C30 brand red — used for errors/alerts
+    "primary_100": "#f8d7da",
+    "primary_200": "#f1aeb3",
+    "primary_300": "#ea858c",
+    "primary_400": "#e25c65",
+    "primary_500": "#A51C30",
+    "primary_600": "#821723",
+    "primary_700": "#5f0010",
+    "primary_800": "#3c0000",
+    "primary_900": "#1a0000",
+}
+
+# Custom CSS
+# Jazzmin allows a custom CSS/JS file path (relative to static root)
+# We use it to fully apply BMU brand colours (#1E1E1E, #A51C30, #4c9f38)
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "default_theme_mode": "light",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
+}

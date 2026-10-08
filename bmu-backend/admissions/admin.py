@@ -52,6 +52,27 @@ class ApplicationAdmin(admin.ModelAdmin):
         }),
     )
 
+    def save_model(self, request, obj, form, change):
+        # The row has not been written yet at this point, so the database still
+        # holds the previous status.
+        old_status = None
+        if change:
+            old_status = Application.objects.filter(pk=obj.pk).values_list('status', flat=True).first()
+
+        super().save_model(request, obj, form, change)
+
+        matric_number = None
+        if obj.status == 'accepted' and old_status != 'accepted':
+            from .views import create_student_record
+            _, _, matric_number = create_student_record(obj)
+
+        from .emails import notify_application_submitted, notify_application_status_change
+        if not change:
+            if obj.status == 'submitted':
+                notify_application_submitted(obj)
+        else:
+            notify_application_status_change(obj, old_status, matric_number=matric_number)
+
 
 @admin.register(AcademicRecord)
 class AcademicRecordAdmin(admin.ModelAdmin):

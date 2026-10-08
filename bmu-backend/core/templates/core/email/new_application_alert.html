@@ -1,0 +1,51 @@
+{% extends "core/email/base.html" %}
+
+{% block preheader %}New application {{ application_id }} from {{ full_name }}.{% endblock %}
+
+{% block heading %}New application received{% endblock %}
+
+{% block content %}
+<p style="margin:0 0 12px 0;">A new application has just been submitted on the online portal.</p>
+<table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="background-color:#f9f9fa; border:1px solid #e5e4e7; border-radius:6px; margin:16px 0; font-size:14px;">
+  <tr>
+    <td style="color:#71717a; width:160px;">Application ID</td>
+    <td style="color:#1E1E1E; font-weight:bold;">{{ application_id }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Applicant</td>
+    <td style="color:#1E1E1E;">{{ full_name }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Email</td>
+    <td style="color:#1E1E1E;">{{ email }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Phone</td>
+    <td style="color:#1E1E1E;">{{ phone }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Programme</td>
+    <td style="color:#1E1E1E;">{{ program }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Student type</td>
+    <td style="color:#1E1E1E;">{{ student_type }}</td>
+  </tr>
+  <tr>
+    <td style="color:#71717a;">Submitted</td>
+    <td style="color:#1E1E1E;">{{ submitted_at }}</td>
+  </tr>
+</table>
+{% endblock %}
+
+{% block action %}
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:24px;">
+  <tr>
+    <td style="background-color:#A51C30; border-radius:6px;">
+      <a href="{{ admin_url }}" style="display:inline-block; padding:12px 24px; color:#ffffff; font-size:14px; font-weight:bold; text-decoration:none;">
+        Review in admin
+      </a>
+    </td>
+  </tr>
+</table>
+{% endblock %}

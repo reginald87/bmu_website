@@ -10,7 +10,7 @@ export const StaffProfile = () => {
 
   if (isLoading) {
     return (
-      <section className="pt-[140px] min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1E1E1E' }}>
         <div className="text-white text-center">
           <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
           <p>Loading profile...</p>
@@ -33,7 +33,7 @@ export const StaffProfile = () => {
         <meta name="description" content={`${staff.full_name} - ${staff.job_title} at Bayelsa Medical University`} />
       </Helmet>
 
-      <section className="pt-[140px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
+      <section className="pt-[180px] pb-12" style={{ backgroundColor: '#1E1E1E' }}>
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { usePageSections } from '../../services/apiHooks';
 
@@ -20,8 +20,8 @@ const fallbackStats = [
 
 export const CareerCentre = () => {
  const { data: sections } = usePageSections('centres/career');
- const services = (sections?.find(s => s.section_key === 'services')?.data as any[] || fallbackServices);
- const stats = (sections?.find(s => s.section_key === 'stats')?.data as any[] || fallbackStats);
+ const services = (sections?.find(s => s.section_key === 'services')?.data as typeof fallbackServices) || fallbackServices;
+ const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
  return (
  <>
  <Helmet>

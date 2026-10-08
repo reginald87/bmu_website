@@ -1,4 +1,4 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useInstitutePages } from '../../services/apiHooks';
@@ -45,7 +45,7 @@ export const ResearchInstitutes = () => {
  <meta name="description" content="Research Institutes at Bayelsa Medical University - Advancing healthcare through research" />
  </Helmet>
 
- <section className="pt-[140px] pb-12 bg-[#1E1E1E]">
+ <section className="pt-[180px] pb-12 bg-[#1E1E1E]">
  <div className="container-custom">
  <motion.div
  initial={{ opacity: 0, y: 20 }}

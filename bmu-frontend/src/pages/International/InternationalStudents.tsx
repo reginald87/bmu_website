@@ -1,99 +1,66 @@
-﻿import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import {
- Users,
- FileText,
- Plane,
- CheckCircle,
- ArrowRight,
- GraduationCap,
- MapPin,
- Phone,
- Mail,
- Loader2
+  Users,
+  FileText,
+  CheckCircle,
+  ArrowRight,
+  MapPin,
+  Phone,
+  Mail,
+  Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useStudentSupportServices } from '../../services/apiHooks';
+import { useStudentSupportServices, usePageSections } from '../../services/apiHooks';
 
-const admissionSteps = [
- {
- step: 1,
- title: 'Choose Your Program',
- description: 'Explore our programs and select the right fit for your academic goals.',
- icon: GraduationCap
- },
- {
- step: 2,
- title: 'Submit Application',
- description: 'Complete online application with required documents and application fee.',
- icon: FileText
- },
- {
- step: 3,
- title: 'Document Evaluation',
- description: 'Academic credentials reviewed and verified by admissions committee.',
- icon: CheckCircle
- },
- {
- step: 4,
- title: 'Interview',
- description: 'Virtual interview with program coordinator (if required).',
- icon: Phone
- },
- {
- step: 5,
- title: 'Admission Decision',
- description: 'Receive official admission letter and enrollment package.',
- icon: Mail
- },
- {
- step: 6,
- title: 'Visa & Travel',
- description: 'Apply for student visa and arrange travel to Nigeria.',
- icon: Plane
- }
+const fallbackStudentStats = [
+  { value: '500+', label: 'International Students' },
+  { value: '45+', label: 'Countries Represented' },
+  { value: '95%', label: 'Visa Success Rate' },
+  { value: '85%', label: 'Student Satisfaction' }
 ];
 
-const requiredDocuments = [
- 'Completed application form',
- 'Secondary school certificate / Bachelor\'s degree transcript',
- 'English proficiency test results (IELTS/TOEFL)',
- 'Passport copy (minimum 6 months validity)',
- 'Medical fitness certificate',
- 'Recommendation letters (2)',
- 'Statement of purpose',
- 'Application fee payment receipt'
+const fallbackAdmissionSteps = [
+  { step: 1, title: 'Choose Your Program', description: 'Explore our programs and select the right fit for your academic goals.' },
+  { step: 2, title: 'Submit Application', description: 'Complete online application with required documents and application fee.' },
+  { step: 3, title: 'Document Evaluation', description: 'Academic credentials reviewed and verified by admissions committee.' },
+  { step: 4, title: 'Interview', description: 'Virtual interview with program coordinator (if required).' },
+  { step: 5, title: 'Admission Decision', description: 'Receive official admission letter and enrollment package.' },
+  { step: 6, title: 'Visa & Travel', description: 'Apply for student visa and arrange travel to Nigeria.' }
 ];
 
-const faqs = [
- {
- question: 'What are the English language requirements?',
- answer: 'International students must demonstrate English proficiency through IELTS (minimum 6.5) or TOEFL iBT (minimum 80). Alternative qualifications may be considered on a case-by-case basis.'
- },
- {
- question: 'When should I apply?',
- answer: 'We recommend applying at least 6 months before your intended start date to allow time for visa processing and travel arrangements. Fall semester applications close June 30, Spring semester applications close November 30.'
- },
- {
- question: 'Are scholarships available for international students?',
- answer: 'Yes, BMU offers merit-based scholarships for outstanding international students. Awards range from 25% to 75% of tuition fees. Additional external scholarship opportunities are also available.'
- },
- {
- question: 'What is the cost of living?',
- answer: 'The estimated cost of living in Yenagoa is approximately $300-500 per month, covering accommodation, food, transportation, and personal expenses. On-campus housing is available at subsidized rates.'
- }
+const fallbackRequiredDocuments = [
+  'Completed application form',
+  'Secondary school certificate / Bachelor\'s degree transcript',
+  'English proficiency test results (IELTS/TOEFL)',
+  'Passport copy (minimum 6 months validity)',
+  'Medical fitness certificate',
+  'Recommendation letters (2)',
+  'Statement of purpose',
+  'Application fee payment receipt'
 ];
 
-const studentStats = [
- { value: '500+', label: 'International Students' },
- { value: '45+', label: 'Countries Represented' },
- { value: '95%', label: 'Visa Success Rate' },
- { value: '85%', label: 'Student Satisfaction' }
+const fallbackFaqs = [
+  { question: 'What are the English language requirements?', answer: 'International students must demonstrate English proficiency through IELTS (minimum 6.5) or TOEFL iBT (minimum 80). Alternative qualifications may be considered on a case-by-case basis.' },
+  { question: 'When should I apply?', answer: 'We recommend applying at least 6 months before your intended start date to allow time for visa processing and travel arrangements. Fall semester applications close June 30, Spring semester applications close November 30.' },
+  { question: 'Are scholarships available for international students?', answer: 'Yes, BMU offers merit-based scholarships for outstanding international students. Awards range from 25% to 75% of tuition fees. Additional external scholarship opportunities are also available.' },
+  { question: 'What is the cost of living?', answer: 'The estimated cost of living in Yenagoa is approximately $300-500 per month, covering accommodation, food, transportation, and personal expenses. On-campus housing is available at subsidized rates.' }
 ];
 
 export const InternationalStudents = () => {
- const { data: services, isLoading } = useStudentSupportServices();
- const internationalServices = services?.filter(s => s.service_type === 'international') ?? [];
+  const { data: services, isLoading } = useStudentSupportServices();
+  const { data: sections = [] } = usePageSections('international_students');
+  const internationalServices = services?.filter(s => s.service_type === 'international') ?? [];
+
+  const getSection = (key: string) => sections.find(s => s.section_key === key);
+  const statsData = getSection('stats')?.data;
+  const studentStats = Array.isArray(statsData) && statsData.length ? statsData : fallbackStudentStats;
+  const stepsData = getSection('admission_steps')?.data;
+  const admissionSteps = Array.isArray(stepsData) && stepsData.length ? stepsData : fallbackAdmissionSteps;
+  const docsData = getSection('required_documents')?.data;
+  const requiredDocuments = Array.isArray(docsData) && docsData.length ? docsData : fallbackRequiredDocuments;
+  const faqsData = getSection('faqs')?.data;
+  const faqs = Array.isArray(faqsData) && faqsData.length ? faqsData : fallbackFaqs;
 
  if (isLoading) {
   return (
@@ -111,9 +78,9 @@ export const InternationalStudents = () => {
   </Helmet>
 
  {/* Hero */}
- <section className="relative pt-[140px] pb-20 overflow-hidden" style={{ backgroundColor: '#A51C30' }}>
- <div className="absolute inset-0 opacity-10" style={{
- backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}>
+ <div className="absolute inset-0 opacity-5" style={{
+ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
  }} />
 
  <div className="container-custom relative z-10">
@@ -124,7 +91,7 @@ export const InternationalStudents = () => {
   <span className="text-white font-medium">International Students</span>
   </div>
   <h1 className="text-display text-white mb-6">
-  Welcome <span className="text-white">International</span> Students
+  Welcome <span className="text-[#A51C30]">International</span> Students
   </h1>
   <p className="text-lead text-white/80 max-w-2xl">
  Join our diverse community of students from over 45 countries. World-class healthcare 
@@ -176,12 +143,11 @@ export const InternationalStudents = () => {
  transition={{ delay: index * 0.1 }}
  className="bg-white p-6 shadow-sm border border-gray-100"
  >
- <div className="flex items-center gap-4 mb-4">
- <div className="w-12 h-12 bg-[#1E1E1E] flex items-center justify-center text-white font-bold">
- {item.step}
- </div>
- <item.icon className="w-6 h-6 text-[#A51C30]" />
- </div>
+  <div className="flex items-center gap-4 mb-4">
+  <div className="w-12 h-12 bg-[#1E1E1E] flex items-center justify-center text-white font-bold">
+  {item.step}
+  </div>
+  </div>
  <h3 className="text-title text-gray-900 mb-2">{item.title}</h3>
  <p className="text-body text-gray-600">{item.description}</p>
  </motion.div>

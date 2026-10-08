@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { GraduationCap, Mail, Lock, AlertCircle, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/useAuth';
 
@@ -55,7 +55,7 @@ export const UniversalLogin = () => {
         <meta name="description" content="Secure universal login for all BMU portals." />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[140px] pb-12 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] pt-[180px] pb-12 px-4">
         <div className="max-w-md mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white overflow-hidden">
             <div className="bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] p-8 text-center">
@@ -100,6 +100,12 @@ export const UniversalLogin = () => {
                   {isLoading ? 'Signing in...' : 'Sign In'}
                 </button>
               </form>
+
+              <div className="mt-4 text-center">
+                <Link to="/portals/reset-password" className="text-sm text-[#A51C30] hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
 
               <div className="mt-6 space-y-4">
                 <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-100 text-xs text-blue-700">

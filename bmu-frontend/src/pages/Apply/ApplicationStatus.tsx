@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Search,
@@ -9,49 +9,52 @@ import {
   FileText,
   AlertCircle,
   ArrowRight,
-  Download,
   Mail,
   Phone,
-  Loader2
+  Loader2,
+  type LucideIcon
 } from 'lucide-react';
 import { useApplicationStatus } from '../../services/apiHooks';
 
 
 
-const statusConfig: Record<string, any> = {
-  submitted: { color: 'blue', label: 'Submitted', icon: FileText },
-  under_review: { color: 'yellow', label: 'Under Review', icon: Clock },
-  accepted: { color: 'green', label: 'Accepted', icon: CheckCircle },
-  rejected: { color: 'red', label: 'Not Accepted', icon: AlertCircle },
-  pending: { color: 'gray', label: 'Pending', icon: Clock },
-  in_progress: { color: 'blue', label: 'In Progress', icon: Clock },
-  completed: { color: 'green', label: 'Completed', icon: CheckCircle },
-  verified: { color: 'green', label: 'Verified', icon: CheckCircle },
-  under_review_doc: { color: 'yellow', label: 'Under Review', icon: Clock }
+interface StatusStyle {
+  bg: string;
+  text: string;
+  border: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+const statusConfig: Record<string, StatusStyle> = {
+  draft: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-200', label: 'Draft', icon: FileText },
+  submitted: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200', label: 'Submitted', icon: FileText },
+  under_review: { bg: 'bg-yellow-100', text: 'text-yellow-700', border: 'border-yellow-200', label: 'Under Review', icon: Clock },
+  interview: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200', label: 'Interview', icon: Clock },
+  waitlisted: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200', label: 'Waitlisted', icon: Clock },
+  accepted: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200', label: 'Accepted', icon: CheckCircle },
+  rejected: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200', label: 'Not Accepted', icon: AlertCircle },
 };
+
+const defaultStatusStyle: StatusStyle = statusConfig.draft;
 
 export const ApplicationStatus = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchId, setSearchId] = useState(id || '');
   const applicationId = id || searchId;
   const { data: application, isLoading, isError } = useApplicationStatus(applicationId || '');
 
   const handleSearch = () => {
     if (searchId) {
-      window.location.href = `/apply/status/${searchId.toUpperCase()}`;
+      navigate(`/apply/status/${searchId.toUpperCase()}`);
     }
   };
 
-  const getStatusColor = (status: string) => {
-    const config = statusConfig[status] || statusConfig.pending;
-    return {
-      bg: `bg-${config.color}-100`,
-      text: `text-${config.color}-700`,
-      border: `border-${config.color}-200`,
-      icon: config.icon,
-      label: config.label
-    };
-  };
+  const getStatusColor = (status: string): StatusStyle =>
+    statusConfig[status] || defaultStatusStyle;
+
+  const isPaid = application?.payment_status === 'paid' || application?.payment_status === 'completed';
 
   return (
     <>
@@ -162,14 +165,18 @@ export const ApplicationStatus = () => {
                   )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t">
-                  <div>
-                    <div className="text-sm text-gray-500">Applicant</div>
-                    <div className="font-medium text-gray-900">{application.first_name} {application.last_name}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Email</div>
-                    <div className="font-medium text-gray-900">{application.email}</div>
-                  </div>
+                  {application.first_name && (
+                    <div>
+                      <div className="text-sm text-gray-500">Applicant</div>
+                      <div className="font-medium text-gray-900">{application.first_name} {application.last_name}</div>
+                    </div>
+                  )}
+                  {application.email && (
+                    <div>
+                      <div className="text-sm text-gray-500">Email</div>
+                      <div className="font-medium text-gray-900">{application.email}</div>
+                    </div>
+                  )}
                   <div>
                     <div className="text-sm text-gray-500">Submitted</div>
                     <div className="font-medium text-gray-900">{application.submitted_at ? new Date(application.submitted_at).toLocaleDateString() : 'N/A'}</div>
@@ -202,8 +209,8 @@ export const ApplicationStatus = () => {
               {/* Payment Status */}
               <div className="bg-white shadow-sm p-6">
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Payment Status</h2>
-                <div className={`inline-flex items-center gap-2 px-4 py-2 ${application.payment_status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                  {application.payment_status === 'paid' ? (
+                <div className={`inline-flex items-center gap-2 px-4 py-2 ${isPaid ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                  {isPaid ? (
                     <CheckCircle className="w-5 h-5" />
                   ) : (
                     <Clock className="w-5 h-5" />
@@ -212,19 +219,19 @@ export const ApplicationStatus = () => {
                 </div>
               </div>
 
-              {/* Download Section */}
+              {/* Documents / portal link */}
               <div className="bg-white shadow-sm p-6">
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Application Documents</h2>
-                <div className="flex gap-4">
-                  <button className="flex items-center gap-2 px-4 py-2 border hover:bg-gray-50 transition">
-                    <Download className="w-4 h-4" />
-                    <span>Download Receipt</span>
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 border hover:bg-gray-50 transition">
-                    <FileText className="w-4 h-4" />
-                    <span>View Application</span>
-                  </button>
-                </div>
+                <p className="text-sm text-gray-600 mb-4">
+                  Sign in to the applicant portal to view your submitted application and download your payment receipt.
+                </p>
+                <Link
+                  to="/portals/applicant"
+                  className="inline-flex items-center gap-2 px-4 py-2 border hover:bg-gray-50 transition"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>Open Applicant Portal</span>
+                </Link>
               </div>
             </motion.div>
           )}

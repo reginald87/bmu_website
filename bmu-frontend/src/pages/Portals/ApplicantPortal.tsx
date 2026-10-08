@@ -146,7 +146,7 @@ const ApplicantLogin = () => {
   };
 
   return (
-    <div className="min-h-screen pt-[140px] bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] flex items-center justify-center p-4">
+    <div className="min-h-screen pt-[180px] bg-gradient-to-br from-[#1E1E1E] to-[#A51C30] flex items-center justify-center p-4">
       <Helmet>
         <title>Applicant Login | Bayelsa Medical University</title>
       </Helmet>
@@ -237,9 +237,9 @@ const ApplicantLogin = () => {
                   <input type="checkbox" className="border-gray-300 text-[#1E1E1E] focus:ring-[#1E1E1E]" />
                   <span className="ml-2 text-gray-600">Remember me</span>
                 </label>
-                <a href="#" className="text-[#1E1E1E] hover:underline">
+                <Link to="/portals/reset-password" className="text-[#1E1E1E] hover:underline">
                   Forgot password?
-                </a>
+                </Link>
               </div>
 
               <button
@@ -521,7 +521,7 @@ const ApplicantDashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen pt-[140px] bg-gray-50">
+    <div className="min-h-screen pt-[180px] bg-gray-50">
       <Helmet>
         <title>Applicant Dashboard | Bayelsa Medical University</title>
       </Helmet>

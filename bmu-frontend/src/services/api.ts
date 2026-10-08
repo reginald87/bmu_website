@@ -1,10 +1,11 @@
 import axios from 'axios';
-import type { 
-  Program, 
-  Faculty, 
-  College, 
-  SDGData, 
-  NewsItem, 
+import type {
+  Program,
+  Faculty,
+  College,
+  SDGData,
+  SDGRichData,
+  NewsItem,
   ResearchCenter,
   PageContentSection,
   LeadershipProfile,
@@ -30,6 +31,8 @@ import type {
   PaymentVerifyResponse,
   FundingOrganizationData,
   FundedProjectData,
+  InnovationProgramData,
+  UniversityProjectData,
   SearchResponseData,
   ExchangeProgramData,
   StudentSupportServiceData,
@@ -61,6 +64,7 @@ import type {
   DigitalResourceData,
   ApplicationData,
   GalleryImageData,
+  CampusGalleryImageData,
 } from './mockData';
 import {
   mockEvents,
@@ -69,10 +73,11 @@ import {
   mockCampusStats,
   mockCampusTestimonials,
   mockCampusContactInfo,
-  mockCampusImages,
+   mockCampusImages,
+  mockCampusGalleryImages,
   mockCampusVideo,
   mockContactInfo,
-  mockApplications,
+  
   mockPartners,
 } from './mockData';
 import {
@@ -81,6 +86,7 @@ import {
   mockFaculty,
   mockColleges,
   mockSDGMetrics,
+  mockSDGs,
   mockNews,
   mockResearchCenters,
   mockPageContent,
@@ -109,6 +115,8 @@ import {
   mockJobPostings,
   mockCPDCourses,
   mockImpactPrograms,
+  mockInnovationPrograms,
+  mockUniversityProjects,
   mockLibraryServices,
   mockLibraryStats,
   mockLibraryHours,
@@ -169,7 +177,12 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const url: string = originalRequest?.url || '';
+    const isAuthRequest =
+      url.includes('/auth/login') ||
+      url.includes('/token/refresh') ||
+      url.includes('/auth/register');
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRequest) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -184,11 +197,14 @@ apiClient.interceptors.response.use(
       if (refreshToken) {
         try {
           const res = await axios.post(
-            `${import.meta.env.VITE_API_URL || '/api'}/v1/auth/login/`,
+            `${import.meta.env.VITE_API_URL || '/api'}/auth/token/refresh`,
             { refresh: refreshToken }
           );
           const newAccess = res.data.access;
           localStorage.setItem('bmu_access_token', newAccess);
+          if (res.data.refresh) {
+            localStorage.setItem('bmu_refresh_token', res.data.refresh);
+          }
           processQueue(null, newAccess);
           originalRequest.headers.Authorization = `Bearer ${newAccess}`;
           return apiClient(originalRequest);
@@ -210,6 +226,9 @@ apiClient.interceptors.response.use(
   }
 );
 
+const ALLOW_API_MOCKS =
+  import.meta.env.DEV || import.meta.env.VITE_ALLOW_API_MOCKS === 'true';
+
 export async function fetchWithFallback<T>(
   endpoint: string,
   mockData: T | (() => T),
@@ -224,13 +243,13 @@ export async function fetchWithFallback<T>(
       data = data.items;
     }
 
-    if (data !== undefined && data !== null) {
-      if (Array.isArray(data)) return data as unknown as T;
-      if (typeof data === 'object' && !Array.isArray(data)) return data as T;
-      if (typeof data === 'number' || typeof data === 'boolean' || typeof data === 'string') return data as T;
+    return data as T;
+  } catch (error) {
+    if (!ALLOW_API_MOCKS) {
+      console.error(`API request failed (${endpoint}); mocks disabled.`, error);
+      throw error;
     }
-  } catch {
-    // API unavailable — fall through to mock
+    // Development only — fall through to mock data.
   }
 
   if (typeof mockData === 'function') {
@@ -282,6 +301,32 @@ interface FetchFacultyParams {
   search?: string;
 }
 
+function mapFacultyFromApi(raw: Record<string, unknown>): Faculty {
+  return {
+    id: raw.id as number,
+    title: (raw.title as string) || '',
+    firstName: (raw.first_name as string) || '',
+    lastName: (raw.last_name as string) || '',
+    fullName: (raw.full_name as string) || `${raw.first_name} ${raw.last_name}`,
+    email: (raw.email as string) || '',
+    department: (raw.department_name as string) || (raw.department as string) || '',
+    college: (raw.college_name as string) || (raw.college as string) || '',
+    position: (raw.position as string) || '',
+    positionDisplay: (raw.get_position_display as string) || (raw.position_display as string) || '',
+    researchInterests: (raw.research_interests as string) || '',
+    bio: (raw.bio as string) || '',
+    orcidId: (raw.orcid_id as string) || undefined,
+    googleScholarUrl: (raw.google_scholar_url as string) || undefined,
+    researchgateUrl: (raw.researchgate_url as string) || undefined,
+    citations: (raw.citations as number) || 0,
+    hIndex: (raw.h_index as number) || 0,
+    i10Index: (raw.i10_index as number) || 0,
+    profileImage: (raw.profile_image as string) || '',
+    publications: (raw.publications as Faculty['publications']) || [],
+    customLinks: (raw.custom_links as Faculty['customLinks']) || [],
+  };
+}
+
 export const fetchFaculty = async (params: FetchFacultyParams = {}): Promise<Faculty[]> => {
   const mock = () => {
     let faculty = [...mockFaculty];
@@ -297,12 +342,26 @@ export const fetchFaculty = async (params: FetchFacultyParams = {}): Promise<Fac
     }
     return faculty;
   };
-  return fetchWithFallback('/public/faculty', mock, params as unknown as Record<string, unknown>, true);
+  try {
+    const response = await apiClient.get('/public/faculty', { params: params as unknown as Record<string, unknown> });
+    let data = response.data;
+    if (data && Array.isArray(data.items)) data = data.items;
+    if (Array.isArray(data)) return data.map(mapFacultyFromApi);
+  } catch {
+    // API unavailable — fall through to mock
+  }
+  return mock();
 };
 
 export const fetchFacultyById = async (id: string | number): Promise<Faculty | undefined> => {
   const mock = () => mockFaculty.find(f => f.id === parseInt(id as string));
-  return fetchWithFallback(`/public/faculty/${id}`, mock);
+  try {
+    const response = await apiClient.get(`/public/faculty/${id}`);
+    if (response.data) return mapFacultyFromApi(response.data);
+  } catch {
+    // API unavailable — fall through to mock
+  }
+  return mock();
 };
 
 export const fetchColleges = async (): Promise<College[]> => {
@@ -319,7 +378,7 @@ export const fetchFaculties = async (): Promise<FacultyUnitData[]> => {
     const collegesData = mockColleges;
     const faculties: FacultyUnitData[] = [];
     for (const c of collegesData) {
-      for (const f of (c as any).faculties || []) {
+      for (const f of c.faculties || []) {
         faculties.push({
           id: f.id, name: f.name, slug: f.slug, code: f.code || '',
           description: f.description || '', college_id: c.id, college_name: c.name,
@@ -509,6 +568,36 @@ export const fetchFundedProjectById = async (id: number): Promise<FundedProjectD
   return fetchWithFallback(`/public/funded-projects/${id}`, mock);
 };
 
+export const fetchInnovationPrograms = async (programType?: string): Promise<InnovationProgramData[]> => {
+  const mock = () => {
+    let items = [...mockInnovationPrograms];
+    if (programType) items = items.filter(p => p.program_type === programType);
+    return items;
+  };
+  const params = programType ? { program_type: programType } as unknown as Record<string, unknown> : undefined;
+  return fetchWithFallback('/public/innovation-programs', mock, params, true);
+};
+
+export const fetchInnovationProgramById = async (id: number): Promise<InnovationProgramData | null> => {
+  const mock = () => mockInnovationPrograms.find(p => p.id === id) || null;
+  return fetchWithFallback(`/public/innovation-programs/${id}`, mock);
+};
+
+export const fetchUniversityProjects = async (params?: { category?: string; status?: string }): Promise<UniversityProjectData[]> => {
+  const mock = () => {
+    let items = [...mockUniversityProjects];
+    if (params?.category) items = items.filter(p => p.category === params.category);
+    if (params?.status) items = items.filter(p => p.status === params.status);
+    return items;
+  };
+  return fetchWithFallback('/public/university-projects', mock, params as unknown as Record<string, unknown> | undefined, true);
+};
+
+export const fetchUniversityProjectById = async (id: number): Promise<UniversityProjectData | null> => {
+  const mock = () => mockUniversityProjects.find(p => p.id === id) || null;
+  return fetchWithFallback(`/public/university-projects/${id}`, mock);
+};
+
 export const fetchFundingStats = async (): Promise<FundingStatsData> => {
   return fetchWithFallback('/public/funding-stats', () => ({ ...mockFundingStats }));
 };
@@ -653,12 +742,14 @@ export const uploadApplicationDocument = async (
 };
 
 export const checkApplicationStatus = async (applicationId: string): Promise<ApplicationData | null> => {
-  return fetchWithFallback(
-    `/public/applications/${applicationId}/status`,
-    () => mockApplications.find(a => a.id === applicationId) || null,
-    undefined,
-    false
-  );
+  if (!applicationId) return null;
+  try {
+    const response = await apiClient.get(`/public/applications/${encodeURIComponent(applicationId)}/status`);
+    return response.data;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) return null;
+    throw err;
+  }
 };
 
 export const fetchUniversityRankings = async (entryType?: string): Promise<UniversityRankingData[]> => {
@@ -710,6 +801,10 @@ export const fetchKeyMetrics = async (category?: string): Promise<KeyMetricData[
 
 export const fetchSDGMetrics = async (): Promise<Record<string, SDGData>> => {
   return fetchWithFallback('/public/sdg-metrics', () => ({ ...mockSDGMetrics }));
+};
+
+export const fetchSDGs = async (): Promise<SDGRichData[]> => {
+  return fetchWithFallback('/public/sdgs', () => [...mockSDGs], undefined, true);
 };
 
 interface FetchNewsParams {
@@ -1078,6 +1173,22 @@ export const fetchCampusImages = async (): Promise<CampusImageData[]> => {
   return mockCampusImages;
 };
 
+export const fetchCampusGallery = async (): Promise<CampusGalleryImageData[]> => {
+  try {
+    const response = await apiClient.get('/public/campus-gallery');
+    const data = response.data;
+    if (data && Array.isArray(data)) {
+      return data;
+    }
+    if (data && Array.isArray(data.items)) {
+      return data.items;
+    }
+  } catch {
+    // fall through to mock
+  }
+  return mockCampusGalleryImages;
+};
+
 export const fetchCampusVideo = async (): Promise<CampusVideoData | null> => {
   try {
     const response = await apiClient.get('/public/campus-video');
@@ -1168,7 +1279,7 @@ export interface PageSectionData {
   content_type: string;
   title: string;
   subtitle: string;
-  data: any;
+  data: unknown;
   display_order: number;
 }
 
@@ -1388,11 +1499,17 @@ export const authApi = {
     return res.data;
   },
 
-  resetPasswordConfirm: async (uid: string, token: string, new_password: string) => {
+  confirmPasswordReset: async (
+    email: string,
+    code: string,
+    new_password: string,
+    new_password_confirm: string
+  ) => {
     const res = await apiClient.post('/v1/auth/password/reset/confirm/', {
-      uid,
-      token,
+      email,
+      code,
       new_password,
+      new_password_confirm,
     });
     return res.data;
   },

@@ -128,8 +128,8 @@ const homeContent: Record<string, unknown> = {
 // ── Navigation translations (top-level + all sub-items) ──
 const navContent: Record<string, Record<string, string>> = {
   en: {
-    home: 'Home', about: 'About', academics: 'Academics', colleges: 'Colleges',
-    research: 'Research', impact: 'Impact', international: 'International',
+    home: 'Home', about: 'About', academics: 'Academics', colleges: 'Colleges & Institutes',
+    research: 'Research', impact: 'Impact & Community', international: 'International',
     apply: 'Apply', news: 'News', institutes: 'Institutes & Centres', portals: 'Portals',
     about_history: 'History', about_visionMission: 'Vision & Mission',
     about_governance: 'Governance', about_campusLife: 'Campus Life',
@@ -141,6 +141,8 @@ const navContent: Record<string, Record<string, string>> = {
     academics_calendar: 'Academic Calendar', academics_library: 'Library',
     research_centers: 'Research & Development', research_publications: 'Publications',
     research_funding: 'Research Funding', research_collaborations: 'Collaborations',
+    research_innovation: 'Technology & Innovation',
+    research_universityProjects: 'University Projects',
     academicUnits: 'Colleges & Faculties', academicUnits_colleges: 'Colleges',
     academicUnits_allColleges: 'All Colleges',
     academicUnits_facultiesDepartments: 'Faculties & Departments',
@@ -173,8 +175,8 @@ const navContent: Record<string, Record<string, string>> = {
     utility_toggleSearch: 'Toggle search',
   },
   fr: {
-    home: 'Accueil', about: 'À propos', academics: 'Académique', colleges: 'Collèges',
-    research: 'Recherche', impact: 'Impact', international: 'International',
+    home: 'Accueil', about: 'À propos', academics: 'Académique', colleges: 'Collèges & Instituts',
+    research: 'Recherche', impact: 'Impact & Communauté', international: 'International',
     apply: 'Postuler', news: 'Actualités', institutes: 'Instituts & Centres', portals: 'Portails',
     about_history: 'Histoire', about_visionMission: 'Vision & Mission',
     about_governance: 'Gouvernance', about_campusLife: 'Vie du Campus',
@@ -187,6 +189,8 @@ const navContent: Record<string, Record<string, string>> = {
     research_centers: 'Recherche & Développement', research_publications: 'Publications',
     research_funding: 'Financement de la Recherche',
     research_collaborations: 'Collaborations',
+    research_innovation: 'Technologie & Innovation',
+    research_universityProjects: 'Projets Universitaires',
     academicUnits: 'Collèges & Facultés', academicUnits_colleges: 'Collèges',
     academicUnits_allColleges: 'Tous les Collèges',
     academicUnits_facultiesDepartments: 'Facultés & Départements',

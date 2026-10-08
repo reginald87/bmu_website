@@ -41,7 +41,7 @@ export const QuickLinks = ({ sections: homeSections }: { sections?: Array<{ sect
     },
   ];
 
-  const rawCards = (homeSections?.find(s => s.section_key === 'quick_links')?.data as any[]) || fallbackCards;
+  const rawCards = (homeSections?.find(s => s.section_key === 'quick_links')?.data as typeof fallbackCards) || fallbackCards;
 
   const cards = rawCards.map((card) => ({
     to: card.to,
