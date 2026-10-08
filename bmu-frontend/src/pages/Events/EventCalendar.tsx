@@ -186,13 +186,13 @@ export const EventCalendar = () => {
   <div className="flex items-center justify-between mb-6"><h2 className="text-2xl font-bold text-gray-900">
   {monthNames[month]} {year}
   </h2><div className="flex gap-2"><button
-  onClick={prevMonth}
+  onClick={prevMonth} aria-label="Previous month"
   className="p-2 hover:bg-gray-100 transition"><ChevronLeft className="w-5 h-5"/></button><button
   onClick={() => setCurrentDate(new Date())}
   className="px-4 py-2 text-sm font-medium text-[#1E1E1E] hover:bg-[#1E1E1E]/10 transition">
   Today
   </button><button
-  onClick={nextMonth}
+  onClick={nextMonth} aria-label="Next month"
   className="p-2 hover:bg-gray-100 transition"><ChevronRight className="w-5 h-5"/></button></div></div>
 
   {/* Days of Week */}

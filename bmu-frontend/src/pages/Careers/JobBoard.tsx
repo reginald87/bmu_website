@@ -81,6 +81,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            aria-label="Close"
             onClick={onClose}
           />
           <motion.div
@@ -97,6 +98,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                 </div>
                 <button
                   onClick={onClose}
+                  aria-label="Close"
                   className="p-2 hover:bg-white/20 transition"
                 >
                   <X className="w-6 h-6" />

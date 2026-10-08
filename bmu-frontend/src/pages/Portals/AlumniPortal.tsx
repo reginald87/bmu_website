@@ -208,7 +208,7 @@ export const AlumniPortal = () => {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <button className="p-2 hover:bg-white/10 transition relative">
+                <button aria-label="Notifications" className="p-2 hover:bg-white/10 transition relative">
                   <Bell className="w-5 h-5" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-[#A51C30]"></span>
                 </button>
@@ -216,7 +216,7 @@ export const AlumniPortal = () => {
                   <User className="w-5 h-5" />
                   <span className="hidden md:inline">{user?.full_name || user?.first_name}</span>
                 </button>
-                <button onClick={logout} className="p-2 hover:bg-white/10 transition">
+                <button onClick={logout} className="p-2 hover:bg-white/10 transition" aria-label="Log out">
                   <LogOut className="w-5 h-5" />
                 </button>
               </div>

@@ -80,7 +80,7 @@ export const Search = () => {
                 />
                 {searchQuery && (
                   <button
-                    onClick={clearSearch}
+                    onClick={clearSearch} aria-label="Clear search"
                     className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 transition"
                   >
                     <X className="w-5 h-5 text-gray-500" />

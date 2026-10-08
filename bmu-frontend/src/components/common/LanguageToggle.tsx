@@ -34,8 +34,8 @@ export const LanguageToggle = () => {
  return (
  <div className="relative">
  <button
- onClick={() => setIsOpen(!isOpen)}
- className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 transition text-sm"
+  onClick={() => setIsOpen(!isOpen)} aria-expanded={isOpen} aria-haspopup="listbox" aria-label="Select language"
+  className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 transition text-sm"
  >
  <span className="text-lg">{currentLang.flag}</span>
  <span className="hidden md:inline text-gray-700">{currentLang.label}</span>
@@ -51,10 +51,12 @@ export const LanguageToggle = () => {
 
  {isOpen && (
  <>
- <div
- className="fixed inset-0 z-40"
- onClick={() => setIsOpen(false)}
- />
+        <button
+          type="button"
+          aria-label="Close language menu"
+          className="fixed inset-0 z-40"
+          onClick={() => setIsOpen(false)}
+        />
  <div className="absolute right-0 mt-2 w-56 bg-white border z-50 max-h-80 overflow-y-auto">
  <div className="py-2">
  {languages.map((lang) => (

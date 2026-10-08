@@ -251,7 +251,7 @@ export const AgentChat = () => {
                   {agentOnline ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4" />}
                 </button>
                 <button
-                  onClick={loadConversations}
+                  onClick={loadConversations} aria-label="Refresh conversations"
                   className="p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition"
                 >
                   <RefreshCw className="w-4 h-4" />
@@ -504,7 +504,7 @@ export const AgentChat = () => {
                     className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-[#A51C30] disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
                   <button
-                    onClick={handleSend}
+                    onClick={handleSend} aria-label="Send message"
                     disabled={!inputText.trim() || isSending || selectedConv.status === 'ended'}
                     className="w-10 h-10 rounded-full bg-[#A51C30] text-white flex items-center justify-center hover:bg-[#8a1725] transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >

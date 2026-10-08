@@ -36,7 +36,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+            <button type="button" aria-label="Close" className="absolute inset-0 bg-black/60" onClick={onClose} />
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -48,7 +48,7 @@ export const GrantApplicationModal = ({ grant, onClose }: Props) => {
               <h2 className="text-title text-gray-900">Apply for Grant</h2>
               <p className="text-small text-gray-500 mt-1">{grant.title}</p>
             </div>
-            <button onClick={onClose} className="p-2 hover:bg-gray-100 transition">
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 transition" aria-label="Close">
               <X className="w-5 h-5 text-gray-500" />
             </button>
           </div>

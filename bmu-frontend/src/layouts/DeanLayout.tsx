@@ -24,10 +24,10 @@ export const DeanLayout = () => {
       </Helmet>
 
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <button type="button" aria-label="Close navigation menu" className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      <aside className={`
+      <aside id="portal-sidebar" className={`
         fixed top-[73px] left-0 z-40 h-[calc(100vh-73px)] w-64 bg-ink-900 text-white
         transform transition-transform duration-200
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -70,8 +70,8 @@ export const DeanLayout = () => {
         <div className="bg-ink-900 text-white fixed top-0 left-0 right-0 z-50 h-[73px]">
           <div className="flex items-center justify-between h-full px-4 lg:px-8">
             <div className="flex items-center gap-4">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-1 hover:bg-white/10 transition">
-                {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-1 hover:bg-white/10 transition" aria-label={sidebarOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={sidebarOpen} aria-controls="portal-sidebar">
+                {sidebarOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Menu className="w-6 h-6" aria-hidden="true" />}
               </button>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 flex items-center justify-center hidden sm:flex">
@@ -84,15 +84,15 @@ export const DeanLayout = () => {
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
-              <button className="p-2 hover:bg-white/10 transition relative">
+              <button aria-label="Notifications" className="p-2 hover:bg-white/10 transition relative">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                <span aria-hidden="true" className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
               </button>
               <button className="hidden sm:flex items-center gap-2 px-3 py-2 hover:bg-white/10 transition">
                 <User className="w-5 h-5" />
                 <span className="text-sm">{user?.full_name || user?.first_name}</span>
               </button>
-              <button onClick={logout} className="p-2 hover:bg-white/10 transition" title="Logout">
+              <button onClick={logout} className="p-2 hover:bg-white/10 transition" aria-label="Log out">
                 <LogOut className="w-5 h-5" />
               </button>
             </div>

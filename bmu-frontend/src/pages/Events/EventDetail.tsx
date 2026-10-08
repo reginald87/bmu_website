@@ -281,7 +281,7 @@ export const EventDetail = () => {
   {copied ? 'Copied!' : 'Copy Link'}
   </button></div>
   )}
-  </div><button onClick={() => setIsBookmarked(!isBookmarked)} className="p-2 bg-gray-100 transition"><Bookmark className={`w-5 h-5 ${isBookmarked ? 'text-[#1E1E1E] fill-[#1E1E1E]' : 'text-gray-600'}`} /></button><button onClick={handlePrint} className="p-2 bg-gray-100 transition"><Printer className="w-5 h-5 text-gray-600"/></button></div></div></div></div>
+  </div><button onClick={() => setIsBookmarked(!isBookmarked)} aria-label="Toggle bookmark" aria-pressed={isBookmarked} className="p-2 bg-gray-100 transition"><Bookmark className={`w-5 h-5 ${isBookmarked ? 'text-[#1E1E1E] fill-[#1E1E1E]' : 'text-gray-600'}`} /></button><button onClick={handlePrint} aria-label="Print" className="p-2 bg-gray-100 transition"><Printer className="w-5 h-5 text-gray-600"/></button></div></div></div></div>
 
  {/* Hero */}
  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: '#1E1E1E' }}><div className="absolute inset-0 opacity-5" style={{

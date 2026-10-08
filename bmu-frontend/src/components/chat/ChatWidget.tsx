@@ -246,7 +246,7 @@ export function ChatWidget() {
                   <button
                     onClick={handleNewChat}
                     className="text-white/80 hover:text-white transition p-1"
-                    title="New conversation"
+                    aria-label="New conversation"
                   >
                     <RotateCcw className="w-4 h-4" />
                   </button>
@@ -255,13 +255,13 @@ export function ChatWidget() {
                   <button
                     onClick={endConversation}
                     className="text-white/80 hover:text-white transition p-1"
-                    title="End conversation"
+                    aria-label="End conversation"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 )}
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => setIsOpen(false)} aria-label="Minimize chat"
                   className="text-white/80 hover:text-white transition p-1"
                 >
                   <ChevronDown className="w-5 h-5" />
@@ -366,7 +366,7 @@ export function ChatWidget() {
                   style={{ backgroundColor: '#fff' }}
                 />
                 <button
-                  onClick={handleSend}
+                  onClick={handleSend} aria-label="Send message"
                   disabled={!inputText.trim() || conversationEnded}
                   className="w-10 h-10 rounded-full flex items-center justify-center text-white disabled:opacity-50 transition"
                   style={{ backgroundColor: inputText.trim() && !conversationEnded ? '#A51C30' : '#ccc' }}
@@ -384,7 +384,7 @@ export function ChatWidget() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsOpen(!isOpen)} aria-label="Open chat"
           className="fixed bottom-20 right-6 z-[60] w-14 h-14 rounded-full flex items-center justify-center shadow-lg text-white"
           style={{ backgroundColor: '#A51C30' }}
         >
