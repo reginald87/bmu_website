@@ -22,7 +22,7 @@ export const UtilityBar = () => {
   };
 
   return (
-    <div className="hidden lg:fixed lg:block inset-x-0 top-0 z-50 bg-[#1E1E1E] text-white text-xs">
+    <div className="hidden lg:fixed lg:block inset-x-0 top-0 z-50 bg-ink-900 text-white text-xs">
       <div className="container-custom">
         <div className="flex items-center justify-between h-9">
           <div className="flex items-center gap-0">

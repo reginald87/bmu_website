@@ -8,12 +8,6 @@ import { megaGroups, type MegaColumn } from './megaMenuData';
 import { useMenuItems } from '../../services/apiHooks';
 import type { MenuItemData } from '../../services/api';
 
-const colors = {
-  primary: '#A51C30',
-  secondary: '#1E1E1E',
-  accent: '#A51C30',
-};
-
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   University,
   GraduationCap,
@@ -143,12 +137,12 @@ export const Navbar = () => {
     const IconComponent = getIcon(group.icon);
     return (
       <div className="flex gap-8">
-        <div className="w-64 flex-shrink-0 bg-[#1E1E1E] p-6 text-white">
+        <div className="w-64 flex-shrink-0 bg-ink-900 p-6 text-white">
           <IconComponent size={32} className="mb-4 text-white/80" />
           <p className="text-sm text-white/70 leading-relaxed">{group.description || group.label}</p>
           <Link
             to={group.url}
-            className="inline-block mt-4 text-sm font-semibold text-[#A51C30] hover:underline"
+            className="inline-block mt-4 text-sm font-semibold text-primary-600 hover:underline"
           >
             {t('megaMenu.explore')} {group.label} →
           </Link>
@@ -169,7 +163,7 @@ export const Navbar = () => {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-gray-700 hover:text-[#A51C30] transition py-1.5 text-sm"
+                      className="block text-gray-700 hover:text-primary-600 transition py-1.5 text-sm"
                     >
                       {link.label}
                     </a>
@@ -177,7 +171,7 @@ export const Navbar = () => {
                     <Link
                       key={link.id}
                       to={link.url}
-                      className="block text-gray-700 hover:text-[#A51C30] transition py-1.5 text-sm"
+                      className="block text-gray-700 hover:text-primary-600 transition py-1.5 text-sm"
                     >
                       {link.label}
                     </Link>
@@ -201,7 +195,7 @@ export const Navbar = () => {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-gray-700 hover:text-[#A51C30] transition py-1.5 text-sm"
+                      className="block text-gray-700 hover:text-primary-600 transition py-1.5 text-sm"
                     >
                       {link.label}
                     </a>
@@ -209,7 +203,7 @@ export const Navbar = () => {
                     <Link
                       key={link.id}
                       to={link.url}
-                      className="block text-gray-700 hover:text-[#A51C30] transition py-1.5 text-sm"
+                      className="block text-gray-700 hover:text-primary-600 transition py-1.5 text-sm"
                     >
                       {link.label}
                     </Link>
@@ -234,7 +228,7 @@ export const Navbar = () => {
             <Link to="/" className="flex items-center gap-4">
               <img src="/logo.png" alt="BMU Logo" className="h-14 w-14 object-contain" />
               <div className="flex flex-col">
-                <span className={`font-bold text-lg md:text-xl transition-colors text-[#1E1E1E]`}>
+                <span className={`font-bold text-lg md:text-xl transition-colors text-ink-900`}>
                   {t('footer.universityName')} {t('footer.universitySuffix')}
                 </span>
                 <span className={`text-sm font-medium transition-colors text-gray-600`}>
@@ -252,7 +246,7 @@ export const Navbar = () => {
                   onMouseLeave={() => setPortalsOpen(false)}
                 >
                   <button
-                    className="flex items-center gap-1 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#A51C30] transition-colors"
+                    className="flex items-center gap-1 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary-600 transition-colors"
                     aria-haspopup="true"
                     aria-expanded={portalsOpen}
                   >
@@ -260,7 +254,7 @@ export const Navbar = () => {
                     <ChevronDown size={16} className={`transition-transform ${portalsOpen ? 'rotate-180' : ''}`} />
                   </button>
                   <div
-                    className={`absolute right-0 top-full mt-3 w-[min(92vw,640px)] bg-white shadow-2xl border-t-4 border-[#A51C30] rounded-b-lg p-6 z-50 transition-all duration-200 ${
+                    className={`absolute right-0 top-full mt-3 w-[min(92vw,640px)] bg-white shadow-2xl border-t-4 border-primary-600 rounded-b-lg p-6 z-50 transition-all duration-200 ${
                       portalsOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
                     }`}
                   >
@@ -271,8 +265,7 @@ export const Navbar = () => {
 
               <Link
                 to="/apply"
-                className="px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90"
-                style={{ backgroundColor: colors.primary }}
+                className="px-5 py-2 text-sm font-semibold text-white bg-primary-600 transition hover:bg-primary-700"
               >
                 {t('nav.applyNow')}
               </Link>
@@ -280,11 +273,9 @@ export const Navbar = () => {
 
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 transition-colors"
-              style={{
-                backgroundColor: isScrolled || !isHomePage ? colors.primary : 'rgba(255,255,255,0.2)',
-                color: 'white',
-              }}
+              className={`lg:hidden p-2 text-white transition-colors ${
+                isScrolled || !isHomePage ? 'bg-primary-600' : 'bg-white/20'
+              }`}
               aria-label={isMenuOpen ? t('nav.mobile_closeMenu') : t('nav.mobile_openMenu')}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
@@ -320,8 +311,8 @@ export const Navbar = () => {
                     onClick={() => setActiveDropdown(null)}
                     className={`flex items-center gap-1 px-2 py-3 text-sm font-medium transition-colors border-b-2 ${
                       isActive
-                        ? 'text-[#A51C30] border-[#A51C30]'
-                        : 'text-gray-700 border-transparent hover:text-[#A51C30]'
+                        ? 'text-primary-600 border-primary-600'
+                        : 'text-gray-700 border-transparent hover:text-primary-600'
                     }`}
                     role="menuitem"
                     aria-haspopup="true"
@@ -338,7 +329,7 @@ export const Navbar = () => {
 
         {/* Shared full-width mega panel */}
         <div
-          className={`absolute left-0 right-0 top-full bg-white shadow-xl border-t-4 border-[#A51C30] z-20 transition-all duration-200 ${
+          className={`absolute left-0 right-0 top-full bg-white shadow-xl border-t-4 border-primary-600 z-20 transition-all duration-200 ${
             activeDropdown ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
           }`}
         >
@@ -388,7 +379,7 @@ export const Navbar = () => {
                     <div className="pb-4">
                       <Link
                         to={url}
-                        className="block text-sm font-semibold text-[#A51C30] py-2"
+                        className="block text-sm font-semibold text-primary-600 py-2"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         {title} →
@@ -402,7 +393,7 @@ export const Navbar = () => {
                                 href={link.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block text-gray-600 hover:text-[#A51C30] transition py-1.5 text-sm"
+                                className="block text-gray-600 hover:text-primary-600 transition py-1.5 text-sm"
                               >
                                 {link.label}
                               </a>
@@ -410,7 +401,7 @@ export const Navbar = () => {
                               <Link
                                 key={link.id}
                                 to={link.url}
-                                className="block text-gray-600 hover:text-[#A51C30] transition py-1.5 text-sm"
+                                className="block text-gray-600 hover:text-primary-600 transition py-1.5 text-sm"
                                 onClick={() => setIsMenuOpen(false)}
                               >
                                 {link.label}
@@ -431,7 +422,7 @@ export const Navbar = () => {
                                 <Link
                                   key={link.to + link.key}
                                   to={link.to}
-                                  className="block text-gray-600 hover:text-[#A51C30] transition py-1.5 text-sm"
+                                  className="block text-gray-600 hover:text-primary-600 transition py-1.5 text-sm"
                                   onClick={() => setIsMenuOpen(false)}
                                 >
                                   {t(link.key)}
@@ -449,18 +440,18 @@ export const Navbar = () => {
           </div>
 
           <div className="pt-4 border-t border-gray-200">
-            <h3 className="text-sm font-bold text-[#A51C30] uppercase tracking-wide mb-3">{t('nav.quickLinks')}</h3>
+            <h3 className="text-sm font-bold text-primary-600 uppercase tracking-wide mb-3">{t('nav.quickLinks')}</h3>
             <div className="space-y-2">
-              <Link to="/admissions" className="block text-gray-600 hover:text-[#A51C30] transition text-sm" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/admissions" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
                 {t('nav.academics_admissions')}
               </Link>
-              <Link to="/portal" className="block text-gray-600 hover:text-[#A51C30] transition text-sm" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/portal" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
                 {t('nav.portals_student')}
               </Link>
-              <Link to="/staff" className="block text-gray-600 hover:text-[#A51C30] transition text-sm" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/staff" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
                 {t('footer.resources_staffPortal')}
               </Link>
-              <Link to="/library" className="block text-gray-600 hover:text-[#A51C30] transition text-sm" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/library" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
                 {t('footer.resources_eLibrary')}
               </Link>
             </div>
@@ -468,8 +459,7 @@ export const Navbar = () => {
 
           <Link
             to="/apply"
-            className="block w-full text-center py-3 mt-4 font-semibold text-white transition hover:opacity-90"
-            style={{ backgroundColor: colors.primary }}
+            className="block w-full text-center py-3 mt-4 font-semibold text-white bg-primary-600 transition hover:bg-primary-700"
             onClick={() => setIsMenuOpen(false)}
           >
             {t('nav.applyNow')} →

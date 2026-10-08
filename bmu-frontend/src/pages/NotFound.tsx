@@ -42,7 +42,7 @@ export const NotFound = () => {
 
  <div className="min-h-screen bg-gray-50">
  {/* Hero Section */}
- <div className="bg-gradient-to-br from-[#1E1E1E] via-[#1a3ac0] to-[#A51C30] text-white">
+ <div className="bg-gradient-to-br from-ink-900 via-ink-800 to-primary-600 text-white">
  <div className="container-custom py-20">
  <motion.div
  initial={{ opacity: 0, y: 20 }}
@@ -82,23 +82,23 @@ export const NotFound = () => {
  to={link.path}
  className="flex items-center gap-4 p-4 bg-white shadow-sm transition group"
  >
- <div className="w-12 h-12 bg-[#1E1E1E]/10 flex items-center justify-center group-hover:bg-[#1E1E1E]/20 transition">
- <link.icon className="w-6 h-6 text-[#1E1E1E]" />
+ <div className="w-12 h-12 bg-ink-900/10 flex items-center justify-center group-hover:bg-ink-900/20 transition">
+ <link.icon className="w-6 h-6 text-ink-900" />
  </div>
  <div className="flex-1">
- <span className="font-semibold text-gray-900 group-hover:text-[#1E1E1E] transition">
+ <span className="font-semibold text-gray-900 group-hover:text-ink-900 transition">
  {link.label}
  </span>
  <p className="text-sm text-gray-500">{link.description}</p>
  </div>
- <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-[#1E1E1E] -rotate-180 transition" />
+ <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-ink-900 -rotate-180 transition" />
  </Link>
  ))}
  </div>
 
  <button
  onClick={() => window.history.back()}
- className="mt-6 flex items-center gap-2 text-[#1E1E1E] font-medium hover:underline"
+ className="mt-6 flex items-center gap-2 text-ink-900 font-medium hover:underline"
  >
  <ArrowLeft className="w-5 h-5" />
  Go back to previous page
@@ -121,7 +121,7 @@ export const NotFound = () => {
  className="group"
  >
  <div className="p-3 hover:bg-gray-50 transition">
- <span className="font-medium text-gray-700 group-hover:text-[#1E1E1E] transition">
+ <span className="font-medium text-gray-700 group-hover:text-ink-900 transition">
  {page.label}
  </span>
  </div>
@@ -131,14 +131,14 @@ export const NotFound = () => {
  </div>
 
  {/* Search Box */}
- <div className="mt-8 bg-gradient-to-r from-[#1E1E1E] to-[#A51C30] p-6 text-white">
+ <div className="mt-8 bg-gradient-to-r from-ink-900 to-primary-600 p-6 text-white">
  <h4 className="font-bold mb-3">Looking for something specific?</h4>
  <p className="text-white/80 text-sm mb-4">
  Try our search feature to find what you need across our website.
  </p>
  <Link
  to="/search"
- className="inline-flex items-center gap-2 px-4 py-2 bg-white text-[#1E1E1E] font-medium hover:bg-white/90 transition"
+ className="inline-flex items-center gap-2 px-4 py-2 bg-white text-ink-900 font-medium hover:bg-white/90 transition"
  >
  <Search className="w-4 h-4" />
  Search Website
@@ -162,14 +162,14 @@ export const NotFound = () => {
  <div className="flex justify-center gap-4">
  <a
  href="mailto:webmaster@bmu.edu.ng"
- className="text-[#1E1E1E] font-medium hover:underline"
+ className="text-ink-900 font-medium hover:underline"
  >
  webmaster@bmu.edu.ng
  </a>
  <span className="text-gray-300">|</span>
  <a
  href="tel:+2348031110000"
- className="text-[#1E1E1E] font-medium hover:underline"
+ className="text-ink-900 font-medium hover:underline"
  >
  +234 803 111 0000
  </a>

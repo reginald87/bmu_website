@@ -78,7 +78,7 @@ const ScrollToTop = () => {
       initial={{ opacity: 0, scale: 0 }}
       animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-[#A51C30] text-white flex items-center justify-center hover:bg-[#8a1828] transition-colors"
+      className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-primary-600 text-white flex items-center justify-center hover:bg-primary-700 transition-colors"
     >
       <ArrowUp className="w-5 h-5" />
     </motion.button>
@@ -102,8 +102,8 @@ const MobileQuickBar = () => {
     >
       <div className="flex items-center justify-around py-2 px-2">
         <Link to="/apply" className="flex flex-col items-center gap-0.5 px-3 py-1">
-          <GraduationCap className="w-5 h-5 text-[#A51C30]" />
-          <span className="text-[10px] font-medium text-[#A51C30]">Apply</span>
+          <GraduationCap className="w-5 h-5 text-primary-600" />
+          <span className="text-[10px] font-medium text-primary-600">Apply</span>
         </Link>
         <Link to="/academics/programs" className="flex flex-col items-center gap-0.5 px-3 py-1">
           <Calendar className="w-5 h-5 text-gray-600" />
@@ -200,10 +200,10 @@ export const Home = () => {
             transition={{ duration: 0.5 }}
             className="mb-14"
           >
-            <span className="text-sm font-bold tracking-[0.2em] uppercase text-[#A51C30]">
+            <span className="text-sm font-bold tracking-[0.2em] uppercase text-primary-600">
               {t('home.spotlight.title')}
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-4 text-[#1E1E1E]">
+            <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-4 text-ink-900">
               {t('home.researchSpotlight.title')} & {t('home.latestNews.title')}
             </h2>
             <p className="text-gray-600 max-w-2xl">
@@ -218,8 +218,8 @@ export const Home = () => {
             <div className="lg:col-span-2">
               <div className="bg-white p-6 shadow-sm border border-gray-100">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-[#1E1E1E]">{t('home.latestNews.title')}</h3>
-                  <Link to="/news" className="text-sm font-semibold text-[#A51C30] hover:underline">
+                  <h3 className="text-xl font-bold text-ink-900">{t('home.latestNews.title')}</h3>
+                  <Link to="/news" className="text-sm font-semibold text-primary-600 hover:underline">
                     {t('home.latestNews.viewAll')} →
                   </Link>
                 </div>
@@ -236,11 +236,11 @@ export const Home = () => {
                         to={`/news/${item.slug}`}
                         className="group flex items-start gap-3 p-3 -mx-3 rounded hover:bg-gray-50 transition-colors"
                       >
-                        <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-[#A51C30]/10 rounded">
-                          <Newspaper className="w-5 h-5 text-[#A51C30]" />
+                        <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-primary-600/10 rounded">
+                          <Newspaper className="w-5 h-5 text-primary-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 group-hover:text-[#A51C30] transition-colors line-clamp-2">
+                          <p className="text-sm font-medium text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-2">
                             {item.title}
                           </p>
                           <p className="text-xs text-gray-400 mt-1">
