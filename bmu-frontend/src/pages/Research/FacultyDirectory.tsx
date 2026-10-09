@@ -5,24 +5,6 @@ import { motion } from 'framer-motion';
 import { Search, ArrowRight, Filter } from 'lucide-react';
 import { useFaculty } from '../../services/apiHooks';
 
-interface FacultyMember {
-  id: number;
-  full_name: string;
-  first_name: string;
-  last_name: string;
-  title: string;
-  position: string;
-  position_display: string;
-  department: string | null;
-  college: string | null;
-  email: string | null;
-  profile_image: string | null;
-  bio: string;
-  research_interests: string;
-  citations: number;
-  h_index: number;
-}
-
 const positionColors: Record<string, string> = {
   professor: 'var(--color-primary-600)',
   associate_professor: 'var(--color-ink-900)',
@@ -33,8 +15,7 @@ const positionColors: Record<string, string> = {
 };
 
 export const FacultyDirectory = () => {
-  const { data: rawFaculty = [], isLoading } = useFaculty();
-  const faculty = rawFaculty as unknown as FacultyMember[];
+  const { data: faculty = [], isLoading } = useFaculty();
   const [search, setSearch] = useState('');
   const [positionFilter, setPositionFilter] = useState('all');
 
@@ -47,10 +28,10 @@ export const FacultyDirectory = () => {
     return faculty.filter((f) => {
       const matchesSearch =
         !search ||
-        f.full_name.toLowerCase().includes(search.toLowerCase()) ||
+        (f.fullName || `${f.firstName} ${f.lastName}`).toLowerCase().includes(search.toLowerCase()) ||
         (f.department && f.department.toLowerCase().includes(search.toLowerCase())) ||
         (f.college && f.college.toLowerCase().includes(search.toLowerCase())) ||
-        f.research_interests.toLowerCase().includes(search.toLowerCase());
+        f.researchInterests.toLowerCase().includes(search.toLowerCase());
       const matchesPosition = positionFilter === 'all' || f.position === positionFilter;
       return matchesSearch && matchesPosition;
     });
@@ -133,7 +114,8 @@ export const FacultyDirectory = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((member, index) => {
-              const initials = `${member.first_name?.[0] || ''}${member.last_name?.[0] || ''}`;
+              const initials = `${member.firstName?.[0] || ''}${member.lastName?.[0] || ''}`;
+              const displayName = member.fullName || `${member.firstName} ${member.lastName}`.trim();
               const color = positionColors[member.position] || 'var(--color-primary-600)';
               return (
                 <motion.div
@@ -149,10 +131,10 @@ export const FacultyDirectory = () => {
                   >
                     <div className="p-6">
                       <div className="flex items-start gap-4 mb-4">
-                        {member.profile_image ? (
+                        {member.profileImage ? (
                           <img loading="lazy" decoding="async"
-                            src={member.profile_image}
-                            alt={member.full_name}
+                            src={member.profileImage}
+                            alt={displayName}
                             className="w-16 h-16 rounded-full object-cover flex-shrink-0"
                           />
                         ) : (
@@ -165,10 +147,10 @@ export const FacultyDirectory = () => {
                         )}
                         <div className="min-w-0">
                           <h3 className="font-bold text-gray-900 group-hover:text-primary-600 transition truncate">
-                            {member.title} {member.full_name}
+                            {member.title} {displayName}
                           </h3>
                           <p className="text-sm font-medium" style={{ color }}>
-                            {member.position_display}
+                            {member.positionDisplay || member.position}
                           </p>
                           {member.department && (
                             <p className="text-sm text-gray-500 truncate">{member.department}</p>
@@ -179,16 +161,16 @@ export const FacultyDirectory = () => {
                         </div>
                       </div>
 
-                      {member.research_interests && (
+                      {member.researchInterests && (
                         <div className="flex flex-wrap gap-1.5 mb-4">
-                          {member.research_interests.split(',').slice(0, 3).map((interest, i) => (
+                          {member.researchInterests.split(',').slice(0, 3).map((interest, i) => (
                             <span key={i} className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600">
                               {interest.trim()}
                             </span>
                           ))}
-                          {member.research_interests.split(',').length > 3 && (
+                          {member.researchInterests.split(',').length > 3 && (
                             <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-400">
-                              +{member.research_interests.split(',').length - 3} more
+                              +{member.researchInterests.split(',').length - 3} more
                             </span>
                           )}
                         </div>
@@ -199,8 +181,8 @@ export const FacultyDirectory = () => {
                           {member.citations > 0 && (
                             <span>{member.citations.toLocaleString()} citations</span>
                           )}
-                          {member.h_index > 0 && (
-                            <span>h-index: {member.h_index}</span>
+                          {member.hIndex > 0 && (
+                            <span>h-index: {member.hIndex}</span>
                           )}
                         </div>
                         <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-primary-600 group-hover:translate-x-1 transition-all" />
