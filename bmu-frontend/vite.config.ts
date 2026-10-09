@@ -7,6 +7,18 @@ const API_TARGET = process.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        // Collapse the hundreds of one-icon-per-chunk modules emitted by
+        // lucide-react's per-icon entry points into a single cached chunk.
+        // All other splitting is left to Vite/Rolldown's defaults.
+        manualChunks(id) {
+          if (id.replace(/\\/g, '/').includes('/lucide-react/')) return 'vendor-icons'
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       '/api': {

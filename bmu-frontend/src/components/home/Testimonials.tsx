@@ -53,7 +53,7 @@ export const Testimonials = ({ sections: homeSections }: { sections?: Array<{ se
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="flex-shrink-0">
                   {testimonials[activeIndex].photo_url ? (
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={testimonials[activeIndex].photo_url ?? ''}
                       alt={testimonials[activeIndex].name}
                       className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover"

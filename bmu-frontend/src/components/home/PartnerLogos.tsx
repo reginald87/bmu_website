@@ -77,7 +77,7 @@ export const PartnerLogos = ({ sections: homeSections }: { sections?: Array<{ se
               <div className="flex flex-col items-center text-center">
                 {partner.logoUrl ? (
                   <div className="w-16 h-16 flex items-center justify-center mb-4">
-                    <img src={partner.logoUrl} alt={partner.name} className="max-w-full max-h-full object-contain" />
+                    <img loading="lazy" decoding="async" src={partner.logoUrl} alt={partner.name} className="max-w-full max-h-full object-contain" />
                   </div>
                 ) : (
                   <div className="w-16 h-16 flex items-center justify-center mb-4" style={{ backgroundColor: `${partner.color}15` }}>

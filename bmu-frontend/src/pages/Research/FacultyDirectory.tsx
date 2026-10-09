@@ -150,7 +150,7 @@ export const FacultyDirectory = () => {
                     <div className="p-6">
                       <div className="flex items-start gap-4 mb-4">
                         {member.profile_image ? (
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={member.profile_image}
                             alt={member.full_name}
                             className="w-16 h-16 rounded-full object-cover flex-shrink-0"

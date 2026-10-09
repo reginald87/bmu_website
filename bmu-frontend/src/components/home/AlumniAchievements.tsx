@@ -110,7 +110,7 @@ export const AlumniAchievements = ({ sections: homeSections }: { sections?: Arra
                   <div className="relative">
                     {alumni.image ? (
                       <div className="w-16 h-16 overflow-hidden border-2 border-gray-200">
-                        <img
+                        <img loading="lazy" decoding="async"
                           src={alumni.image}
                           alt={alumni.name}
                           className="w-full h-full object-cover"

@@ -145,7 +145,7 @@ export const History = () => {
                 <div className="grid grid-cols-2 gap-4">
                   {introImages.map((img) => (
                     <div key={img.order} className="bg-gray-100 overflow-hidden">
-                      <img src={img.image} alt={img.caption} className="w-full aspect-video object-cover" />
+                      <img loading="lazy" decoding="async" src={img.image} alt={img.caption} className="w-full aspect-video object-cover" />
                       {img.caption && (
                         <p className="text-center text-sm text-gray-500 py-2">{img.caption}</p>
                       )}
@@ -154,7 +154,7 @@ export const History = () => {
                 </div>
               ) : introImage ? (
                 <div className="w-full overflow-hidden">
-                  <img src={introImage} alt={introImageCaption} className="w-full h-[480px] object-cover object-top" />
+                  <img loading="lazy" decoding="async" src={introImage} alt={introImageCaption} className="w-full h-[480px] object-cover object-top" />
                 </div>
               ) : (
                 <div className="bg-gray-100 aspect-video flex items-center justify-center">

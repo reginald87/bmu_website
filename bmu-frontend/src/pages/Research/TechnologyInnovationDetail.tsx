@@ -130,7 +130,7 @@ export const TechnologyInnovationDetail = () => {
             </motion.div>
           ) : program.cover_image ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-              <img src={program.cover_image} alt={program.title} className="w-full aspect-video object-cover mb-10" />
+              <img loading="lazy" decoding="async" src={program.cover_image} alt={program.title} className="w-full aspect-video object-cover mb-10" />
             </motion.div>
           ) : null}
 
@@ -216,7 +216,7 @@ export const TechnologyInnovationDetail = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
                 {galleryImages.map((img, i) => (
                   <div key={i} className="overflow-hidden border border-gray-200">
-                    <img src={img.image} alt={img.caption} className="w-full aspect-video object-cover" />
+                    <img loading="lazy" decoding="async" src={img.image} alt={img.caption} className="w-full aspect-video object-cover" />
                     {img.caption && (
                       <p className="text-center text-sm text-gray-500 py-2 px-3">{img.caption}</p>
                     )}

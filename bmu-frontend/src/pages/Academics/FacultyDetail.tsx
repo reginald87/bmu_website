@@ -473,7 +473,7 @@ export const FacultyDetail = () => {
               {faculty.leadership_name && (
                 <div className="bg-white/10 backdrop-blur-sm p-6 text-center">
                   {faculty.dean_photo ? (
-                    <img src={faculty.dean_photo} alt={faculty.leadership_name} className="w-28 h-28 object-cover mx-auto" />
+                    <img loading="lazy" decoding="async" src={faculty.dean_photo} alt={faculty.leadership_name} className="w-28 h-28 object-cover mx-auto" />
                   ) : (
                     <div className="w-28 h-28 bg-white/20 flex items-center justify-center mx-auto">
                       <Users className="w-12 h-12 text-white" />

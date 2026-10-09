@@ -130,7 +130,7 @@ export const UniversityProjects = () => {
                     >
                       <div className="relative h-64 overflow-hidden">
                         {project.image ? (
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={project.image}
                             alt={project.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -206,7 +206,7 @@ export const UniversityProjects = () => {
                     >
                       <div className="relative h-52 overflow-hidden">
                         {project.image ? (
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={project.image}
                             alt={project.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

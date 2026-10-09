@@ -65,7 +65,7 @@ export const AccreditationStrip = () => {
                   <div className="flex items-center gap-2 mb-5">
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-500 flex items-center justify-center shadow-lg shadow-primary-600/20 group-hover:scale-110 transition-transform duration-300">
                       {acc.logo_url ? (
-                        <img src={acc.logo_url} alt={acc.accrediting_body} className="w-10 h-10 object-contain" />
+                        <img loading="lazy" decoding="async" src={acc.logo_url} alt={acc.accrediting_body} className="w-10 h-10 object-contain" />
                       ) : (
                         <Icon className="w-8 h-8 text-white" />
                       )}

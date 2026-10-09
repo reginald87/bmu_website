@@ -82,7 +82,7 @@ export const CampusLife = () => {
                 transition={{ duration: 0.5 }}
                 className="absolute inset-0"
               >
-                <img
+                <img loading="lazy" decoding="async"
                   src={images[activeIndex]?.image}
                   alt={images[activeIndex]?.title}
                   className="w-full h-full object-cover"

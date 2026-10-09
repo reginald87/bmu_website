@@ -105,7 +105,7 @@ export function ExternalPartners() {
                   <div className="p-6">
                     <div className="flex items-center gap-4 mb-4">
                       {org.logo ? (
-                        <img src={org.logo} alt={org.name} className="w-14 h-14 object-contain rounded-lg" />
+                        <img loading="lazy" decoding="async" src={org.logo} alt={org.name} className="w-14 h-14 object-contain rounded-lg" />
                       ) : (
                         <div className="w-14 h-14 flex items-center justify-center text-white font-bold text-lg" style={{ backgroundColor: brandGradients[i % brandGradients.length] }}>
                           {org.acronym.charAt(0)}
@@ -200,7 +200,7 @@ export function ExternalPartners() {
             <motion.div key={p.id} className="bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}>
               <Link to={`/impact/external-partners/${p.id}`} className="block">
                 {p.image ? (
-                  <img src={p.image} alt={p.title} className="w-full h-48 object-cover" />
+                  <img loading="lazy" decoding="async" src={p.image} alt={p.title} className="w-full h-48 object-cover" />
                 ) : (
                   <div className="w-full h-48 flex items-center justify-center" style={{ backgroundColor: brandGradients[orgIndex % brandGradients.length] }}>
                     <div className="text-center text-white">

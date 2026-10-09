@@ -100,7 +100,7 @@ export const AnnouncementModal = () => {
             {announcement.image ? (
               <div className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f1420] via-transparent to-transparent" />
-                <img
+                <img loading="lazy" decoding="async"
                   src={announcement.image}
                   alt={announcement.title}
                   className="w-full object-cover"

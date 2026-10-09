@@ -106,7 +106,7 @@ export const Gallery = () => {
                   className="group relative bg-white overflow-hidden shadow-sm transition-all"
                 >
                   <div className="aspect-square overflow-hidden">
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={image.thumbnail_url || image.image_url}
                       alt={image.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"

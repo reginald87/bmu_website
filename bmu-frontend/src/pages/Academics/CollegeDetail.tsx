@@ -258,7 +258,7 @@ export const CollegeDetail = () => {
               {college.provost_name && (
                 <div className="bg-white/10 backdrop-blur-sm p-6 text-center">
                   {college.provost_photo ? (
-                    <img src={college.provost_photo} alt={college.provost_name} className="w-28 h-28 object-cover mx-auto" />
+                    <img loading="lazy" decoding="async" src={college.provost_photo} alt={college.provost_name} className="w-28 h-28 object-cover mx-auto" />
                   ) : (
                     <div className="w-28 h-28 bg-white/20 flex items-center justify-center mx-auto">
                       <Users className="w-12 h-12 text-white" />

@@ -64,7 +64,7 @@ export const FacultyProfile = () => {
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="w-32 h-32 md:w-40 md:h-40 bg-white p-1 flex-shrink-0">
                 {faculty.profileImage ? (
-                  <img src={faculty.profileImage} alt={`${faculty.firstName} ${faculty.lastName}`} className="w-full h-full object-cover" />
+                  <img loading="lazy" decoding="async" src={faculty.profileImage} alt={`${faculty.firstName} ${faculty.lastName}`} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                     <span className="text-4xl md:text-5xl font-bold text-gray-400">{initials}</span>

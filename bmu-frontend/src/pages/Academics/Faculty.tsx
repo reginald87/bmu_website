@@ -172,7 +172,7 @@ export const Faculty = () => {
                       <div className="absolute -bottom-10 left-6">
                         <div className="w-20 h-20 bg-white p-1">
                           {faculty.profileImage ? (
-                            <img src={faculty.profileImage} alt={`${faculty.firstName} ${faculty.lastName}`} className="w-full h-full object-cover" />
+                            <img loading="lazy" decoding="async" src={faculty.profileImage} alt={`${faculty.firstName} ${faculty.lastName}`} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                               <span className="text-2xl font-bold text-gray-400">

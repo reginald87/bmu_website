@@ -81,7 +81,7 @@ export const SiteAnnouncements = () => {
                     <div className="flex flex-col md:flex-row">
                       {a.image && (
                         <div className="md:w-48 shrink-0">
-                          <img src={a.image} alt={a.title} className="w-full h-full object-cover" />
+                          <img loading="lazy" decoding="async" src={a.image} alt={a.title} className="w-full h-full object-cover" />
                         </div>
                       )}
                       <div className="p-6 flex-1">

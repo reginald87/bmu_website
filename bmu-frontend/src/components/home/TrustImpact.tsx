@@ -71,7 +71,7 @@ export const TrustImpact = ({ stats, statsLoading }: TrustImpactProps) => {
                 return (
                   <div key={acc.accrediting_body} className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200">
                     {acc.logo_url ? (
-                      <img src={acc.logo_url} alt={acc.accrediting_body} className="w-6 h-6 object-contain" />
+                      <img loading="lazy" decoding="async" src={acc.logo_url} alt={acc.accrediting_body} className="w-6 h-6 object-contain" />
                     ) : (
                       <Icon className="w-5 h-5 text-primary-600" />
                     )}
@@ -120,7 +120,7 @@ export const TrustImpact = ({ stats, statsLoading }: TrustImpactProps) => {
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 bg-primary-600/10 flex items-center justify-center flex-shrink-0">
                     {acc.logo_url ? (
-                      <img src={acc.logo_url} alt={acc.accrediting_body} className="w-10 h-10 object-contain" />
+                      <img loading="lazy" decoding="async" src={acc.logo_url} alt={acc.accrediting_body} className="w-10 h-10 object-contain" />
                     ) : (
                       <Icon className="w-7 h-7 text-primary-600" />
                     )}

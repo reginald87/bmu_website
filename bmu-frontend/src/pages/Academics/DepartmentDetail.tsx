@@ -377,7 +377,7 @@ hod_photo: response.data.hod_photo ?? null,
   {department.leadership_name && (
   <div className="bg-white/10 backdrop-blur-sm p-6 text-center">
   {department.hod_photo ? (
-    <img src={department.hod_photo} alt={department.leadership_name} className="w-28 h-28 object-cover mx-auto" />
+    <img loading="lazy" decoding="async" src={department.hod_photo} alt={department.leadership_name} className="w-28 h-28 object-cover mx-auto" />
   ) : (
   <div className="w-28 h-28 bg-white/20 flex items-center justify-center mx-auto">
   <Users className="w-12 h-12 text-white" />
@@ -439,7 +439,7 @@ hod_photo: response.data.hod_photo ?? null,
  <div className="flex items-start gap-4">
  <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center flex-shrink-0">
  {member.profile_image ? (
- <img 
+ <img loading="lazy" decoding="async" 
  src={member.profile_image} 
  alt={member.full_name}
  className="w-full h-full object-cover"

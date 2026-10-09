@@ -163,7 +163,7 @@ export const Staff = () => {
                   <div className="absolute -bottom-8 left-6">
                     <div className="w-16 h-16 bg-white p-1">
                       {staff.photo_url ? (
-                        <img src={staff.photo_url} alt={staff.full_name} className="w-full h-full object-cover" />
+                        <img loading="lazy" decoding="async" src={staff.photo_url} alt={staff.full_name} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                           <span className="text-xl font-bold text-gray-400">

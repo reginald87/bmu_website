@@ -53,7 +53,7 @@ export const StaffProfile = () => {
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="w-40 h-40 md:w-48 md:h-48 overflow-hidden bg-white/20 flex items-center justify-center flex-shrink-0 border-4 border-white/30">
                 {staff.photo_url ? (
-                  <img src={staff.photo_url} alt={staff.full_name} className="w-full h-full object-cover" />
+                  <img loading="lazy" decoding="async" src={staff.photo_url} alt={staff.full_name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="text-white text-4xl md:text-5xl font-bold">{initials}</div>
                 )}

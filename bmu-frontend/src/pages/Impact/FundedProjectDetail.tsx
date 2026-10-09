@@ -142,7 +142,7 @@ export const FundedProjectDetail = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
                 {allImages.map((img, i) => (
                   <div key={i} className="overflow-hidden border border-gray-200">
-                    <img src={img.image} alt={img.caption} className="w-full aspect-video object-cover" />
+                    <img loading="lazy" decoding="async" src={img.image} alt={img.caption} className="w-full aspect-video object-cover" />
                     {img.caption && (
                       <p className="text-center text-sm text-gray-500 py-2 px-3">{img.caption}</p>
                     )}

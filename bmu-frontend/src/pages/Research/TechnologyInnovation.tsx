@@ -141,7 +141,7 @@ export const TechnologyInnovation = () => {
                     >
                       <div className="relative h-52 overflow-hidden">
                         {program.cover_image ? (
-                          <img
+                          <img loading="lazy" decoding="async"
                             src={program.cover_image}
                             alt={program.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -187,7 +187,7 @@ export const TechnologyInnovation = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="relative overflow-hidden">
                 {featured.cover_image ? (
-                  <img src={featured.cover_image} alt={featured.title} className="w-full aspect-video object-cover" />
+                  <img loading="lazy" decoding="async" src={featured.cover_image} alt={featured.title} className="w-full aspect-video object-cover" />
                 ) : (
                   <div className="w-full aspect-video flex items-center justify-center bg-ink-900">
                     <Lightbulb className="w-16 h-16 text-white/60" />

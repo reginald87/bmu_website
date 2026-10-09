@@ -92,7 +92,7 @@ export const VideoShowcase = () => {
             <>
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               {video?.thumbnail ? (
-                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
+                <img loading="lazy" decoding="async" src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full bg-gray-800 flex items-center justify-center">
                   <span className="text-gray-600 text-lg">Campus Tour Preview</span>

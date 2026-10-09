@@ -144,7 +144,7 @@ export const Events = () => {
                     <div className="text-center p-8">
                       <span className="text-6xl">{typeIcons[featuredEvent.event_type] || '📅'}</span>
                       {featuredEvent.featured_image ? (
-                        <img src={featuredEvent.featured_image} alt={featuredEvent.title} className="w-full h-full object-cover" />
+                        <img loading="lazy" decoding="async" src={featuredEvent.featured_image} alt={featuredEvent.title} className="w-full h-full object-cover" />
                       ) : (
                         <p className="text-gray-500 mt-4">Event Image</p>
                       )}
