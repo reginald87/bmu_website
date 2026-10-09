@@ -139,8 +139,21 @@ const ApplicantLogin = () => {
         });
       }
     } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string; detail?: string } } };
-      setError(e?.response?.data?.message || e?.response?.data?.detail || 'Authentication failed. Please try again.');
+      const e = err as { response?: { data?: Record<string, unknown> } };
+      const data = e?.response?.data;
+      let message = 'Authentication failed. Please try again.';
+      if (data) {
+        if (typeof data.message === 'string') message = data.message;
+        else if (typeof data.detail === 'string') message = data.detail;
+        else {
+          const first = Object.values(data).find(
+            (v) => typeof v === 'string' || (Array.isArray(v) && typeof v[0] === 'string')
+          );
+          if (typeof first === 'string') message = first;
+          else if (Array.isArray(first) && typeof first[0] === 'string') message = first[0];
+        }
+      }
+      setError(message);
     } finally {
       setIsLoading(false);
     }
