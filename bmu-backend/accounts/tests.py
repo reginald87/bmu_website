@@ -150,6 +150,62 @@ class ApiLoginTests(TestCase):
         self.assertEqual(res.status_code, 401, res.content)
 
 
+class ApiRegistrationTests(TestCase):
+    def setUp(self):
+        self.url = '/api/v1/auth/register/'
+
+    def test_register_with_confirm_password_autologs_in(self):
+        res = self.client.post(
+            self.url,
+            {
+                'email': 'newapp@example.com',
+                'password': 'password123',
+                'confirm_password': 'password123',
+                'first_name': 'New',
+                'last_name': 'Applicant',
+                'role': 'applicant',
+            },
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 201, res.content)
+        data = res.json()
+        self.assertIn('access', data)
+        self.assertEqual(data['tokens']['access'], data['access'])
+        self.assertEqual(data['tokens']['refresh'], data['refresh'])
+        self.assertEqual(data['user']['email'], 'newapp@example.com')
+
+        user = User.objects.get(email='newapp@example.com')
+        self.assertTrue(user.check_password('password123'))
+        self.assertTrue(user.username)
+
+    def test_duplicate_email_is_rejected(self):
+        User.objects.create_user(
+            username='taken', email='dup@example.com', password='password123'
+        )
+        res = self.client.post(
+            '/api/v1/auth/register/',
+            {
+                'email': 'dup@example.com', 'password': 'password123',
+                'confirm_password': 'password123', 'first_name': 'A',
+                'last_name': 'B', 'role': 'applicant',
+            },
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 400)
+
+    def test_mismatched_passwords_are_rejected(self):
+        res = self.client.post(
+            '/api/v1/auth/register/',
+            {
+                'email': 'mismatch@example.com', 'password': 'password123',
+                'confirm_password': 'different123', 'first_name': 'A',
+                'last_name': 'B', 'role': 'applicant',
+            },
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 400)
+
+
 class EmailVerificationTests(TestCase):
     def setUp(self):
         self.register_url = reverse('user-register')

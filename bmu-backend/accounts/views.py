@@ -25,7 +25,28 @@ class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
     permission_classes = [permissions.AllowAny]
-    
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        user = serializer.instance
+        refresh = RefreshToken.for_user(user)
+        access = str(refresh.access_token)
+        refresh_token = str(refresh)
+        return Response(
+            {
+                'user': UserSerializer(user).data,
+                'tokens': {
+                    'access': access,
+                    'refresh': refresh_token,
+                },
+                'access': access,
+                'refresh': refresh_token,
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
     def perform_create(self, serializer):
         user = serializer.save()
         # Log the activity

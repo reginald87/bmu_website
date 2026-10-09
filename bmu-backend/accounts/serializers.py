@@ -1,3 +1,5 @@
+import re
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import UserActivity, Notification
@@ -28,26 +30,57 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    """Serializer for creating new users"""
+    """Serializer for creating new users.
+
+    Accepts the confirmation password under either ``password_confirm``
+    (existing API/test contract) or ``confirm_password`` (frontend payload).
+    Usernames are optional and derived from the email when omitted.
+    """
     password = serializers.CharField(write_only=True, min_length=8)
-    password_confirm = serializers.CharField(write_only=True)
-    
+    password_confirm = serializers.CharField(write_only=True, required=False)
+    confirm_password = serializers.CharField(write_only=True, required=False)
+
     class Meta:
         model = User
         fields = [
             'username', 'email', 'first_name', 'last_name',
-            'phone', 'role', 'password', 'password_confirm'
+            'phone', 'role', 'password', 'password_confirm', 'confirm_password'
         ]
-    
+        extra_kwargs = {
+            'username': {'required': False, 'validators': []},
+        }
+
     def validate(self, data):
-        if data['password'] != data['password_confirm']:
-            raise serializers.ValidationError("Passwords do not match.")
+        confirm = data.get('password_confirm') or data.get('confirm_password')
+        if not confirm:
+            raise serializers.ValidationError(
+                {'password_confirm': 'This field is required.'}
+            )
+        if data['password'] != confirm:
+            raise serializers.ValidationError('Passwords do not match.')
+        data['password_confirm'] = confirm
         return data
-    
+
+    @staticmethod
+    def _generate_username(email):
+        base = re.sub(r'[^a-z0-9._-]', '', (email.split('@')[0] or '').lower())
+        base = (base or 'user')[:150]
+        username = base
+        suffix = 1
+        while User.objects.filter(username=username).exists():
+            tail = str(suffix)
+            username = f'{base[:150 - len(tail)]}{tail}'
+            suffix += 1
+        return username
+
     def create(self, validated_data):
-        validated_data.pop('password_confirm')
-        user = User.objects.create_user(**validated_data)
-        return user
+        validated_data.pop('password_confirm', None)
+        validated_data.pop('confirm_password', None)
+        if not validated_data.get('username'):
+            validated_data['username'] = self._generate_username(
+                validated_data['email']
+            )
+        return User.objects.create_user(**validated_data)
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
