@@ -25,7 +25,7 @@ export const SDGSnapshot = ({ sections: homeSections }: { sections?: Array<{ sec
         {sdgs.map((sdg) => (
           <a
             key={sdg.number}
-            href={`/impact/sdg${sdg.number}`}
+            href="/impact/sdg-dashboard"
             className="flex items-center gap-3 p-3 hover:opacity-90 transition"
             style={{ backgroundColor: sdg.color + '20' }}
           >
