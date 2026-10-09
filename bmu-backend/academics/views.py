@@ -165,6 +165,12 @@ class SDGMetricsListView(generics.ListAPIView):
                     queryset.filter(sdg_code='sdg5'), many=True
                 ).data
             },
+            'sdg17': {
+                'title': 'Partnerships for the Goals',
+                'metrics': SDGMetricSerializer(
+                    queryset.filter(sdg_code='sdg17'), many=True
+                ).data
+            },
         }
         
         return Response(sdg_data)

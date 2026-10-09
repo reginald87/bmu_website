@@ -1014,6 +1014,14 @@ export const mockSDGMetrics: Record<string, SDGData> = {
  { label: "Female student enrollment", value: 52, target: 55, unit: "%" },
  { label: "Female leadership positions", value: 4, target: 8, unit: "positions" }
  ]
+ },
+ sdg17: {
+ title: "Partnerships for the Goals",
+ metrics: [
+ { label: "Active international partnerships", value: 10, target: 15, unit: "partners" },
+ { label: "Joint research projects", value: 12, target: 20, unit: "projects" },
+ { label: "Student exchange programmes", value: 2, target: 6, unit: "programmes" }
+ ]
  }
 };
 
@@ -1073,6 +1081,33 @@ export const mockSDGs: SDGRichData[] = [
       { year: "2022", female_students: 60, female_faculty: 46, female_leadership: 42 },
       { year: "2023", female_students: 61, female_faculty: 49, female_leadership: 45 },
       { year: "2024", female_students: 62, female_faculty: 52, female_leadership: 48 },
+    ],
+  },
+  {
+    id: 3,
+    number: 17,
+    title: "Partnerships for the Goals",
+    short_title: "Partnerships",
+    color: "#19486a",
+    icon: "Handshake",
+    description: "Strengthen the means of implementation and revitalize the global partnership for sustainable development.",
+    contributions: [
+      "Active partnerships with 10 international institutions, NGOs and government agencies advancing health research and education.",
+      "Collaboration with WHO, UNICEF and UNFPA on disease surveillance, maternal and child health, and immunization programmes.",
+      "Academic partnerships with institutions such as the London School of Hygiene & Tropical Medicine for joint research and faculty exchange.",
+      "Student and staff exchange programmes that build global capacity and share best practice in medical education.",
+    ],
+    metrics: [
+      { label: "International partnerships", value: "10", target: "15" },
+      { label: "Joint research projects", value: "12", target: "20" },
+      { label: "Student exchange programmes", value: "2", target: "6" },
+    ],
+    progress_data: [
+      { year: "2020", partnerships: 4, projects: 3 },
+      { year: "2021", partnerships: 6, projects: 5 },
+      { year: "2022", partnerships: 7, projects: 8 },
+      { year: "2023", partnerships: 9, projects: 10 },
+      { year: "2024", partnerships: 10, projects: 12 },
     ],
   },
 ];

@@ -5,6 +5,7 @@ import {
   HeartPulse,
   GraduationCap,
   Users,
+  Handshake,
   ArrowRight,
   TrendingUp,
   MapPin,
@@ -98,10 +99,19 @@ const studentGenderData = [
 ];
 
 const leadershipGenderData = [
-  { level: 'Deans', male: 6, female: 4 },
-  { level: 'Heads of Dept', male: 18, female: 15 },
-  { level: 'Senior Faculty', male: 25, female: 28 },
-  { level: 'Non-Teaching Staff', male: 32, female: 70 },
+ { level: 'Deans', male: 6, female: 4 },
+ { level: 'Heads of Dept', male: 18, female: 15 },
+ { level: 'Senior Faculty', male: 25, female: 28 },
+ { level: 'Non-Teaching Staff', male: 32, female: 70 },
+];
+
+// Chart data for SDG 17 - Partnerships for the Goals
+const partnershipGrowthData = [
+ { year: '2020', partnerships: 4, projects: 3 },
+ { year: '2021', partnerships: 6, projects: 5 },
+ { year: '2022', partnerships: 7, projects: 8 },
+ { year: '2023', partnerships: 9, projects: 10 },
+ { year: '2024', partnerships: 10, projects: 12 },
 ];
 
 // Impact Map - Niger Delta Outreach Locations
@@ -290,7 +300,7 @@ const MetricCard = ({ metric, color }: { metric: SDGMetric; color: string }) => 
 };
 
 export const SDGDashboard = () => {
-  const [activeTab, setActiveTab] = useState<'all' | 'sdg3' | 'sdg4' | 'sdg5'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'sdg3' | 'sdg4' | 'sdg5' | 'sdg17'>('all');
   const [timeRange, setTimeRange] = useState<'month' | 'quarter' | 'year'>('month');
   
   const { data: sdgData } = useSDGMetrics();
@@ -327,6 +337,7 @@ export const SDGDashboard = () => {
  <span className="bg-white/20 px-3 py-1 text-sm text-white">SDG 3: Good Health</span>
  <span className="bg-white/20 px-3 py-1 text-sm text-white">SDG 4: Quality Education</span>
  <span className="bg-white/20 px-3 py-1 text-sm text-white">SDG 5: Gender Equality</span>
+ <span className="bg-white/20 px-3 py-1 text-sm text-white">SDG 17: Partnerships</span>
  </div>
  </motion.div>
  </div>
@@ -402,6 +413,7 @@ export const SDGDashboard = () => {
  { id: 'sdg3', label: 'SDG 3: Health', color: '#4c9f38' },
  { id: 'sdg4', label: 'SDG 4: Education', color: '#c5192d' },
  { id: 'sdg5', label: 'SDG 5: Equality', color: '#ff3a21' },
+ { id: 'sdg17', label: 'SDG 17: Partnerships', color: '#19486a' },
  ].map((tab) => (
  <button
  key={tab.id}
@@ -774,6 +786,72 @@ export const SDGDashboard = () => {
  </div>
  </section>
  )}
+
+  {/* SDG 17 Panel - Partnerships for the Goals */}
+  {(activeTab === 'all' || activeTab === 'sdg17') && (
+  <section className="py-16" style={{ backgroundColor: '#ffffff' }}>
+  <div className="container-custom">
+  <div className="flex items-center gap-3 mb-8">
+  <div className="w-12 h-12 bg-[#19486a]/10 flex items-center justify-center">
+  <Handshake className="w-6 h-6 text-[#19486a]" />
+  </div>
+  <div>
+  <span className="text-sm font-bold text-[#19486a]">SDG 17</span>
+  <h2 className="text-headline text-gray-900">Partnerships for the Goals</h2>
+  </div>
+  </div>
+
+  {/* Dynamic Metrics from API */}
+  {sdgData?.sdg17?.metrics && sdgData.sdg17.metrics.length > 0 && (
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  {sdgData.sdg17.metrics.map((metric, idx) => (
+  <MetricCard key={idx} metric={metric} color="#19486a" />
+  ))}
+  </div>
+  )}
+
+  {/* Partnership Growth */}
+  <div className="bg-gray-50 p-6">
+  <h3 className="text-title text-gray-900 mb-4">Partnership Growth</h3>
+  <ResponsiveContainer width="100%" height={250}>
+  <BarChart data={partnershipGrowthData}>
+  <CartesianGrid strokeDasharray="3 3" stroke="#e5e4e7" />
+  <XAxis dataKey="year" />
+  <YAxis />
+  <Tooltip />
+  <Legend />
+  <Bar dataKey="partnerships" fill="#19486a" name="Partnerships" radius={[4, 4, 0, 0]} />
+  <Bar dataKey="projects" fill="#4c9f38" name="Joint Projects" radius={[4, 4, 0, 0]} />
+  </BarChart>
+  </ResponsiveContainer>
+  </div>
+
+  {/* Partnership Highlights */}
+  <div className="mt-8 bg-white p-6 shadow-sm">
+  <h3 className="text-title text-gray-900 mb-4">Partnership Highlights</h3>
+  {(() => {
+  const sdg17 = sdgList?.find(s => s.number === 17);
+  const contributions = sdg17?.contributions ?? [];
+  const items = contributions.length > 0
+  ? contributions
+  : [
+  "Active partnerships with international institutions, NGOs and government agencies.",
+  "Collaboration with WHO, UNICEF and UNFPA on health programmes.",
+  "Academic partnerships for joint research and faculty exchange.",
+  "Student and staff exchange programmes building global capacity.",
+  ];
+  return (
+  <ul className="list-disc list-inside space-y-2 text-gray-700 text-body">
+  {items.map((item: string, idx: number) => (
+  <li key={idx}>{item}</li>
+  ))}
+  </ul>
+  );
+  })()}
+  </div>
+  </div>
+  </section>
+  )}
 
   {/* Annual Reports Section */}
   <section className="py-16" style={{ backgroundColor: '#ffffff' }}>

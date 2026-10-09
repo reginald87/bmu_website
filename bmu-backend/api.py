@@ -1441,6 +1441,7 @@ def sdg_metrics(request):
         'sdg3': 'Good Health & Well-being',
         'sdg4': 'Quality Education',
         'sdg5': 'Gender Equality',
+        'sdg17': 'Partnerships for the Goals',
     }
     for code, title in sdgs.items():
         metrics = SDGMetric.objects.filter(sdg_code=code, is_active=True)

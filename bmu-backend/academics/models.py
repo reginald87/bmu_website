@@ -611,6 +611,7 @@ class SDGMetric(models.Model):
         ('sdg3', 'SDG 3: Good Health & Well-being'),
         ('sdg4', 'SDG 4: Quality Education'),
         ('sdg5', 'SDG 5: Gender Equality'),
+        ('sdg17', 'SDG 17: Partnerships for the Goals'),
     ]
 
     sdg_code = models.CharField(max_length=10, choices=SDG_CHOICES)
