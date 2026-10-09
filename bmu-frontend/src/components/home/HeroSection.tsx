@@ -135,11 +135,23 @@ export const HeroSection = () => {
                 Nigeria's Premier Medical University
               </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6">
+              <h1
+                className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6"
+                style={{
+                  color: slide.textColor || '#ffffff',
+                  textShadow: '0 2px 24px rgba(0, 0, 0, 0.45)',
+                }}
+              >
                 {slide.title}
               </h1>
 
-              <p className="text-lg md:text-xl leading-relaxed mb-10 max-w-2xl" style={{ color: slide.textColor ? `${slide.textColor}cc` : 'rgba(255,255,255,0.8)' }}>
+              <p
+                className="text-lg md:text-xl leading-relaxed mb-10 max-w-2xl"
+                style={{
+                  color: slide.textColor ? `${slide.textColor}cc` : 'rgba(255, 255, 255, 0.92)',
+                  textShadow: '0 1px 16px rgba(0, 0, 0, 0.45)',
+                }}
+              >
                 {slide.subtitle}
               </p>
 
