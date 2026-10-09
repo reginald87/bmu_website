@@ -6,6 +6,7 @@ import types, logging, re, json
 from core.throttle import ratelimit
 
 from ninja import NinjaAPI, Router, Schema, Field
+from ninja.errors import HttpError
 from ninja.pagination import paginate
 from ninja_auth import JWTAuth
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
@@ -2017,7 +2018,7 @@ class PageSectionSchema(Schema):
     display_order: int
 
 
-@public_router.get("/page-sections/{page_key}", response=List[PageSectionSchema])
+@public_router.get("/page-sections/{path:page_key}", response=List[PageSectionSchema])
 def list_page_sections(request, page_key: str):
     """List all active sections for a given page key"""
     return PageSection.objects.filter(page_key=page_key, is_active=True).order_by('display_order')

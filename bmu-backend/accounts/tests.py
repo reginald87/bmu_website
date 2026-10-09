@@ -116,6 +116,40 @@ class PasswordResetTests(TestCase):
         self.assertIn('password was changed', mail.outbox[0].subject.lower())
 
 
+class ApiLoginTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='jane', email='jane@example.com',
+            password='password123', is_active=True,
+        )
+        self.url = '/api/auth/login'
+
+    def test_valid_credentials_return_tokens(self):
+        res = self.client.post(
+            self.url,
+            {'email': 'jane@example.com', 'password': 'password123'},
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 200, res.content)
+        self.assertIn('access', res.json())
+
+    def test_unknown_email_returns_401_not_500(self):
+        res = self.client.post(
+            self.url,
+            {'email': 'nobody@example.com', 'password': 'whatever'},
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 401, res.content)
+
+    def test_wrong_password_returns_401(self):
+        res = self.client.post(
+            self.url,
+            {'email': 'jane@example.com', 'password': 'wrong-password'},
+            content_type='application/json',
+        )
+        self.assertEqual(res.status_code, 401, res.content)
+
+
 class EmailVerificationTests(TestCase):
     def setUp(self):
         self.register_url = reverse('user-register')

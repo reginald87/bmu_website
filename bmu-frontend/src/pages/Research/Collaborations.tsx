@@ -39,7 +39,7 @@ const fallbackBenefits = [
 
 export const Collaborations = () => {
   const { data: partners = [] } = useInternationalPartners();
-  const { data: sections } = usePageSections('research/collaborations');
+  const { data: sections } = usePageSections('collaborations');
 
   const fallbackWhyPartner = [
     'Access to the Niger Delta research context',

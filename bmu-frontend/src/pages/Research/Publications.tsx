@@ -23,7 +23,7 @@ const fallbackStats = [
 
 export const Publications = () => {
   const { data: publications = [] } = usePublications();
-  const { data: sections } = usePageSections('research/publications');
+  const { data: sections } = usePageSections('publications');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
