@@ -2,7 +2,7 @@
 
 Two self-contained documents are produced for every accepted application:
 
-* a provisional letter of admission (the "success letter"), and
+* a screening success letter (provisional admission), and
 * a statutory declaration / matriculation oath form.
 
 Both follow the same house style as the other printable documents in the
@@ -120,13 +120,13 @@ def _render_pdf(template, context, filename):
     if pdf.err:
         return HttpResponse('Error generating PDF', status=500)
     response = HttpResponse(result.getvalue(), content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="{filename}"'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
 
 def success_letter_response(application):
     context = build_context(application)
-    filename = f'provisional_admission_letter_{application.id}.pdf'
+    filename = f'screening_success_letter_{application.id}.pdf'
     return _render_pdf('admissions/success_letter.html', context, filename)
 
 

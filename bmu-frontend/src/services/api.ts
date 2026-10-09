@@ -786,7 +786,7 @@ export const downloadAdmissionDocument = async (
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${kind === 'success-letter' ? 'provisional_admission_letter' : 'statutory_declaration'}_${applicationId}.pdf`;
+  link.download = `${kind === 'success-letter' ? 'screening_success_letter' : 'statutory_declaration'}_${applicationId}.pdf`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

@@ -723,7 +723,7 @@ const ApplicantDashboard = () => {
               <div className="bg-white shadow-sm border border-gray-100 border-l-4 border-l-green-500 p-6">
                 <h3 className="font-bold text-gray-900 mb-2">Congratulations on your Admission</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Your provisional letter of admission and the statutory declaration form are now available.
+                  Your screening success letter and the statutory declaration form are now available.
                   Download, print and present both at matriculation.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -733,7 +733,7 @@ const ApplicantDashboard = () => {
                     className="flex items-center justify-center gap-2 px-4 py-2 bg-ink-900 text-white font-medium hover:bg-ink-900/90 disabled:opacity-60 transition"
                   >
                     {downloadingDoc === 'success-letter' ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                    Provisional Admission Letter
+                    Screening Success Letter
                   </button>
                   <button
                     onClick={() => handleDocumentDownload('oath-form')}

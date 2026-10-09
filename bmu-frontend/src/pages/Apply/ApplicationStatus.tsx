@@ -241,7 +241,7 @@ export const ApplicationStatus = () => {
                 <div className="bg-white shadow-sm p-6 border-l-4 border-green-500">
                   <h2 className="text-lg font-bold text-gray-900 mb-2">Congratulations on your Admission</h2>
                   <p className="text-sm text-gray-600 mb-4">
-                    Your provisional letter of admission and the statutory declaration form are now available.
+                    Your screening success letter and the statutory declaration form are now available.
                     Download, print and present both at matriculation.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3">
@@ -255,7 +255,7 @@ export const ApplicationStatus = () => {
                       ) : (
                         <Download className="w-4 h-4" />
                       )}
-                      Provisional Admission Letter
+                      Screening Success Letter
                     </button>
                     <button
                       onClick={() => handleDocumentDownload('oath-form')}
