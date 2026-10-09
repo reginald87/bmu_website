@@ -329,3 +329,76 @@ class StatusChangeHelperTests(TestCase):
         self.assertTrue(notify_application_status_change(application, 'draft'))
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn(application.id, mail.outbox[0].subject)
+
+
+class AdmissionDocumentTests(TestCase):
+    def setUp(self):
+        self.program = make_program()
+        self.user = User.objects.create_user(
+            username='jane', email='jane@example.com', password='pass1234')
+        self.application = make_application(
+            self.program, applicant=self.user, status='accepted')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def test_success_letter_is_a4_pdf(self):
+        response = self.client.get(
+            reverse('application-success-letter', args=[self.application.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertTrue(response.content.startswith(b'%PDF'))
+        self.assertIn(self.application.id, response['Content-Disposition'])
+
+    def test_oath_form_is_a4_pdf(self):
+        response = self.client.get(
+            reverse('application-oath-form', args=[self.application.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertTrue(response.content.startswith(b'%PDF'))
+        self.assertIn(self.application.id, response['Content-Disposition'])
+
+    def test_letter_blocked_until_accepted(self):
+        self.application.status = 'under_review'
+        self.application.save()
+        response = self.client.get(
+            reverse('application-success-letter', args=[self.application.id]))
+        self.assertEqual(response.status_code, 409)
+
+    def test_letter_blocked_for_other_users(self):
+        other = User.objects.create_user(
+            username='sam', email='sam@example.com', password='pass1234')
+        self.client.force_authenticate(user=other)
+        response = self.client.get(
+            reverse('application-success-letter', args=[self.application.id]))
+        self.assertEqual(response.status_code, 403)
+
+    def test_public_download_uses_public_id(self):
+        response = self.client.get(
+            f'/api/public/applications/{self.application.public_id}/success-letter')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.content.startswith(b'%PDF'))
+
+    def test_public_download_rejects_sequential_id(self):
+        response = self.client.get(
+            f'/api/public/applications/{self.application.id}/success-letter')
+        self.assertEqual(response.status_code, 404)
+
+    def test_public_download_blocked_until_accepted(self):
+        self.application.status = 'submitted'
+        self.application.save()
+        response = self.client.get(
+            f'/api/public/applications/{self.application.public_id}/oath-form')
+        self.assertEqual(response.status_code, 409)
+
+
+class DocumentContextTests(TestCase):
+    def test_academic_session_boundaries(self):
+        from datetime import date
+        from .documents import academic_session
+
+        self.assertEqual(academic_session(date(2026, 9, 1)), '2026/2027')
+        self.assertEqual(academic_session(date(2026, 1, 15)), '2025/2026')
+
+    def test_faculty_label_falls_back_to_university(self):
+        from .documents import faculty_label
+        self.assertEqual(faculty_label(None), 'Bayelsa Medical University')

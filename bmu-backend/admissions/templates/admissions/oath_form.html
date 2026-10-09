@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    @page {
+        size: A4 portrait;
+        margin: 15mm 16mm 18mm 16mm;
+    }
+
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #1f2933;
+        font-size: 10.5px;
+        line-height: 1.5;
+    }
+
+    .watermark {
+        position: fixed;
+        top: 130mm;
+        left: 22mm;
+        opacity: 0.06;
+        font-size: 44px;
+        font-weight: bold;
+        color: #0b27ac;
+    }
+
+    .header td {
+        vertical-align: middle;
+    }
+
+    .crest {
+        width: 66px;
+        height: 66px;
+    }
+
+    .uni-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #0b27ac;
+        margin: 0;
+    }
+
+    .uni-sub {
+        font-size: 8.5px;
+        color: #52606d;
+        margin: 2px 0 0;
+    }
+
+    .rule {
+        border: 0;
+        border-top: 3px solid #0b27ac;
+        margin: 6px 0 0;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #0b27ac;
+        letter-spacing: 1px;
+        margin: 14px 0 3px;
+        text-transform: uppercase;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-size: 9.5px;
+        color: #52606d;
+        margin: 0 0 12px;
+    }
+
+    .section-title {
+        font-size: 11px;
+        font-weight: bold;
+        color: #ffffff;
+        background: #0b27ac;
+        padding: 4px 8px;
+        margin: 12px 0 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .details {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .details td {
+        border: 1px solid #cbd2d9;
+        padding: 4px 7px;
+        font-size: 9.5px;
+        vertical-align: middle;
+    }
+
+    .details td.label {
+        background: #f0f4ff;
+        color: #334155;
+        font-weight: bold;
+        width: 24%;
+    }
+
+    .passport {
+        width: 74px;
+        height: 88px;
+        border: 1px solid #cbd2d9;
+    }
+
+    .passport-box {
+        width: 74px;
+        height: 88px;
+        border: 1px dashed #cbd2d9;
+        color: #9aa5b1;
+        font-size: 7px;
+        text-align: center;
+    }
+
+    p.intro {
+        text-align: justify;
+        margin: 0 0 8px;
+    }
+
+    ol.declare {
+        margin: 2px 0 8px 16px;
+        padding: 0;
+    }
+
+    ol.declare li {
+        margin-bottom: 6px;
+        text-align: justify;
+    }
+
+    .sworn {
+        margin: 10px 0;
+        font-size: 10.5px;
+    }
+
+    .sign-block {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 6px;
+    }
+
+    .sign-block td {
+        width: 50%;
+        vertical-align: top;
+        padding: 0 8px 0 0;
+        font-size: 9.5px;
+    }
+
+    .sign-line {
+        border-top: 1px solid #1f2933;
+        margin-top: 34px;
+        padding-top: 3px;
+    }
+
+    .thumb {
+        width: 90px;
+        height: 70px;
+        border: 1px solid #64748b;
+        color: #9aa5b1;
+        font-size: 7px;
+        text-align: center;
+        margin-top: 6px;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 7.5px;
+        color: #9aa5b1;
+        border-top: 1px solid #e4e7eb;
+        padding-top: 3px;
+    }
+</style>
+</head>
+<body>
+
+<div class="watermark">BMU OATH</div>
+
+<table class="header" style="width:100%;">
+    <tr>
+        <td style="width:72px;">
+            {% if logo_data_uri %}<img class="crest" src="{{ logo_data_uri }}" alt="BMU">{% endif %}
+        </td>
+        <td style="text-align:center;">
+            <p class="uni-name">{{ university_name }}</p>
+            <p class="uni-sub">{{ university_address }}</p>
+            <p class="uni-sub">Office of the Registrar &bull; Admissions Office</p>
+            <p class="uni-sub">&ldquo;{{ motto }}&rdquo;</p>
+        </td>
+        <td style="width:72px;"></td>
+    </tr>
+</table>
+<hr class="rule">
+
+<div class="title">Statutory Declaration &amp; Matriculation Oath</div>
+<p class="subtitle">Application Ref: {{ reference }} &bull; {{ session }} Academic Session</p>
+
+<div class="section-title">Section A &mdash; Particulars of Declarant</div>
+<table class="details">
+    <tr>
+        <td class="label">Full Name</td>
+        <td colspan="3">{{ applicant_name }}</td>
+    </tr>
+    <tr>
+        <td class="label">Application ID</td>
+        <td colspan="3">{{ reference }}</td>
+        <td rowspan="4" style="width:86px;text-align:center;">
+            {% if passport_data_uri %}
+                <img class="passport" src="{{ passport_data_uri }}" alt="Passport">
+            {% else %}
+                <div class="passport-box">PASSPORT<br/>PHOTO</div>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Programme</td>
+        <td colspan="3">{{ program_title }}{% if program_degree %} ({{ program_degree }}){% endif %}</td>
+    </tr>
+    <tr>
+        <td class="label">Faculty / College</td>
+        <td colspan="3">{{ faculty }}</td>
+    </tr>
+    <tr>
+        <td class="label">Category</td>
+        <td colspan="3">{{ student_type }}</td>
+    </tr>
+    <tr>
+        <td class="label">Phone</td>
+        <td>{{ applicant_phone }}</td>
+        <td class="label" style="width:14%;">Email</td>
+        <td colspan="2">{{ applicant_email }}</td>
+    </tr>
+    <tr>
+        <td class="label">Address</td>
+        <td colspan="4">{{ applicant_address }}</td>
+    </tr>
+</table>
+
+<div class="section-title">Section B &mdash; Declaration</div>
+<p class="intro">
+    I, <b>{{ applicant_name }}</b>, being a person admitted to pursue a programme of study at
+    {{ university_name }}, do hereby solemnly and sincerely declare as follows:
+</p>
+
+<ol class="declare">
+    <li>
+        That I will faithfully and honestly fulfil my obligations as a student of
+        {{ university_name }}, and that I will obey and abide by the Statutes, Ordinances,
+        Regulations, Rules and Orders of the University as may be made from time to time.
+    </li>
+    <li>
+        That I will at all times maintain a high standard of discipline and moral conduct,
+        and I shall <b>not</b> belong to, participate in, promote or support any secret cult,
+        cult activity, gang or unlawful society, whether within or outside the campus.
+    </li>
+    <li>
+        That I shall not engage in any form of violence, examination malpractice, examination
+        misconduct, drug abuse, bullying, harassment, or any other act capable of bringing the
+        name of the University into disrepute.
+    </li>
+    <li>
+        That I will be diligent and devoted to my studies and shall not engage in any
+        activity that may prevent me from completing my programme within the prescribed time.
+    </li>
+    <li>
+        That I will promptly and honestly pay all fees and levies prescribed by the University,
+        and that I will not defraud the University or any member of the University community.
+    </li>
+    <li>
+        That all the information and documents I have provided in support of my application
+        are true, complete and genuine, and that any false declaration or falsified document
+        may lead to the withdrawal of my admission, disciplinary action and/or prosecution.
+    </li>
+    <li>
+        That I will uphold the good name and image of the University and its motto,
+        &ldquo;{{ motto }}&rdquo;, both within and outside the campus.
+    </li>
+</ol>
+
+<p class="intro">
+    I make this declaration conscientiously believing the same to be true, and by virtue of the
+    provisions of the Oaths Act, I make this declaration conscientiously believing the same to
+    be true and correct.
+</p>
+
+<p class="sworn">
+    Declared at <b>____________________________</b> this ________ day of
+    ____________________, 20______.
+</p>
+
+<table class="sign-block">
+    <tr>
+        <td>
+            <div class="sign-line">Signature / Mark of Declarant</div>
+        </td>
+        <td>
+            <div class="sign-line">Right Thumb Impression</div>
+            <div class="thumb">THUMB<br/>IMPRESSION</div>
+        </td>
+    </tr>
+</table>
+
+<div class="section-title">Section C &mdash; Before Me</div>
+<table class="sign-block">
+    <tr>
+        <td>
+            <div class="sign-line">Commissioner for Oaths / Notary Public</div>
+            <div style="margin-top:6px;">Name: ______________________________</div>
+        </td>
+        <td>
+            <div style="height:44px;border:1px solid #64748b;color:#9aa5b1;font-size:7px;text-align:center;padding-top:16px;">
+                OFFICIAL SEAL / STAMP
+            </div>
+            <div style="margin-top:6px;">Date: ______________________</div>
+        </td>
+    </tr>
+</table>
+
+<div class="footer">
+    {{ university_name }} &mdash; Statutory Declaration &amp; Matriculation Oath &mdash; Ref {{ reference }}
+    &mdash; Generated {{ generated_date|date:"d M Y" }}
+</div>
+
+</body>
+</html>

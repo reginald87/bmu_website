@@ -13,6 +13,7 @@ from .serializers import (
 )
 from accounts.models import UserActivity, Notification
 from django.utils import timezone
+from . import documents
 
 
 class ApplicationCreateView(generics.CreateAPIView):
@@ -586,3 +587,49 @@ def replace_application_document(request, application_id, document_id):
     document.save()
 
     return Response(ApplicationDocumentSerializer(document).data)
+
+
+def _accepted_application_for(request, application_id):
+    """Return (application, error_response) for the given applicant.
+
+    The success letter and oath form are only released once an offer has been
+    made, and only to the applicant (or staff) who owns the application.
+    """
+    try:
+        application = Application.objects.get(id=application_id)
+    except Application.DoesNotExist:
+        return None, Response({'error': 'Application not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if application.applicant != request.user and not request.user.is_staff:
+        return None, Response(
+            {'error': "You don't have permission to access this application."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    if application.status != 'accepted':
+        return None, Response(
+            {'error': 'The admission letter is only available after an offer of admission has been made.'},
+            status=status.HTTP_409_CONFLICT,
+        )
+
+    return application, None
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def download_success_letter(request, application_id):
+    """Download the provisional letter of admission (A4 PDF) for an accepted application."""
+    application, error = _accepted_application_for(request, application_id)
+    if error:
+        return error
+    return documents.success_letter_response(application)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def download_oath_form(request, application_id):
+    """Download the statutory declaration / matriculation oath form (A4 PDF)."""
+    application, error = _accepted_application_for(request, application_id)
+    if error:
+        return error
+    return documents.oath_form_response(application)

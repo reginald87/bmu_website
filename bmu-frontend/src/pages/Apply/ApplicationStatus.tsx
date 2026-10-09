@@ -12,9 +12,11 @@ import {
   Mail,
   Phone,
   Loader2,
+  Download,
   type LucideIcon
 } from 'lucide-react';
 import { useApplicationStatus } from '../../services/apiHooks';
+import { downloadAdmissionDocument, type AdmissionDocumentKind } from '../../services/api';
 
 
 
@@ -42,12 +44,27 @@ export const ApplicationStatus = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchId, setSearchId] = useState(id || '');
+  const [downloadingDoc, setDownloadingDoc] = useState<AdmissionDocumentKind | null>(null);
+  const [documentError, setDocumentError] = useState('');
   const applicationId = id || searchId;
   const { data: application, isLoading, isError } = useApplicationStatus(applicationId || '');
 
   const handleSearch = () => {
     if (searchId) {
       navigate(`/apply/status/${searchId.toUpperCase()}`);
+    }
+  };
+
+  const handleDocumentDownload = async (kind: AdmissionDocumentKind) => {
+    if (!application?.public_id) return;
+    setDocumentError('');
+    setDownloadingDoc(kind);
+    try {
+      await downloadAdmissionDocument(application.public_id, kind, { public: true });
+    } catch (err) {
+      setDocumentError(err instanceof Error ? err.message : 'Unable to download this document right now.');
+    } finally {
+      setDownloadingDoc(null);
     }
   };
 
@@ -218,6 +235,46 @@ export const ApplicationStatus = () => {
                   <span className="font-medium capitalize">{application.payment_status || 'pending'}</span>
                 </div>
               </div>
+
+              {/* Admission documents — only for accepted applications */}
+              {application.status === 'accepted' && (
+                <div className="bg-white shadow-sm p-6 border-l-4 border-green-500">
+                  <h2 className="text-lg font-bold text-gray-900 mb-2">Congratulations on your Admission</h2>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Your provisional letter of admission and the statutory declaration form are now available.
+                    Download, print and present both at matriculation.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      onClick={() => handleDocumentDownload('success-letter')}
+                      disabled={downloadingDoc !== null}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-ink-900 text-white font-medium hover:bg-ink-900/90 disabled:opacity-60 transition"
+                    >
+                      {downloadingDoc === 'success-letter' ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Download className="w-4 h-4" />
+                      )}
+                      Provisional Admission Letter
+                    </button>
+                    <button
+                      onClick={() => handleDocumentDownload('oath-form')}
+                      disabled={downloadingDoc !== null}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 border border-ink-900 text-ink-900 font-medium hover:bg-ink-900 hover:text-white disabled:opacity-60 transition"
+                    >
+                      {downloadingDoc === 'oath-form' ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Download className="w-4 h-4" />
+                      )}
+                      Statutory Declaration Form
+                    </button>
+                  </div>
+                  {documentError && (
+                    <p className="mt-3 text-sm text-red-600">{documentError}</p>
+                  )}
+                </div>
+              )}
 
               {/* Documents / portal link */}
               <div className="bg-white shadow-sm p-6">

@@ -752,6 +752,47 @@ export const checkApplicationStatus = async (applicationId: string): Promise<App
   }
 };
 
+export type AdmissionDocumentKind = 'success-letter' | 'oath-form';
+
+export const downloadAdmissionDocument = async (
+  applicationId: string,
+  kind: AdmissionDocumentKind,
+  options: { public?: boolean } = {}
+): Promise<void> => {
+  const base = (apiClient.defaults.baseURL || '/api').replace(/\/$/, '');
+  const path = options.public
+    ? `${base}/public/applications/${encodeURIComponent(applicationId)}/${kind}`
+    : `${base}/v1/admissions/applications/${encodeURIComponent(applicationId)}/${kind}/`;
+
+  const headers: Record<string, string> = {};
+  if (!options.public) {
+    const token = localStorage.getItem('bmu_access_token');
+    if (token) headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(path, { headers });
+  if (!response.ok) {
+    let detail = 'Unable to download this document right now.';
+    try {
+      const text = await response.text();
+      if (text) detail = text.replace(/\s+/g, ' ').trim();
+    } catch {
+      /* keep default message */
+    }
+    throw new Error(detail);
+  }
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${kind === 'success-letter' ? 'provisional_admission_letter' : 'statutory_declaration'}_${applicationId}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
 export const fetchUniversityRankings = async (entryType?: string): Promise<UniversityRankingData[]> => {
   const mock = () => {
     let items = [...mockUniversityRankings];

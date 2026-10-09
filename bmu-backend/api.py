@@ -6412,6 +6412,44 @@ def get_application_status(request, application_id: str):
     return payload
 
 
+def _public_accepted_application(application_id: str):
+    """Resolve an accepted application from its unguessable public_id (UUID).
+
+    Only the public_id is accepted: the sequential BMU id is enumerable and
+    must never authorise a document download.
+    """
+    import uuid as uuid_lib
+    from admissions.models import Application
+    from ninja.errors import HttpError
+
+    try:
+        pid = uuid_lib.UUID(str(application_id))
+    except (ValueError, AttributeError, TypeError):
+        raise HttpError(404, 'Application not found')
+    app = Application.objects.filter(public_id=pid).first()
+    if app is None:
+        raise HttpError(404, 'Application not found')
+    if app.status != 'accepted':
+        raise HttpError(409, 'The admission letter is only available after an offer of admission has been made.')
+    return app
+
+
+@public_router.get("/applications/{application_id}/success-letter")
+@ratelimit('application_letter', limit=20, window=60)
+def get_success_letter(request, application_id: str):
+    """Download the provisional letter of admission (A4 PDF) for an accepted application."""
+    from admissions import documents
+    return documents.success_letter_response(_public_accepted_application(application_id))
+
+
+@public_router.get("/applications/{application_id}/oath-form")
+@ratelimit('application_oath', limit=20, window=60)
+def get_oath_form(request, application_id: str):
+    """Download the statutory declaration / matriculation oath form (A4 PDF)."""
+    from admissions import documents
+    return documents.oath_form_response(_public_accepted_application(application_id))
+
+
 DOCUMENT_TYPE_CHOICES = [
     'passport_photo', 'birth_certificate', 'academic_transcripts',
     'certificate_of_origin', 'english_proficiency', 'reference_letters', 'other',
