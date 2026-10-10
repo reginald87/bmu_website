@@ -6320,6 +6320,9 @@ class ApplicationSubmitSchema(Schema):
     date_of_birth: str = ''
     gender: str = ''
     address: str = ''
+    nationality: str = ''
+    state_of_origin: str = ''
+    lga: str = ''
     program_id: int
     student_type: str = 'LOCAL'
     academic_records: Optional[List[AcademicRecordSchema]] = None
@@ -6364,6 +6367,9 @@ def submit_application(request, data: ApplicationSubmitSchema):
         date_of_birth=data.date_of_birth or '2000-01-01',
         gender=data.gender or 'other',
         address=data.address or '',
+        nationality=data.nationality or '',
+        state_of_origin=data.state_of_origin or '',
+        lga=data.lga or '',
         previous_institution='',
         payment_currency='NGN',
         applicant=request.user if request.user.is_authenticated else None,

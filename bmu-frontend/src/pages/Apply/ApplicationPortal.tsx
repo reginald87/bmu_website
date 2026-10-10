@@ -16,7 +16,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { validatePersonalInfo, validateAcademicInfo, getFieldError, type ValidationError } from '../../utils/validation';
+import { validatePersonalInfo, validateAcademicInfo, validateApplicantOrigin, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
 import { uploadApplicationDocument, fetchApplyPrograms } from '../../services/api';
 import { useAuth } from '../../contexts/useAuth';
@@ -74,6 +74,19 @@ const LEVEL_TO_TAB: Record<string, 'UG' | 'PG' | 'PHD' | 'CERT'> = {
   phd: 'PHD',
   certificate: 'CERT',
 };
+
+const NIGERIAN_STATES = [
+  'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue',
+  'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'Gombe',
+  'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara',
+  'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau',
+  'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara', 'Federal Capital Territory',
+];
+
+const BAYELSA_LGAS = [
+  'Brass', 'Ekeremor', 'Kolokuma/Opokuma', 'Nembe', 'Ogbia', 'Sagbama',
+  'Southern Ijaw', 'Yenagoa',
+];
 
 // Document requirements
 const requiredDocuments = [
@@ -209,15 +222,20 @@ interface PersonalInfoForm {
   dob?: string;
   gender?: string;
   address?: string;
+  country?: string;
+  originState?: string;
+  lga?: string;
 }
 
 const PersonalInfoStep = ({ 
   data, 
+  studentType,
   onChange,
   errors,
-  touched
+  touched 
 }: { 
   data: PersonalInfoForm, 
+  studentType: string | null,
   onChange: (field: string, value: string) => void,
   errors: ValidationError[],
   touched: Record<string, boolean>
@@ -339,6 +357,114 @@ const PersonalInfoStep = ({
           <p id="address-error" className="mt-1 text-sm text-red-600">{getError('address')}</p>
         )}
       </div>
+
+      {/* Nationality & Origin */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {studentType === 'INTL' ? 'Country *' : 'Country'}
+          </label>
+          {studentType === 'INTL' ? (
+            <input
+              type="text"
+              value={data.country || ''}
+              onChange={(e) => onChange('country', e.target.value)}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('country') ? 'border-red-500' : '' }`}
+              placeholder="e.g. Ghana, United Kingdom"
+              aria-invalid={!!getError('country')}
+            />
+          ) : (
+            <input
+              type="text"
+              value="Nigeria"
+              readOnly
+              className="w-full px-4 py-3 border bg-gray-100 text-gray-600 cursor-not-allowed"
+            />
+          )}
+          {getError('country') && (
+            <p className="mt-1 text-sm text-red-600">{getError('country')}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {studentType === 'INTL' ? 'State / Province *' : 'State of Origin *'}
+          </label>
+          {studentType === 'INTL' ? (
+            <input
+              type="text"
+              value={data.originState || ''}
+              onChange={(e) => onChange('originState', e.target.value)}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('originState') ? 'border-red-500' : '' }`}
+              placeholder="e.g. Greater Accra, England"
+              aria-invalid={!!getError('originState')}
+            />
+          ) : (
+            <select
+              value={data.originState || ''}
+              onChange={(e) => onChange('originState', e.target.value)}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('originState') ? 'border-red-500' : '' }`}
+              aria-invalid={!!getError('originState')}
+            >
+              <option value="">Select state of origin</option>
+              {NIGERIAN_STATES.map((state) => (
+                <option key={state} value={state}>{state}</option>
+              ))}
+            </select>
+          )}
+          {getError('originState') && (
+            <p className="mt-1 text-sm text-red-600">{getError('originState')}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {studentType === 'INTL' ? 'County / Region' : 'Local Government Area *'}
+          </label>
+          {studentType === 'INTL' ? (
+            <input
+              type="text"
+              value={data.lga || ''}
+              onChange={(e) => onChange('lga', e.target.value)}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('lga') ? 'border-red-500' : '' }`}
+              placeholder="e.g. Devon, Ontario (optional)"
+              aria-invalid={!!getError('lga')}
+            />
+          ) : data.originState === 'Bayelsa' ? (
+            <select
+              value={data.lga || ''}
+              onChange={(e) => onChange('lga', e.target.value)}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('lga') ? 'border-red-500' : '' }`}
+              aria-invalid={!!getError('lga')}
+            >
+              <option value="">Select your LGA</option>
+              {BAYELSA_LGAS.map((lga) => (
+                <option key={lga} value={lga}>{lga}</option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type="text"
+              value={data.lga || ''}
+              onChange={(e) => onChange('lga', e.target.value)}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('lga') ? 'border-red-500' : '' }`}
+              placeholder="Enter your Local Government Area"
+              aria-invalid={!!getError('lga')}
+            />
+          )}
+          {getError('lga') && (
+            <p className="mt-1 text-sm text-red-600">{getError('lga')}</p>
+          )}
+        </div>
+      </div>
+
+      {studentType === 'LOCAL' && data.originState && (
+        <p className={`text-sm ${ data.originState === 'Bayelsa' ? 'text-green-700' : 'text-gray-600' }`}>
+          {data.originState === 'Bayelsa'
+            ? 'Classified as a Bayelsa State indigene.'
+            : 'Classified as a non-indigene (state of origin is not Bayelsa).'}
+        </p>
+      )}
     </div>
   );
 };
@@ -716,6 +842,24 @@ const ReviewPayStep = ({
           <span className="text-gray-600">Email</span>
           <span className="font-medium">{data.personal.email}</span>
         </div>
+        <div className="flex justify-between items-center pb-4 border-b">
+          <span className="text-gray-600">{data.studentType === 'INTL' ? 'Country' : 'State of Origin'}</span>
+          <span className="font-medium text-right">
+            {data.studentType === 'INTL' ? data.personal.country : data.personal.originState}
+          </span>
+        </div>
+        <div className="flex justify-between items-center pb-4 border-b">
+          <span className="text-gray-600">{data.studentType === 'INTL' ? 'State / County' : 'Local Government Area'}</span>
+          <span className="font-medium text-right">{data.personal.lga}</span>
+        </div>
+        {data.studentType === 'LOCAL' && (
+          <div className="flex justify-between items-center pb-4 border-b">
+            <span className="text-gray-600">Indigene Status</span>
+            <span className="font-medium">
+              {data.personal.originState === 'Bayelsa' ? 'Indigene' : 'Non-indigene'}
+            </span>
+          </div>
+        )}
         <div className="flex justify-between items-center pt-2">
           <span className="text-lg font-semibold">Application Fee</span>
           <span className="text-2xl font-bold text-ink-900">{fee}</span>
@@ -881,7 +1025,10 @@ export const ApplicationPortal = () => {
     
     switch (step) {
       case 3:
-        stepErrors = validatePersonalInfo(formData.personal);
+        stepErrors = [
+          ...validatePersonalInfo(formData.personal),
+          ...validateApplicantOrigin(formData.personal, formData.studentType),
+        ];
         break;
       case 4:
         stepErrors = validateAcademicInfo(formData.academicRecords);
@@ -944,6 +1091,9 @@ export const ApplicationPortal = () => {
         date_of_birth: formData.personal.dob || '',
         gender: formData.personal.gender || '',
         address: formData.personal.address || '',
+        nationality: formData.studentType === 'INTL' ? (formData.personal.country || '') : 'Nigeria',
+        state_of_origin: formData.personal.originState || '',
+        lga: formData.personal.lga || '',
         program_id: formData.program?.id || 0,
         student_type: formData.studentType || '',
         academic_records: academicRecordsPayload,
@@ -974,7 +1124,9 @@ export const ApplicationPortal = () => {
     switch (currentStep) {
       case 1: return !!formData.studentType;
       case 2: return !!formData.program;
-      case 3: return !!(formData.personal.firstName && formData.personal.lastName && formData.personal.email);
+      case 3: return !!(formData.personal.firstName && formData.personal.lastName && formData.personal.email)
+        && !!formData.personal.originState
+        && !!(formData.studentType === 'INTL' ? formData.personal.country : formData.personal.lga);
       case 4: return formData.academicRecords.length > 0 && formData.academicRecords.some(r => r.institution && r.qualification);
       case 5: {
         const requiredDocNames = requiredDocuments.filter(d => d.required).map(d => d.name);
@@ -1065,6 +1217,7 @@ export const ApplicationPortal = () => {
                 {currentStep === 3 && (
                   <PersonalInfoStep 
                     data={formData.personal}
+                    studentType={formData.studentType}
                     onChange={(field, value) => {
                       setFormData({ 
                         ...formData, 

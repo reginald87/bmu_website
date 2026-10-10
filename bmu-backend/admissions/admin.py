@@ -28,10 +28,10 @@ class ApplicationMessageInline(admin.TabularInline):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'program', 'student_type', 'status', 'payment_status', 'created_at']
-    list_filter = ['status', 'payment_status', 'student_type', 'program__level', 'created_at']
+    list_display = ['id', 'first_name', 'last_name', 'program', 'student_type', 'is_indigene', 'status', 'payment_status', 'created_at']
+    list_filter = ['status', 'payment_status', 'student_type', 'is_indigene', 'program__level', 'created_at']
     search_fields = ['id', 'first_name', 'last_name', 'email', 'phone']
-    readonly_fields = ['id', 'created_at', 'updated_at', 'submitted_at']
+    readonly_fields = ['id', 'created_at', 'updated_at', 'submitted_at', 'is_indigene']
     inlines = [AcademicRecordInline, ApplicationDocumentInline, ApplicationStepInline, ApplicationMessageInline]
     fieldsets = (
         ('Application Info', {
@@ -39,6 +39,9 @@ class ApplicationAdmin(admin.ModelAdmin):
         }),
         ('Personal Information', {
             'fields': ('first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'gender', 'address')
+        }),
+        ('Origin & Nationality', {
+            'fields': ('nationality', 'state_of_origin', 'lga', 'is_indigene')
         }),
         ('Academic Information', {
             'fields': ('previous_institution',)

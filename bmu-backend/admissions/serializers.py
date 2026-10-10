@@ -101,6 +101,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'first_name', 'last_name', 'email', 'phone',
             'date_of_birth', 'gender', 'gender_display', 'address',
+            'nationality', 'state_of_origin', 'lga', 'is_indigene',
             'student_type', 'student_type_display',
             'program', 'program_title', 'program_college',
             'previous_institution',
@@ -123,6 +124,7 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'first_name', 'last_name', 'email', 'phone',
             'date_of_birth', 'gender', 'address',
+            'nationality', 'state_of_origin', 'lga',
             'student_type', 'program',
             'previous_institution', 'academic_records', 'passport'
         ]
@@ -179,6 +181,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'first_name', 'last_name', 'email', 'phone',
             'date_of_birth', 'gender', 'gender_display', 'address',
+            'nationality', 'state_of_origin', 'lga', 'is_indigene',
             'student_type', 'student_type_display',
             'program', 'program_title',
             'status', 'status_display', 'progress_percentage',

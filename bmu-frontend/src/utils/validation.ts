@@ -126,6 +126,27 @@ export function validateAcademicInfo(records: AcademicRecordInput[]): Validation
   return errors;
 }
 
+export const validateApplicantOrigin = (
+  data: { country?: string; originState?: string; lga?: string },
+  studentType: string | null,
+): ValidationError[] => {
+  const errors: ValidationError[] = [];
+
+  if (studentType === 'INTL') {
+    const countryError = validateRequired(data.country || '', 'Country');
+    if (countryError) errors.push({ field: 'country', message: countryError });
+    const stateError = validateRequired(data.originState || '', 'State / Province');
+    if (stateError) errors.push({ field: 'originState', message: stateError });
+  } else if (studentType === 'LOCAL') {
+    const stateError = validateRequired(data.originState || '', 'State of origin');
+    if (stateError) errors.push({ field: 'originState', message: stateError });
+    const lgaError = validateRequired(data.lga || '', 'Local Government Area');
+    if (lgaError) errors.push({ field: 'lga', message: lgaError });
+  }
+
+  return errors;
+};
+
 export const getFieldError = (errors: ValidationError[], field: string): string | null => {
   const error = errors.find(e => e.field === field);
   return error ? error.message : null;

@@ -63,7 +63,19 @@ class Application(models.Model):
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     address = models.TextField()
-    
+
+    # Origin / Nationality
+    nationality = models.CharField(max_length=100, blank=True, default='',
+                                   help_text="Country of citizenship")
+    state_of_origin = models.CharField(max_length=100, blank=True, default='',
+                                       help_text="State of origin (Nigeria) or state/province (international)")
+    lga = models.CharField(max_length=100, blank=True, default='',
+                           help_text="Local Government Area, or county/region for international applicants")
+    is_indigene = models.BooleanField(
+        default=False,
+        help_text="True when a Nigerian applicant's state of origin is Bayelsa State",
+    )
+
     # Application Details
     student_type = models.CharField(max_length=10, choices=STUDENT_TYPE_CHOICES)
     program = models.ForeignKey('academics.Program', on_delete=models.CASCADE)
@@ -106,7 +118,14 @@ class Application(models.Model):
         verbose_name_plural = "Applications"
         ordering = ['-created_at']
 
+    def is_bayelsa_indigene(self):
+        """A Nigerian applicant is an indigene when their state of origin is Bayelsa."""
+        if self.student_type != 'LOCAL':
+            return False
+        return 'bayelsa' in (self.state_of_origin or '').strip().lower()
+
     def save(self, *args, **kwargs):
+        self.is_indigene = self.is_bayelsa_indigene()
         if not self.id:
             # Application ID: BMU-YYYY-XXXX (created_at is None until saved)
             year = timezone.now().year

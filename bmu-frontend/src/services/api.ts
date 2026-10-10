@@ -740,6 +740,9 @@ export const submitApplication = async (data: {
   date_of_birth?: string;
   gender?: string;
   address?: string;
+  nationality?: string;
+  state_of_origin?: string;
+  lga?: string;
   program_id: number;
   student_type: string;
   academic_records?: AcademicRecordPayload[];

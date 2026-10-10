@@ -445,3 +445,48 @@ class ProgramApplicationStatusTests(TestCase):
         res = self.client.post('/api/public/applications', self._payload(), format='json')
         self.assertEqual(res.status_code, 200, res.content)
 
+
+class ApplicationOriginTests(TestCase):
+    """Origin fields drive indigene classification."""
+
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.program = make_program()
+        self.client = APIClient()
+
+    def _post(self, **overrides):
+        payload = {
+            'first_name': 'Jane', 'last_name': 'Doe',
+            'email': 'jane@example.com', 'phone': '08012345678',
+            'date_of_birth': '2000-01-01', 'gender': 'female',
+            'address': 'Yenagoa', 'program_id': self.program.id,
+            'student_type': 'LOCAL',
+        }
+        payload.update(overrides)
+        return self.client.post('/api/public/applications', payload, format='json')
+
+    def test_bayelsa_origin_is_indigene(self):
+        res = self._post(state_of_origin='Bayelsa', lga='Yenagoa', nationality='Nigeria')
+        self.assertEqual(res.status_code, 200, res.content)
+        app = Application.objects.get(id=res.json()['id'])
+        self.assertTrue(app.is_indigene)
+        self.assertEqual(app.state_of_origin, 'Bayelsa')
+        self.assertEqual(app.lga, 'Yenagoa')
+
+    def test_other_state_is_not_indigene(self):
+        res = self._post(state_of_origin='Lagos', lga='Ikeja', nationality='Nigeria')
+        self.assertEqual(res.status_code, 200, res.content)
+        app = Application.objects.get(id=res.json()['id'])
+        self.assertFalse(app.is_indigene)
+
+    def test_international_is_not_indigene(self):
+        res = self._post(
+            student_type='INTL', nationality='Ghana',
+            state_of_origin='Greater Accra', lga='Accra Metropolitan',
+        )
+        self.assertEqual(res.status_code, 200, res.content)
+        app = Application.objects.get(id=res.json()['id'])
+        self.assertFalse(app.is_indigene)
+        self.assertEqual(app.nationality, 'Ghana')
+
