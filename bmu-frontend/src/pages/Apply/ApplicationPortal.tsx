@@ -18,6 +18,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { validatePersonalInfo, validateAcademicInfo, validateApplicantOrigin, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
+import { NIGERIAN_STATES, getLgas } from '../../data/nigeriaLGAs';
 import { uploadApplicationDocument, fetchApplyPrograms } from '../../services/api';
 import { useAuth } from '../../contexts/useAuth';
 
@@ -74,19 +75,6 @@ const LEVEL_TO_TAB: Record<string, 'UG' | 'PG' | 'PHD' | 'CERT'> = {
   phd: 'PHD',
   certificate: 'CERT',
 };
-
-const NIGERIAN_STATES = [
-  'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue',
-  'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'Gombe',
-  'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara',
-  'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau',
-  'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara', 'Federal Capital Territory',
-];
-
-const BAYELSA_LGAS = [
-  'Brass', 'Ekeremor', 'Kolokuma/Opokuma', 'Nembe', 'Ogbia', 'Sagbama',
-  'Southern Ijaw', 'Yenagoa',
-];
 
 // Document requirements
 const requiredDocuments = [
@@ -402,7 +390,7 @@ const PersonalInfoStep = ({
           ) : (
             <select
               value={data.originState || ''}
-              onChange={(e) => onChange('originState', e.target.value)}
+              onChange={(e) => { onChange('originState', e.target.value); onChange('lga', ''); }}
               className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('originState') ? 'border-red-500' : '' }`}
               aria-invalid={!!getError('originState')}
             >
@@ -430,27 +418,19 @@ const PersonalInfoStep = ({
               placeholder="e.g. Devon, Ontario (optional)"
               aria-invalid={!!getError('lga')}
             />
-          ) : data.originState === 'Bayelsa' ? (
+          ) : (
             <select
               value={data.lga || ''}
               onChange={(e) => onChange('lga', e.target.value)}
-              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('lga') ? 'border-red-500' : '' }`}
+              disabled={!data.originState}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 disabled:bg-gray-100 disabled:cursor-not-allowed ${ getError('lga') ? 'border-red-500' : '' }`}
               aria-invalid={!!getError('lga')}
             >
-              <option value="">Select your LGA</option>
-              {BAYELSA_LGAS.map((lga) => (
+              <option value="">{data.originState ? 'Select your LGA' : 'Select state of origin first'}</option>
+              {getLgas(data.originState || '').map((lga) => (
                 <option key={lga} value={lga}>{lga}</option>
               ))}
             </select>
-          ) : (
-            <input
-              type="text"
-              value={data.lga || ''}
-              onChange={(e) => onChange('lga', e.target.value)}
-              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('lga') ? 'border-red-500' : '' }`}
-              placeholder="Enter your Local Government Area"
-              aria-invalid={!!getError('lga')}
-            />
           )}
           {getError('lga') && (
             <p className="mt-1 text-sm text-red-600">{getError('lga')}</p>
