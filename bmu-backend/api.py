@@ -80,6 +80,7 @@ class CollegeSchema(Schema):
     faculty_count: int
     student_count: int
     faculty_members_count: int
+    program_count: int = 0
     primary_color: Optional[str] = None
     secondary_color: Optional[str] = None
     icon_name: Optional[str] = None
@@ -1090,7 +1091,8 @@ public_router = Router()
 def list_colleges(request):
     """List all active colleges"""
     return College.objects.filter(is_active=True).annotate(
-        department_count=Count('faculties__departments', distinct=True) + Count('departments_direct', distinct=True)
+        department_count=Count('faculties__departments', distinct=True) + Count('departments_direct', distinct=True),
+        program_count=Count('programs', filter=Q(programs__is_active=True), distinct=True),
     )
 
 
@@ -1098,7 +1100,8 @@ def list_colleges(request):
 def get_college(request, slug: str):
     """Get college details by slug"""
     return College.objects.annotate(
-        department_count=Count('faculties__departments', distinct=True) + Count('departments_direct', distinct=True)
+        department_count=Count('faculties__departments', distinct=True) + Count('departments_direct', distinct=True),
+        program_count=Count('programs', filter=Q(programs__is_active=True), distinct=True),
     ).get(slug=slug, is_active=True)
 
 

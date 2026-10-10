@@ -47,6 +47,8 @@ export interface College {
   facultyCount?: number;
   studentCount?: number;
   facultyMembersCount?: number;
+  departmentCount?: number;
+  programCount?: number;
   departments: string[];
   programs: string[];
   primaryColor?: string;

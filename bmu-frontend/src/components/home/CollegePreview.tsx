@@ -91,7 +91,7 @@ export const CollegePreview = ({ colleges }: CollegePreviewProps) => {
 
                     <div className="flex items-center gap-2 text-white/80 group-hover:text-white transition-colors">
                       <span className="text-sm font-semibold">
-                        {college.programs?.length || college.courses?.length || 0} {t('home.collegePreview.programs')}
+                        {college.programCount ?? college.programs?.length ?? college.courses?.length ?? 0} {t('home.collegePreview.programs')}
                       </span>
                       <ArrowRight className="w-4 h-4" />
                     </div>

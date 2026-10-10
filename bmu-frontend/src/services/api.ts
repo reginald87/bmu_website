@@ -385,8 +385,40 @@ export const fetchFacultyById = async (id: string | number): Promise<Faculty | u
   return mock();
 };
 
+const normalizeCollege = (raw: Record<string, unknown>): College => {
+  const pick = <T,>(...keys: string[]): T | undefined => {
+    for (const key of keys) {
+      const value = raw[key];
+      if (value !== undefined && value !== null) return value as T;
+    }
+    return undefined;
+  };
+  return {
+    ...(raw as unknown as College),
+    id: Number(pick<number>('id') ?? 0),
+    name: pick<string>('name') ?? '',
+    slug: pick<string>('slug') ?? '',
+    description: pick<string>('description') ?? '',
+    establishedYear: pick<number>('establishedYear', 'established_year') ?? 0,
+    facultyCount: pick<number>('facultyCount', 'faculty_count'),
+    studentCount: pick<number>('studentCount', 'student_count'),
+    facultyMembersCount: pick<number>('facultyMembersCount', 'faculty_members_count'),
+    departmentCount: pick<number>('departmentCount', 'department_count'),
+    programCount: pick<number>('programCount', 'program_count'),
+    primaryColor: pick<string>('primaryColor', 'primary_color'),
+    secondaryColor: pick<string>('secondaryColor', 'secondary_color'),
+    iconName: pick<string>('iconName', 'icon_name'),
+    previewImage: pick<string>('previewImage', 'preview_image'),
+    deanName: pick<string>('deanName', 'dean_name', 'leadership_name'),
+    directorName: pick<string>('directorName', 'director_name'),
+    programs: pick<string[]>('programs') ?? [],
+    departments: pick<string[]>('departments') ?? [],
+  };
+};
+
 export const fetchColleges = async (): Promise<College[]> => {
-  return fetchWithFallback('/public/colleges', () => [...mockColleges], undefined, true);
+  const data = await fetchWithFallback<College[]>('/public/colleges', () => [...mockColleges], undefined, true);
+  return data.map((college) => normalizeCollege(college as unknown as Record<string, unknown>));
 };
 
 export const fetchCollegeBySlug = async (slug: string): Promise<College | undefined> => {
