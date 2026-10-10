@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackPillars = [
  {
@@ -39,9 +40,9 @@ const fallbackPartners = ['Microsoft', 'Google Health', 'IBM Research', 'NITDA',
 
 export const InnovationCentre = () => {
  const { data: sections } = usePageSections('centres/innovation');
- const innovationPillars = (sections?.find(s => s.section_key === 'innovation_pillars')?.data as typeof fallbackPillars) || fallbackPillars;
- const facilities = (sections?.find(s => s.section_key === 'facilities')?.data as typeof fallbackFacilities) || fallbackFacilities;
- const partners = (sections?.find(s => s.section_key === 'partners')?.data as typeof fallbackPartners) || fallbackPartners;
+ const innovationPillars = (sections?.find(s => s.section_key === 'innovation_pillars')?.data as typeof fallbackPillars) ?? (ALLOW_API_MOCKS ? fallbackPillars : []);
+ const facilities = (sections?.find(s => s.section_key === 'facilities')?.data as typeof fallbackFacilities) ?? (ALLOW_API_MOCKS ? fallbackFacilities : []);
+ const partners = (sections?.find(s => s.section_key === 'partners')?.data as typeof fallbackPartners) ?? (ALLOW_API_MOCKS ? fallbackPartners : []);
  return (
  <>
  <Helmet>

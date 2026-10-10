@@ -18,6 +18,7 @@ import {
  MessageSquare
 } from 'lucide-react';
 import { useArchivedContent } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 // Types for archived items
 interface ArchivedItem {
@@ -183,8 +184,8 @@ export const ArchivePage = () => {
        archivedDate: item.original_date,
        archivedBy: item.archived_by,
      }))
-   : fallbackArchivedItems
- );
+   : (ALLOW_API_MOCKS ? fallbackArchivedItems : [])
+  );
 
  // Get unique categories
  const categories = Array.from(new Set(archivedItems.map(item => item.category)));

@@ -226,8 +226,19 @@ apiClient.interceptors.response.use(
   }
 );
 
-const ALLOW_API_MOCKS =
+export const ALLOW_API_MOCKS =
   import.meta.env.DEV || import.meta.env.VITE_ALLOW_API_MOCKS === 'true';
+
+function mockOrThrow<T>(endpoint: string, mock: T | (() => T), caught?: unknown): T {
+  if (ALLOW_API_MOCKS) {
+    return typeof mock === 'function' ? (mock as () => T)() : mock;
+  }
+  if (caught instanceof Error) {
+    console.error(`API request failed (${endpoint}); mocks disabled in production.`, caught);
+    throw caught;
+  }
+  throw new Error(`API request to ${endpoint} returned no data and mocks are disabled in production.`);
+}
 
 export async function fetchWithFallback<T>(
   endpoint: string,
@@ -368,10 +379,10 @@ export const fetchFaculty = async (params: FetchFacultyParams = {}): Promise<Fac
     let data = response.data;
     if (data && Array.isArray(data.items)) data = data.items;
     if (Array.isArray(data)) return data.map(mapFacultyFromApi);
-  } catch {
-    // API unavailable — fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/faculty', mock, error);
   }
-  return mock();
+  return mockOrThrow('/public/faculty', mock);
 };
 
 export const fetchFacultyById = async (id: string | number): Promise<Faculty | undefined> => {
@@ -379,10 +390,10 @@ export const fetchFacultyById = async (id: string | number): Promise<Faculty | u
   try {
     const response = await apiClient.get(`/public/faculty/${id}`);
     if (response.data) return mapFacultyFromApi(response.data);
-  } catch {
-    // API unavailable — fall through to mock
+  } catch (error) {
+    return mockOrThrow(`/public/faculty/${id}`, mock, error);
   }
-  return mock();
+  return mockOrThrow(`/public/faculty/${id}`, mock);
 };
 
 const normalizeCollege = (raw: Record<string, unknown>): College => {
@@ -1011,10 +1022,7 @@ const mapPublication = (raw: Record<string, unknown>): PublicationData => ({
 });
 
 export const submitGrantApplication = async (data: GrantApplicationSubmitData): Promise<GrantApplicationData> => {
-  try {
-    const response = await apiClient.post('/public/grant-applications', data);
-    return response.data;
-  } catch {
+  const mock = (): GrantApplicationData => {
     const mockId = Math.floor(Math.random() * 10000);
     return {
       id: mockId,
@@ -1033,6 +1041,12 @@ export const submitGrantApplication = async (data: GrantApplicationSubmitData): 
       submitted_at: new Date().toISOString(),
       reviewed_at: null,
     };
+  };
+  try {
+    const response = await apiClient.post('/public/grant-applications', data);
+    return response.data;
+  } catch (error) {
+    return mockOrThrow('/public/grant-applications', mock, error);
   }
 };
 
@@ -1046,91 +1060,96 @@ export const getGrantApplicationStatus = async (applicationId: number): Promise<
 };
 
 export const fetchAllEvents = async (): Promise<EventData[]> => {
+  const mock = () => mockEvents;
   try {
     const response = await apiClient.get('/public/events');
     const items = response.data?.items || response.data;
-    if (items && Array.isArray(items) && items.length > 0) {
+    if (Array.isArray(items)) {
       return items;
     }
-    return mockEvents;
-  } catch {
-    return mockEvents;
+  } catch (error) {
+    return mockOrThrow('/public/events', mock, error);
   }
+  return mockOrThrow('/public/events', mock);
 };
 
 export const registerForEvent = async (data: EventRegistrationInput): Promise<EventRegistrationData> => {
+  const mock = (): EventRegistrationData => ({
+    id: Math.floor(Math.random() * 10000),
+    event_id: data.event_id,
+    name: data.name,
+    email: data.email,
+    status: 'registered',
+    status_display: 'Registered',
+    amount_paid: null,
+    payment_status: 'completed',
+    payment_status_display: 'Completed',
+    payment_reference: '',
+    paid_at: null,
+    registered_at: new Date().toISOString(),
+  });
   try {
     const response = await apiClient.post('/public/event-registrations', data);
     return response.data;
-  } catch {
-    return {
-      id: Math.floor(Math.random() * 10000),
-      event_id: data.event_id,
-      name: data.name,
-      email: data.email,
-      status: 'registered',
-      status_display: 'Registered',
-      amount_paid: null,
-      payment_status: 'completed',
-      payment_status_display: 'Completed',
-      payment_reference: '',
-      paid_at: null,
-      registered_at: new Date().toISOString(),
-    };
+  } catch (error) {
+    return mockOrThrow('/public/event-registrations', mock, error);
   }
 };
 
 export const initializeEventPayment = async (data: PaymentInitializeInput): Promise<PaymentInitializeResponse> => {
+  const mock = (): PaymentInitializeResponse => ({
+    authorization_url: '',
+    access_code: 'demo_access_code',
+    reference: `EVT-DEMO-${Date.now()}`,
+    registration_id: Math.floor(Math.random() * 10000),
+  });
   try {
     const response = await apiClient.post('/public/event-registrations/initialize-payment', data);
     return response.data;
-  } catch {
-    return {
-      authorization_url: '',
-      access_code: 'demo_access_code',
-      reference: `EVT-DEMO-${Date.now()}`,
-      registration_id: Math.floor(Math.random() * 10000),
-    };
+  } catch (error) {
+    return mockOrThrow('/public/event-registrations/initialize-payment', mock, error);
   }
 };
 
 export const verifyEventPayment = async (reference: string): Promise<PaymentVerifyResponse> => {
+  const mock = (): PaymentVerifyResponse => ({
+    status: 'success',
+    message: 'Payment verified (demo mode)',
+    registration: {
+      id: Math.floor(Math.random() * 10000),
+      event_id: 0,
+      name: '',
+      email: '',
+      status: 'registered',
+      status_display: 'Registered',
+      amount_paid: 0,
+      payment_status: 'completed',
+      payment_status_display: 'Completed',
+      payment_reference: reference,
+      paid_at: new Date().toISOString(),
+      registered_at: new Date().toISOString(),
+    },
+  });
   try {
     const response = await apiClient.get('/public/event-registrations/verify-payment', { params: { reference } });
     return response.data;
-  } catch {
-    return {
-      status: 'success',
-      message: 'Payment verified (demo mode)',
-      registration: {
-        id: Math.floor(Math.random() * 10000),
-        event_id: 0,
-        name: '',
-        email: '',
-        status: 'registered',
-        status_display: 'Registered',
-        amount_paid: 0,
-        payment_status: 'completed',
-        payment_status_display: 'Completed',
-        payment_reference: reference,
-        paid_at: new Date().toISOString(),
-        registered_at: new Date().toISOString(),
-      },
-    };
+  } catch (error) {
+    return mockOrThrow('/public/event-registrations/verify-payment', mock, error);
   }
 };
 
 export const fetchGalleryImages = async (): Promise<GalleryImageData[]> => {
+  const mock = () => mockGalleryImages;
   try {
     const response = await apiClient.get('/public/gallery');
     const data = response.data?.items || response.data;
-    if (data && Array.isArray(data) && data.length > 0) {
+    if (Array.isArray(data)) {
       return data;
     }
-    return mockGalleryImages;
-  } catch {
-    return mockGalleryImages;
+  } catch (error) {
+    return mockOrThrow('/public/gallery', mock, error);
   }
+  return mockOrThrow('/public/gallery', mock);
 };
 
 export const downloadPublicDocument = (docId: number): void => {
@@ -1162,141 +1181,150 @@ export const fetchResearchGrants = async (): Promise<GrantData[]> => {
 };
 
 export const fetchPublications = async (): Promise<PublicationData[]> => {
+  const mock = () => mockPublications;
   try {
     const response = await apiClient.get('/public/publications');
     let data = response.data;
     if (data && Array.isArray(data.items)) {
       data = data.items;
     }
-    if (Array.isArray(data) && data.length > 0) {
+    if (Array.isArray(data)) {
       return data.map(mapPublication);
     }
-  } catch {
-    // fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/publications', mock, error);
   }
-  return mockPublications;
+  return mockOrThrow('/public/publications', mock);
 };
 
 export const fetchCampusFeatures = async (sectionKey?: string): Promise<CampusFeatureData[]> => {
+  const mock = () =>
+    sectionKey
+      ? mockCampusFeatures.filter((f) => f.section_key === sectionKey)
+      : mockCampusFeatures;
   try {
     const response = await apiClient.get('/public/campus-features', { params: { section_key: sectionKey } });
     let data = response.data;
     if (data && Array.isArray(data.items)) {
       data = data.items;
     }
-    if (Array.isArray(data) && data.length > 0) {
+    if (Array.isArray(data)) {
       return data;
     }
-  } catch {
-    // fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/campus-features', mock, error);
   }
-  if (sectionKey) {
-    return mockCampusFeatures.filter((f) => f.section_key === sectionKey);
-  }
-  return mockCampusFeatures;
+  return mockOrThrow('/public/campus-features', mock);
 };
 
 export const fetchCampusStats = async (): Promise<CampusStatData[]> => {
+  const mock = () => mockCampusStats;
   try {
     const response = await apiClient.get('/public/campus-stats');
     let data = response.data;
     if (data && Array.isArray(data.items)) {
       data = data.items;
     }
-    if (Array.isArray(data) && data.length > 0) {
+    if (Array.isArray(data)) {
       return data;
     }
-  } catch {
-    // fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/campus-stats', mock, error);
   }
-  return mockCampusStats;
+  return mockOrThrow('/public/campus-stats', mock);
 };
 
 export const fetchCampusTestimonials = async (): Promise<CampusTestimonialData[]> => {
+  const mock = () => mockCampusTestimonials;
   try {
     const response = await apiClient.get('/public/campus-testimonials');
     let data = response.data;
     if (data && Array.isArray(data.items)) {
       data = data.items;
     }
-    if (Array.isArray(data) && data.length > 0) {
+    if (Array.isArray(data)) {
       return data;
     }
-  } catch {
-    // fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/campus-testimonials', mock, error);
   }
-  return mockCampusTestimonials;
+  return mockOrThrow('/public/campus-testimonials', mock);
 };
 
 export const fetchCampusContact = async (): Promise<CampusContactInfoData | null> => {
+  const mock = () => mockCampusContactInfo;
   try {
     const response = await apiClient.get('/public/campus-contact');
     const data = response.data;
     if (data && typeof data === 'object' && data.id) {
       return data;
     }
-  } catch {
-    // fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/campus-contact', mock, error);
   }
-  return mockCampusContactInfo;
+  return mockOrThrow('/public/campus-contact', mock);
 };
 
 export const fetchContactInfo = async (): Promise<ContactInfoData | null> => {
+  const mock = () => mockContactInfo;
   try {
     const response = await apiClient.get('/public/contact-info');
     const data = response.data;
     if (data && typeof data === 'object' && data.id) {
       return data;
     }
-  } catch {
-    // fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/contact-info', mock, error);
   }
-  return mockContactInfo;
+  return mockOrThrow('/public/contact-info', mock);
 };
 
 export const fetchCampusImages = async (): Promise<CampusImageData[]> => {
+  const mock = () => mockCampusImages;
   try {
     const response = await apiClient.get('/public/campus-images');
     let data = response.data;
     if (data && Array.isArray(data.items)) {
       data = data.items;
     }
-    if (Array.isArray(data) && data.length > 0) {
+    if (Array.isArray(data)) {
       return data;
     }
-  } catch {
-    // fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/campus-images', mock, error);
   }
-  return mockCampusImages;
+  return mockOrThrow('/public/campus-images', mock);
 };
 
 export const fetchCampusGallery = async (): Promise<CampusGalleryImageData[]> => {
+  const mock = () => mockCampusGalleryImages;
   try {
     const response = await apiClient.get('/public/campus-gallery');
     const data = response.data;
-    if (data && Array.isArray(data)) {
-      return data;
-    }
     if (data && Array.isArray(data.items)) {
       return data.items;
     }
-  } catch {
-    // fall through to mock
+    if (Array.isArray(data)) {
+      return data;
+    }
+  } catch (error) {
+    return mockOrThrow('/public/campus-gallery', mock, error);
   }
-  return mockCampusGalleryImages;
+  return mockOrThrow('/public/campus-gallery', mock);
 };
 
 export const fetchCampusVideo = async (): Promise<CampusVideoData | null> => {
+  const mock = () => mockCampusVideo;
   try {
     const response = await apiClient.get('/public/campus-video');
     const data = response.data;
     if (data && typeof data === 'object' && data.id) {
       return data;
     }
-  } catch {
-    // fall through to mock
+  } catch (error) {
+    return mockOrThrow('/public/campus-video', mock, error);
   }
-  return mockCampusVideo;
+  return mockOrThrow('/public/campus-video', mock);
 };
 
 export interface AvailableCourse {

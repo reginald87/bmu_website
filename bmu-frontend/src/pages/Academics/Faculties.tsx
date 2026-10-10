@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowRight, Users, BookOpen, Microscope, HeartPulse, Activity, Stethoscope, School, ChevronRight, Loader2, Building2, GraduationCap } from 'lucide-react';
@@ -69,9 +69,9 @@ export const Faculties = () => {
         if (Array.isArray(items) && items.length > 0) {
           return items as FacultyData[];
         }
-        return [...fallbackColleges.flatMap(c => c.faculties), ...fallbackStandalone];
+        return ALLOW_API_MOCKS ? [...fallbackColleges.flatMap(c => c.faculties), ...fallbackStandalone] : [];
       } catch {
-        return [...fallbackColleges.flatMap(c => c.faculties), ...fallbackStandalone];
+        return ALLOW_API_MOCKS ? [...fallbackColleges.flatMap(c => c.faculties), ...fallbackStandalone] : [];
       }
     },
   });
@@ -86,9 +86,9 @@ export const Faculties = () => {
         if (Array.isArray(items) && items.length > 0) {
           return items as CollegeGroup[];
         }
-        return fallbackColleges;
+        return ALLOW_API_MOCKS ? fallbackColleges : [];
       } catch {
-        return fallbackColleges;
+        return ALLOW_API_MOCKS ? fallbackColleges : [];
       }
     },
   });
@@ -98,7 +98,7 @@ export const Faculties = () => {
         ...c,
         faculties: faculties.filter(f => f.college_id === c.id),
       })).filter(c => c.faculties.length > 0)
-    : fallbackColleges;
+    : (ALLOW_API_MOCKS ? fallbackColleges : []);
 
   const standaloneFaculties: FacultyData[] = faculties.filter(f => f.is_standalone);
 

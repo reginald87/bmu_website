@@ -15,6 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 import { useResearchGrants, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 import type { GrantData } from '../../services/mockData';
 import { GrantApplicationModal } from '../../components/research/GrantApplicationModal';
 
@@ -52,7 +53,7 @@ export const ResearchFunding = () => {
     { step: 4, title: 'Review Process', desc: 'Applications reviewed by expert panels, results within 6 weeks' }
   ];
 
-  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as typeof fallbackApplicationSteps) || fallbackApplicationSteps;
+  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as typeof fallbackApplicationSteps) ?? (ALLOW_API_MOCKS ? fallbackApplicationSteps : []);
 
   const stats = useMemo(() => {
     const activeGrants = grants.filter(g => g.status === 'active').length;

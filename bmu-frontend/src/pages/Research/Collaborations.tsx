@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useInternationalPartners, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 interface Partner {
   id: string;
@@ -49,9 +50,9 @@ export const Collaborations = () => {
     'Shared research infrastructure'
   ];
 
-  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
-  const benefits = (sections?.find(s => s.section_key === 'benefits')?.data as typeof fallbackBenefits) || fallbackBenefits;
-  const whyPartner = (sections?.find(s => s.section_key === 'why_partner')?.data as typeof fallbackWhyPartner) || fallbackWhyPartner;
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
+  const benefits = (sections?.find(s => s.section_key === 'benefits')?.data as typeof fallbackBenefits) ?? (ALLOW_API_MOCKS ? fallbackBenefits : []);
+  const whyPartner = (sections?.find(s => s.section_key === 'why_partner')?.data as typeof fallbackWhyPartner) ?? (ALLOW_API_MOCKS ? fallbackWhyPartner : []);
 
   const internationalPartners: Partner[] = partners
     .filter(p => p.country !== 'Nigeria')

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useColleges } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 interface College {
   id: number;
@@ -80,7 +81,7 @@ export const Colleges = () => {
     if (apiColleges && Array.isArray(apiColleges) && apiColleges.length > 0) {
       return apiColleges.map(transformCollege);
     }
-    return fallbackColleges;
+    return ALLOW_API_MOCKS ? fallbackColleges : [];
   })();
 
   if (isLoading) {

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Award, Shield, CheckCircle, Star, TrendingUp, Globe, BookOpen, Users, type LucideIcon } from 'lucide-react';
 import { useUniversityRankings, useKeyMetrics } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 interface Ranking {
   category: string;
@@ -96,7 +97,7 @@ export const Rankings = () => {
         value: m.value,
         icon: iconMap[m.icon_name] || Star,
       }))
-    : fallbackKeyMetrics;
+    : (ALLOW_API_MOCKS ? fallbackKeyMetrics : []);
 
   const rankings: Ranking[] = !isLoading && apiData
     ? apiData.filter(r => r.entry_type === 'ranking').map(r => ({
@@ -105,7 +106,7 @@ export const Rankings = () => {
         year: r.year,
         source: r.source,
       }))
-    : fallbackRankings;
+    : (ALLOW_API_MOCKS ? fallbackRankings : []);
 
   const accreditations: Accreditation[] = !isLoading && apiData
     ? apiData.filter(r => r.entry_type === 'accreditation').map(r => ({
@@ -115,7 +116,7 @@ export const Rankings = () => {
         year: r.validity,
         programs: r.accredited_programs ? r.accredited_programs.split(',').map(p => p.trim()) : [],
       }))
-    : fallbackAccreditations;
+    : (ALLOW_API_MOCKS ? fallbackAccreditations : []);
 
   const achievements = !isLoading && apiData
     ? apiData.filter(r => r.entry_type === 'achievement').map(r => ({
@@ -123,7 +124,7 @@ export const Rankings = () => {
         title: r.title,
         description: r.description,
       }))
-    : fallbackAchievements;
+    : (ALLOW_API_MOCKS ? fallbackAchievements : []);
 
   return (
     <>

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useExchangePrograms, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackRequirements = [
   'Minimum GPA of 3.0',
@@ -47,11 +48,11 @@ export const Exchange = () => {
 
   const getSection = (key: string) => sections.find(s => s.section_key === key);
   const reqData = getSection('requirements')?.data;
-  const requirements = Array.isArray(reqData) && reqData.length ? reqData : fallbackRequirements;
+  const requirements = Array.isArray(reqData) && reqData.length ? reqData : (ALLOW_API_MOCKS ? fallbackRequirements : []);
   const procData = getSection('process_steps')?.data;
-  const processSteps = Array.isArray(procData) && procData.length ? procData : fallbackProcessSteps;
+  const processSteps = Array.isArray(procData) && procData.length ? procData : (ALLOW_API_MOCKS ? fallbackProcessSteps : []);
   const dlData = getSection('upcoming_deadlines')?.data;
-  const upcomingDeadlines = Array.isArray(dlData) && dlData.length ? dlData : fallbackUpcomingDeadlines;
+  const upcomingDeadlines = Array.isArray(dlData) && dlData.length ? dlData : (ALLOW_API_MOCKS ? fallbackUpcomingDeadlines : []);
 
  return (
   <>

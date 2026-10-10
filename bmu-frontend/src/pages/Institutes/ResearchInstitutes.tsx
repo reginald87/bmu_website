@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useInstitutePages } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackInstitutes = [
   {
@@ -36,7 +37,7 @@ const fallbackInstitutes = [
 
 export const ResearchInstitutes = () => {
   const { data: apiInstitutes } = useInstitutePages();
-  const institutes = (apiInstitutes && apiInstitutes.length > 0 ? apiInstitutes : fallbackInstitutes);
+  const institutes = (apiInstitutes && apiInstitutes.length > 0 ? apiInstitutes : (ALLOW_API_MOCKS ? fallbackInstitutes : []));
 
   return (
  <>

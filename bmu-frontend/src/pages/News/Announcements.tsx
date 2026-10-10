@@ -16,7 +16,7 @@ import {
   ArrowRight,
   type LucideIcon
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 
 interface Announcement {
   id: number;
@@ -160,7 +160,7 @@ export const Announcements = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const { data: announcements = fallbackAnnouncements } = useQuery<Announcement[]>({
+  const { data: announcements = ALLOW_API_MOCKS ? fallbackAnnouncements : [] } = useQuery<Announcement[]>({
     queryKey: ['announcements'],
     queryFn: async () => {
       try {
@@ -184,7 +184,7 @@ export const Announcements = () => {
       } catch {
         // fall through
       }
-      return fallbackAnnouncements;
+      return ALLOW_API_MOCKS ? fallbackAnnouncements : [];
     },
   });
 

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useInternationalPartners, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   GraduationCap, Microscope, Building, Globe,
@@ -52,9 +53,9 @@ export const Partnerships = () => {
 
   const getSection = (key: string) => sections.find(s => s.section_key === key);
   const typesData = getSection('partnership_types')?.data;
-  const partnershipTypes = Array.isArray(typesData) && typesData.length ? typesData : fallbackPartnershipTypes;
+  const partnershipTypes = Array.isArray(typesData) && typesData.length ? typesData : (ALLOW_API_MOCKS ? fallbackPartnershipTypes : []);
   const benefitsData = getSection('partnership_benefits')?.data;
-  const partnershipBenefits = Array.isArray(benefitsData) && benefitsData.length ? benefitsData : fallbackPartnershipBenefits;
+  const partnershipBenefits = Array.isArray(benefitsData) && benefitsData.length ? benefitsData : (ALLOW_API_MOCKS ? fallbackPartnershipBenefits : []);
 
   return (
   <>

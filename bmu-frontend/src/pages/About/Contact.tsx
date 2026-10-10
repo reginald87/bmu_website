@@ -7,6 +7,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useSubmitContactEnquiry, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const defaultIcon = L.icon({
  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -62,7 +63,7 @@ export const Contact = () => {
       details: ['Monday - Friday', '8:00 AM - 5:00 PM WAT'],
     },
   ];
-  const rawContactInfo = (sections?.find(s => s.section_key === 'contact_info')?.data as typeof fallbackContactInfo) || fallbackContactInfo;
+  const rawContactInfo = (sections?.find(s => s.section_key === 'contact_info')?.data as typeof fallbackContactInfo) ?? (ALLOW_API_MOCKS ? fallbackContactInfo : []);
   const iconByTitle: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
     'Main Campus': MapPin,
     'Address': MapPin,
@@ -87,7 +88,7 @@ export const Contact = () => {
     { name: 'Public Relations', email: 'pro@bmu.edu.ng', phone: '+234 803 123 4572' },
     { name: 'Webmaster', email: 'webmaster@bmu.edu.ng', phone: '+234 803 123 4573' },
   ];
-  const departmentContacts = (sections?.find(s => s.section_key === 'department_contacts')?.data as typeof fallbackDepartments) || fallbackDepartments;
+  const departmentContacts = (sections?.find(s => s.section_key === 'department_contacts')?.data as typeof fallbackDepartments) ?? (ALLOW_API_MOCKS ? fallbackDepartments : []);
 
   const mapData = sections?.find(s => s.section_key === 'map_coords')?.data as { lat: number | string; lng: number | string }[] | undefined;
   const mapCenter: [number, number] = mapData?.[0]?.lat && mapData?.[0]?.lng
@@ -290,7 +291,7 @@ export const Contact = () => {
               <Marker position={mapCenter}>
                 <Popup>
                   Bayelsa Medical University<br />
-                  {contactInfo[0].details.join(', ')}
+                  {contactInfo[0]?.details.join(', ')}
                 </Popup>
               </Marker>
             </MapContainer>

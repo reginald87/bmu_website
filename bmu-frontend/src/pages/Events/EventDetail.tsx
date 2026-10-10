@@ -20,7 +20,7 @@ import {
   Download,
   CreditCard
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 import { EventRegistrationModal } from '../../components/events/EventRegistrationModal';
 
 interface EventOrganizer {
@@ -194,10 +194,10 @@ export const EventDetail = () => {
     if (data && (Array.isArray(data) ? data.length > 0 : Object.keys(data).length > 0)) {
      return data;
     }
-   } catch {
-     // fall back to mock data on error
+   } catch (error) {
+     if (!ALLOW_API_MOCKS) throw error;
    }
-   return fallbackEvents;
+   return ALLOW_API_MOCKS ? fallbackEvents : {};
   },
   });
 
@@ -408,7 +408,7 @@ export const EventDetail = () => {
 
  {/* Related Events */}
  <section className="mt-16"><h2 className="text-2xl font-bold text-gray-900 mb-8">Related Events</h2><div className="grid md:grid-cols-3 gap-8">
-  {relatedEventsData.slice(0, 3).map((evt) => (
+  {ALLOW_API_MOCKS && relatedEventsData.slice(0, 3).map((evt) => (
   <Link
   key={evt.id}
   to={`/events/${evt.slug}`}

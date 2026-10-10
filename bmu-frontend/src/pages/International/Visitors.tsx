@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackVisitorTypes = [
  {
@@ -90,10 +91,10 @@ const fallbackStats = [
 
 export const Visitors = () => {
  const { data: sections } = usePageSections('international/visitors');
- const visitorTypes = (sections?.find(s => s.section_key === 'visitor_types')?.data as typeof fallbackVisitorTypes) || fallbackVisitorTypes;
- const services = (sections?.find(s => s.section_key === 'services')?.data as typeof fallbackServices) || fallbackServices;
- const recentVisits = (sections?.find(s => s.section_key === 'recent_visits')?.data as typeof fallbackRecentVisits) || fallbackRecentVisits;
- const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
+ const visitorTypes = (sections?.find(s => s.section_key === 'visitor_types')?.data as typeof fallbackVisitorTypes) ?? (ALLOW_API_MOCKS ? fallbackVisitorTypes : []);
+ const services = (sections?.find(s => s.section_key === 'services')?.data as typeof fallbackServices) ?? (ALLOW_API_MOCKS ? fallbackServices : []);
+ const recentVisits = (sections?.find(s => s.section_key === 'recent_visits')?.data as typeof fallbackRecentVisits) ?? (ALLOW_API_MOCKS ? fallbackRecentVisits : []);
+ const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
  return (
  <>
  <Helmet>

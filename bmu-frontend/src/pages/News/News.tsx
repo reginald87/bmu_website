@@ -16,7 +16,7 @@ import {
   Megaphone,
   FileText
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 
 interface NewsArticle {
   id: number;
@@ -192,12 +192,12 @@ export const News = () => {
             tags: [],
           }));
         }
-        return fallbackNews;
+        return ALLOW_API_MOCKS ? fallbackNews : [];
       } catch {
-        return fallbackNews;
+        return ALLOW_API_MOCKS ? fallbackNews : [];
       }
     },
-    initialData: fallbackNews,
+    initialData: ALLOW_API_MOCKS ? fallbackNews : [],
   });
 
   // Filter articles

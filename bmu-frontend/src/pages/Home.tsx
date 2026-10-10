@@ -24,7 +24,7 @@ import { AccreditationStrip } from '../components/home/AccreditationStrip';
 import { AlumniAchievements } from '../components/home/AlumniAchievements';
 import { NewsletterSignup } from '../components/home/NewsletterSignup';
 import { StickySectionNav } from '../components/home/StickySectionNav';
-import { fetchHomeStats, fetchNews, fetchAllEvents, fetchColleges } from '../services/api';
+import { fetchHomeStats, fetchNews, fetchAllEvents, fetchColleges, ALLOW_API_MOCKS } from '../services/api';
 
 const fallbackSections = [
   { id: 'hero', label: 'Welcome' },
@@ -125,7 +125,7 @@ const MobileQuickBar = () => {
 export const Home = () => {
   const { t } = useTranslation();
   const { data: homeSections } = usePageSections('home');
-  const navSections = (homeSections?.find(s => s.section_key === 'nav_sections')?.data as typeof fallbackSections || fallbackSections);
+  const navSections = (homeSections?.find(s => s.section_key === 'nav_sections')?.data as typeof fallbackSections) ?? (ALLOW_API_MOCKS ? fallbackSections : []);
   const activeSection = useScrollSpy(navSections.map((s) => s.id));
 
   const { data: stats, isLoading: statsLoading } = useQuery({

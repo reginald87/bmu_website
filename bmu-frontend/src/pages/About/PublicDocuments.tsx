@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FileText, Download, ExternalLink, Calendar, ChevronRight, Loader2 } from 'lucide-react';
 import { usePublicDocuments } from '../../services/apiHooks';
-import { downloadPublicDocument } from '../../services/api';
+import { downloadPublicDocument, ALLOW_API_MOCKS } from '../../services/api';
 
 interface FallbackDoc {
   id: number;
@@ -50,7 +50,7 @@ export const PublicDocuments = () => {
         category: d.category ? d.category.charAt(0).toUpperCase() + d.category.slice(1) : '',
       }));
     }
-    return fallbackDocuments;
+    return ALLOW_API_MOCKS ? fallbackDocuments : [];
   })();
 
   return (

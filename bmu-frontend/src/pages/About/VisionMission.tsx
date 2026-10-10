@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Target, Eye, Lightbulb, ArrowRight, Award, Leaf, Users, Microscope, HeartHandshake } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useVisionMissionPage } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 import { useMemo } from 'react';
 
 const fallbackStrategicPillars = [
@@ -75,14 +76,14 @@ export const VisionMission = () => {
         description: p.description,
       }));
     }
-    return fallbackStrategicPillars;
+    return ALLOW_API_MOCKS ? fallbackStrategicPillars : [];
   }, [pageData]);
 
   const coreValues = useMemo(() => {
     if (pageData?.core_values?.length) {
       return pageData.core_values;
     }
-    return fallbackCoreValues;
+    return ALLOW_API_MOCKS ? fallbackCoreValues : [];
   }, [pageData]);
 
   return (

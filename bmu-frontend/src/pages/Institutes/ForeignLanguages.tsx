@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackLanguages = [
  { lang: 'French', level: 'Beginner to Advanced', desc: 'Essential for West African medical practice' },
@@ -12,7 +13,7 @@ const fallbackLanguages = [
 
 export const ForeignLanguages = () => {
  const { data: sections } = usePageSections('institutes/languages');
- const languages = (sections?.find(s => s.section_key === 'language_programs')?.data as typeof fallbackLanguages) || fallbackLanguages;
+ const languages = (sections?.find(s => s.section_key === 'language_programs')?.data as typeof fallbackLanguages) ?? (ALLOW_API_MOCKS ? fallbackLanguages : []);
  return (
  <>
  <Helmet>

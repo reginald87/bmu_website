@@ -13,7 +13,7 @@ import {
  Image as ImageIcon,
  ArrowLeft
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 
 interface PastEvent {
  id: number;
@@ -133,7 +133,7 @@ export const PastEvents = () => {
  const [selectedCategory, setSelectedCategory] = useState('all');
  const [selectedYear, setSelectedYear] = useState('All Years');
 
-  const { data: pastEvents = fallbackPastEvents } = useQuery<PastEvent[]>({
+  const { data: pastEvents = ALLOW_API_MOCKS ? fallbackPastEvents : [] } = useQuery<PastEvent[]>({
    queryKey: ['pastEvents'],
    queryFn: async () => {
     try {
@@ -158,7 +158,7 @@ export const PastEvents = () => {
     } catch {
      // fall through
     }
-    return fallbackPastEvents;
+    return ALLOW_API_MOCKS ? fallbackPastEvents : [];
    },
   });
 

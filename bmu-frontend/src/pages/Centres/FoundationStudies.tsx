@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackPathways = [
  {
@@ -32,7 +33,7 @@ const fallbackPathways = [
 
 export const FoundationStudies = () => {
  const { data: sections } = usePageSections('centres/foundation');
- const pathways = (sections?.find(s => s.section_key === 'pathways')?.data as typeof fallbackPathways) || fallbackPathways;
+ const pathways = (sections?.find(s => s.section_key === 'pathways')?.data as typeof fallbackPathways) ?? (ALLOW_API_MOCKS ? fallbackPathways : []);
  return (
  <>
  <Helmet>

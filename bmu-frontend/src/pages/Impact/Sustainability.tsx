@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useImpactPrograms, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackCarbonTargets = [
   { year: '2020', baseline: '100%', reduction: '0%' },
@@ -52,9 +53,9 @@ export const Sustainability = () => {
 
   const getSection = (key: string) => sections.find(s => s.section_key === key);
   const ctData = getSection('carbon_targets')?.data;
-  const carbonTargets = Array.isArray(ctData) && ctData.length ? ctData : fallbackCarbonTargets;
+  const carbonTargets = Array.isArray(ctData) && ctData.length ? ctData : (ALLOW_API_MOCKS ? fallbackCarbonTargets : []);
   const raData = getSection('research_areas')?.data;
-  const researchAreas = Array.isArray(raData) && raData.length ? raData : fallbackResearchAreas;
+  const researchAreas = Array.isArray(raData) && raData.length ? raData : (ALLOW_API_MOCKS ? fallbackResearchAreas : []);
 
   if (isLoading) {
     return (

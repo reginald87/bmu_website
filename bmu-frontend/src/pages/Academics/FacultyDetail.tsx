@@ -10,7 +10,7 @@ import {
   ChevronRight,
   Building
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 
 interface Department {
   id: number;
@@ -381,7 +381,7 @@ export const FacultyDetail = () => {
         // fall through to fallback
       }
 
-      let fallback = [...fallbackFaculties];
+      let fallback = ALLOW_API_MOCKS ? [...fallbackFaculties] : [];
       if (effectiveCollegeSlug) {
         fallback = fallback.filter(f => f.collegeSlug === effectiveCollegeSlug);
       }

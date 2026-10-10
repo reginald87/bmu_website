@@ -4,6 +4,7 @@ import { Building2, Users, Gavel, FileText, Shield, Scale } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useGovernancePage } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 import { useMemo } from 'react';
 import { iconMap as iconRegistry } from '../../lib/icons';
 
@@ -73,21 +74,21 @@ export const Governance = () => {
         color: body.color || 'var(--color-ink-900)',
       }));
     }
-    return fallbackGovernanceBodies;
+    return ALLOW_API_MOCKS ? fallbackGovernanceBodies : [];
   }, [pageData]);
 
   const committees = useMemo(() => {
     if (pageData?.committees?.length) {
       return pageData.committees;
     }
-    return fallbackCommittees;
+    return ALLOW_API_MOCKS ? fallbackCommittees : [];
   }, [pageData]);
 
   const policies = useMemo(() => {
     if (pageData?.policies?.length) {
       return pageData.policies;
     }
-    return fallbackPolicies;
+    return ALLOW_API_MOCKS ? fallbackPolicies : [];
   }, [pageData]);
 
   return (

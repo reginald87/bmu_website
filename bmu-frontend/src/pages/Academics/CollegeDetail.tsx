@@ -10,7 +10,7 @@ import {
   Eye,
   ChevronRight
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 
 interface College {
   id: number;
@@ -179,7 +179,7 @@ export const CollegeDetail = () => {
         // API unavailable — fall through to fallback
       }
 
-      const found = fallbackColleges.find(c => c.slug === collegeSlug);
+      const found = ALLOW_API_MOCKS ? fallbackColleges.find(c => c.slug === collegeSlug) : undefined;
       if (found) {
         return mapItemToHierarchy(found as unknown as Record<string, unknown>);
       }

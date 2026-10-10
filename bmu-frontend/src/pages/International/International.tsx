@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackQuickLinks = [
  {
@@ -62,9 +63,9 @@ const fallbackStats = [
 
 export const International = () => {
  const { data: sections } = usePageSections('international');
- const quickLinks = (sections?.find(s => s.section_key === 'quick_links')?.data as typeof fallbackQuickLinks) || fallbackQuickLinks;
- const partnerCountries = (sections?.find(s => s.section_key === 'partner_countries')?.data as typeof fallbackPartnerCountries) || fallbackPartnerCountries;
- const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
+ const quickLinks = (sections?.find(s => s.section_key === 'quick_links')?.data as typeof fallbackQuickLinks) ?? (ALLOW_API_MOCKS ? fallbackQuickLinks : []);
+ const partnerCountries = (sections?.find(s => s.section_key === 'partner_countries')?.data as typeof fallbackPartnerCountries) ?? (ALLOW_API_MOCKS ? fallbackPartnerCountries : []);
+ const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
  return (
  <>
  <Helmet>

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { usePublications, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackStats = [
   { value: '200+', label: 'Publications', icon: FileText },
@@ -27,7 +28,7 @@ export const Publications = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
 
   const categories = useMemo(() => {
     const cats = [...new Set(publications.map(p => p.category).filter(Boolean))] as string[];

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Building2, GraduationCap, Award, Globe } from 'lucide-react';
 import { useHistoryPage } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 import { useMemo } from 'react';
 
 interface TimelineEvent {
@@ -81,7 +82,7 @@ export const History = () => {
         icon: titleIconMap[e.title] || Building2,
       }));
     }
-    return fallbackTimelineEvents;
+    return ALLOW_API_MOCKS ? fallbackTimelineEvents : [];
   }, [pageData]);
 
   return (

@@ -4,6 +4,7 @@ import { Target, Eye, Heart, Award, Users, BookOpen, HeartHandshake, Shield, Cli
 import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAboutPage } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 import { useMemo } from 'react';
 import { iconMap as iconRegistry } from '../../lib/icons';
 
@@ -49,7 +50,7 @@ export const About = () => {
     if (pageData?.stats?.length) {
       return pageData.stats.map(s => ({ value: s.value, label: s.label, suffix: s.suffix }));
     }
-    return fallbackStats;
+    return ALLOW_API_MOCKS ? fallbackStats : [];
   }, [pageData]);
 
   const coreValues = useMemo(() => {
@@ -60,11 +61,11 @@ export const About = () => {
         description: v.description,
       }));
     }
-    return fallbackCoreValues;
+    return ALLOW_API_MOCKS ? fallbackCoreValues : [];
   }, [pageData]);
 
-  const missionContent = pageData?.mission_content || fallbackMission;
-  const visionContent = pageData?.vision_content || fallbackVision;
+  const missionContent = pageData?.mission_content || (ALLOW_API_MOCKS ? fallbackMission : '');
+  const visionContent = pageData?.vision_content || (ALLOW_API_MOCKS ? fallbackVision : '');
 
   const whyChoose = useMemo(() => {
     if (pageData?.why_choose?.length) {
@@ -74,7 +75,7 @@ export const About = () => {
         description: w.description,
       }));
     }
-    return fallbackWhyChoose;
+    return ALLOW_API_MOCKS ? fallbackWhyChoose : [];
   }, [pageData]);
 
   return (

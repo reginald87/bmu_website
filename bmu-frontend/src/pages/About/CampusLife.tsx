@@ -10,6 +10,7 @@ import {
   useCampusContact,
   useCampusGallery,
 } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 import { iconMap as iconRegistry } from '../../lib/icons';
 
 const resolveIcon = (name?: string): LucideIcon => {
@@ -96,11 +97,11 @@ export const CampusLife = () => {
   const { data: contactInfo } = useCampusContact();
   const { data: tourFeatures = [] } = useCampusFeatures('virtual_tour');
   const { data: galleryImages = [] } = useCampusGallery();
-  const displayGallery = galleryImages.length ? galleryImages : fallbackGallery;
+  const displayGallery = galleryImages.length ? galleryImages : (ALLOW_API_MOCKS ? fallbackGallery : []);
 
   const heroContent = 'More than just academics — discover a vibrant community where learning meets life, friendships flourish, and future leaders are shaped.';
 
-  const displayStats = stats.length ? stats : fallbackStats;
+  const displayStats = stats.length ? stats : (ALLOW_API_MOCKS ? fallbackStats : []);
 
   return (
     <>

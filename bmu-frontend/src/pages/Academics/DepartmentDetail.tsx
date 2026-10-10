@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -281,7 +281,7 @@ hod_photo: response.data.hod_photo ?? null,
        // fall through
      }
 
-     const found = fallbackDepartments.find(d => d.slug === slug);
+     const found = ALLOW_API_MOCKS ? fallbackDepartments.find(d => d.slug === slug) : undefined;
      return found ? mapFallbackToDepartment(found) : null;
    },
    enabled: !!slug,

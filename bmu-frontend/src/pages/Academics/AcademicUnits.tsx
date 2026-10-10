@@ -12,7 +12,7 @@ import {
   GraduationCap,
   Users,
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 
 interface DepartmentData {
   id: number;
@@ -123,9 +123,9 @@ export const AcademicUnits = () => {
         const result = response.data;
         const items: DepartmentData[] = result?.items || result || [];
         if (Array.isArray(items) && items.length > 0) return items;
-        return fallbackGroups.flatMap(g => g.departments);
+        return ALLOW_API_MOCKS ? fallbackGroups.flatMap(g => g.departments) : [];
       } catch {
-        return fallbackGroups.flatMap(g => g.departments);
+        return ALLOW_API_MOCKS ? fallbackGroups.flatMap(g => g.departments) : [];
       }
     },
   });

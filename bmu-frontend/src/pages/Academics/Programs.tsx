@@ -18,6 +18,7 @@ import {
  Loader2
 } from 'lucide-react';
 import { usePrograms, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 import { type Program as ApiProgram } from '../../services/mockData';
 
 interface ApiProgramSource extends ApiProgram {
@@ -103,14 +104,14 @@ const fallbackStats = [
 export const Programs = () => {
  const { data: apiPrograms, isLoading } = usePrograms();
  const { data: sections } = usePageSections('programs');
-  const stats = (sections?.find(s => s.section_key === 'stats')?.data as ProgramStat[] || fallbackStats);
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as ProgramStat[]) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
 
  const programs: Program[] = (() => {
   if (apiPrograms && Array.isArray(apiPrograms) && apiPrograms.length > 0) {
    return apiPrograms.map(transformProgram);
   }
-  return fallbackPrograms;
- })();
+  return ALLOW_API_MOCKS ? fallbackPrograms : [];
+  })();
 
  if (isLoading) {
   return (

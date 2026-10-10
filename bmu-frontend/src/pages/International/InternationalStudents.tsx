@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useStudentSupportServices, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackStudentStats = [
   { value: '500+', label: 'International Students' },
@@ -54,13 +55,13 @@ export const InternationalStudents = () => {
 
   const getSection = (key: string) => sections.find(s => s.section_key === key);
   const statsData = getSection('stats')?.data;
-  const studentStats = Array.isArray(statsData) && statsData.length ? statsData : fallbackStudentStats;
+  const studentStats = Array.isArray(statsData) && statsData.length ? statsData : (ALLOW_API_MOCKS ? fallbackStudentStats : []);
   const stepsData = getSection('admission_steps')?.data;
-  const admissionSteps = Array.isArray(stepsData) && stepsData.length ? stepsData : fallbackAdmissionSteps;
+  const admissionSteps = Array.isArray(stepsData) && stepsData.length ? stepsData : (ALLOW_API_MOCKS ? fallbackAdmissionSteps : []);
   const docsData = getSection('required_documents')?.data;
-  const requiredDocuments = Array.isArray(docsData) && docsData.length ? docsData : fallbackRequiredDocuments;
+  const requiredDocuments = Array.isArray(docsData) && docsData.length ? docsData : (ALLOW_API_MOCKS ? fallbackRequiredDocuments : []);
   const faqsData = getSection('faqs')?.data;
-  const faqs = Array.isArray(faqsData) && faqsData.length ? faqsData : fallbackFaqs;
+  const faqs = Array.isArray(faqsData) && faqsData.length ? faqsData : (ALLOW_API_MOCKS ? fallbackFaqs : []);
 
  if (isLoading) {
   return (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -136,7 +136,7 @@ export const PressReleases = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const { data: pressReleasesData = fallbackPressReleases } = useQuery<PressReleaseItem[]>({
+  const { data: pressReleasesData = ALLOW_API_MOCKS ? fallbackPressReleases : [] } = useQuery<PressReleaseItem[]>({
   queryKey: ['pressReleases'],
   queryFn: async () => {
     try {
@@ -161,7 +161,7 @@ export const PressReleases = () => {
     } catch {
       // fall through
     }
-    return fallbackPressReleases;
+    return ALLOW_API_MOCKS ? fallbackPressReleases : [];
    },
   });
 

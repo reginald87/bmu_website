@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackServices = [
  { title: 'Career Counseling', desc: 'One-on-one guidance for career planning and development' },
@@ -21,8 +22,8 @@ const fallbackStats = [
 
 export const CareerCentre = () => {
  const { data: sections } = usePageSections('centres/career');
- const services = (sections?.find(s => s.section_key === 'services')?.data as typeof fallbackServices) || fallbackServices;
- const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
+ const services = (sections?.find(s => s.section_key === 'services')?.data as typeof fallbackServices) ?? (ALLOW_API_MOCKS ? fallbackServices : []);
+ const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
  return (
  <>
  <Helmet>

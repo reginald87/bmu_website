@@ -18,6 +18,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useResearchCenters, useFaculty, useFundedProjects, usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const areaIconMap: Record<string, React.ElementType> = {
   malaria: Microscope,
@@ -96,10 +97,10 @@ export const Research = () => {
     { value: String(researcherCount), label: 'Researchers', icon: Users }
   ];
 
-  const items = (sections?.find(s => s.section_key === 'highlights')?.data as typeof fallbackHighlights) || fallbackHighlights;
-  const impactMetrics = (sections?.find(s => s.section_key === 'impact_metrics')?.data as typeof fallbackImpactMetrics) || fallbackImpactMetrics;
-  const opportunities = (sections?.find(s => s.section_key === 'opportunities')?.data as typeof fallbackOpportunities) || fallbackOpportunities;
-  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
+  const items = (sections?.find(s => s.section_key === 'highlights')?.data as typeof fallbackHighlights) ?? (ALLOW_API_MOCKS ? fallbackHighlights : []);
+  const impactMetrics = (sections?.find(s => s.section_key === 'impact_metrics')?.data as typeof fallbackImpactMetrics) ?? (ALLOW_API_MOCKS ? fallbackImpactMetrics : []);
+  const opportunities = (sections?.find(s => s.section_key === 'opportunities')?.data as typeof fallbackOpportunities) ?? (ALLOW_API_MOCKS ? fallbackOpportunities : []);
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
 
   const researchAreas = (centers ?? []).map(c => {
     const slug = c.slug.toLowerCase();

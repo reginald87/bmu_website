@@ -17,6 +17,7 @@ import {
   type LucideIcon
 } from 'lucide-react';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 interface AcademicUnit {
   name: string;
@@ -121,11 +122,11 @@ const fallbackStats = [
 
 export const Academics = () => {
  const { data: sections } = usePageSections('academics');
-  const academicUnits = (sections?.find(s => s.section_key === 'academic_units')?.data as AcademicUnit[] || fallbackUnits);
+  const academicUnits = (sections?.find(s => s.section_key === 'academic_units')?.data as AcademicUnit[]) ?? (ALLOW_API_MOCKS ? fallbackUnits : []);
   const collegeUnits = academicUnits.filter(u => !u.standalone);
   const standaloneUnits = academicUnits.filter(u => u.standalone);
-  const quickLinks = (sections?.find(s => s.section_key === 'quick_links')?.data as QuickLink[] || fallbackQuickLinks);
-  const stats = (sections?.find(s => s.section_key === 'stats')?.data as Stat[] || fallbackStats);
+  const quickLinks = (sections?.find(s => s.section_key === 'quick_links')?.data as QuickLink[]) ?? (ALLOW_API_MOCKS ? fallbackQuickLinks : []);
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as Stat[]) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
 
   const renderUnitCard = (unit: AcademicUnit, index: number) => (
     <motion.div

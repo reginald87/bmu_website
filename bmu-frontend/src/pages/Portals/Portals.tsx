@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../contexts/useAuth';
 import { usePortalDefinitions } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const iconMap: Record<string, React.ElementType> = {
   UserCircle,
@@ -79,7 +80,7 @@ export const Portals = () => {
         audience: p.audience,
         features: Array.isArray(p.features) ? p.features.map(String) : [],
       }))
-    : fallbackPortals.map((p) => ({
+    : (ALLOW_API_MOCKS ? fallbackPortals : []).map((p) => ({
         ...p,
         icon: iconMap[p.icon] || UserCircle,
       }))

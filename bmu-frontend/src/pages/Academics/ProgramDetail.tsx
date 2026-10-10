@@ -26,6 +26,7 @@ import {
  Loader2
 } from 'lucide-react';
 import { useProgramBySlug } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 import { type Program as ApiProgram, mockProgramDetails } from '../../services/mockData';
 
 interface ProgramAccreditation {
@@ -123,7 +124,7 @@ export const ProgramDetail = () => {
  if (apiProgram && apiProgram.slug === slug) {
   program = transformDetail(apiProgram);
  }
- if (!program) {
+ if (!program && ALLOW_API_MOCKS) {
   program = fallbackPrograms[slug || ''];
  }
 

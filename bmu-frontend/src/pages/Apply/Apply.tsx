@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackSteps = [
   {
@@ -73,10 +74,10 @@ const fallbackStats = [
 
 export const Apply = () => {
   const { data: sections } = usePageSections('apply');
-  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as typeof fallbackSteps) || fallbackSteps;
-  const upcomingDeadlines = (sections?.find(s => s.section_key === 'deadlines')?.data as typeof fallbackDeadlines) || fallbackDeadlines;
-  const requirements = (sections?.find(s => s.section_key === 'requirements')?.data as typeof fallbackRequirements) || fallbackRequirements;
-  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
+  const applicationSteps = (sections?.find(s => s.section_key === 'application_steps')?.data as typeof fallbackSteps) ?? (ALLOW_API_MOCKS ? fallbackSteps : []);
+  const upcomingDeadlines = (sections?.find(s => s.section_key === 'deadlines')?.data as typeof fallbackDeadlines) ?? (ALLOW_API_MOCKS ? fallbackDeadlines : []);
+  const requirements = (sections?.find(s => s.section_key === 'requirements')?.data as typeof fallbackRequirements) ?? (ALLOW_API_MOCKS ? fallbackRequirements : []);
+  const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
 
   return (
     <>

@@ -13,6 +13,7 @@ import {
  TreePine
 } from 'lucide-react';
 import { usePageSections } from '../../services/apiHooks';
+import { ALLOW_API_MOCKS } from '../../services/api';
 
 const fallbackImpactAreas = [
  {
@@ -76,9 +77,9 @@ const fallbackHighlights = [
 
 export const Impact = () => {
  const { data: sections } = usePageSections('impact');
- const impactAreas = (sections?.find(s => s.section_key === 'impact_areas')?.data as typeof fallbackImpactAreas) || fallbackImpactAreas;
- const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) || fallbackStats;
- const highlights = (sections?.find(s => s.section_key === 'highlights')?.data as typeof fallbackHighlights) || fallbackHighlights;
+ const impactAreas = (sections?.find(s => s.section_key === 'impact_areas')?.data as typeof fallbackImpactAreas) ?? (ALLOW_API_MOCKS ? fallbackImpactAreas : []);
+ const stats = (sections?.find(s => s.section_key === 'stats')?.data as typeof fallbackStats) ?? (ALLOW_API_MOCKS ? fallbackStats : []);
+ const highlights = (sections?.find(s => s.section_key === 'highlights')?.data as typeof fallbackHighlights) ?? (ALLOW_API_MOCKS ? fallbackHighlights : []);
 
  return (
  <>

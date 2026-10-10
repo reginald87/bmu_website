@@ -21,7 +21,7 @@ import {
   Bookmark,
   Heart
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 
 interface Article {
  id: number;
@@ -155,10 +155,10 @@ export const NewsDetail = () => {
             relatedArticles: [],
           };
         }
-      } catch {
-        // fall through to fallback
+      } catch (error) {
+        if (!ALLOW_API_MOCKS) throw error;
       }
-      const found = fallbackNews.find(a => a.slug === slug);
+      const found = ALLOW_API_MOCKS ? fallbackNews.find(a => a.slug === slug) : null;
       return found || null;
     },
     enabled: !!slug,
@@ -343,7 +343,7 @@ export const NewsDetail = () => {
  <div className="bg-white p-6 shadow-sm"><h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-ink-900"/>
  Related Articles
  </h3><div className="space-y-4">
- {relatedArticlesData.map((related) => (
+ {ALLOW_API_MOCKS && relatedArticlesData.map((related) => (
  <Link
  key={related.id}
  to={`/news/${related.slug}`}
@@ -378,7 +378,7 @@ export const NewsDetail = () => {
 
  {/* More Articles Section */}
  <div className="container-custom py-16"><h2 className="text-2xl font-bold text-gray-900 mb-8">More Articles You Might Like</h2><div className="grid md:grid-cols-3 gap-8">
- {relatedArticlesData.slice(0, 3).map((article) => (
+ {ALLOW_API_MOCKS && relatedArticlesData.slice(0, 3).map((article) => (
  <Link
  key={article.id}
  to={`/news/${article.slug}`}

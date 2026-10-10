@@ -11,7 +11,7 @@ import {
  MapPin,
  ChevronRight as ArrowRight
 } from 'lucide-react';
-import { apiClient } from '../../services/api';
+import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
 
 interface CalendarEvent {
   id: number;
@@ -111,12 +111,12 @@ export const EventCalendar = () => {
          color: item.category === 'academic' || item.category === 'Academic' ? 'var(--color-ink-900)' : 'var(--color-primary-600)',
        }));
      }
-     return fallbackEvents;
+     return ALLOW_API_MOCKS ? fallbackEvents : [];
     } catch {
-     return fallbackEvents;
+     return ALLOW_API_MOCKS ? fallbackEvents : [];
     }
    },
-   initialData: fallbackEvents,
+   initialData: ALLOW_API_MOCKS ? fallbackEvents : [],
   });
 
  const year = currentDate.getFullYear();
