@@ -1199,10 +1199,10 @@ export const ApplicationPortal = () => {
                     data={formData.personal}
                     studentType={formData.studentType}
                     onChange={(field, value) => {
-                      setFormData({ 
-                        ...formData, 
-                        personal: { ...formData.personal, [field]: value } 
-                      });
+                      setFormData(prev => ({
+                        ...prev,
+                        personal: { ...prev.personal, [field]: value },
+                      }));
                       // Mark field as touched
                       setTouched(prev => ({ ...prev, [field]: true }));
                     }}
