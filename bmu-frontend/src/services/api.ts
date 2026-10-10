@@ -295,6 +295,27 @@ export const fetchProgramBySlug = async (slug: string): Promise<Program | undefi
   return fetchWithFallback(`/public/programs/${slug}`, mock);
 };
 
+export interface ApplyProgramApi {
+  id: number;
+  title: string;
+  degree?: string;
+  level: string;
+  level_display?: string;
+  duration: string;
+  college_name?: string;
+  application_fee_local: number;
+  application_fee_intl: number;
+}
+
+export const fetchApplyPrograms = async (): Promise<ApplyProgramApi[]> => {
+  try {
+    const response = await apiClient.get('/public/apply/programs');
+    return (response.data as ApplyProgramApi[]) || [];
+  } catch {
+    return [];
+  }
+};
+
 interface FetchFacultyParams {
   college?: string;
   department?: string;

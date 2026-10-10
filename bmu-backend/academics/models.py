@@ -304,6 +304,10 @@ class Program(models.Model):
                                   null=True, blank=True, related_name='programs')
     
     is_active = models.BooleanField(default=True)
+    applications_open = models.BooleanField(
+        default=True,
+        help_text="Allow applicants to apply to this program",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

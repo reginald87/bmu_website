@@ -402,3 +402,46 @@ class DocumentContextTests(TestCase):
     def test_faculty_label_falls_back_to_university(self):
         from .documents import faculty_label
         self.assertEqual(faculty_label(None), 'Bayelsa Medical University')
+
+
+class ProgramApplicationStatusTests(TestCase):
+    """Applicants must not be able to apply to a program that is closed."""
+
+    def setUp(self):
+        self.program = make_program()
+        self.client = APIClient()
+
+    def _payload(self):
+        return {
+            'first_name': 'Jane', 'last_name': 'Doe',
+            'email': 'jane@example.com', 'phone': '08012345678',
+            'date_of_birth': '2000-01-01', 'gender': 'female',
+            'address': 'Yenagoa',
+            'program_id': self.program.id, 'student_type': 'LOCAL',
+        }
+
+    def test_closed_program_hidden_from_apply_list(self):
+        self.program.applications_open = False
+        self.program.save()
+        res = self.client.get('/api/public/apply/programs')
+        self.assertEqual(res.status_code, 200)
+        self.assertNotIn(self.program.id, [p['id'] for p in res.json()])
+
+    def test_open_program_listed_with_fee(self):
+        res = self.client.get('/api/public/apply/programs')
+        self.assertEqual(res.status_code, 200)
+        listed = {p['id']: p for p in res.json()}
+        self.assertIn(self.program.id, listed)
+        self.assertEqual(listed[self.program.id]['application_fee_local'], 10000.0)
+
+    def test_closed_program_rejected_on_submit(self):
+        self.program.applications_open = False
+        self.program.save()
+        res = self.client.post('/api/public/applications', self._payload(), format='json')
+        self.assertEqual(res.status_code, 400, res.content)
+        self.assertIn('closed', res.json()['detail'].lower())
+
+    def test_open_program_submits(self):
+        res = self.client.post('/api/public/applications', self._payload(), format='json')
+        self.assertEqual(res.status_code, 200, res.content)
+

@@ -157,8 +157,9 @@ class ProgramAdmissionRequirementInline(admin.TabularInline):
 
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
-    list_display = ['title', 'degree', 'level', 'college', 'duration', 'is_active']
-    list_filter = ['level', 'category', 'is_active', 'college']
+    list_display = ['title', 'degree', 'level', 'college', 'duration', 'is_active', 'applications_open']
+    list_filter = ['level', 'category', 'is_active', 'applications_open', 'college']
+    list_editable = ['applications_open']
     search_fields = ['title', 'degree', 'college__name', 'department__name']
     prepopulated_fields = {'slug': ('title',)}
     inlines = [

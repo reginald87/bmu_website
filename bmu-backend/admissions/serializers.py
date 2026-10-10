@@ -127,7 +127,16 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
             'previous_institution', 'academic_records', 'passport'
         ]
         read_only_fields = ['id']
-    
+
+    def validate_program(self, program):
+        if not program.is_active:
+            raise serializers.ValidationError("This program is not available.")
+        if not program.applications_open:
+            raise serializers.ValidationError(
+                "Applications for this program are currently closed."
+            )
+        return program
+
     def create(self, validated_data):
         academic_records_data = validated_data.pop('academic_records', [])
         passport = validated_data.pop('passport', None)

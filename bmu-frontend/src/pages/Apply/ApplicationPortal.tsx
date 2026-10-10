@@ -18,7 +18,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { validatePersonalInfo, validateAcademicInfo, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
-import { uploadApplicationDocument } from '../../services/api';
+import { uploadApplicationDocument, fetchApplyPrograms } from '../../services/api';
 import { useAuth } from '../../contexts/useAuth';
 
 // Step configuration
@@ -57,15 +57,23 @@ const programLevels = [
   { id: 'CERT', name: 'Certificate', description: 'Professional courses' }
 ];
 
-// Mock programs
-const programs = [
-  { id: 1, title: 'MBBS (Medicine & Surgery)', college: 'College of Medicine', duration: '6 years', level: 'UG', feeLocal: 15000, feeIntl: 100 },
-  { id: 2, title: 'BSc Nursing Science', college: 'College of Nursing', duration: '4 years', level: 'UG', feeLocal: 12000, feeIntl: 80 },
-  { id: 3, title: 'BSc Public Health', college: 'College of Public Health', duration: '4 years', level: 'UG', feeLocal: 12000, feeIntl: 80 },
-  { id: 4, title: 'BSc Medical Laboratory Science', college: 'College of Health Sciences', duration: '4 years', level: 'UG', feeLocal: 12000, feeIntl: 80 },
-  { id: 5, title: 'MSc Public Health', college: 'School of Public Health', duration: '2 years', level: 'PG', feeLocal: 25000, feeIntl: 150 },
-  { id: 6, title: 'PhD in Health Systems', college: 'School of Graduate Studies', duration: '3-5 years', level: 'PHD', feeLocal: 50000, feeIntl: 300 },
-];
+interface ApplyProgram {
+  id: number;
+  title: string;
+  level: 'UG' | 'PG' | 'PHD' | 'CERT';
+  duration: string;
+  college?: string;
+  feeLocal: number;
+  feeIntl: number;
+}
+
+const LEVEL_TO_TAB: Record<string, 'UG' | 'PG' | 'PHD' | 'CERT'> = {
+  undergraduate: 'UG',
+  masters: 'PG',
+  professional: 'PG',
+  phd: 'PHD',
+  certificate: 'CERT',
+};
 
 // Document requirements
 const requiredDocuments = [
@@ -104,13 +112,17 @@ const StudentTypeStep = ({ selected, onSelect }: { selected: string | null, onSe
 
 // Step 2: Program Selector
 const ProgramStep = ({ 
+  programs,
+  loading,
   studentType, 
   selected, 
   onSelect 
 }: { 
+  programs: ApplyProgram[],
+  loading?: boolean,
   studentType: string | null, 
-  selected: typeof programs[0] | null, 
-  onSelect: (program: typeof programs[0]) => void 
+  selected: ApplyProgram | null, 
+  onSelect: (program: ApplyProgram) => void 
 }) => {
   const [level, setLevel] = useState('UG');
   const [search, setSearch] = useState('');
@@ -154,6 +166,14 @@ const ProgramStep = ({
 
       {/* Programs List */}
       <div className="space-y-3 max-h-80 overflow-y-auto">
+        {loading && (
+          <p className="text-sm text-gray-500 py-6 text-center">Loading programs…</p>
+        )}
+        {!loading && filteredPrograms.length === 0 && (
+          <p className="text-sm text-gray-500 py-6 text-center">
+            No programs are currently open for this level.
+          </p>
+        )}
         {filteredPrograms.map((program) => (
           <button
             key={program.id}
@@ -664,7 +684,7 @@ const ReviewPayStep = ({
   isSubmitting,
   submitError
 }: { 
-  data: { studentType: string | null, program: typeof programs[0] | null, personal: PersonalInfoForm },
+  data: { studentType: string | null, program: ApplyProgram | null, personal: PersonalInfoForm },
   onSubmit: () => void,
   isSubmitting?: boolean,
   submitError?: string | null
@@ -749,7 +769,7 @@ const DRAFT_KEY = 'bmu_application_draft';
 
 interface ApplicationFormData {
   studentType: string | null;
-  program: (typeof programs)[number] | null;
+  program: ApplyProgram | null;
   personal: PersonalInfoForm;
   academicRecords: AcademicRecordForm[];
   documents: Record<string, File>;
@@ -790,6 +810,8 @@ export const ApplicationPortal = () => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [programs, setPrograms] = useState<ApplyProgram[]>([]);
+  const [programsLoading, setProgramsLoading] = useState(true);
   const savedDraft = loadDraft();
   const [formData, setFormData] = useState<ApplicationFormData>(() => savedDraft || {
     studentType: null,
@@ -800,6 +822,37 @@ export const ApplicationPortal = () => {
   });
 
   const progress = ((currentStep - 1) / (STEPS.length - 1)) * 100;
+
+  // Load the programs that are currently open for applications.
+  useEffect(() => {
+    let active = true;
+    fetchApplyPrograms()
+      .then((rows) => {
+        if (!active) return;
+        const mapped: ApplyProgram[] = rows.map((p) => ({
+          id: p.id,
+          title: p.title,
+          level: LEVEL_TO_TAB[p.level] || 'UG',
+          duration: p.duration,
+          college: p.college_name || undefined,
+          feeLocal: p.application_fee_local,
+          feeIntl: p.application_fee_intl,
+        }));
+        setPrograms(mapped);
+        // Drop a saved draft's program if it is no longer open.
+        setFormData((prev) =>
+          prev.program && !mapped.some((p) => p.id === prev.program!.id)
+            ? { ...prev, program: null }
+            : prev
+        );
+      })
+      .finally(() => {
+        if (active) setProgramsLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (user && (user.first_name || user.last_name || user.email || user.phone)) {
@@ -938,7 +991,7 @@ export const ApplicationPortal = () => {
         <meta name="description" content="Complete your application to Bayelsa Medical University. Multi-step application form for undergraduate, postgraduate, and professional programs." />
       </Helmet>
 
-      <div className="bg-gray-50 min-h-screen pt-28 pb-12">
+      <div className="bg-gray-50 min-h-screen pt-[180px] pb-12">
         <div className="container-custom max-w-4xl">
           {/* Header */}
           <div className="text-center mb-8">
@@ -999,6 +1052,8 @@ export const ApplicationPortal = () => {
                 
                 {currentStep === 2 && (
                   <ProgramStep 
+                    programs={programs}
+                    loading={programsLoading}
                     studentType={formData.studentType}
                     selected={formData.program}
                     onSelect={(program) => {

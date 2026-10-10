@@ -182,6 +182,28 @@ class ProgramListSchema(Schema):
     college_id: Optional[int] = None
     college_name: Optional[str] = None
     department_id: Optional[int] = None
+    applications_open: bool = True
+
+    @staticmethod
+    def resolve_college_name(obj):
+        return obj.college.name if obj.college else None
+
+
+class ApplyProgramSchema(Schema):
+    id: int
+    title: str
+    slug: str
+    degree: Optional[str] = None
+    level: str
+    level_display: Optional[str] = None
+    duration: str
+    college_name: Optional[str] = None
+    application_fee_local: float
+    application_fee_intl: float
+
+    @staticmethod
+    def resolve_level_display(obj):
+        return obj.get_level_display()
 
     @staticmethod
     def resolve_college_name(obj):
@@ -1082,14 +1104,28 @@ def get_college(request, slug: str):
 
 @public_router.get("/programs", response=List[ProgramListSchema])
 @paginate
-def list_programs(request, level: Optional[str] = None, college_id: Optional[int] = None):
+def list_programs(request, level: Optional[str] = None, college_id: Optional[int] = None,
+                  applications_open: Optional[bool] = None):
     """List programs with optional filtering"""
     qs = Program.objects.filter(is_active=True)
     if level:
         qs = qs.filter(level=level)
     if college_id:
         qs = qs.filter(college_id=college_id)
+    if applications_open is not None:
+        qs = qs.filter(applications_open=applications_open)
     return qs
+
+
+@public_router.get("/apply/programs", response=List[ApplyProgramSchema])
+def list_apply_programs(request):
+    """Programs currently open for applications (used by the apply flow)."""
+    return (
+        Program.objects
+        .filter(is_active=True, applications_open=True)
+        .select_related('college')
+        .order_by('display_order', 'title')
+    )
 
 
 @public_router.get("/programs/{slug}", response=ProgramDetailSchema)
@@ -6311,6 +6347,8 @@ def submit_application(request, data: ApplicationSubmitSchema):
     from academics.models import Program
 
     program = get_object_or_404(Program, id=data.program_id, is_active=True)
+    if not program.applications_open:
+        raise HttpError(400, "Applications for this program are currently closed.")
 
     from django.utils import timezone
     app = Application.objects.create(
