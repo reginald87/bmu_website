@@ -90,7 +90,9 @@ class ApplicationListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
-        return Application.objects.filter(applicant=self.request.user)
+        user = self.request.user
+        Application.claim_guest_applications(user)
+        return Application.objects.filter(applicant=user)
 
 
 class ApplicationDetailView(generics.RetrieveAPIView):
@@ -113,6 +115,7 @@ class ApplicationDetailView(generics.RetrieveAPIView):
 @permission_classes([permissions.IsAuthenticated])
 def user_pending_applications(request):
     """Get pending applications for the current user"""
+    Application.claim_guest_applications(request.user)
     applications = Application.objects.filter(
         applicant=request.user,
         status='draft'

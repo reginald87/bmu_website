@@ -490,3 +490,76 @@ class ApplicationOriginTests(TestCase):
         self.assertFalse(app.is_indigene)
         self.assertEqual(app.nationality, 'Ghana')
 
+
+class ApplicationAccountLinkTests(TestCase):
+    """Applications submitted while signed in belong to the applicant."""
+
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.program = make_program()
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username='jane', email='jane@example.com', password='testpass123',
+        )
+
+    def _payload(self, **overrides):
+        payload = {
+            'first_name': 'Jane', 'last_name': 'Doe',
+            'email': 'jane@example.com', 'phone': '08012345678',
+            'date_of_birth': '2000-01-01', 'gender': 'female',
+            'address': 'Yenagoa', 'program_id': self.program.id,
+            'student_type': 'LOCAL',
+        }
+        payload.update(overrides)
+        return payload
+
+    def _token(self):
+        from rest_framework_simplejwt.tokens import AccessToken
+        return str(AccessToken.for_user(self.user))
+
+    def test_submission_with_token_is_linked_to_account(self):
+        res = self.client.post(
+            '/api/public/applications', self._payload(), format='json',
+            HTTP_AUTHORIZATION=f'Bearer {self._token()}',
+        )
+        self.assertEqual(res.status_code, 200, res.content)
+        app = Application.objects.get(id=res.json()['id'])
+        self.assertEqual(app.applicant, self.user)
+
+    def test_guest_submission_has_no_owner(self):
+        res = self.client.post(
+            '/api/public/applications', self._payload(), format='json',
+        )
+        self.assertEqual(res.status_code, 200, res.content)
+        app = Application.objects.get(id=res.json()['id'])
+        self.assertIsNone(app.applicant)
+
+    def test_invalid_token_is_ignored(self):
+        res = self.client.post(
+            '/api/public/applications', self._payload(), format='json',
+            HTTP_AUTHORIZATION='Bearer not-a-real-token',
+        )
+        self.assertEqual(res.status_code, 200, res.content)
+        app = Application.objects.get(id=res.json()['id'])
+        self.assertIsNone(app.applicant)
+
+    def test_claim_guest_applications_links_by_email(self):
+        make_application(self.program, applicant=None, email='jane@example.com')
+        claimed = Application.claim_guest_applications(self.user)
+        self.assertEqual(claimed, 1)
+        self.assertTrue(
+            Application.objects.filter(applicant=self.user, status='submitted').exists()
+        )
+
+    def test_application_list_claims_guest_application(self):
+        make_application(self.program, applicant=None, email='jane@example.com')
+        res = self.client.get(
+            '/api/v1/admissions/applications/list/',
+            HTTP_AUTHORIZATION=f'Bearer {self._token()}',
+        )
+        self.assertEqual(res.status_code, 200, res.content)
+        self.assertEqual(len(res.json()), 1)
+        self.assertEqual(Application.objects.get().applicant, self.user)
+
+

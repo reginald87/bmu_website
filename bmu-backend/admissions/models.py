@@ -173,6 +173,21 @@ class Application(models.Model):
     def __str__(self):
         return f"{self.id} - {self.first_name} {self.last_name}"
 
+    @classmethod
+    def claim_guest_applications(cls, user):
+        """Attach guest applications (applicant=None) matching the user's email.
+
+        The public apply portal historically submitted applications without an
+        owner, so an applicant who applied before signing in would not see their
+        application. This links those records to the account on first access.
+        """
+        email = getattr(user, 'email', None)
+        if not getattr(user, 'is_authenticated', False) or not email:
+            return 0
+        return cls.objects.filter(
+            applicant__isnull=True, email__iexact=email
+        ).update(applicant=user)
+
 
 class AcademicRecord(models.Model):
     """Academic records for applications (SSCE, BSc, MSc, etc.)"""

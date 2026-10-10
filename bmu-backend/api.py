@@ -6312,6 +6312,28 @@ class AcademicRecordSchema(Schema):
     grade: Optional[str] = None
     subjects: Optional[List[SubjectSchema]] = None
 
+def _optional_auth_user(request):
+    """Resolve a signed-in user on public endpoints.
+
+    ``public_api`` is registered without an auth class, so ``request.user`` is
+    always anonymous there even when the client sends a Bearer token. Endpoints
+    that attach submitted records to an account resolve the user here so a
+    logged-in applicant's submission lands on their profile.
+    """
+    user = getattr(request, 'user', None)
+    if user is not None and getattr(user, 'is_authenticated', False):
+        return user
+    header = request.META.get('HTTP_AUTHORIZATION', '')
+    if not header.startswith('Bearer '):
+        return None
+    token = header.split(' ', 1)[1].strip()
+    try:
+        from ninja_auth import JWTAuth
+        return JWTAuth().authenticate(request, token)
+    except Exception:
+        return None
+
+
 class ApplicationSubmitSchema(Schema):
     first_name: str
     last_name: str
@@ -6372,7 +6394,7 @@ def submit_application(request, data: ApplicationSubmitSchema):
         lga=data.lga or '',
         previous_institution='',
         payment_currency='NGN',
-        applicant=request.user if request.user.is_authenticated else None,
+        applicant=_optional_auth_user(request),
     )
 
     for record_data in (data.academic_records or []):
