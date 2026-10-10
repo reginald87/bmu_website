@@ -105,6 +105,20 @@ else:
         },
     }
 
+# ── Cache ─────────────────────────────────────────────────────────────────────
+# DRF throttles rely on a shared cache so rate limits hold across workers.
+# When REDIS_URL is set (production) use Redis; otherwise keep per-process
+# local memory for development.
+CACHES = {
+    'default': {
+        'BACKEND': (
+            'django.core.cache.backends.redis.RedisCache' if REDIS_URL
+            else 'django.core.cache.backends.locmem.LocMemCache'
+        ),
+        'LOCATION': REDIS_URL if REDIS_URL else 'bmu-local-cache',
+    }
+}
+
 # ── Database ──────────────────────────────────────────────────────────────────
 DATABASES = {
     'default': {
@@ -157,6 +171,19 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'OPTIONS': {
+            'location': str(MEDIA_ROOT),
+            'base_url': MEDIA_URL,
+        },
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    },
+}
+
 # ── CORS ──────────────────────────────────────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
     origin.strip()
@@ -168,9 +195,17 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
+# CSRF origins (production origins come from the environment; dev origins are
+# added automatically when running in DEBUG).
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+    if origin.strip()
+]
+
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
-    CSRF_TRUSTED_ORIGINS = [
+    CSRF_TRUSTED_ORIGINS += [
         'http://localhost:5173', 'http://localhost:5174',
         'http://127.0.0.1:5173', 'http://127.0.0.1:5174',
     ]
@@ -209,6 +244,9 @@ EMAIL_BACKEND = os.getenv(
 )
 # Frontend origin used to build absolute links in outgoing emails
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+# Error-reporting recipients (comma-separated emails; empty in dev).
+ADMINS = [('BMU Admin', email.strip()) for email in os.getenv('ADMINS_EMAILS', '').split(',') if email.strip()]
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # Internal alerts (comma-separated). Applicant replies should go elsewhere.
 ADMISSIONS_OFFICE_EMAIL = os.getenv('ADMISSIONS_OFFICE_EMAIL', 'admissions@bmu.edu.ng')
 
@@ -228,6 +266,10 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 # ── Production Security Headers (only when not DEBUG) ─────────────────────────
 if not DEBUG:
+    # Serve static files from STATIC_ROOT (reverse proxy / CDN still handles media).
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    # Terminated-TLS at the reverse proxy.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SESSION_COOKIE_SECURE = True
@@ -308,33 +350,6 @@ JAZZMIN_SETTINGS = {
     "footer_fixed": False,
     "sidebar_fixed": True,
     "custom_css": "jazzmin/custom.css",
-}
-
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "title_small_text": False,
-    "body_small_text": False,
-    "inline_small_text": False,
-    "input_small_text": False,
-    "body_class": "bg-white",
-    "dark_mode_class": "",
-    "icon_color": "#A51C30",
-    "accent": "accent-red-700",
-    "primary": "primary",  # uses brand color below
-    "success": "success",  # #4c9f38 SDG green
-    "info": "info",
-    "warning": "warning",
-    "danger": "danger",   # #A51C30 brand red — used for errors/alerts
-    "primary_100": "#f8d7da",
-    "primary_200": "#f1aeb3",
-    "primary_300": "#ea858c",
-    "primary_400": "#e25c65",
-    "primary_500": "#A51C30",
-    "primary_600": "#821723",
-    "primary_700": "#5f0010",
-    "primary_800": "#3c0000",
-    "primary_900": "#1a0000",
 }
 
 # Custom CSS

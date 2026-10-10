@@ -1284,13 +1284,7 @@ def initialize_event_payment(request, data: PaymentInitializeInput):
     try:
         event = Event.objects.get(id=data.event_id, is_published=True)
     except Event.DoesNotExist:
-        mock_id = int(datetime.now().timestamp()) % 100000
-        return {
-            'authorization_url': f'/events?payment_demo=1&registration_id={mock_id}',
-            'access_code': 'demo_access_code',
-            'reference': f'EVT-{mock_id}-{int(datetime.now().timestamp())}',
-            'registration_id': mock_id,
-        }
+        raise HttpError(404, "Event not found")
 
     if not event.fee or event.fee <= 0:
         raise HttpError(400, "This event is free. Use /event-registrations instead.")
@@ -1306,13 +1300,15 @@ def initialize_event_payment(request, data: PaymentInitializeInput):
     )
 
     secret_key = settings.PAYSTACK_SECRET_KEY
-    if not secret_key or settings.PAYSTACK_TEST_MODE:
+    if settings.PAYSTACK_TEST_MODE:
         return {
             'authorization_url': f'/events/{event.slug}?payment_demo=1&registration_id={registration.id}',
             'access_code': 'demo_access_code',
             'reference': f'EVT-{registration.id}-{int(datetime.now().timestamp())}',
             'registration_id': registration.id,
         }
+    if not secret_key:
+        raise HttpError(503, "Payment gateway is not configured.")
 
     callback_url = request.build_absolute_uri(f'/events/{event.slug}?registration_id={registration.id}')
     payload = {
@@ -1375,24 +1371,7 @@ def verify_event_payment(request, reference: str):
     try:
         registration = EventRegistration.objects.get(payment_reference=reference)
     except EventRegistration.DoesNotExist:
-        return {
-            'status': 'success',
-            'message': 'Payment verified (demo mode)',
-            'registration': {
-                'id': int(datetime.now().timestamp()) % 100000,
-                'event_id': 0,
-                'name': '',
-                'email': '',
-                'status': 'registered',
-                'status_display': 'Registered',
-                'amount_paid': 0,
-                'payment_status': 'completed',
-                'payment_status_display': 'Completed',
-                'payment_reference': reference,
-                'paid_at': datetime.now().isoformat(),
-                'registered_at': datetime.now().isoformat(),
-            },
-        }
+        raise HttpError(404, "Registration not found")
 
     if registration.payment_status == 'completed':
         return {
@@ -1402,7 +1381,7 @@ def verify_event_payment(request, reference: str):
         }
 
     secret_key = settings.PAYSTACK_SECRET_KEY
-    if not secret_key or settings.PAYSTACK_TEST_MODE:
+    if settings.PAYSTACK_TEST_MODE:
         registration.payment_status = 'completed'
         registration.paid_at = timezone.now()
         registration.status = 'registered'
@@ -1413,6 +1392,8 @@ def verify_event_payment(request, reference: str):
             'message': 'Payment verified (demo mode)',
             'registration': registration,
         }
+    if not secret_key:
+        raise HttpError(503, "Payment verification unavailable: gateway is not configured.")
 
     headers = {'Authorization': f'Bearer {secret_key}'}
     response = http_requests.get(
