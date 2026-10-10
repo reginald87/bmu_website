@@ -461,7 +461,7 @@ hod_photo: response.data.hod_photo ?? null,
  </span>
  )}
  <Link 
- to={`/leadership/${member.id}`}
+ to={`/about/leadership/${member.id}`}
  className="text-small text-ink-900 font-medium hover:underline"
  >
  View Profile

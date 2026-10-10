@@ -442,16 +442,16 @@ export const Navbar = () => {
           <div className="pt-4 border-t border-gray-200">
             <h3 className="text-sm font-bold text-primary-600 uppercase tracking-wide mb-3">{t('nav.quickLinks')}</h3>
             <div className="space-y-2">
-              <Link to="/admissions" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/academics/admissions" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
                 {t('nav.academics_admissions')}
               </Link>
-              <Link to="/portal" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/portals" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
                 {t('nav.portals_student')}
               </Link>
-              <Link to="/staff" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/about/staff" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
                 {t('footer.resources_staffPortal')}
               </Link>
-              <Link to="/library" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/academics/library" className="block text-gray-600 hover:text-primary-600 transition text-sm" onClick={() => setIsMenuOpen(false)}>
                 {t('footer.resources_eLibrary')}
               </Link>
             </div>

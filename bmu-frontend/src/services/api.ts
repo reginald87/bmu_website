@@ -1327,6 +1327,23 @@ export const fetchCampusVideo = async (): Promise<CampusVideoData | null> => {
   return mockOrThrow('/public/campus-video', mock);
 };
 
+export interface FAQData {
+  id: number;
+  question: string;
+  answer: string;
+  category: string;
+  category_display: string;
+}
+
+export const fetchFAQs = async (category?: string): Promise<FAQData[]> => {
+  return fetchWithFallback(
+    '/public/faqs',
+    () => [] as FAQData[],
+    category ? { category } : undefined,
+    false
+  );
+};
+
 export interface AvailableCourse {
   id: number;
   code: string;

@@ -13,7 +13,7 @@ import {
 const quickLinks = [
  { icon: Home, label: 'Home', path: '/', description: 'Return to homepage' },
  { icon: Search, label: 'Search', path: '/search', description: 'Search our website' },
- { icon: MapPin, label: 'Sitemap', path: '/about', description: 'Browse our sections' },
+ { icon: MapPin, label: 'Sitemap', path: '/sitemap', description: 'Browse our sections' },
  { icon: HelpCircle, label: 'Contact', path: '/contact', description: 'Get assistance' }
 ];
 

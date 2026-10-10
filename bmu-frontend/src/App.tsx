@@ -111,6 +111,15 @@ const InnovationCentre = lazyNamed('InnovationCentre', () => import('./pages/Cen
 // Archive & Other
 const ArchivePage = lazyNamed('ArchivePage', () => import('./pages/Archive/Archive'));
 const SiteAnnouncements = lazyNamed('SiteAnnouncements', () => import('./pages/More/Announcements'));
+const FAQPage = lazyNamed('FAQPage', () => import('./pages/More/FAQPage'));
+const PrivacyPolicy = lazyNamed('PrivacyPolicy', () => import('./pages/More/LegalPages'));
+const TermsOfUse = lazyNamed('TermsOfUse', () => import('./pages/More/LegalPages'));
+const SitemapPage = lazyNamed('SitemapPage', () => import('./pages/More/LegalPages'));
+
+// College sub-pages
+const CollegeSectionPage = lazy(() =>
+  import('./pages/Colleges/CollegeSectionPage').then((m) => ({ default: m.CollegeSectionPage }))
+);
 
 // Pages - Portals
 const HODApproval = lazyNamed('HODApproval', () => import('./pages/Portals/ApprovalPages'));
@@ -239,6 +248,10 @@ function App() {
 
                       <Route path="archive" element={<ArchivePage />} />
                       <Route path="announcements" element={<SiteAnnouncements />} />
+                      <Route path="faq" element={<FAQPage />} />
+                      <Route path="privacy" element={<PrivacyPolicy />} />
+                      <Route path="terms" element={<TermsOfUse />} />
+                      <Route path="sitemap" element={<SitemapPage />} />
 
                       <Route path="centres/career" element={<CareerCentre />} />
                       <Route path="careers/jobs" element={<JobBoard />} />
@@ -248,9 +261,9 @@ function App() {
 
                       <Route path="colleges/:collegeSlug" element={<CollegeLayout />}>
                         <Route index element={<CollegeDetail />} />
-                        <Route path="programs" element={<div>College Programs</div>} />
-                        <Route path="faculty" element={<div>College Faculty</div>} />
-                        <Route path="research" element={<div>College Research</div>} />
+                        <Route path="programs" element={<CollegeSectionPage section="programs" />} />
+                        <Route path="faculty" element={<CollegeSectionPage section="faculty" />} />
+                        <Route path="research" element={<CollegeSectionPage section="research" />} />
                       </Route>
 
                       {/* Portal routes (non-student) */}

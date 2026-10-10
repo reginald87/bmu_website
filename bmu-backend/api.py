@@ -59,6 +59,7 @@ from content.models import (
     InnovationProgram, InnovationProgramImage, UniversityProject, UniversityProjectImage,
     AboutPage, HistoryPage, VisionMissionPage, GovernancePage,
     Announcement, MenuItem, UtilityLink,
+    FAQ,
     PageSection, PortalDefinition, CentrePage, ArchivedContent, InstitutePage,
     MediaAsset, ContactInfo,
 )
@@ -2750,6 +2751,23 @@ def get_campus_video(request):
     """Get the active campus life video for the VideoShowcase section"""
     video = CampusVideo.objects.filter(is_active=True).order_by('display_order').first()
     return video
+
+
+class FAQSchema(Schema):
+    id: int
+    question: str
+    answer: str
+    category: str
+    category_display: str = Field(alias="get_category_display")
+
+
+@public_router.get("/faqs", response=List[FAQSchema])
+def list_faqs(request, category: Optional[str] = None):
+    """List published FAQs, optionally filtered by category"""
+    qs = FAQ.objects.filter(is_active=True).order_by('display_order', 'id')
+    if category:
+        qs = qs.filter(category=category)
+    return qs
 
 
 @public_router.get("/gallery", response=List[GalleryImageSchema])

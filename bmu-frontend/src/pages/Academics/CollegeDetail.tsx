@@ -266,7 +266,7 @@ export const CollegeDetail = () => {
                   )}
                   <p className="text-white/60 text-sm mt-4">{college.provost_title}</p>
                   <Link
-                    to={college.provost_id ? `/leadership/${college.provost_id}` : '#'}
+                    to={college.provost_id ? `/about/leadership/${college.provost_id}` : '#'}
                     className="text-white font-bold text-lg hover:underline block mt-1"
                   >
                     {college.provost_name}
