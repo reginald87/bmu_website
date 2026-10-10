@@ -20,29 +20,35 @@ export const ForeignLanguages = () => {
  <meta name="description" content="Institute of Foreign Languages at Bayelsa Medical University - Learn French, Spanish, German and more" />
  </Helmet>
 
- <section className="pt-[180px] pb-12 bg-ink-900">
- <div className="container-custom">
- <motion.div
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- className="relative z-10"
- >
- {/* Breadcrumb */}
- <div className="flex items-center gap-2 text-white/60 text-sm mb-6">
- <Link to="/" className="hover:text-white transition">Home</Link>
- <span>/</span>
- <span className="text-white">Institute of Foreign Languages</span>
- </div>
+  <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
+    <div
+      className="absolute inset-0 opacity-5"
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
+      }}
+    />
+    <div className="container-custom relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-white/60 text-sm mb-6">
+          <Link to="/" className="hover:text-white transition">Home</Link>
+          <span>/</span>
+          <span className="text-white font-medium">Institute of Foreign Languages</span>
+        </div>
 
- <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
- Institute of Foreign Languages
- </h1>
- <p className="text-xl text-white/80">
- Opening Global Opportunities Through Language Proficiency
- </p>
- </motion.div>
- </div>
- </section>
+        <h1 className="text-display text-white mb-6">
+          Institute of <span className="text-primary-600">Foreign Languages</span>
+        </h1>
+        <p className="text-lead text-white/80 max-w-2xl">
+          Opening Global Opportunities Through Language Proficiency
+        </p>
+      </motion.div>
+    </div>
+  </section>
 
  <div className="container-custom py-12">
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
