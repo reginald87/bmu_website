@@ -1,7 +1,43 @@
+import io
+import os
+import posixpath
+
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.db import models
 from django.conf import settings
-from django.conf import settings
 from django.utils import timezone
+from PIL import Image, ImageOps
+
+# Gallery image processing limits
+GALLERY_THUMBNAIL_MAX = 600
+GALLERY_IMAGE_MAX = 2000
+
+
+def _reencode_image(file_obj, max_dim, force=False):
+    """Return a re-encoded JPEG ContentFile with the longest edge capped at
+    ``max_dim`` (aspect ratio preserved). Fixes EXIF orientation, flattens
+    transparency onto white, and returns ``None`` when nothing changed."""
+    img = Image.open(file_obj)
+    img.load()
+    img = ImageOps.exif_transpose(img)
+    has_alpha = img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info)
+    needs_work = force or has_alpha or max(img.size) > max_dim
+    if not needs_work:
+        return None
+    if has_alpha:
+        img = img.convert('RGBA')
+    if has_alpha:
+        background = Image.new('RGB', img.size, (255, 255, 255))
+        background.paste(img, mask=img.split()[-1])
+        img = background
+    elif img.mode != 'RGB':
+        img = img.convert('RGB')
+    if max(img.size) > max_dim:
+        img.thumbnail((max_dim, max_dim), Image.LANCZOS)
+    buf = io.BytesIO()
+    img.save(buf, format='JPEG', quality=88, optimize=True)
+    return ContentFile(buf.getvalue())
 
 
 class NewsItem(models.Model):
@@ -444,6 +480,51 @@ class GalleryImage(models.Model):
 
     def __str__(self):
         return self.title
+
+    @staticmethod
+    def _thumb_name(original_name):
+        base = os.path.splitext(os.path.basename(original_name))[0]
+        return f"{base}_thumb.jpg"
+
+    def _reprocess_images(self, force=False):
+        """Regenerate the thumbnail and downscale oversized originals.
+
+        Uses deterministic file names so re-running never accumulates
+        duplicate files. The thumbnail is stored under ``<original>_thumb.jpg``
+        in the thumbnail upload directory; oversized originals are rewritten
+        in place at their existing storage path.
+        """
+        if not self.image:
+            return
+        with self.image.open('rb') as f:
+            thumb = _reencode_image(f, GALLERY_THUMBNAIL_MAX, force=True)
+        thumb_path = posixpath.join('gallery', 'thumbnails', self._thumb_name(self.image.name))
+        if self.thumbnail.name != thumb_path:
+            self.thumbnail.delete(save=False)
+        if default_storage.exists(thumb_path):
+            default_storage.delete(thumb_path)
+        self.thumbnail.save(posixpath.basename(thumb_path), thumb, save=False)
+
+        with self.image.open('rb') as f:
+            original = _reencode_image(f, GALLERY_IMAGE_MAX, force)
+        if original is not None and self.image.name:
+            original.seek(0)
+            with default_storage.open(self.image.name, 'wb') as out:
+                while True:
+                    chunk = original.read(65536)
+                    if not chunk:
+                        break
+                    out.write(chunk)
+
+    def save(self, *args, **kwargs):
+        force = kwargs.pop('force', False)
+        super().save(*args, **kwargs)
+        if self.image:
+            # Process after the file has been committed to storage so each
+            # open() gets an independent handle (closing one must not
+            # invalidate the original upload).
+            self._reprocess_images(force=force)
+            super().save(update_fields=['image', 'thumbnail'])
 
 
 class HeroSlide(models.Model):

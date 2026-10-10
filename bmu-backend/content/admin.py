@@ -75,6 +75,29 @@ class GalleryImageAdmin(admin.ModelAdmin):
     list_filter = ['category', 'is_published', 'is_featured']
     search_fields = ['title', 'description', 'photographer', 'location']
     list_editable = ['display_order', 'is_published', 'is_featured']
+    readonly_fields = ['thumbnail_preview', 'created_at', 'updated_at']
+    fieldsets = [
+        ('Image', {'fields': ['image', 'thumbnail', 'thumbnail_preview']}),
+        ('Details', {'fields': ['title', 'description', 'category']}),
+        ('Metadata', {'fields': ['event_date', 'photographer', 'location']}),
+        ('Display', {'fields': ['display_order', 'is_published', 'is_featured']}),
+    ]
+
+    @admin.display(description='Preview')
+    def thumbnail_preview(self, obj):
+        from django.utils.html import format_html
+
+        if not obj.pk:
+            return format_html('<span class="help">Save the image to generate a thumbnail.</span>')
+        url = obj.thumbnail.url if obj.thumbnail else (obj.image.url if obj.image else None)
+        if not url:
+            return '-'
+        return format_html(
+            '<img src="{}" style="max-height:220px;max-width:320px;'
+            'border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25);" alt="{}" />',
+            url,
+            obj.title,
+        )
 
 
 @admin.register(ContactEnquiry)

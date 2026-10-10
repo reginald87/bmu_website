@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Loader2, Image as ImageIcon, Calendar, User, Download } from 'lucide-react';
+import { ChevronRight, Loader2, Image as ImageIcon, Calendar, User, Download, Expand } from 'lucide-react';
 import { useGalleryImages } from '../../services/apiHooks';
 import { downloadGalleryImage } from '../../services/api';
+import { GalleryLightbox } from '../../components/GalleryLightbox';
 
 export const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const { data: images = [], isLoading, error } = useGalleryImages();
 
   const categories = ['all', ...Array.from(new Set(images.filter(img => img.category).map(img => img.category) as string[]))];
@@ -103,7 +105,8 @@ export const Gallery = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05 }}
-                  className="group relative bg-white overflow-hidden shadow-sm transition-all"
+                  className="group relative bg-white overflow-hidden shadow-sm transition-all cursor-zoom-in"
+                  onClick={() => setLightboxIndex(index)}
                 >
                   <div className="aspect-square overflow-hidden">
                     <img loading="lazy" decoding="async"
@@ -114,13 +117,22 @@ export const Gallery = () => {
                   </div>
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); downloadGalleryImage(image.id, image.title); }}
-                      className="absolute top-3 right-3 p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors"
-                      title="Download image"
-                    >
-                      <Download className="w-4 h-4 text-white" />
-                    </button>
+                    <div className="absolute top-3 right-3 flex items-center gap-2">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setLightboxIndex(index); }}
+                        className="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors"
+                        title="View image"
+                      >
+                        <Expand className="w-4 h-4 text-white" />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); downloadGalleryImage(image.id, image.title); }}
+                        className="p-2 bg-white/20 hover:bg-white/40 rounded-full transition-colors"
+                        title="Download image"
+                      >
+                        <Download className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
                     <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                       <h3 className="font-semibold text-sm mb-1">{image.title}</h3>
                       {image.description && (
@@ -156,6 +168,13 @@ export const Gallery = () => {
           )}
         </div>
       </section>
+
+      <GalleryLightbox
+        images={filteredImages}
+        index={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onNavigate={setLightboxIndex}
+      />
     </>
   );
 };
