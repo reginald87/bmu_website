@@ -52,25 +52,33 @@ export const CPDCentre = () => {
  <meta name="description" content="Continuing Professional Development Centre at BMU - Lifelong learning for healthcare professionals" />
  </Helmet>
 
- <div className="bg-ink-900 text-white py-16">
- <div className="container-custom">
- <motion.h1 
- initial={{ opacity: 0, y: 20 }}
+ <section className="relative pt-[180px] pb-20 overflow-hidden" style={{ backgroundColor: 'var(--color-ink-900)' }}>
+ <div
+ className="absolute inset-0 opacity-5"
+ style={{
+ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
+ }}
+ />
+ <div className="container-custom relative z-10">
+ <motion.div
+ initial={{ opacity: 0, y: 30 }}
  animate={{ opacity: 1, y: 0 }}
- className="text-4xl md:text-5xl font-bold mb-4"
+ transition={{ duration: 0.6 }}
  >
- CPD Centre
- </motion.h1>
- <motion.p 
- initial={{ opacity: 0, y: 20 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: 0.1 }}
- className="text-xl text-white/80"
- >
+ <div className="flex items-center gap-2 text-white/60 text-sm mb-6">
+ <Link to="/" className="hover:text-white transition">Home</Link>
+ <span>/</span>
+ <span className="text-white font-medium">CPD Centre</span>
+ </div>
+ <h1 className="text-display text-white mb-6">
+ CPD <span className="text-primary-600">Centre</span>
+ </h1>
+ <p className="text-lead text-white/80 max-w-2xl">
  Continuing Professional Development for Healthcare Excellence
- </motion.p>
+ </p>
+ </motion.div>
  </div>
- </div>
+ </section>
 
  <div className="container-custom py-12">
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
