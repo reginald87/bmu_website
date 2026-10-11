@@ -22,6 +22,7 @@ import {
   Heart
 } from 'lucide-react';
 import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
+import { NewsletterForm } from '../../components/common/NewsletterForm';
 
 interface Article {
  id: number;
@@ -332,10 +333,7 @@ export const NewsDetail = () => {
  className="mt-8 bg-white p-8 shadow-sm"><div className="flex items-start gap-4"><div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center flex-shrink-0"><User className="w-8 h-8 text-ink-900"/></div><div><h3 className="font-bold text-gray-900">{article.author.name}</h3><p className="text-ink-900 text-sm mb-2">{article.author.role}</p><p className="text-gray-600 text-sm">{article.author.bio}</p></div></div></motion.div>
 
  {/* Newsletter CTA */}
- <div className="mt-8 bg-gradient-to-r from-ink-900 to-primary-600 p-8 text-white"><div className="flex flex-col md:flex-row items-center gap-6"><div className="flex-1"><h3 className="text-xl font-bold mb-2">Never Miss an Update</h3><p className="text-white/80">Subscribe to our newsletter for the latest news, events, and announcements from BMU.</p></div><div className="flex gap-2 w-full md:w-auto"><input
- type="email" placeholder="Your email" className="flex-1 md:w-48 px-4 py-3 text-gray-900"/><button className="px-6 py-3 bg-primary-600 text-white font-bold hover:bg-white hover:text-ink-900 transition whitespace-nowrap">
- Subscribe
- </button></div></div></div></div>
+ <div className="mt-8 bg-gradient-to-r from-ink-900 to-primary-600 p-8 text-white"><div className="flex flex-col md:flex-row items-center gap-6"><div className="flex-1"><h3 className="text-xl font-bold mb-2">Never Miss an Update</h3><p className="text-white/80">Subscribe to our newsletter for the latest news, events, and announcements from BMU.</p></div><NewsletterForm variant="dark" source="news-detail" className="w-full md:w-auto" placeholder="Your email" /></div></div></div>
 
  {/* Sidebar */}
  <div className="lg:col-span-1"><div className="sticky top-24 space-y-6">

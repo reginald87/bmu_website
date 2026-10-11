@@ -34,6 +34,8 @@ import {
   fetchUniversityProjects,
   fetchUniversityProjectById,
   submitContactEnquiry,
+  subscribeNewsletter,
+  submitJobApplication,
   submitApplication,
   checkApplicationStatus,
   fetchAcademicCalendar,
@@ -461,6 +463,19 @@ export function useFundingStats() {
 export function useSubmitContactEnquiry() {
   return useMutation({
     mutationFn: submitContactEnquiry,
+  });
+}
+
+export function useSubscribeNewsletter() {
+  return useMutation({
+    mutationFn: subscribeNewsletter,
+  });
+}
+
+export function useSubmitJobApplication() {
+  return useMutation({
+    mutationFn: ({ jobId, data }: { jobId: number; data: Parameters<typeof submitJobApplication>[1] }) =>
+      submitJobApplication(jobId, data),
   });
 }
 

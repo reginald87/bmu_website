@@ -18,7 +18,7 @@ from .models import (
     GovernancePage, GovernanceBody, GovernanceCommittee, GovernancePolicy,
     Announcement, MenuItem, UtilityLink,
     PageSection, PortalDefinition, CentrePage, ArchivedContent, InstitutePage, MediaAsset,
-    ContactInfo,
+    ContactInfo, NewsletterSubscriber,
 )
 
 
@@ -67,6 +67,15 @@ class FAQAdmin(admin.ModelAdmin):
     list_display = ['question', 'category', 'is_active', 'display_order']
     list_filter = ['category', 'is_active']
     search_fields = ['question', 'answer']
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ['email', 'full_name', 'source', 'is_active', 'created_at']
+    list_filter = ['is_active', 'source']
+    search_fields = ['email', 'full_name']
+    list_editable = ['is_active']
+    readonly_fields = ['created_at', 'updated_at']
 
 
 @admin.register(GalleryImage)

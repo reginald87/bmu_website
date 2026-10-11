@@ -59,7 +59,7 @@ from content.models import (
     InnovationProgram, InnovationProgramImage, UniversityProject, UniversityProjectImage,
     AboutPage, HistoryPage, VisionMissionPage, GovernancePage,
     Announcement, MenuItem, UtilityLink,
-    FAQ,
+    FAQ, NewsletterSubscriber,
     PageSection, PortalDefinition, CentrePage, ArchivedContent, InstitutePage,
     MediaAsset, ContactInfo,
 )
@@ -1840,6 +1840,145 @@ def list_jobs(request):
         status='published',
         application_deadline__gte=timezone.now().date()
     )
+
+
+class NewsletterSubscribeSchema(Schema):
+    email: str
+    full_name: Optional[str] = None
+    source: Optional[str] = None
+
+
+class NewsletterSubscribeResultSchema(Schema):
+    email: str
+    detail: str
+    subscribed: bool
+
+
+@public_router.post("/newsletter", response=NewsletterSubscribeResultSchema)
+@ratelimit('newsletter_subscribe', limit=5, window=60)
+def subscribe_newsletter(request, data: NewsletterSubscribeSchema):
+    """Subscribe an email address to the newsletter (idempotent)."""
+    from django.core.exceptions import ValidationError
+    from django.core.validators import validate_email
+
+    email = (data.email or '').strip().lower()
+    if not email:
+        raise HttpError(400, 'Email is required')
+    try:
+        validate_email(email)
+    except ValidationError:
+        raise HttpError(400, 'Enter a valid email address')
+
+    subscriber, created = NewsletterSubscriber.objects.get_or_create(
+        email=email,
+        defaults={
+            'full_name': (data.full_name or '').strip(),
+            'source': (data.source or 'website').strip() or 'website',
+        },
+    )
+    if not created and not subscriber.is_active:
+        subscriber.is_active = True
+        subscriber.save(update_fields=['is_active', 'updated_at'])
+
+    detail = 'Thanks for subscribing!' if created else 'You are already subscribed.'
+    return {'email': email, 'detail': detail, 'subscribed': True}
+
+
+class JobApplicationResultSchema(Schema):
+    id: int
+    reference: str
+    job_id: int
+    job_title: str
+    status: str
+    detail: str
+
+
+@public_router.post("/jobs/{job_id}/applications", response=JobApplicationResultSchema)
+@ratelimit('job_application', limit=5, window=60)
+def submit_job_application(request, job_id: int):
+    """Submit a job application (multipart form with a resume file)."""
+    from careers.models import JobApplication
+    from core.email import send_templated_email
+
+    job = JobPosting.objects.filter(id=job_id).first()
+    if job is None:
+        raise HttpError(404, 'Job posting not found')
+    if not job.is_open:
+        raise HttpError(400, 'Applications for this position are closed')
+
+    def field(name):
+        return (request.POST.get(name) or '').strip()
+
+    required = {
+        'first_name': field('first_name'),
+        'last_name': field('last_name'),
+        'email': field('email'),
+        'phone': field('phone'),
+        'highest_qualification': field('highest_qualification'),
+        'cover_letter': field('cover_letter'),
+    }
+    missing = [key for key, value in required.items() if not value]
+    if missing:
+        raise HttpError(400, 'Missing required field(s): ' + ', '.join(missing))
+
+    resume = request.FILES.get('resume')
+    if resume is None:
+        raise HttpError(400, 'A resume/CV file is required')
+
+    years_raw = re.sub(r'\D', '', field('years_of_experience'))
+    try:
+        years_of_experience = int(years_raw) if years_raw else 0
+    except ValueError:
+        years_of_experience = 0
+
+    application = JobApplication.objects.create(
+        job=job,
+        first_name=required['first_name'],
+        last_name=required['last_name'],
+        email=required['email'],
+        phone=required['phone'],
+        address=field('address'),
+        city=field('city'),
+        state=field('state'),
+        country=field('country') or 'Nigeria',
+        highest_qualification=required['highest_qualification'],
+        years_of_experience=years_of_experience,
+        current_employer=field('current_employer') or None,
+        current_position=field('current_position') or None,
+        resume=resume,
+        cover_letter=required['cover_letter'],
+        linkedin_url=field('linkedin') or None,
+        portfolio_url=field('portfolio') or None,
+    )
+    job.applications_count = (job.applications_count or 0) + 1
+    job.save(update_fields=['applications_count'])
+
+    reference = f'JOB-{application.id:05d}'
+    send_templated_email(
+        subject=f'Application received — {job.title}',
+        template='acknowledgement',
+        context={
+            'university_name': 'Bayelsa Medical University',
+            'name': application.first_name,
+            'heading': 'Your application has been received',
+            'body': (f'Thank you for applying for the position of {job.title}. '
+                     'We have received your application and will review it; '
+                     'shortlisted candidates will be contacted directly.'),
+            'reference': reference,
+            'subject_line': job.title,
+            'contact_email': 'careers@bmu.edu.ng',
+        },
+        recipient_list=[application.email],
+    )
+
+    return {
+        'id': application.id,
+        'reference': reference,
+        'job_id': job.id,
+        'job_title': job.title,
+        'status': application.status,
+        'detail': 'Your application has been received.',
+    }
 
 
 @public_router.get("/library/books", response=List[BookSchema])

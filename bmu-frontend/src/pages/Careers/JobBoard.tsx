@@ -20,7 +20,7 @@ import {
   Upload,
   Loader2
 } from 'lucide-react';
-import { useJobs } from '../../services/apiHooks';
+import { useJobs, useSubmitJobApplication } from '../../services/apiHooks';
 import type { JobPostingData } from '../../services/mockData';
 
 const formatSalary = (min: number | null, max: number | null) => {
@@ -31,45 +31,72 @@ const formatSalary = (min: number | null, max: number | null) => {
   return `Up to ${fmt(max as number)}/year`;
 };
 
+const emptyApplication = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  qualification: '',
+  experience: '',
+  address: '',
+  city: '',
+  state: '',
+  coverLetter: '',
+  resume: null as File | null,
+};
+
 const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null; isOpen: boolean; onClose: () => void }) => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    qualification: '',
-    experience: '',
-    coverLetter: '',
-    resume: null as File | null
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({ ...emptyApplication });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  const submitApplication = useSubmitJobApplication();
 
   if (!isOpen || !job) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        qualification: '',
-        experience: '',
-        coverLetter: '',
-        resume: null
-      });
-      onClose();
-    }, 3000);
+    if (!formData.resume) {
+      setSubmitError('Please attach your resume/CV (PDF or DOCX).');
+      return;
+    }
+    setSubmitError('');
+    const yearsMatch = formData.experience.match(/\d+/);
+    submitApplication.mutate(
+      {
+        jobId: job.id,
+        data: {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          highest_qualification: formData.qualification,
+          years_of_experience: yearsMatch ? Number(yearsMatch[0]) : 0,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          cover_letter: formData.coverLetter,
+          resume: formData.resume,
+        },
+      },
+      {
+        onSuccess: () => {
+          setIsSubmitted(true);
+          setTimeout(() => {
+            setIsSubmitted(false);
+            setFormData({ ...emptyApplication });
+            onClose();
+          }, 3000);
+        },
+        onError: (error) => {
+          setSubmitError(
+            error instanceof Error
+              ? error.message
+              : 'Unable to submit your application right now. Please try again.'
+          );
+        },
+      }
+    );
   };
 
   return (
@@ -214,6 +241,43 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                   </div>
 
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Residential Address *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.address}
+                      onChange={(e) => setFormData({...formData, address: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
+                      placeholder="Street address"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.city}
+                        onChange={(e) => setFormData({...formData, city: e.target.value})}
+                        className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
+                        placeholder="City"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.state}
+                        onChange={(e) => setFormData({...formData, state: e.target.value})}
+                        className="w-full px-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
+                        placeholder="State"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Cover Letter *</label>
                     <div className="relative">
                       <FileText className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -230,7 +294,7 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Resume/CV *</label>
-                    <div className="border-2 border-dashed border-gray-300 p-6 text-center hover:border-ink-900 transition">
+                    <div className="relative border-2 border-dashed border-gray-300 p-6 text-center hover:border-ink-900 transition">
                       <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                       <p className="text-sm text-gray-600 mb-1">Drag and drop your resume here, or click to browse</p>
                       <p className="text-xs text-gray-400">PDF, DOCX up to 5MB</p>
@@ -246,6 +310,12 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                     )}
                   </div>
 
+                  {submitError && (
+                    <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-sm">
+                      {submitError}
+                    </div>
+                  )}
+
                   <div className="flex gap-4 pt-4">
                     <button
                       type="button"
@@ -256,12 +326,12 @@ const ApplicationModal = ({ job, isOpen, onClose }: { job: JobPostingData | null
                     </button>
                     <button
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={submitApplication.isPending}
                       className="flex-1 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition disabled:opacity-50 flex items-center justify-center gap-2"
                     >
-                      {isSubmitting ? (
+                      {submitApplication.isPending ? (
                         <>
-                          <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin" />
+                          <Loader2 className="w-5 h-5 animate-spin" />
                           Submitting...
                         </>
                       ) : (

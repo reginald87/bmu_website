@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useContactInfo } from '../../services/apiHooks';
+import { NewsletterForm } from './NewsletterForm';
 
 export const Footer = () => {
   const { t } = useTranslation();
@@ -128,20 +129,13 @@ export const Footer = () => {
               <h4 className="font-bold text-lg mb-1">{t('footer.newsletterTitle')}</h4>
               <p className="text-sm opacity-80">{t('footer.newsletterDescription')}</p>
             </div>
-            <form className="flex gap-2 w-full md:w-auto">
-              <input
-                type="email"
-                placeholder={t('footer.newsletterPlaceholder')}
-                aria-label={t('footer.newsletterPlaceholder')}
-                className="px-4 py-2 text-gray-800 w-full md:w-64"
-              />
-              <button
-                type="submit"
-                className="px-6 py-2 font-semibold bg-white text-primary-700 transition hover:bg-white/90"
-              >
-                {t('footer.newsletterSubscribe')}
-              </button>
-            </form>
+            <NewsletterForm
+              variant="dark"
+              source="footer"
+              className="w-full md:w-auto"
+              placeholder={t('footer.newsletterPlaceholder')}
+              buttonLabel={t('footer.newsletterSubscribe')}
+            />
           </div>
         </div>
       </div>

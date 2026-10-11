@@ -767,6 +767,65 @@ export const submitContactEnquiry = async (data: { name: string; email: string; 
   return response.data;
 };
 
+export interface NewsletterSubscribeInput {
+  email: string;
+  full_name?: string;
+  source?: string;
+}
+
+export interface NewsletterSubscribeResult {
+  email: string;
+  detail: string;
+  subscribed: boolean;
+}
+
+export const subscribeNewsletter = async (data: NewsletterSubscribeInput): Promise<NewsletterSubscribeResult> => {
+  const response = await apiClient.post('/public/newsletter', data);
+  return response.data;
+};
+
+export interface JobApplicationInput {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  highest_qualification: string;
+  years_of_experience: number;
+  cover_letter: string;
+  resume: File;
+  address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  linkedin?: string;
+  portfolio?: string;
+}
+
+export interface JobApplicationResult {
+  id: number;
+  reference: string;
+  job_id: number;
+  job_title: string;
+  status: string;
+  detail: string;
+}
+
+export const submitJobApplication = async (
+  jobId: number,
+  data: JobApplicationInput
+): Promise<JobApplicationResult> => {
+  const formData = new FormData();
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      formData.append(key, value as string | Blob);
+    }
+  });
+  const response = await apiClient.post(`/public/jobs/${jobId}/applications`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data;
+};
+
 export interface AcademicRecordPayload {
   institution: string;
   qualification: string;

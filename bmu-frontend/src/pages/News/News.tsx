@@ -17,6 +17,7 @@ import {
   FileText
 } from 'lucide-react';
 import { apiClient, ALLOW_API_MOCKS } from '../../services/api';
+import { NewsletterForm } from '../../components/common/NewsletterForm';
 
 interface NewsArticle {
   id: number;
@@ -342,9 +343,6 @@ export const News = () => {
           Stay Updated with BMU News
         </h3><p className="text-white/80 mb-6">
           Subscribe to our newsletter to receive the latest news, announcements, and updates directly in your inbox.
-        </p><div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"><input
-          type="email" placeholder="Enter your email" className="flex-1 px-4 py-3 text-gray-900 focus:ring-2 focus:ring-primary-600"/><button className="px-6 py-3 bg-primary-600 text-ink-900 font-bold hover:bg-white transition">
-          Subscribe
-        </button></div></div></div></section></div></div></>
+        </p><NewsletterForm variant="dark" source="news" className="max-w-md mx-auto" /></div></div></section></div></div></>
   );
 };
