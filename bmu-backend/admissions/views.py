@@ -548,6 +548,57 @@ def update_application_status(request, application_id):
     return Response(response_data)
 
 
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def accept_provisional_admission(request, application_id):
+    """Applicant accepts provisional admission offer."""
+    try:
+        application = Application.objects.get(id=application_id)
+    except Application.DoesNotExist:
+        return Response(
+            {'error': 'Application not found'},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    if application.applicant != request.user:
+        return Response(
+            {'error': 'You can only respond to your own application'},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    if application.status != 'accepted':
+        return Response(
+            {'error': 'Provisional admission can only be accepted for accepted applications'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    if application.provisional_admission_accepted:
+        return Response({'message': 'Provisional admission already accepted'})
+
+    application.accept_provisional_offer()
+
+    # Promote user to student if not already
+    user = application.applicant
+    if user and user.role != 'student':
+        user.role = 'student'
+        user.save(update_fields=['role'])
+    if user and hasattr(user, 'student_profile'):
+        profile = user.student_profile
+        if not profile.matriculated_at and not profile.matric_number:
+            # For UG, don't set matric; for PG/Cert it may already be set
+            pass
+        profile.save()
+
+    ApplicationMessage.objects.create(
+        application=application,
+        type='info',
+        text='Provisional admission offer accepted by applicant.',
+        from_name='System',
+    )
+
+    return Response({'message': 'Provisional admission accepted successfully'})
+
+
 class ApplicationUpdateView(generics.RetrieveUpdateAPIView):
     """Get or update application (applicant can edit when draft or revision_requested)"""
     queryset = Application.objects.all()

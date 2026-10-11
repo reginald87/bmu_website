@@ -33,6 +33,9 @@ urlpatterns = [
     # Submit
     path('applications/<str:application_id>/submit/', views.submit_application, name='application-submit'),
     
+    # Provisional admission acceptance
+    path('applications/<str:application_id>/accept-provisional/', views.accept_provisional_admission, name='accept-provisional-admission'),
+
     # Admin
     path('admin/applications/', views.ApplicationAdminListView.as_view(), name='application-admin-list'),
     path('admin/applications/<str:application_id>/status/', views.update_application_status, name='application-update-status'),

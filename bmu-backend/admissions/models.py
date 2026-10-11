@@ -97,6 +97,10 @@ class Application(models.Model):
         help_text="JAMB/UTME registration number, e.g. 202660304236IE (undergraduate applicants)",
     )
     
+    # Applicant's explicit acceptance of the provisional offer.
+    provisional_admission_accepted = models.BooleanField(default=False)
+    provisional_admission_accepted_at = models.DateTimeField(null=True, blank=True)
+
     # Academic Information - Removed single fields, use AcademicRecord for multiple
     # Keeping for backward compatibility if needed
     previous_institution = models.CharField(max_length=200, blank=True, null=True)
@@ -178,6 +182,19 @@ class Application(models.Model):
         if note is not None:
             self.revision_note = note
         self.save(update_fields=['revision_due_at', 'revision_note'])
+
+    def accept_provisional_offer(self):
+        """Mark provisional admission as accepted by the applicant."""
+        if not self.provisional_admission_accepted:
+            from django.utils import timezone
+
+            self.provisional_admission_accepted = True
+            self.provisional_admission_accepted_at = timezone.now()
+            self.save(update_fields=[
+                'provisional_admission_accepted',
+                'provisional_admission_accepted_at',
+                'updated_at',
+            ])
 
     def clear_revision(self):
         """Drop any pending revision window (on resubmit or status change)."""

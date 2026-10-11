@@ -111,6 +111,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'jamb_registration_number',
             'status', 'status_display', 'progress_percentage',
             'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
+            'provisional_admission_accepted', 'provisional_admission_accepted_at',
             'payment_status', 'payment_status_display',
             'payment_amount', 'payment_currency', 'payment_method', 'paid_at',
             'documents', 'steps', 'messages', 'academic_records',
@@ -236,8 +237,10 @@ class ApplicationStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = ['id', 'status', 'status_display', 'progress_percentage',
-                  'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
-                  'steps', 'submitted_at']
+            'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
+            'provisional_admission_accepted', 'provisional_admission_accepted_at',
+                  'provisional_admission_accepted', 'provisional_admission_accepted_at',
+            'steps', 'submitted_at']
 
 
 class ApplicationPaymentSerializer(serializers.Serializer):
