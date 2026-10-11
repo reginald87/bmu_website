@@ -124,7 +124,7 @@ export const ApplicationStatus = () => {
         <meta name="description" content="Check the status of your BMU application. Track your application progress from submission to final decision." />
       </Helmet>
 
-      <div className="bg-gray-50 min-h-screen pt-28 pb-12">
+      <div className="bg-gray-50 min-h-screen pt-[180px] pb-12">
         <div className="container-custom max-w-4xl">
           {/* Header */}
           <div className="text-center mb-8">
