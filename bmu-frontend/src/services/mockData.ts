@@ -2972,6 +2972,13 @@ export interface ApplicationData {
   status_display: string;
   progress_percentage: number;
   payment_status: string;
+  payment_amount?: number | null;
+  payment_currency?: string | null;
+  payment_method?: string | null;
+  payment_reference?: string | null;
+  paid_at?: string | null;
+  fee?: number | null;
+  fee_currency?: string | null;
   submitted_at: string | null;
 }
 

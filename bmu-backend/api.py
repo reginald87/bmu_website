@@ -6503,7 +6503,45 @@ class ApplicationStatusSchema(Schema):
     status_display: str
     progress_percentage: int
     payment_status: str
+    payment_amount: Optional[float] = None
+    payment_currency: Optional[str] = None
+    payment_method: Optional[str] = None
+    payment_reference: Optional[str] = None
+    paid_at: Optional[str] = None
+    fee: Optional[float] = None
+    fee_currency: Optional[str] = None
     submitted_at: Optional[str] = None
+
+
+def _application_fee(application):
+    """Return ``(amount, currency)`` for an application's programme fee."""
+    program = application.program
+    if application.student_type == 'INTL':
+        return program.application_fee_intl, 'USD'
+    return program.application_fee_local, 'NGN'
+
+
+def _finalize_application_payment(application):
+    """Mark an application's fee as paid and run the follow-up side effects."""
+    application.payment_status = 'completed'
+    application.paid_at = timezone.now()
+    application.save()
+
+    step = application.steps.filter(name='payment_verified').first()
+    if step:
+        step.status = 'completed'
+        step.completed_at = timezone.now()
+        step.save()
+
+    if application.status == 'draft':
+        application.status = 'submitted'
+        application.submitted_at = timezone.now()
+        application.save()
+        from admissions.emails import notify_application_submitted
+        notify_application_submitted(application)
+
+    from admissions.emails import send_payment_receipt
+    send_payment_receipt(application)
 
 @public_router.post("/applications", response=ApplicationStatusSchema)
 @ratelimit('application_submit', limit=5, window=60)
@@ -6555,6 +6593,7 @@ def submit_application(request, data: ApplicationSubmitSchema):
     from admissions.emails import notify_application_submitted
     notify_application_submitted(app)
 
+    fee, fee_currency = _application_fee(app)
     return {
         'id': app.id,
         'public_id': str(app.public_id),
@@ -6568,6 +6607,10 @@ def submit_application(request, data: ApplicationSubmitSchema):
         'status_display': app.get_status_display(),
         'progress_percentage': app.progress_percentage,
         'payment_status': 'pending',
+        'payment_amount': float(fee),
+        'payment_currency': fee_currency,
+        'fee': float(fee),
+        'fee_currency': fee_currency,
         'submitted_at': app.submitted_at.isoformat() if app.submitted_at else None,
     }
 
@@ -6599,6 +6642,7 @@ def get_application_status(request, application_id: str):
         raise HttpError(404, 'Application not found')
 
     status_display = dict(Application.STATUS_CHOICES).get(app.status, app.status)
+    fee, fee_currency = _application_fee(app)
     payload = {
         'id': app.id,
         'public_id': str(app.public_id),
@@ -6608,6 +6652,13 @@ def get_application_status(request, application_id: str):
         'status_display': status_display,
         'progress_percentage': app.progress_percentage,
         'payment_status': app.payment_status,
+        'payment_amount': float(app.payment_amount) if app.payment_amount is not None else None,
+        'payment_currency': app.payment_currency,
+        'payment_method': app.payment_method,
+        'payment_reference': app.payment_reference,
+        'paid_at': app.paid_at.isoformat() if app.paid_at else None,
+        'fee': float(fee),
+        'fee_currency': fee_currency,
         'submitted_at': app.submitted_at.isoformat() if app.submitted_at else None,
     }
     if expose_pii:
@@ -6618,6 +6669,26 @@ def get_application_status(request, application_id: str):
             'phone': app.phone,
         })
     return payload
+
+
+def _public_application(application_id: str):
+    """Resolve an application from its unguessable public_id (UUID).
+
+    Only the public_id is accepted: the sequential application id is
+    enumerable and must never authorise a public action.
+    """
+    import uuid as uuid_lib
+    from admissions.models import Application
+    from ninja.errors import HttpError
+
+    try:
+        pid = uuid_lib.UUID(str(application_id))
+    except (ValueError, AttributeError, TypeError):
+        raise HttpError(404, 'Application not found')
+    app = Application.objects.filter(public_id=pid).first()
+    if app is None:
+        raise HttpError(404, 'Application not found')
+    return app
 
 
 def _public_accepted_application(application_id: str):
@@ -6656,6 +6727,187 @@ def get_oath_form(request, application_id: str):
     """Download the statutory declaration / matriculation oath form (A4 PDF)."""
     from admissions import documents
     return documents.oath_form_response(_public_accepted_application(application_id))
+
+
+class ApplicationPaymentInitResponse(Schema):
+    authorization_url: str
+    access_code: str
+    reference: str
+
+
+@public_router.post(
+    "/applications/{application_id}/initialize-payment",
+    response=ApplicationPaymentInitResponse,
+)
+@ratelimit('application_pay_init', limit=10, window=60)
+def initialize_application_payment(request, application_id: str):
+    """Initialize a Paystack payment for an application's fee.
+
+    The unguessable ``public_id`` is required. The expected amount is derived
+    server-side from the programme fee so the client can never dictate it.
+    """
+    import requests as http_requests
+    from ninja.errors import HttpError
+
+    app = _public_application(application_id)
+    if app.payment_status == 'completed':
+        raise HttpError(400, 'This application has already been paid for.')
+
+    fee, currency = _application_fee(app)
+    reference = f'ADM-{app.id}-{int(datetime.now().timestamp())}'
+
+    app.payment_method = 'paystack'
+    app.payment_amount = fee
+    app.payment_currency = currency
+    app.payment_reference = reference
+    app.payment_status = 'pending'
+    app.save(update_fields=[
+        'payment_method', 'payment_amount', 'payment_currency',
+        'payment_reference', 'payment_status',
+    ])
+
+    if settings.PAYSTACK_TEST_MODE or (settings.DEBUG and not settings.PAYSTACK_SECRET_KEY):
+        return {
+            'authorization_url': '',
+            'access_code': 'demo_access_code',
+            'reference': reference,
+        }
+    if not settings.PAYSTACK_SECRET_KEY:
+        raise HttpError(503, 'Payment gateway is not configured.')
+
+    callback_url = (
+        f"{settings.FRONTEND_URL.rstrip('/')}/apply/status/{app.public_id}"
+        f'?reference={reference}'
+    )
+    payload = {
+        'email': app.email,
+        'amount': int(Decimal(str(fee)) * 100),
+        'reference': reference,
+        'callback_url': callback_url,
+        'currency': currency,
+        'metadata': {
+            'application_id': app.id,
+            'public_id': str(app.public_id),
+        },
+    }
+    headers = {
+        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
+        'Content-Type': 'application/json',
+    }
+    try:
+        response = http_requests.post(
+            'https://api.paystack.co/transaction/initialize',
+            json=payload,
+            headers=headers,
+            timeout=30,
+        )
+    except Exception:
+        raise HttpError(502, 'Unable to reach the payment gateway. Please try again.')
+
+    if response.status_code != 200:
+        raise HttpError(502, 'Payment gateway initialization failed')
+    result = response.json()
+    if not result.get('status'):
+        raise HttpError(502, result.get('message', 'Payment initialization failed'))
+
+    data = result['data']
+    return {
+        'authorization_url': data['authorization_url'],
+        'access_code': data['access_code'],
+        'reference': data['reference'],
+    }
+
+
+class ApplicationPaymentVerifyResponse(Schema):
+    status: str
+    message: str
+    payment_status: str
+    paid_at: Optional[str] = None
+
+
+@public_router.get(
+    "/applications/{application_id}/verify-payment",
+    response=ApplicationPaymentVerifyResponse,
+)
+@ratelimit('application_pay_verify', limit=30, window=60)
+def verify_application_payment(request, application_id: str, reference: str):
+    """Verify a Paystack payment and mark the application fee as paid."""
+    import requests as http_requests
+    from ninja.errors import HttpError
+
+    app = _public_application(application_id)
+
+    if app.payment_status == 'completed':
+        return {
+            'status': 'success',
+            'message': 'Payment already verified',
+            'payment_status': 'completed',
+            'paid_at': app.paid_at.isoformat() if app.paid_at else None,
+        }
+
+    if app.payment_reference != reference:
+        raise HttpError(400, 'Payment reference does not match this application.')
+
+    simulate = settings.PAYSTACK_TEST_MODE or (
+        settings.DEBUG and not settings.PAYSTACK_SECRET_KEY
+    )
+    if not simulate:
+        if not settings.PAYSTACK_SECRET_KEY:
+            raise HttpError(503, 'Payment verification unavailable: gateway is not configured.')
+        headers = {'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}'}
+        try:
+            response = http_requests.get(
+                f'https://api.paystack.co/transaction/verify/{reference}',
+                headers=headers,
+                timeout=30,
+            )
+        except Exception:
+            raise HttpError(502, 'Unable to verify payment with the gateway. Please try again.')
+        if response.status_code != 200:
+            raise HttpError(502, 'Payment verification failed')
+        result = response.json()
+        gw = result.get('data') or {}
+        if not result.get('status') or gw.get('status') != 'success':
+            app.payment_status = 'failed'
+            app.save(update_fields=['payment_status'])
+            return {
+                'status': 'failed',
+                'message': 'Payment verification failed',
+                'payment_status': 'failed',
+                'paid_at': None,
+            }
+
+        expected_kobo = int(Decimal(str(app.payment_amount or 0)) * 100)
+        if int(gw.get('amount') or 0) != expected_kobo:
+            app.payment_status = 'failed'
+            app.save(update_fields=['payment_status'])
+            return {
+                'status': 'failed',
+                'message': 'Payment amount does not match the application fee',
+                'payment_status': 'failed',
+                'paid_at': None,
+            }
+
+    _finalize_application_payment(app)
+    return {
+        'status': 'success',
+        'message': 'Payment verified successfully' if not simulate else 'Payment verified (demo mode)',
+        'payment_status': 'completed',
+        'paid_at': app.paid_at.isoformat() if app.paid_at else None,
+    }
+
+
+@public_router.get("/applications/{application_id}/receipt")
+@ratelimit('application_receipt', limit=20, window=60)
+def get_payment_receipt(request, application_id: str):
+    """Download the official payment receipt (A4 PDF) for a paid application."""
+    from admissions import documents
+    from ninja.errors import HttpError
+
+    app = _public_application(application_id)
+    if app.payment_status != 'completed':
+        raise HttpError(409, 'The receipt is only available after payment is completed.')
+    return documents.receipt_response(app)
 
 
 DOCUMENT_TYPE_CHOICES = [

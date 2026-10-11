@@ -23,6 +23,9 @@ urlpatterns = [
     # Admission documents (accepted applications only)
     path('applications/<str:application_id>/success-letter/', views.download_success_letter, name='application-success-letter'),
     path('applications/<str:application_id>/oath-form/', views.download_oath_form, name='application-oath-form'),
+
+    # Payment receipt (paid applications only)
+    path('applications/<str:application_id>/receipt/', views.download_payment_receipt, name='application-receipt'),
     
     # Payment
     path('applications/<str:application_id>/payment/', views.submit_application_payment, name='application-payment'),

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    @page {
+        size: A4 portrait;
+        margin: 15mm 16mm 18mm 16mm;
+    }
+
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #1f2933;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .watermark {
+        position: fixed;
+        top: 130mm;
+        left: 26mm;
+        opacity: 0.06;
+        font-size: 44px;
+        font-weight: bold;
+        color: #1c6b3c;
+    }
+
+    .header td {
+        vertical-align: middle;
+    }
+
+    .crest {
+        width: 74px;
+        height: 74px;
+    }
+
+    .uni-name {
+        font-size: 20px;
+        font-weight: bold;
+        color: #a51c30;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    .uni-sub {
+        font-size: 9px;
+        color: #52606d;
+        margin: 2px 0 0;
+    }
+
+    .uni-motto {
+        font-size: 9px;
+        font-style: italic;
+        color: #9aa5b1;
+        margin: 2px 0 0;
+    }
+
+    .rule {
+        border: 0;
+        border-top: 3px solid #a51c30;
+        margin: 8px 0 0;
+    }
+
+    .rule-thin {
+        border: 0;
+        border-top: 1px solid #cbd2d9;
+        margin: 2px 0 0;
+    }
+
+    .meta {
+        margin-top: 10px;
+        font-size: 10px;
+        color: #52606d;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        color: #1c6b3c;
+        letter-spacing: 1px;
+        margin: 16px 0 14px;
+        text-transform: uppercase;
+    }
+
+    p {
+        margin: 0 0 9px;
+        text-align: justify;
+    }
+
+    .details {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0 12px;
+    }
+
+    .details td {
+        border: 1px solid #cbd2d9;
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+
+    .details td.label {
+        background: #e6f3ec;
+        color: #334155;
+        font-weight: bold;
+        width: 46%;
+    }
+
+    .amount {
+        font-size: 16px;
+        font-weight: bold;
+        color: #1c6b3c;
+    }
+
+    .stamp {
+        margin-top: 14px;
+        padding: 8px 10px;
+        background: #e6f3ec;
+        border: 1px solid #1c6b3c;
+        color: #1c6b3c;
+        font-weight: bold;
+        text-align: center;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 10px;
+    }
+
+    .plain {
+        background: #fff8e6;
+        border-left: 3px solid #c69a2e;
+        padding: 7px 9px;
+        font-size: 9.5px;
+        color: #6b4e00;
+        margin: 10px 0;
+    }
+
+    .signature-name {
+        font-weight: bold;
+        color: #1f2933;
+    }
+
+    .signature-role {
+        color: #52606d;
+    }
+
+    .signature-line {
+        width: 190px;
+        border-top: 1px solid #1f2933;
+        margin-top: 34px;
+        padding-top: 3px;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 7.5px;
+        color: #9aa5b1;
+        border-top: 1px solid #e4e7eb;
+        padding-top: 3px;
+    }
+</style>
+</head>
+<body>
+
+<div class="watermark">PAYMENT RECEIPT</div>
+
+<table class="header" style="width:100%;">
+    <tr>
+        <td style="width:80px;">
+            {% if logo_data_uri %}<img class="crest" src="{{ logo_data_uri }}" alt="BMU">{% endif %}
+        </td>
+        <td style="text-align:center;">
+            <p class="uni-name">{{ university_name }}</p>
+            <p class="uni-sub">{{ university_address }}</p>
+            <p class="uni-sub">Office of the Bursar &bull; Admissions Office</p>
+            <p class="uni-sub">bursary@bmu.edu.ng &bull; admissions@bmu.edu.ng &bull; www.bmu.edu.ng</p>
+            <p class="uni-motto">&ldquo;{{ motto }}&rdquo;</p>
+        </td>
+        <td style="width:80px;"></td>
+    </tr>
+</table>
+<hr class="rule">
+<hr class="rule-thin">
+
+<table style="width:100%;" class="meta">
+    <tr>
+        <td style="text-align:left;">Receipt Ref: <b>{{ payment_reference }}</b></td>
+        <td style="text-align:right;">Date: <b>{{ issued_date_long }}</b></td>
+    </tr>
+</table>
+
+<div class="title">Official Payment Receipt</div>
+
+<p>Dear <b>{{ applicant_name }}</b>,</p>
+
+<p>
+    This receipt confirms that the application fee for your admission application to
+    {{ university_name }} has been received. Please retain it for your records.
+</p>
+
+<table class="details">
+    <tr><td class="label">Application ID</td><td>{{ reference }}</td></tr>
+    <tr><td class="label">Applicant</td><td>{{ applicant_name }}</td></tr>
+    <tr><td class="label">Programme of Study</td><td>{{ program_title }}{% if program_degree %} ({{ program_degree }}){% endif %}</td></tr>
+    <tr><td class="label">Student Category</td><td>{{ student_type }}</td></tr>
+    <tr><td class="label">Payment Method</td><td>{{ payment_method }}</td></tr>
+    <tr><td class="label">Transaction Reference</td><td>{{ payment_reference }}</td></tr>
+    <tr><td class="label">Date of Payment</td><td>{{ paid_at_long }}</td></tr>
+    <tr><td class="label">Payment Status</td><td>{{ payment_status }}</td></tr>
+    <tr>
+        <td class="label">Amount Paid</td>
+        <td class="amount">{{ currency }} {{ amount_display }}</td>
+    </tr>
+</table>
+
+{% if is_paid %}
+<div class="stamp">Paid in full &mdash; thank you</div>
+{% else %}
+<div class="plain">
+    This receipt was generated while the payment is still being confirmed. If the
+    status above does not read &ldquo;Completed&rdquo;, please contact the Bursary
+    before relying on this document.
+</div>
+{% endif %}
+
+<div class="closing" style="margin-top:16px;">
+    <div class="signature-line">
+        <span class="signature-name">Bursary Department</span><br/>
+        <span class="signature-role">for: The Bursar</span>
+    </div>
+</div>
+
+<div class="footer">
+    {{ university_name }} &mdash; Official Payment Receipt &mdash; Ref {{ reference }}
+    &mdash; Generated {{ generated_date|date:"d M Y" }}
+</div>
+
+</body>
+</html>

@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { validatePersonalInfo, validateAcademicInfo, validateApplicantOrigin, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
 import { NIGERIAN_STATES, getLgas } from '../../data/nigeriaLGAs';
-import { uploadApplicationDocument, fetchApplyPrograms } from '../../services/api';
+import { uploadApplicationDocument, fetchApplyPrograms, startAdmissionPayment } from '../../services/api';
 import { useAuth } from '../../contexts/useAuth';
 
 // Step configuration
@@ -1092,7 +1092,17 @@ export const ApplicationPortal = () => {
       await Promise.all(uploadPromises);
 
       clearDraft();
-      navigate(`/apply/status/${appKey}`);
+
+      // Start the application fee payment. A real gateway redirects the browser
+      // to Paystack; in demo/no-gateway mode we continue to the status page,
+      // which verifies the payment reference on load.
+      try {
+        const start = await startAdmissionPayment(appKey);
+        if (start.redirected) return;
+        navigate(`/apply/status/${appKey}?reference=${encodeURIComponent(start.reference)}`);
+      } catch {
+        navigate(`/apply/status/${appKey}`);
+      }
     } catch {
       setSubmitError('Failed to submit application. Please try again.');
     } finally {

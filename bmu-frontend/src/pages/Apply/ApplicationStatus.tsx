@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Search,
@@ -15,8 +15,12 @@ import {
   Download,
   type LucideIcon
 } from 'lucide-react';
-import { useApplicationStatus } from '../../services/apiHooks';
-import { downloadAdmissionDocument, type AdmissionDocumentKind } from '../../services/api';
+import { useApplicationStatus, useVerifyAdmissionPayment } from '../../services/apiHooks';
+import {
+  downloadAdmissionDocument,
+  startAdmissionPayment,
+  type AdmissionDocumentKind,
+} from '../../services/api';
 
 
 
@@ -43,11 +47,30 @@ const defaultStatusStyle: StatusStyle = statusConfig.draft;
 export const ApplicationStatus = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [searchId, setSearchId] = useState(id || '');
   const [downloadingDoc, setDownloadingDoc] = useState<AdmissionDocumentKind | null>(null);
   const [documentError, setDocumentError] = useState('');
+  const [payError, setPayError] = useState('');
+  const [isPaying, setIsPaying] = useState(false);
+  const verifiedRef = useRef(false);
   const applicationId = id || searchId;
-  const { data: application, isLoading, isError } = useApplicationStatus(applicationId || '');
+  const reference = searchParams.get('reference');
+  const { data: application, isLoading, isError, refetch } = useApplicationStatus(applicationId || '');
+  const verifyPayment = useVerifyAdmissionPayment();
+
+  // Returning from the Paystack gateway: verify the reference, then refresh.
+  useEffect(() => {
+    if (!reference || !applicationId || verifiedRef.current) return;
+    if (application?.payment_status === 'completed') return;
+    verifiedRef.current = true;
+    verifyPayment
+      .mutateAsync({ applicationId, reference })
+      .then(() => refetch())
+      .catch(() => {
+        /* leave the status as-is; the applicant can retry below */
+      });
+  }, [reference, applicationId, application?.payment_status, verifyPayment, refetch]);
 
   const handleSearch = () => {
     if (searchId) {
@@ -68,10 +91,30 @@ export const ApplicationStatus = () => {
     }
   };
 
+  const handlePayNow = async () => {
+    if (!application?.public_id) return;
+    setPayError('');
+    setIsPaying(true);
+    try {
+      const start = await startAdmissionPayment(application.public_id);
+      if (start.redirected) return;
+      await verifyPayment.mutateAsync({ applicationId: application.public_id, reference: start.reference });
+      await refetch();
+    } catch (err) {
+      setPayError(err instanceof Error ? err.message : 'Unable to start the payment. Please try again.');
+    } finally {
+      setIsPaying(false);
+    }
+  };
+
   const getStatusColor = (status: string): StatusStyle =>
     statusConfig[status] || defaultStatusStyle;
 
   const isPaid = application?.payment_status === 'paid' || application?.payment_status === 'completed';
+  const feeCurrency = application?.fee_currency || application?.payment_currency || 'NGN';
+  const feeLabel = application?.fee != null
+    ? `${feeCurrency === 'USD' ? '$' : '₦'}${Number(application.fee).toLocaleString()}`
+    : '';
 
   return (
     <>
@@ -226,14 +269,63 @@ export const ApplicationStatus = () => {
               {/* Payment Status */}
               <div className="bg-white shadow-sm p-6">
                 <h2 className="text-lg font-bold text-gray-900 mb-4">Payment Status</h2>
-                <div className={`inline-flex items-center gap-2 px-4 py-2 ${isPaid ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                  {isPaid ? (
-                    <CheckCircle className="w-5 h-5" />
-                  ) : (
-                    <Clock className="w-5 h-5" />
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className={`inline-flex items-center gap-2 px-4 py-2 ${isPaid ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                    {isPaid ? (
+                      <CheckCircle className="w-5 h-5" />
+                    ) : (
+                      <Clock className="w-5 h-5" />
+                    )}
+                    <span className="font-medium capitalize">{application.payment_status || 'pending'}</span>
+                  </div>
+                  {application.payment_amount != null && (
+                    <div className="text-sm text-gray-600">
+                      Amount: <span className="font-semibold text-gray-900">
+                        {application.payment_currency === 'USD' ? '$' : '₦'}
+                        {Number(application.payment_amount).toLocaleString()}
+                      </span>
+                    </div>
                   )}
-                  <span className="font-medium capitalize">{application.payment_status || 'pending'}</span>
+                  {application.payment_reference && (
+                    <div className="text-sm text-gray-600">
+                      Ref: <span className="font-mono text-gray-900">{application.payment_reference}</span>
+                    </div>
+                  )}
                 </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                  {isPaid ? (
+                    <button
+                      onClick={() => handleDocumentDownload('receipt')}
+                      disabled={downloadingDoc !== null}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 border border-ink-900 text-ink-900 font-medium hover:bg-ink-900 hover:text-white disabled:opacity-60 transition"
+                    >
+                      {downloadingDoc === 'receipt' ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Download className="w-4 h-4" />
+                      )}
+                      Download Payment Receipt
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handlePayNow}
+                      disabled={isPaying}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-ink-900 text-white font-medium hover:bg-ink-900/90 disabled:opacity-60 transition"
+                    >
+                      {isPaying ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Starting payment...
+                        </>
+                      ) : (
+                        `Pay Application Fee${feeLabel ? ` (${feeLabel})` : ''}`
+                      )}
+                    </button>
+                  )}
+                </div>
+                {payError && <p className="mt-3 text-sm text-red-600">{payError}</p>}
+                {documentError && <p className="mt-3 text-sm text-red-600">{documentError}</p>}
               </div>
 
               {/* Admission documents — only for accepted applications */}

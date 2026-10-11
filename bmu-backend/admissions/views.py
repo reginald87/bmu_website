@@ -636,3 +636,35 @@ def download_oath_form(request, application_id):
     if error:
         return error
     return documents.oath_form_response(application)
+
+
+def _paid_application_for(request, application_id):
+    """Resolve an application owned by the caller whose payment is completed."""
+    try:
+        application = Application.objects.get(id=application_id)
+    except Application.DoesNotExist:
+        return None, Response({'error': 'Application not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if application.applicant != request.user and not request.user.is_staff:
+        return None, Response(
+            {'error': "You don't have permission to access this application."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    if application.payment_status != 'completed':
+        return None, Response(
+            {'error': 'The receipt is only available after payment is completed.'},
+            status=status.HTTP_409_CONFLICT,
+        )
+
+    return application, None
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def download_payment_receipt(request, application_id):
+    """Download the official payment receipt (A4 PDF) for a paid application."""
+    application, error = _paid_application_for(request, application_id)
+    if error:
+        return error
+    return documents.receipt_response(application)

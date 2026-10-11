@@ -38,6 +38,8 @@ import {
   submitJobApplication,
   submitApplication,
   checkApplicationStatus,
+  initializeAdmissionPayment,
+  verifyAdmissionPayment,
   fetchAcademicCalendar,
   fetchAdmissionRequirements,
   fetchImportantDates,
@@ -482,6 +484,19 @@ export function useSubmitJobApplication() {
 export function useSubmitApplication() {
   return useMutation({
     mutationFn: submitApplication,
+  });
+}
+
+export function useInitializeAdmissionPayment() {
+  return useMutation({
+    mutationFn: (applicationId: string) => initializeAdmissionPayment(applicationId),
+  });
+}
+
+export function useVerifyAdmissionPayment() {
+  return useMutation({
+    mutationFn: ({ applicationId, reference }: { applicationId: string; reference: string }) =>
+      verifyAdmissionPayment(applicationId, reference),
   });
 }
 

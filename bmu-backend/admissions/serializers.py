@@ -179,14 +179,15 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = [
-            'id', 'first_name', 'last_name', 'email', 'phone',
+            'id', 'public_id', 'first_name', 'last_name', 'email', 'phone',
             'date_of_birth', 'gender', 'gender_display', 'address',
             'nationality', 'state_of_origin', 'lga', 'is_indigene',
             'student_type', 'student_type_display',
             'program', 'program_title',
             'status', 'status_display', 'progress_percentage',
             'payment_status', 'payment_status_display',
-            'payment_amount', 'payment_currency',
+            'payment_amount', 'payment_currency', 'payment_method',
+            'payment_reference', 'paid_at',
             'documents', 'steps', 'messages', 'academic_records',
             'created_at', 'updated_at', 'submitted_at'
         ]

@@ -77,6 +77,7 @@ interface EditForm {
 
 interface Application {
   id: string;
+  publicId?: string;
   program: string;
   programLevel: string;
   status: string;
@@ -95,6 +96,13 @@ interface Application {
   steps: ApplicationStep[];
   documents: ApplicationDocument[];
   messages: ApplicationMessage[];
+  paymentStatus: string;
+  paymentStatusDisplay: string;
+  paymentAmount?: number | null;
+  paymentCurrency?: string | null;
+  paymentMethod?: string | null;
+  paymentReference?: string | null;
+  paidAt?: string | null;
 }
 
 
@@ -501,6 +509,7 @@ const ApplicantDashboard = () => {
           // Convert API data to match frontend application structure
           apiApps = applicationsRes.data.map((app: Record<string, unknown>) => ({
             id: app.id as string,
+            publicId: (app.public_id as string) || undefined,
             program: app.program_title as string || '',
             programLevel: '',
             status: app.status as string || 'draft',
@@ -515,6 +524,13 @@ const ApplicantDashboard = () => {
             gender: app.gender_display as string || '',
             studentType: app.student_type_display as string || '',
             address: app.address as string || '',
+            paymentStatus: app.payment_status as string || 'pending',
+            paymentStatusDisplay: app.payment_status_display as string || 'Pending',
+            paymentAmount: (app.payment_amount as number) ?? null,
+            paymentCurrency: (app.payment_currency as string) || null,
+            paymentMethod: (app.payment_method as string) || null,
+            paymentReference: (app.payment_reference as string) || null,
+            paidAt: (app.paid_at as string) || null,
             academicRecords: (app.academic_records as AcademicRecord[]) || [],
             steps: ((app.steps || []) as ApplicationStep[]).map((s: ApplicationStep) => ({
               name: s.name_display || s.name,
@@ -756,6 +772,55 @@ const ApplicantDashboard = () => {
                     {downloadingDoc === 'oath-form' ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                     Statutory Declaration Form
                   </button>
+                </div>
+                {documentError && (
+                  <p className="mt-3 text-sm text-red-600">{documentError}</p>
+                )}
+              </div>
+            )}
+
+            {/* Payment */}
+            {application && (
+              <div className="bg-white shadow-sm border border-gray-100 p-6">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-bold text-gray-900">Application Fee</h3>
+                    <span
+                      className={`px-3 py-1 text-sm font-medium ${
+                        application.paymentStatus === 'completed'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}
+                    >
+                      {application.paymentStatusDisplay}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                    {application.paymentAmount != null && (
+                      <span>
+                        Amount:{' '}
+                        <span className="font-semibold text-gray-900">
+                          {application.paymentCurrency === 'USD' ? '$' : '₦'}
+                          {Number(application.paymentAmount).toLocaleString()}
+                        </span>
+                      </span>
+                    )}
+                    {application.paymentReference && (
+                      <span>
+                        Ref: <span className="font-mono text-gray-900">{application.paymentReference}</span>
+                      </span>
+                    )}
+                    {application.paymentStatus === 'completed' && (
+                      <button
+                        onClick={() => handleDocumentDownload('receipt')}
+                        disabled={downloadingDoc !== null}
+                        className="flex items-center justify-center gap-2 px-4 py-2 border border-ink-900 text-ink-900 font-medium hover:bg-ink-900 hover:text-white disabled:opacity-60 transition"
+                      >
+                        {downloadingDoc === 'receipt' ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                        Payment Receipt
+                      </button>
+                    )}
+                  </div>
                 </div>
                 {documentError && (
                   <p className="mt-3 text-sm text-red-600">{documentError}</p>

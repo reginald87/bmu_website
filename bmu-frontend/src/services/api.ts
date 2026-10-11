@@ -878,7 +878,13 @@ export const checkApplicationStatus = async (applicationId: string): Promise<App
   }
 };
 
-export type AdmissionDocumentKind = 'success-letter' | 'oath-form';
+export type AdmissionDocumentKind = 'success-letter' | 'oath-form' | 'receipt';
+
+const ADMISSION_DOCUMENT_FILENAMES: Record<AdmissionDocumentKind, string> = {
+  'success-letter': 'screening_success_letter',
+  'oath-form': 'statutory_declaration',
+  receipt: 'payment_receipt',
+};
 
 export const downloadAdmissionDocument = async (
   applicationId: string,
@@ -912,11 +918,65 @@ export const downloadAdmissionDocument = async (
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${kind === 'success-letter' ? 'screening_success_letter' : 'statutory_declaration'}_${applicationId}.pdf`;
+  link.download = `${ADMISSION_DOCUMENT_FILENAMES[kind]}_${applicationId}.pdf`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+};
+
+export interface AdmissionPaymentInitResult {
+  authorization_url: string;
+  access_code: string;
+  reference: string;
+}
+
+export interface AdmissionPaymentVerifyResult {
+  status: string;
+  message: string;
+  payment_status: string;
+  paid_at?: string | null;
+}
+
+export const initializeAdmissionPayment = async (
+  applicationId: string
+): Promise<AdmissionPaymentInitResult> => {
+  const response = await apiClient.post(
+    `/public/applications/${encodeURIComponent(applicationId)}/initialize-payment`
+  );
+  return response.data;
+};
+
+export const verifyAdmissionPayment = async (
+  applicationId: string,
+  reference: string
+): Promise<AdmissionPaymentVerifyResult> => {
+  const response = await apiClient.get(
+    `/public/applications/${encodeURIComponent(applicationId)}/verify-payment`,
+    { params: { reference } }
+  );
+  return response.data;
+};
+
+export interface AdmissionPaymentStart {
+  redirected: boolean;
+  reference: string;
+}
+
+/**
+ * Initialize an application fee payment. When a real gateway URL is returned
+ * the browser is redirected to Paystack; otherwise (demo/no gateway) the caller
+ * receives the reference so it can verify immediately.
+ */
+export const startAdmissionPayment = async (
+  applicationId: string
+): Promise<AdmissionPaymentStart> => {
+  const init = await initializeAdmissionPayment(applicationId);
+  if (init.authorization_url && /^https?:\/\//i.test(init.authorization_url)) {
+    window.location.assign(init.authorization_url);
+    return { redirected: true, reference: init.reference };
+  }
+  return { redirected: false, reference: init.reference };
 };
 
 export const fetchUniversityRankings = async (entryType?: string): Promise<UniversityRankingData[]> => {

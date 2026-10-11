@@ -134,3 +134,28 @@ def oath_form_response(application):
     context = build_context(application)
     filename = f'statutory_declaration_{application.id}.pdf'
     return _render_pdf('admissions/oath_form.html', context, filename)
+
+
+def receipt_context(application):
+    """Context for the payment receipt PDF."""
+    context = build_context(application)
+    paid_at = application.paid_at or timezone.now()
+    context.update({
+        'currency': application.payment_currency or 'NGN',
+        'amount_display': (
+            f'{application.payment_amount:,.2f}' if application.payment_amount else '0.00'
+        ),
+        'payment_method': application.get_payment_method_display() or 'Not specified',
+        'payment_reference': application.payment_reference or '—',
+        'payment_status': application.get_payment_status_display(),
+        'is_paid': application.payment_status == 'completed',
+        'paid_at': paid_at,
+        'paid_at_long': paid_at.strftime('%d %B %Y, %H:%M'),
+    })
+    return context
+
+
+def receipt_response(application):
+    context = receipt_context(application)
+    filename = f'payment_receipt_{application.id}.pdf'
+    return _render_pdf('admissions/payment_receipt.html', context, filename)
