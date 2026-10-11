@@ -1,4 +1,9 @@
+import axiosInstance from '../lib/axios';
 import axios from 'axios';
+
+// Backwards compatibility export
+export const apiClient = axiosInstance;
+
 import type {
   Program,
   Faculty,
@@ -139,92 +144,6 @@ export interface FacultyUnitData {
   student_count: number;
   is_standalone: boolean;
 }
-
-const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
-  timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('bmu_access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-let isRefreshing = false;
-let failedQueue: Array<{
-  resolve: (value: unknown) => void;
-  reject: (reason: unknown) => void;
-}> = [];
-
-const processQueue = (error: unknown, token: string | null = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
-  });
-  failedQueue = [];
-};
-
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    const url: string = originalRequest?.url || '';
-    const isAuthRequest =
-      url.includes('/auth/login') ||
-      url.includes('/token/refresh') ||
-      url.includes('/auth/register');
-    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRequest) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        }).then((token) => {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          return apiClient(originalRequest);
-        });
-      }
-      originalRequest._retry = true;
-      isRefreshing = true;
-      const refreshToken = localStorage.getItem('bmu_refresh_token');
-      if (refreshToken) {
-        try {
-          const res = await axios.post(
-            `${import.meta.env.VITE_API_URL || '/api'}/auth/token/refresh`,
-            { refresh: refreshToken }
-          );
-          const newAccess = res.data.access;
-          localStorage.setItem('bmu_access_token', newAccess);
-          if (res.data.refresh) {
-            localStorage.setItem('bmu_refresh_token', res.data.refresh);
-          }
-          processQueue(null, newAccess);
-          originalRequest.headers.Authorization = `Bearer ${newAccess}`;
-          return apiClient(originalRequest);
-        } catch (refreshError) {
-          processQueue(refreshError, null);
-          localStorage.removeItem('bmu_access_token');
-          localStorage.removeItem('bmu_refresh_token');
-          window.location.href = '/portals';
-          return Promise.reject(refreshError);
-        } finally {
-          isRefreshing = false;
-        }
-      } else {
-        isRefreshing = false;
-        window.location.href = '/portals';
-      }
-    }
-    return Promise.reject(error);
-  }
-);
 
 export const ALLOW_API_MOCKS =
   import.meta.env.DEV || import.meta.env.VITE_ALLOW_API_MOCKS === 'true';
@@ -1925,7 +1844,6 @@ export const lecturerApi = {
   },
 };
 
-export { apiClient };
 
 // ============================================================================
 // CHAT ADMIN API

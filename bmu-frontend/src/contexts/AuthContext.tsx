@@ -1,7 +1,9 @@
 import { createContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import axios from 'axios';
+import axiosInstance from '../lib/axios';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
+// axiosInstance is imported for its interceptors (auto-attaches Bearer token)
+void axiosInstance;
 
 export interface User {
   id: number;
@@ -71,7 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const tryRefresh = useCallback(async (refreshToken: string) => {
     try {
-      const res = await axios.post(`${API_URL}/auth/token/refresh`, {
+      const res = await axiosInstance.post(`${API_URL}/auth/token/refresh`, {
         refresh: refreshToken,
       });
       const newTokens: AuthTokens = {
@@ -90,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = useCallback(async (token: string): Promise<User | null> => {
     try {
-      const res = await axios.get(`${API_URL}/auth/profile`, {
+      const res = await axiosInstance.get(`${API_URL}/auth/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return res.data;
@@ -123,7 +125,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [fetchProfile, tryRefresh]);
 
   const login = async (email: string, password: string) => {
-    const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+    const res = await axiosInstance.post(`${API_URL}/auth/login`, { email, password });
     const tokens: AuthTokens = {
       access: res.data.access,
       refresh: res.data.refresh,
@@ -135,7 +137,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const register = async (data: RegisterData) => {
-    const res = await axios.post(`${API_URL}/v1/auth/register/`, data);
+    const res = await axiosInstance.post(`${API_URL}/v1/auth/register/`, data);
     if (res.data.tokens) {
       storeTokens(res.data.tokens);
       setUser(res.data.user);
@@ -152,7 +154,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateProfile = async (data: Partial<User>) => {
     const tokens = getStoredTokens();
     if (!tokens) throw new Error('Not authenticated');
-    const res = await axios.put(`${API_URL}/v1/auth/profile/update/`, data, {
+    const res = await axiosInstance.put(`${API_URL}/v1/auth/profile/update/`, data, {
       headers: { Authorization: `Bearer ${tokens.access}` },
     });
     setUser((prev) => prev ? { ...prev, ...res.data } : null);
