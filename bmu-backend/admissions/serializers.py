@@ -92,6 +92,9 @@ class ApplicationSerializer(serializers.ModelSerializer):
     
     program_title = serializers.CharField(source='program.title', read_only=True)
     program_college = serializers.SerializerMethodField()
+    program_level = serializers.CharField(source='program.level', read_only=True)
+    is_editable = serializers.BooleanField(read_only=True)
+    revision_expired = serializers.BooleanField(read_only=True)
 
     def get_program_college(self, obj):
         return obj.program.college.name if obj.program.college else None
@@ -103,9 +106,11 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'date_of_birth', 'gender', 'gender_display', 'address',
             'nationality', 'state_of_origin', 'lga', 'is_indigene',
             'student_type', 'student_type_display',
-            'program', 'program_title', 'program_college',
+            'program', 'program_title', 'program_college', 'program_level',
             'previous_institution',
+            'jamb_registration_number',
             'status', 'status_display', 'progress_percentage',
+            'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
             'payment_status', 'payment_status_display',
             'payment_amount', 'payment_currency', 'payment_method', 'paid_at',
             'documents', 'steps', 'messages', 'academic_records',
@@ -126,9 +131,33 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
             'date_of_birth', 'gender', 'address',
             'nationality', 'state_of_origin', 'lga',
             'student_type', 'program',
+            'jamb_registration_number',
             'previous_institution', 'academic_records', 'passport'
         ]
         read_only_fields = ['id']
+
+    def validate(self, attrs):
+        program = attrs.get('program')
+        jamb = (attrs.get('jamb_registration_number') or '').strip().upper() or None
+        if jamb:
+            from django.core.exceptions import ValidationError as DjangoValidationError
+            from .validators import validate_jamb_registration_number
+            try:
+                jamb = validate_jamb_registration_number(jamb)
+            except DjangoValidationError as exc:
+                raise serializers.ValidationError({'jamb_registration_number': exc.messages})
+            if Application.objects.filter(jamb_registration_number=jamb).exists():
+                raise serializers.ValidationError({
+                    'jamb_registration_number':
+                        'This JAMB registration number is already in use on another application.'
+                })
+        elif program and program.level == 'undergraduate':
+            raise serializers.ValidationError({
+                'jamb_registration_number':
+                    'A JAMB registration number is required for undergraduate applications.'
+            })
+        attrs['jamb_registration_number'] = jamb
+        return attrs
 
     def validate_program(self, program):
         if not program.is_active:
@@ -170,6 +199,8 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     program_title = serializers.CharField(source='program.title', read_only=True)
     gender_display = serializers.CharField(source='get_gender_display', read_only=True)
     payment_status_display = serializers.CharField(source='get_payment_status_display', read_only=True)
+    is_editable = serializers.BooleanField(read_only=True)
+    program_level = serializers.CharField(source='program.level', read_only=True)
     
     documents = ApplicationDocumentSerializer(many=True, read_only=True)
     steps = ApplicationStepSerializer(many=True, read_only=True)
@@ -184,7 +215,9 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             'nationality', 'state_of_origin', 'lga', 'is_indigene',
             'student_type', 'student_type_display',
             'program', 'program_title',
+            'jamb_registration_number', 'program_level',
             'status', 'status_display', 'progress_percentage',
+            'is_editable', 'revision_due_at', 'revision_note',
             'payment_status', 'payment_status_display',
             'payment_amount', 'payment_currency', 'payment_method',
             'payment_reference', 'paid_at',
@@ -196,11 +229,15 @@ class ApplicationListSerializer(serializers.ModelSerializer):
 class ApplicationStatusSerializer(serializers.ModelSerializer):
     """Serializer for application status check"""
     status_display = serializers.CharField(source='get_status_display', read_only=True)
+    is_editable = serializers.BooleanField(read_only=True)
+    revision_expired = serializers.BooleanField(read_only=True)
     steps = ApplicationStepSerializer(many=True, read_only=True)
     
     class Meta:
         model = Application
-        fields = ['id', 'status', 'status_display', 'progress_percentage', 'steps', 'submitted_at']
+        fields = ['id', 'status', 'status_display', 'progress_percentage',
+                  'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
+                  'steps', 'submitted_at']
 
 
 class ApplicationPaymentSerializer(serializers.Serializer):
@@ -219,8 +256,42 @@ class ApplicationUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'first_name', 'last_name', 'email', 'phone',
             'date_of_birth', 'gender', 'address',
+            'jamb_registration_number',
             'previous_institution', 'academic_records', 'passport'
         ]
+
+    def validate_jamb_registration_number(self, value):
+        normalized = (value or '').strip().upper() or None
+        if not normalized:
+            return None
+        from django.core.exceptions import ValidationError as DjangoValidationError
+        from .validators import validate_jamb_registration_number as validate_jamb
+        try:
+            normalized = validate_jamb(normalized)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError(exc.messages)
+        clashes = Application.objects.filter(jamb_registration_number=normalized)
+        if self.instance is not None:
+            clashes = clashes.exclude(pk=self.instance.pk)
+        if clashes.exists():
+            raise serializers.ValidationError(
+                'This JAMB registration number is already in use on another application.'
+            )
+        return normalized
+
+    def validate(self, attrs):
+        instance = self.instance
+        jamb = attrs.get(
+            'jamb_registration_number',
+            instance.jamb_registration_number if instance else None,
+        )
+        if (instance and instance.program
+                and instance.program.level == 'undergraduate' and not jamb):
+            raise serializers.ValidationError({
+                'jamb_registration_number':
+                    'A JAMB registration number is required for undergraduate applications.'
+            })
+        return attrs
 
     def update(self, instance, validated_data):
         academic_records_data = validated_data.pop('academic_records', None)

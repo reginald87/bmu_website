@@ -2967,7 +2967,9 @@ export interface ApplicationData {
   email?: string | null;
   phone?: string | null;
   program: string;
+  program_level?: string | null;
   student_type: string;
+  jamb_registration_number?: string | null;
   status: string;
   status_display: string;
   progress_percentage: number;
@@ -2980,12 +2982,16 @@ export interface ApplicationData {
   fee?: number | null;
   fee_currency?: string | null;
   submitted_at: string | null;
+  is_editable?: boolean;
+  revision_due_at?: string | null;
+  revision_note?: string | null;
+  revision_expired?: boolean;
 }
 
 export const mockApplications: ApplicationData[] = [
-  { id: 'BMU-2025-0001', first_name: 'John', last_name: 'Okafor', email: 'john.okafor@example.com', phone: '+234 803 123 4567', program: 'MBBS', student_type: 'LOCAL', status: 'submitted', status_display: 'Submitted', progress_percentage: 100, payment_status: 'paid', submitted_at: '2025-01-15T10:30:00Z' },
-  { id: 'BMU-2025-0002', first_name: 'Aisha', last_name: 'Mohammed', email: 'aisha.m@example.com', phone: '+234 803 234 5678', program: 'B.Sc. Nursing', student_type: 'LOCAL', status: 'under_review', status_display: 'Under Review', progress_percentage: 75, payment_status: 'paid', submitted_at: '2025-01-20T14:00:00Z' },
-  { id: 'BMU-2025-0003', first_name: 'David', last_name: 'Williams', email: 'david.w@example.co.uk', phone: '+44 7700 900123', program: 'M.Sc. Public Health', student_type: 'INTL', status: 'accepted', status_display: 'Accepted', progress_percentage: 100, payment_status: 'paid', submitted_at: '2024-12-10T09:00:00Z' },
+  { id: 'BMU-2025-0001', first_name: 'John', last_name: 'Okafor', email: 'john.okafor@example.com', phone: '+234 803 123 4567', program: 'MBBS', program_level: 'undergraduate', jamb_registration_number: '202560304236IE', student_type: 'LOCAL', status: 'submitted', status_display: 'Submitted', progress_percentage: 100, payment_status: 'paid', submitted_at: '2025-01-15T10:30:00Z' },
+  { id: 'BMU-2025-0002', first_name: 'Aisha', last_name: 'Mohammed', email: 'aisha.m@example.com', phone: '+234 803 234 5678', program: 'B.Sc. Nursing', program_level: 'undergraduate', jamb_registration_number: '202512304201AB', student_type: 'LOCAL', status: 'under_review', status_display: 'Under Review', progress_percentage: 75, payment_status: 'paid', submitted_at: '2025-01-20T14:00:00Z' },
+  { id: 'BMU-2025-0003', first_name: 'David', last_name: 'Williams', email: 'david.w@example.co.uk', phone: '+44 7700 900123', program: 'M.Sc. Public Health', program_level: 'masters', jamb_registration_number: null, student_type: 'INTL', status: 'accepted', status_display: 'Accepted', progress_percentage: 100, payment_status: 'paid', submitted_at: '2024-12-10T09:00:00Z' },
 ];
 
 export interface SearchResultItemData {

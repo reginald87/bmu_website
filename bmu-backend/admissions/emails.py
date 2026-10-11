@@ -136,6 +136,8 @@ def send_application_status_update(application, old_status=None, matric_number=N
     context = _base_context(application)
     context.update(content)
     context['matric_number'] = matric_number or ''
+    if new_status == 'accepted':
+        context.update(acceptance_portal_context(application))
     context['subject'] = f'Update on your application {application.id}: {application.get_status_display()}'
     return send_templated_email(
         subject=context['subject'],
@@ -143,6 +145,41 @@ def send_application_status_update(application, old_status=None, matric_number=N
         context=context,
         recipient_list=[application.email],
     )
+
+
+def acceptance_portal_context(application):
+    """Portal sign-in details for an accepted applicant.
+
+    Auto-created (guest) accounts have no usable password, so the email points
+    them at the reset-password screen to set one before they can sign in.
+    """
+    from urllib.parse import quote
+
+    from accounts.models import User
+
+    base = (settings.FRONTEND_URL or '').rstrip('/')
+    context = {
+        'portal_login_url': f'{base}/portals/login',
+        'set_password_url': f'{base}/portals/reset-password?email={quote(application.email or "")}',
+        'needs_password_setup': False,
+    }
+
+    user = application.applicant
+    if user is None and application.email:
+        user = User.objects.filter(email__iexact=application.email).first()
+
+    if user is not None:
+        context['student_username'] = user.email
+        # An account with no stored password (guest applicants) cannot sign in
+        # until a password is set. ``has_usable_password`` alone is not enough:
+        # Django treats an empty password string as "usable".
+        if not user.password or not user.has_usable_password():
+            context['needs_password_setup'] = True
+    else:
+        # No account resolved yet — still direct them to set up access.
+        context['needs_password_setup'] = True
+
+    return context
 
 
 def send_payment_receipt(application):

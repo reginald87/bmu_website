@@ -158,6 +158,19 @@ class StudentProfile(models.Model):
         choices=[('first', 'First'), ('second', 'Second')],
         default='first'
     )
+
+    # Matriculation (undergraduate identity). Undergraduates are only issued a
+    # matriculation number when the university matriculates them — a batch event
+    # run by the admission officer after acceptance. ``matriculated_at`` records
+    # when that happened. Postgraduate/certificate students receive their
+    # permanent number on acceptance and are not "matriculated" in this sense.
+    matriculated_at = models.DateTimeField(null=True, blank=True)
+    # JAMB/UTME registration number, carried over from the application as a
+    # permanent (and unique) backward reference. NULL for applicants who never
+    # sat UTME and for legacy records.
+    jamb_registration_number = models.CharField(
+        max_length=20, blank=True, null=True, unique=True, default=None,
+    )
     
     # Academic advisor
     academic_advisor = models.ForeignKey(
@@ -201,7 +214,12 @@ class StudentProfile(models.Model):
     class Meta:
         verbose_name = "Student Profile"
         verbose_name_plural = "Student Profiles"
-    
+
+    @property
+    def is_matriculated(self):
+        """True once the university has formally matriculated this student."""
+        return bool(self.matriculated_at)
+
     def __str__(self):
         return f"{self.user.full_name} - {self.matric_number or 'No Matric'}"
 

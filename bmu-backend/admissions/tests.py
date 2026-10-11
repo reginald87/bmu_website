@@ -1,9 +1,12 @@
+from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.core import mail
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework.test import APIClient
 
 from academics.models import Program
@@ -92,6 +95,7 @@ class SubmissionEmailTests(TestCase):
             'address': 'Yenagoa',
             'program_id': self.program.id,
             'student_type': 'LOCAL',
+            'jamb_registration_number': '202660304236IE',
         }, format='json')
 
         payload = response.json()
@@ -152,19 +156,33 @@ class StatusChangeEmailTests(TestCase):
         self.assertIn('revision', message.subject.lower())
         self.assertIn(self.application.id, message.body)
 
-    def test_accepted_sends_matric_number_and_creates_student(self):
+    def test_accepting_undergraduate_does_not_assign_matric_number(self):
         response = self._change_status('accepted')
         self.assertEqual(response.status_code, 200)
-        matric_number = response.data['matric_number']
+        self.assertIsNone(response.data['matric_number'])
 
         self.assertEqual(len(mail.outbox), 1)
         message = mail.outbox[0]
         self.assertEqual(message.to, ['jane@example.com'])
-        self.assertIn(matric_number, message.body)
 
         student = User.objects.get(email='jane@example.com')
         self.assertEqual(student.role, 'student')
         self.assertTrue(student.is_email_verified)
+        profile = student.student_profile
+        self.assertFalse(profile.matric_number)
+        self.assertIsNone(profile.matriculated_at)
+
+    def test_accepting_postgraduate_assigns_university_number(self):
+        self.program.level = 'masters'
+        self.program.save()
+        response = self._change_status('accepted')
+        self.assertEqual(response.status_code, 200)
+        number = response.data['matric_number']
+        self.assertTrue(number.startswith('MSC/BMU/'))
+
+        student = User.objects.get(email='jane@example.com')
+        self.assertEqual(student.student_profile.matric_number, number)
+        self.assertIn(number, mail.outbox[0].body)
 
     def test_status_change_without_email_address_does_not_fail(self):
         self.application.email = ''
@@ -172,6 +190,179 @@ class StatusChangeEmailTests(TestCase):
         response = self._change_status('under_review')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(mail.outbox), 0)
+
+
+class JambUniquenessTests(TestCase):
+    def setUp(self):
+        cache.clear()
+        self.program = make_program()
+        self.client = APIClient()
+
+    def _submit(self, jamb=None, **overrides):
+        payload = {
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'email': 'jane@example.com',
+            'phone': '08012345678',
+            'date_of_birth': '2000-01-01',
+            'gender': 'female',
+            'address': 'Yenagoa',
+            'program_id': self.program.id,
+            'student_type': 'LOCAL',
+        }
+        if jamb is not None:
+            payload['jamb_registration_number'] = jamb
+        payload.update(overrides)
+        return self.client.post('/api/public/applications', payload, format='json')
+
+    def test_undergraduate_submission_requires_jamb(self):
+        response = self._submit()
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('JAMB', response.json()['detail'])
+
+    def test_duplicate_jamb_is_rejected(self):
+        first = self._submit('202660304236IE')
+        self.assertEqual(first.status_code, 200, first.content)
+
+        response = self._submit('202660304236IE', email='other@example.com',
+                                phone='08011112222')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(Application.objects.filter(
+            jamb_registration_number='202660304236IE').count(), 1)
+
+    def test_jamb_is_uppercased_and_unique_case_insensitively(self):
+        response = self._submit(jamb='202660304236ie')
+        self.assertEqual(response.status_code, 200, response.json())
+        application = Application.objects.get(id=response.json()['id'])
+        self.assertEqual(application.jamb_registration_number, '202660304236IE')
+
+        duplicate = self._submit(jamb='202660304236IE')
+        self.assertEqual(duplicate.status_code, 400)
+
+    def test_postgraduate_submission_allows_missing_jamb(self):
+        program = Program.objects.create(
+            title='M.Sc. Public Health',
+            slug='msc-public-health',
+            level='masters',
+            duration='2 years',
+            requirements='B.Sc.',
+            application_fee_local=15000,
+            application_fee_intl=75,
+        )
+        response = self._submit(program_id=program.id)
+        self.assertEqual(response.status_code, 200, response.json())
+        application = Application.objects.get(id=response.json()['id'])
+        self.assertIsNone(application.jamb_registration_number)
+
+    def test_multiple_applications_without_jamb_can_coexist(self):
+        first = make_application(self.program, status='submitted',
+                                 jamb_registration_number=None)
+        second = make_application(self.program, status='submitted',
+                                  email='other@example.com',
+                                  jamb_registration_number=None)
+        self.assertIsNone(first.jamb_registration_number)
+        self.assertIsNone(second.jamb_registration_number)
+
+
+class RequestJambDetailsActionTests(TestCase):
+    def setUp(self):
+        from django.contrib.admin.sites import AdminSite
+
+        from .admin import ApplicationAdmin
+
+        self.program = make_program()
+        self.without_jamb = make_application(self.program, status='submitted')
+        self.with_jamb = make_application(
+            self.program, status='submitted', email='other@example.com',
+            jamb_registration_number='202560304236IE')
+        admin_user = User.objects.create_superuser(
+            username='admin4', email='admin4@bmu.edu.ng', password='pass1234')
+        self.admin = ApplicationAdmin(Application, AdminSite())
+        self.request = RequestFactory().get('/admin/')
+        self.request.user = admin_user
+
+    def test_action_opens_revision_only_for_undergraduates_without_jamb(self):
+        queryset = Application.objects.filter(
+            id__in=[self.without_jamb.id, self.with_jamb.id])
+        with patch.object(self.admin, 'message_user') as message_user:
+            self.admin.request_jamb_details(self.request, queryset)
+
+        self.without_jamb.refresh_from_db()
+        self.with_jamb.refresh_from_db()
+
+        self.assertEqual(self.without_jamb.status, 'revision_requested')
+        self.assertIsNotNone(self.without_jamb.revision_due_at)
+        self.assertEqual(self.without_jamb.messages.count(), 1)
+
+        self.assertEqual(self.with_jamb.status, 'submitted')
+        self.assertIsNone(self.with_jamb.revision_due_at)
+        self.assertEqual(self.with_jamb.messages.count(), 0)
+
+        message_user.assert_called_once()
+        self.assertIn('skipped 1', message_user.call_args[0][1])
+
+
+class RevisionWindowTests(TestCase):
+    def setUp(self):
+        self.program = make_program()
+        self.application = make_application(self.program, status='submitted')
+        self.admin = User.objects.create_superuser(
+            username='admin3', email='admin3@bmu.edu.ng', password='pass1234')
+        self.owner = User.objects.create_user(
+            username='jane', email='jane@example.com', password='pass1234')
+        self.application.applicant = self.owner
+        self.application.jamb_registration_number = '202560304236IE'
+        self.application.save()
+
+        self.admin_client = APIClient()
+        self.admin_client.force_authenticate(user=self.admin)
+
+    def _change_status(self, new_status, **extra):
+        return self.admin_client.post(
+            reverse('application-update-status', args=[self.application.id]),
+            {'status': new_status, **extra}, format='json')
+
+    def test_requesting_revision_opens_window_with_note(self):
+        response = self._change_status('revision_requested', note='Upload a clearer passport')
+        self.assertEqual(response.status_code, 200)
+        self.application.refresh_from_db()
+        self.assertEqual(self.application.status, 'revision_requested')
+        self.assertIsNotNone(self.application.revision_due_at)
+        self.assertEqual(self.application.revision_note, 'Upload a clearer passport')
+        self.assertTrue(self.application.is_editable)
+
+    def test_editing_open_revision_resubmits_and_closes_window(self):
+        self.application.status = 'revision_requested'
+        self.application.revision_due_at = timezone.now() + timedelta(days=2)
+        self.application.save()
+
+        client = APIClient()
+        client.force_authenticate(user=self.application.applicant)
+        response = client.patch(
+            reverse('application-update', args=[self.application.id]),
+            {'phone': '08011112222'}, format='json')
+        self.assertEqual(response.status_code, 200, response.data)
+
+        self.application.refresh_from_db()
+        self.assertEqual(self.application.status, 'submitted')
+        self.assertIsNone(self.application.revision_due_at)
+        self.assertEqual(self.application.phone, '08011112222')
+
+    def test_expired_revision_blocks_editing(self):
+        self.application.status = 'revision_requested'
+        self.application.revision_due_at = timezone.now() - timedelta(days=1)
+        self.application.save()
+
+        client = APIClient()
+        client.force_authenticate(user=self.application.applicant)
+        response = client.patch(
+            reverse('application-update', args=[self.application.id]),
+            {'phone': '08099999999'}, format='json')
+        self.assertEqual(response.status_code, 400)
+
+        self.application.refresh_from_db()
+        self.assertEqual(self.application.phone, '08012345678')
+        self.assertTrue(self.application.revision_expired)
 
 
 class AdminSaveModelTests(TestCase):
@@ -208,7 +399,11 @@ class AdminSaveModelTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         student = User.objects.get(email='jane@example.com')
         self.assertEqual(student.role, 'student')
-        self.assertIn('UG/', mail.outbox[0].body)
+        # Undergraduates get no matriculation number on acceptance; they are
+        # pointed at the portal to set a password instead.
+        self.assertFalse(student.student_profile.matric_number)
+        self.assertNotIn('UG/', mail.outbox[0].body)
+        self.assertIn('/portals/reset-password', mail.outbox[0].body)
 
     def test_new_application_created_as_submitted_notifies(self):
         new_app = make_application(self.program, status='submitted')
@@ -418,6 +613,7 @@ class ProgramApplicationStatusTests(TestCase):
             'date_of_birth': '2000-01-01', 'gender': 'female',
             'address': 'Yenagoa',
             'program_id': self.program.id, 'student_type': 'LOCAL',
+            'jamb_registration_number': '202660304236IE',
         }
 
     def test_closed_program_hidden_from_apply_list(self):
@@ -462,6 +658,7 @@ class ApplicationOriginTests(TestCase):
             'date_of_birth': '2000-01-01', 'gender': 'female',
             'address': 'Yenagoa', 'program_id': self.program.id,
             'student_type': 'LOCAL',
+            'jamb_registration_number': '202660304236IE',
         }
         payload.update(overrides)
         return self.client.post('/api/public/applications', payload, format='json')
@@ -510,6 +707,7 @@ class ApplicationAccountLinkTests(TestCase):
             'date_of_birth': '2000-01-01', 'gender': 'female',
             'address': 'Yenagoa', 'program_id': self.program.id,
             'student_type': 'LOCAL',
+            'jamb_registration_number': '202660304236IE',
         }
         payload.update(overrides)
         return payload
@@ -561,5 +759,105 @@ class ApplicationAccountLinkTests(TestCase):
         self.assertEqual(res.status_code, 200, res.content)
         self.assertEqual(len(res.json()), 1)
         self.assertEqual(Application.objects.get().applicant, self.user)
+
+
+class JambValidationTests(TestCase):
+    """Undergraduate applications must carry a valid JAMB registration number."""
+
+    def setUp(self):
+        from django.core.cache import cache
+        cache.clear()
+        self.program = make_program()
+        self.client = APIClient()
+
+    def _post(self, **overrides):
+        payload = {
+            'first_name': 'Jane', 'last_name': 'Doe',
+            'email': 'jane@example.com', 'phone': '08012345678',
+            'date_of_birth': '2000-01-01', 'gender': 'female',
+            'address': 'Yenagoa', 'program_id': self.program.id,
+            'student_type': 'LOCAL',
+        }
+        payload.update(overrides)
+        return self.client.post('/api/public/applications', payload, format='json')
+
+    def test_undergraduate_requires_jamb(self):
+        res = self._post()
+        self.assertEqual(res.status_code, 400, res.content)
+        self.assertIn('jamb', res.json()['detail'].lower())
+
+    def test_invalid_jamb_format_rejected(self):
+        res = self._post(jamb_registration_number='12345')
+        self.assertEqual(res.status_code, 400, res.content)
+        self.assertIn('jamb', res.json()['detail'].lower())
+
+    def test_valid_jamb_is_normalized_and_stored(self):
+        res = self._post(jamb_registration_number=' 202660304236ie ')
+        self.assertEqual(res.status_code, 200, res.content)
+        app = Application.objects.get(id=res.json()['id'])
+        self.assertEqual(app.jamb_registration_number, '202660304236IE')
+
+    def test_postgraduate_does_not_require_jamb(self):
+        self.program.level = 'masters'
+        self.program.save()
+        res = self._post()
+        self.assertEqual(res.status_code, 200, res.content)
+
+
+class MatriculationTests(TestCase):
+    """Undergraduate numbers are assigned in a batch at matriculation only."""
+
+    def setUp(self):
+        from django.contrib import admin
+        self.model_admin = admin.site._registry[Application]
+        self.model_admin.message_user = MagicMock()
+        self.program = make_program()
+        self.admin_user = User.objects.create_superuser(
+            username='admin4', email='admin4@bmu.edu.ng', password='pass1234')
+        self.request = MagicMock()
+        self.request.user = self.admin_user
+
+    def _matriculate(self, application):
+        self.model_admin.matriculate_undergraduates(
+            self.request, Application.objects.filter(pk=application.pk))
+
+    def test_action_assigns_undergraduate_matric_number(self):
+        from accounts.models import StudentProfile
+        from .views import create_student_record
+
+        application = make_application(self.program, status='accepted')
+        create_student_record(application)
+        profile = StudentProfile.objects.get(user__email='jane@example.com')
+        self.assertFalse(profile.matric_number)
+
+        self._matriculate(application)
+
+        profile.refresh_from_db()
+        self.assertTrue(profile.matric_number.startswith('UG/'))
+        self.assertIsNotNone(profile.matriculated_at)
+
+    def test_action_skips_non_accepted_applications(self):
+        application = make_application(self.program, status='submitted')
+        self._matriculate(application)
+        self.assertFalse(User.objects.filter(email='jane@example.com').exists())
+
+    def test_action_does_not_renumber_postgraduate(self):
+        from accounts.models import StudentProfile
+        from .views import create_student_record
+
+        self.program.level = 'masters'
+        self.program.save()
+        application = make_application(self.program, status='accepted')
+        create_student_record(application)
+        profile = StudentProfile.objects.get(user__email='jane@example.com')
+        number = profile.matric_number
+        self.assertTrue(number.startswith('MSC/BMU/'))
+
+        self._matriculate(application)
+
+        profile.refresh_from_db()
+        self.assertEqual(profile.matric_number, number)
+        self.assertIsNone(profile.matriculated_at)
+
 
 

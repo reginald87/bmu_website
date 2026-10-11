@@ -16,7 +16,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { validatePersonalInfo, validateAcademicInfo, validateApplicantOrigin, getFieldError, type ValidationError } from '../../utils/validation';
+import { validatePersonalInfo, validateAcademicInfo, validateApplicantOrigin, validateJambRegistrationNumber, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
 import { NIGERIAN_STATES, getLgas } from '../../data/nigeriaLGAs';
 import { uploadApplicationDocument, fetchApplyPrograms, fetchPaymentFees, startAdmissionPayment, type PaymentFeesApi } from '../../services/api';
@@ -213,17 +213,20 @@ interface PersonalInfoForm {
   country?: string;
   originState?: string;
   lga?: string;
+  jambRegistrationNumber?: string;
 }
 
 const PersonalInfoStep = ({ 
   data, 
   studentType,
+  showJamb,
   onChange,
   errors,
   touched 
 }: { 
   data: PersonalInfoForm, 
   studentType: string | null,
+  showJamb: boolean,
   onChange: (field: string, value: string) => void,
   errors: ValidationError[],
   touched: Record<string, boolean>
@@ -296,6 +299,25 @@ const PersonalInfoStep = ({
             <p id="phone-error" className="mt-1 text-sm text-red-600">{getError('phone')}</p>
           )}
         </div>
+        {showJamb && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">JAMB Registration Number *</label>
+            <input
+              type="text"
+              value={data.jambRegistrationNumber || ''}
+              onChange={(e) => onChange('jambRegistrationNumber', e.target.value.toUpperCase())}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('jambRegistrationNumber') ? 'border-red-500' : '' }`}
+              placeholder="e.g. 202660304236IE"
+              aria-invalid={!!getError('jambRegistrationNumber')}
+              aria-describedby={getError('jambRegistrationNumber') ? 'jambRegistrationNumber-error' : undefined}
+            />
+            {getError('jambRegistrationNumber') ? (
+              <p id="jambRegistrationNumber-error" className="mt-1 text-sm text-red-600">{getError('jambRegistrationNumber')}</p>
+            ) : (
+              <p className="mt-1 text-xs text-gray-500">12 digits followed by 2 letters, as printed on your JAMB result slip.</p>
+            )}
+          </div>
+        )}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth *</label>
           <input
@@ -1039,6 +1061,12 @@ export const ApplicationPortal = () => {
           ...validatePersonalInfo(formData.personal),
           ...validateApplicantOrigin(formData.personal, formData.studentType),
         ];
+        if (formData.program?.level === 'UG') {
+          const jambError = validateJambRegistrationNumber(formData.personal.jambRegistrationNumber || '');
+          if (jambError) {
+            stepErrors.push({ field: 'jambRegistrationNumber', message: jambError });
+          }
+        }
         break;
       case 4:
         stepErrors = validateAcademicInfo(formData.academicRecords);
@@ -1106,6 +1134,7 @@ export const ApplicationPortal = () => {
         lga: formData.personal.lga || '',
         program_id: formData.program?.id || 0,
         student_type: formData.studentType || '',
+        jamb_registration_number: formData.personal.jambRegistrationNumber || '',
         academic_records: academicRecordsPayload,
       });
 
@@ -1238,6 +1267,7 @@ export const ApplicationPortal = () => {
                   <PersonalInfoStep 
                     data={formData.personal}
                     studentType={formData.studentType}
+                    showJamb={formData.program?.level === 'UG'}
                     onChange={(field, value) => {
                       setFormData(prev => ({
                         ...prev,

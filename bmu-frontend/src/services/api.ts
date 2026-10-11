@@ -867,6 +867,7 @@ export const submitApplication = async (data: {
   lga?: string;
   program_id: number;
   student_type: string;
+  jamb_registration_number?: string;
   academic_records?: AcademicRecordPayload[];
 }): Promise<ApplicationData> => {
   const response = await apiClient.post('/public/applications', data);

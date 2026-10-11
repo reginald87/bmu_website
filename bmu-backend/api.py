@@ -6512,6 +6512,7 @@ class ApplicationSubmitSchema(Schema):
     lga: str = ''
     program_id: int
     student_type: str = 'LOCAL'
+    jamb_registration_number: str = ''
     academic_records: Optional[List[AcademicRecordSchema]] = None
 
 class ApplicationStatusSchema(Schema):
@@ -6523,6 +6524,7 @@ class ApplicationStatusSchema(Schema):
     phone: Optional[str] = None
     program: str
     student_type: str
+    jamb_registration_number: Optional[str] = None
     status: str
     status_display: str
     progress_percentage: int
@@ -6535,6 +6537,10 @@ class ApplicationStatusSchema(Schema):
     fee: Optional[float] = None
     fee_currency: Optional[str] = None
     submitted_at: Optional[str] = None
+    is_editable: bool = False
+    revision_due_at: Optional[str] = None
+    revision_note: Optional[str] = None
+    revision_expired: bool = False
 
 
 def _application_fee(application):
@@ -6629,27 +6635,47 @@ def submit_application(request, data: ApplicationSubmitSchema):
     if not program.applications_open:
         raise HttpError(400, "Applications for this program are currently closed.")
 
+    from django.core.exceptions import ValidationError
+    from django.db import IntegrityError
+    from admissions.validators import validate_jamb_registration_number
+
+    jamb = None
+    if (data.jamb_registration_number or '').strip():
+        try:
+            jamb = validate_jamb_registration_number(data.jamb_registration_number)
+        except ValidationError as exc:
+            raise HttpError(400, exc.messages[0])
+    elif program.level == 'undergraduate':
+        raise HttpError(400, "A JAMB registration number is required for undergraduate applications.")
+
+    if jamb and Application.objects.filter(jamb_registration_number=jamb).exists():
+        raise HttpError(400, "This JAMB registration number has already been used on another application.")
+
     from django.utils import timezone
-    app = Application.objects.create(
-        first_name=data.first_name,
-        last_name=data.last_name,
-        email=data.email,
-        phone=data.phone,
-        program=program,
-        student_type=data.student_type,
-        status='submitted',
-        progress_percentage=30,
-        submitted_at=timezone.now(),
-        date_of_birth=data.date_of_birth or '2000-01-01',
-        gender=data.gender or 'other',
-        address=data.address or '',
-        nationality=data.nationality or '',
-        state_of_origin=data.state_of_origin or '',
-        lga=data.lga or '',
-        previous_institution='',
-        payment_currency='USD' if data.student_type == 'INTL' else 'NGN',
-        applicant=_optional_auth_user(request),
-    )
+    try:
+        app = Application.objects.create(
+            first_name=data.first_name,
+            last_name=data.last_name,
+            email=data.email,
+            phone=data.phone,
+            program=program,
+            student_type=data.student_type,
+            jamb_registration_number=jamb,
+            status='submitted',
+            progress_percentage=30,
+            submitted_at=timezone.now(),
+            date_of_birth=data.date_of_birth or '2000-01-01',
+            gender=data.gender or 'other',
+            address=data.address or '',
+            nationality=data.nationality or '',
+            state_of_origin=data.state_of_origin or '',
+            lga=data.lga or '',
+            previous_institution='',
+            payment_currency='USD' if data.student_type == 'INTL' else 'NGN',
+            applicant=_optional_auth_user(request),
+        )
+    except IntegrityError:
+        raise HttpError(400, "This JAMB registration number has already been used on another application.")
 
     for record_data in (data.academic_records or []):
         from admissions.models import AcademicRecord
@@ -6678,6 +6704,7 @@ def submit_application(request, data: ApplicationSubmitSchema):
         'phone': app.phone,
         'program': app.program.title,
         'student_type': app.student_type,
+        'jamb_registration_number': app.jamb_registration_number or None,
         'status': app.status,
         'status_display': app.get_status_display(),
         'progress_percentage': app.progress_percentage,
@@ -6687,6 +6714,10 @@ def submit_application(request, data: ApplicationSubmitSchema):
         'fee': float(breakdown['base']),
         'fee_currency': breakdown['currency'],
         'submitted_at': app.submitted_at.isoformat() if app.submitted_at else None,
+        'is_editable': app.is_editable,
+        'revision_due_at': app.revision_due_at.isoformat() if app.revision_due_at else None,
+        'revision_note': app.revision_note or None,
+        'revision_expired': app.revision_expired,
     }
 
 @public_router.get("/applications/{application_id}/status", response=ApplicationStatusSchema)
@@ -6741,6 +6772,10 @@ def get_application_status(request, application_id: str):
         'fee': float(breakdown['base']),
         'fee_currency': breakdown['currency'],
         'submitted_at': app.submitted_at.isoformat() if app.submitted_at else None,
+        'is_editable': app.is_editable,
+        'revision_due_at': app.revision_due_at.isoformat() if app.revision_due_at else None,
+        'revision_note': app.revision_note or None,
+        'revision_expired': app.revision_expired,
     }
     if expose_pii:
         payload.update({
@@ -6748,6 +6783,7 @@ def get_application_status(request, application_id: str):
             'last_name': app.last_name,
             'email': app.email,
             'phone': app.phone,
+            'jamb_registration_number': app.jamb_registration_number or None,
         })
     return payload
 

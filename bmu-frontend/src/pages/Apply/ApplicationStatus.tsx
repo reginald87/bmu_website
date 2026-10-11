@@ -44,6 +44,12 @@ const statusConfig: Record<string, StatusStyle> = {
 
 const defaultStatusStyle: StatusStyle = statusConfig.draft;
 
+const formatDate = (value?: string | null) => {
+  if (!value) return '';
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? '' : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+};
+
 export const ApplicationStatus = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -208,6 +214,31 @@ export const ApplicationStatus = () => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
+              {/* Revision notice */}
+              {application.status === 'revision_requested' && (
+                <div className="bg-red-50 border border-red-200 border-l-4 border-l-red-500 p-6">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h2 className="font-bold text-red-800">Action required: revision requested</h2>
+                      {application.revision_note && (
+                        <p className="text-sm text-red-700 mt-1 whitespace-pre-line">{application.revision_note}</p>
+                      )}
+                      {application.revision_expired ? (
+                        <p className="text-sm text-red-700 mt-2">
+                          The revision window has closed. Please contact the admissions office to continue.
+                        </p>
+                      ) : (
+                        <p className="text-sm text-red-700 mt-2">
+                          Please sign in to your applicant portal to update your application
+                          {application.revision_due_at ? ` before ${formatDate(application.revision_due_at)}` : ''}.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Status Header */}
               <div className={`bg-white shadow-sm p-6 border-l-4 ${getStatusColor(application.status).border}`}>
                 <div className="flex flex-wrap justify-between items-start gap-4">
@@ -252,6 +283,12 @@ export const ApplicationStatus = () => {
                     <div className="text-sm text-gray-500">Student Type</div>
                     <div className="font-medium text-gray-900">{application.student_type === 'INTL' ? 'International' : 'Local'}</div>
                   </div>
+                  {application.jamb_registration_number && (
+                    <div>
+                      <div className="text-sm text-gray-500">JAMB Registration Number</div>
+                      <div className="font-medium text-gray-900">{application.jamb_registration_number}</div>
+                    </div>
+                  )}
                 </div>
               </div>
 

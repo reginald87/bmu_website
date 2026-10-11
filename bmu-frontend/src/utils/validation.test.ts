@@ -3,6 +3,7 @@ import {
   getFieldError,
   validateAcademicInfo,
   validateEmail,
+  validateJambRegistrationNumber,
   validatePersonalInfo,
   validatePhone,
   validateRequired,
@@ -35,6 +36,22 @@ describe('validatePhone', () => {
   it('accepts international formats', () => {
     expect(validatePhone('+234 803 123 4567')).toBeNull()
     expect(validatePhone('(080) 3123-4567')).toBeNull()
+  })
+})
+
+describe('validateJambRegistrationNumber', () => {
+  it('requires a value', () => {
+    expect(validateJambRegistrationNumber('')).toBe('JAMB registration number is required')
+  })
+
+  it('rejects the wrong shape', () => {
+    expect(validateJambRegistrationNumber('12345')).not.toBeNull()
+    expect(validateJambRegistrationNumber('202660304236I')).not.toBeNull()
+  })
+
+  it('accepts a valid number regardless of case or padding', () => {
+    expect(validateJambRegistrationNumber('202660304236ie')).toBeNull()
+    expect(validateJambRegistrationNumber(' 202660304236IE ')).toBeNull()
   })
 })
 

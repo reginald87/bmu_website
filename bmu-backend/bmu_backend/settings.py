@@ -249,6 +249,8 @@ ADMINS = [('BMU Admin', email.strip()) for email in os.getenv('ADMINS_EMAILS', '
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # Internal alerts (comma-separated). Applicant replies should go elsewhere.
 ADMISSIONS_OFFICE_EMAIL = os.getenv('ADMISSIONS_OFFICE_EMAIL', 'admissions@bmu.edu.ng')
+# Days an applicant has to edit and re-submit after admissions requests a revision.
+ADMISSIONS_REVISION_WINDOW_DAYS = int(os.getenv('ADMISSIONS_REVISION_WINDOW_DAYS', '14'))
 
 # ── Payments (Paystack) ───────────────────────────────────────────────────────
 PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY', '')

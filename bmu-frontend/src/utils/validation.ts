@@ -10,6 +10,22 @@ export const validateEmail = (email: string): string | null => {
   return null;
 };
 
+export const JAMB_REGISTRATION_REGEX = /^\d{12}[A-Z]{2}$/;
+
+export const validateJambRegistrationNumber = (value: string): string | null => {
+  const normalized = (value || '').trim().toUpperCase();
+  if (!normalized) return 'JAMB registration number is required';
+  if (!JAMB_REGISTRATION_REGEX.test(normalized)) {
+    return 'Enter a valid JAMB registration number, e.g. 202660304236IE';
+  }
+  const year = parseInt(normalized.slice(0, 4), 10);
+  const maxYear = new Date().getFullYear() + 1;
+  if (year < 2010 || year > maxYear) {
+    return 'The JAMB registration number has an invalid year';
+  }
+  return null;
+};
+
 export const validatePhone = (phone: string): string | null => {
   const phoneRegex = /^[+]?[\d\s\-()]{10,}$/;
   if (!phone) return 'Phone number is required';

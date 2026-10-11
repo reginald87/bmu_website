@@ -29,6 +29,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/useAuth';
 import { apiClient, downloadAdmissionDocument, startAdmissionPayment, verifyAdmissionPayment, type AdmissionDocumentKind } from '../../services/api';
+import { validateJambRegistrationNumber } from '../../utils/validation';
 
 interface ApplicationStep {
   name: string;
@@ -74,6 +75,7 @@ interface EditForm {
   phone?: string;
   dateOfBirth?: string;
   address?: string;
+  jambRegistrationNumber?: string;
 }
 
 interface Application {
@@ -104,6 +106,10 @@ interface Application {
   paymentMethod?: string | null;
   paymentReference?: string | null;
   paidAt?: string | null;
+  isEditable?: boolean;
+  revisionDueAt?: string | null;
+  revisionNote?: string;
+  jambRegistrationNumber?: string;
 }
 
 
@@ -118,6 +124,14 @@ const statusConfig: Record<string, { color: string; bg: string; label: string; i
   rejected: { color: 'text-red-600', bg: 'bg-red-100', label: 'Not Admitted', icon: AlertCircle },
   waitlisted: { color: 'text-orange-600', bg: 'bg-orange-100', label: 'Waitlisted', icon: Clock }
 };
+
+const formatDate = (value?: string | null) => {
+  if (!value) return '';
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? '' : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+};
+
+const ADMISSIONS_EMAIL = 'admissions@bmu.edu.ng';
 
 const ApplicantLogin = () => {
   const { login, register } = useAuth();
@@ -412,14 +426,18 @@ const ApplicantDashboard = () => {
   const [documentError, setDocumentError] = useState('');
   const [isPaying, setIsPaying] = useState(false);
   const [payError, setPayError] = useState('');
+  const [editError, setEditError] = useState('');
 
   const application = selectedApplication
     ? applications.find(app => app.id === selectedApplication)
     : applications[0];
 
-  const canEdit = application?.status === 'draft' || application?.status === 'revision_requested';
+  const canEdit = application?.isEditable
+    ?? (application?.status === 'draft' || application?.status === 'revision_requested');
+  const isUndergraduate = application?.programLevel === 'undergraduate';
 
   const startEditing = () => {
+    setEditError('');
     setEditForm({
       firstName: application?.firstName || '',
       lastName: application?.lastName || '',
@@ -427,6 +445,7 @@ const ApplicantDashboard = () => {
       phone: application?.phone || '',
       dateOfBirth: application?.dateOfBirth || '',
       address: application?.address || '',
+      jambRegistrationNumber: application?.jambRegistrationNumber || '',
     });
     setIsEditing(true);
   };
@@ -471,23 +490,39 @@ const ApplicantDashboard = () => {
 
   const saveEditing = async () => {
     if (!application) return;
+    setEditError('');
+
+    const jamb = (editForm.jambRegistrationNumber || '').trim().toUpperCase();
+    if (isUndergraduate && !jamb) {
+      setEditError('A JAMB registration number is required for undergraduate applications.');
+      return;
+    }
+    const jambError = jamb ? validateJambRegistrationNumber(jamb) : null;
+    if (jambError) {
+      setEditError(jambError);
+      return;
+    }
+
     setSaving(true);
     try {
-      const res = await apiClient.patch(`/v1/admissions/applications/${application.id}/update/`, {
+      await apiClient.patch(`/v1/admissions/applications/${application.id}/update/`, {
         first_name: editForm.firstName,
         last_name: editForm.lastName,
         email: editForm.email,
         phone: editForm.phone,
         date_of_birth: editForm.dateOfBirth,
         address: editForm.address,
+        jamb_registration_number: jamb || null,
       });
-      if (res.status === 200) {
-        setApplications(prev => prev.map(a => a.id === application.id ? { ...a, ...editForm, firstName: editForm.firstName, lastName: editForm.lastName, email: editForm.email, phone: editForm.phone, dateOfBirth: editForm.dateOfBirth, address: editForm.address } : a) as Application[]);
-        setIsEditing(false);
-        setEditForm({});
-      }
+      setApplications(prev => prev.map(a => (
+        a.id === application.id
+          ? { ...a, ...editForm, jambRegistrationNumber: jamb }
+          : a
+      )));
+      setIsEditing(false);
+      setEditForm({});
     } catch (err) {
-      console.error('Failed to save application', err);
+      setEditError(err instanceof Error ? err.message : 'Could not save your changes. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -534,7 +569,7 @@ const ApplicantDashboard = () => {
             id: app.id as string,
             publicId: (app.public_id as string) || undefined,
             program: app.program_title as string || '',
-            programLevel: '',
+            programLevel: (app.program_level as string) || '',
             status: app.status as string || 'draft',
             submittedDate: app.submitted_at as string || '',
             lastUpdated: app.updated_at as string || '',
@@ -554,6 +589,10 @@ const ApplicantDashboard = () => {
             paymentMethod: (app.payment_method as string) || null,
             paymentReference: (app.payment_reference as string) || null,
             paidAt: (app.paid_at as string) || null,
+            isEditable: (app.is_editable as boolean) ?? undefined,
+            revisionDueAt: (app.revision_due_at as string) || null,
+            revisionNote: (app.revision_note as string) || '',
+            jambRegistrationNumber: (app.jamb_registration_number as string) || '',
             academicRecords: (app.academic_records as AcademicRecord[]) || [],
             steps: ((app.steps || []) as ApplicationStep[]).map((s: ApplicationStep) => ({
               name: s.name_display || s.name,
@@ -770,6 +809,50 @@ const ApplicantDashboard = () => {
               </div>
             </div>
 
+            {/* Revision notice */}
+            {application?.status === 'revision_requested' && (
+              <div className="bg-red-50 border border-red-200 border-l-4 border-l-red-500 p-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-bold text-red-800">Action required: revision requested</h3>
+                    {application.revisionNote && (
+                      <p className="text-sm text-red-700 mt-1 whitespace-pre-line">{application.revisionNote}</p>
+                    )}
+                    {application.isEditable ? (
+                      <p className="text-sm text-red-700 mt-2">
+                        Please update your application
+                        {application.revisionDueAt ? ` and re-submit before ${formatDate(application.revisionDueAt)}` : ' and re-submit'}.
+                        Use the <strong>Edit Application</strong> button above.
+                      </p>
+                    ) : (
+                      <p className="text-sm text-red-700 mt-2">
+                        The revision window has closed. Please contact the admissions office to continue.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Read-only: request a change */}
+            {application && !canEdit && ['submitted', 'under_review', 'interview', 'waitlisted'].includes(application.status) && (
+              <div className="bg-white shadow-sm border border-gray-100 p-6">
+                <h3 className="font-bold text-gray-900 mb-1">Need to change something?</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Submitted applications are read-only while under review. To request a change, contact
+                  the admissions office quoting your Application ID.
+                </p>
+                <a
+                  href={`mailto:${ADMISSIONS_EMAIL}?subject=${encodeURIComponent(`Change request for ${application.id}`)}`}
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-ink-900 text-ink-900 font-medium hover:bg-ink-900 hover:text-white transition"
+                >
+                  <Mail className="w-4 h-4" />
+                  Request a change
+                </a>
+              </div>
+            )}
+
             {/* Admission documents — only for accepted applications */}
             {application?.status === 'accepted' && (
               <div className="bg-white shadow-sm border border-gray-100 border-l-4 border-l-green-500 p-6">
@@ -927,6 +1010,11 @@ const ApplicantDashboard = () => {
                           </div>
                         )}
                       </div>
+                      {isEditing && editError && (
+                        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-sm text-red-700">
+                          {editError}
+                        </div>
+                      )}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="p-4 bg-gray-50">
                           <p className="text-sm text-gray-500">Full Name</p>
@@ -998,6 +1086,23 @@ const ApplicantDashboard = () => {
                           <p className="text-sm text-gray-500">Student Type</p>
                           <p className="font-medium text-gray-900">{application?.studentType}</p>
                         </div>
+                        {(isUndergraduate || application?.jambRegistrationNumber) && (
+                          <div className="p-4 bg-gray-50">
+                            <p className="text-sm text-gray-500">JAMB Registration Number</p>
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                value={editForm.jambRegistrationNumber || ''}
+                                onChange={e => setEditForm({ ...editForm, jambRegistrationNumber: e.target.value.toUpperCase() })}
+                                className="w-full px-3 py-2 border border-gray-300 text-sm uppercase"
+                                placeholder="e.g. 202660304236IE"
+                                maxLength={14}
+                              />
+                            ) : (
+                              <p className="font-medium text-gray-900">{application?.jambRegistrationNumber || '—'}</p>
+                            )}
+                          </div>
+                        )}
                         <div className="p-4 bg-gray-50 md:col-span-2">
                           <p className="text-sm text-gray-500">Address</p>
                           {isEditing ? (

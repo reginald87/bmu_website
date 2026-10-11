@@ -1,7 +1,14 @@
 import uuid
+from datetime import timedelta
+
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+
+from .validators import (
+    normalize_jamb_registration_number,
+    validate_jamb_registration_number,
+)
 
 
 class Application(models.Model):
@@ -79,6 +86,16 @@ class Application(models.Model):
     # Application Details
     student_type = models.CharField(max_length=10, choices=STUDENT_TYPE_CHOICES)
     program = models.ForeignKey('academics.Program', on_delete=models.CASCADE)
+
+    # JAMB/UTME registration number. Required for undergraduate applicants; kept
+    # as the applicant's reference until (and after) matriculation. Unique per
+    # candidate — stored as NULL (not '') when absent so that legacy and
+    # postgraduate rows can coexist under the unique constraint.
+    jamb_registration_number = models.CharField(
+        max_length=20, blank=True, null=True, unique=True, default=None,
+        validators=[validate_jamb_registration_number],
+        help_text="JAMB/UTME registration number, e.g. 202660304236IE (undergraduate applicants)",
+    )
     
     # Academic Information - Removed single fields, use AcademicRecord for multiple
     # Keeping for backward compatibility if needed
@@ -113,6 +130,18 @@ class Application(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     submitted_at = models.DateTimeField(null=True, blank=True)
 
+    # Revision workflow. When admissions requests changes the applicant gets a
+    # limited window to edit the application and re-submit it. Once the deadline
+    # passes the application becomes read-only and must be handled by the office.
+    revision_due_at = models.DateTimeField(
+        null=True, blank=True,
+        help_text="Deadline for the applicant to resubmit after a revision request",
+    )
+    revision_note = models.TextField(
+        blank=True, default='',
+        help_text="Reason shown to the applicant when a revision is requested",
+    )
+
     class Meta:
         verbose_name = "Application"
         verbose_name_plural = "Applications"
@@ -124,8 +153,44 @@ class Application(models.Model):
             return False
         return 'bayelsa' in (self.state_of_origin or '').strip().lower()
 
+    @property
+    def revision_expired(self):
+        """True when a revision was requested but the edit window has closed."""
+        return bool(
+            self.revision_due_at
+            and timezone.now() > self.revision_due_at
+        )
+
+    @property
+    def is_editable(self):
+        """An application may only be edited in draft or while a revision is open."""
+        if self.status == 'draft':
+            return True
+        if self.status == 'revision_requested':
+            return not self.revision_expired
+        return False
+
+    def schedule_revision(self, days=None, note=None):
+        """Open a revision window for the applicant (used when status flips)."""
+        if days is None:
+            days = getattr(settings, 'ADMISSIONS_REVISION_WINDOW_DAYS', 14)
+        self.revision_due_at = timezone.now() + timedelta(days=days)
+        if note is not None:
+            self.revision_note = note
+        self.save(update_fields=['revision_due_at', 'revision_note'])
+
+    def clear_revision(self):
+        """Drop any pending revision window (on resubmit or status change)."""
+        if self.revision_due_at or self.revision_note:
+            self.revision_due_at = None
+            self.revision_note = ''
+            self.save(update_fields=['revision_due_at', 'revision_note'])
+
     def save(self, *args, **kwargs):
         self.is_indigene = self.is_bayelsa_indigene()
+        self.jamb_registration_number = normalize_jamb_registration_number(
+            self.jamb_registration_number
+        )
         if not self.id:
             # Application ID: BMU-YYYY-XXXX (created_at is None until saved)
             year = timezone.now().year

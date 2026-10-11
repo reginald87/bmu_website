@@ -357,7 +357,11 @@ def submit_application(request, application_id):
     # Update application
     was_revision = application.status == 'revision_requested'
     application.status = 'submitted'
-    if not was_revision:
+    if was_revision:
+        # Resubmitting closes the revision window.
+        application.revision_due_at = None
+        application.revision_note = ''
+    else:
         application.submitted_at = timezone.now()
     application.save()
     
@@ -389,31 +393,25 @@ class ApplicationAdminListView(generics.ListAPIView):
 
 def generate_matric_number(year=None):
     """Generate matriculation number in format UG/YY/XXXX"""
-    yy = (str(year) if year else str(timezone.now().year))[-2:]
-    
-    from accounts.models import StudentProfile
-    last_profile = StudentProfile.objects.filter(
-        matric_number__startswith=f'UG/{yy}/'
-    ).order_by('-matric_number').first()
-    
-    if last_profile and last_profile.matric_number:
-        try:
-            last_num = int(last_profile.matric_number.split('/')[-1])
-            new_num = last_num + 1
-        except (ValueError, IndexError):
-            new_num = 1
-    else:
-        new_num = 1
-    
-    return f'UG/{yy}/{new_num:04d}'
+    from .services import generate_undergraduate_matric_number
+    return generate_undergraduate_matric_number(year)
 
 
 def create_student_record(application):
-    """Create student user account and profile when application is accepted"""
+    """Create student user account and profile when application is accepted.
+
+    Important: acceptance is *not* matriculation. Undergraduate applicants keep
+    their JAMB registration number as their reference and receive no
+    matriculation number here — numbers are assigned in a batch later by the
+    admission officer. Postgraduate/certificate applicants receive their
+    permanent university number (``MSC/BMU/YEAR/0001`` etc.) on acceptance.
+    """
     from accounts.models import User, StudentProfile
-    from academics.models import Program
     from django.utils import timezone
-    
+    from .services import generate_postgraduate_number
+
+    level = getattr(application.program, 'level', None) if application.program else None
+
     # Check if user already exists for this email
     user, created = User.objects.get_or_create(
         email=application.email,
@@ -428,9 +426,9 @@ def create_student_record(application):
             'is_email_verified': True,
         }
     )
-    
+
     if not created:
-        # Update existing user
+        # Update existing user (preserving their password/credentials)
         user.first_name = application.first_name
         user.last_name = application.last_name
         user.phone = application.phone
@@ -439,40 +437,56 @@ def create_student_record(application):
         user.program = application.program
         user.is_email_verified = True
         user.save()
-    
-    # Generate matric number
-    matric_number = generate_matric_number()
-    
+
+    jamb = application.jamb_registration_number or None
+
     # Create or update student profile
-    profile, _ = StudentProfile.objects.get_or_create(
+    profile, profile_created = StudentProfile.objects.get_or_create(
         user=user,
         defaults={
-            'matric_number': matric_number,
             'admission_date': timezone.now().date(),
             'admission_type': 'utme',  # default, can be updated later
             'current_level': 100,
             'current_semester': 'first',
             'state_of_origin': application.address.split(',')[-1].strip() if application.address else None,
+            'jamb_registration_number': jamb,
         }
     )
-    
-    if not profile.matric_number:
-        profile.matric_number = matric_number
-        profile.save(update_fields=['matric_number'])
-    
+
+    if not profile_created and jamb and not profile.jamb_registration_number:
+        profile.jamb_registration_number = jamb
+
+    # Undergraduate numbers are issued at matriculation, never on acceptance.
+    # Postgraduate/certificate numbers are issued now.
+    university_number = None
+    if level != 'undergraduate':
+        university_number = generate_postgraduate_number(level)
+        if university_number and not profile.matric_number:
+            profile.matric_number = university_number
+
+    profile.save()
+
     # Link application to user
     application.applicant = user
     application.save(update_fields=['applicant'])
-    
+
+    if university_number:
+        text = (f'Congratulations! You have been offered admission. '
+                f'Your university number is {university_number}.')
+    else:
+        text = ('Congratulations! You have been offered admission. Your JAMB '
+                'registration number is your reference; your matriculation '
+                'number will be issued when you are matriculated.')
+
     # Create admission message
     ApplicationMessage.objects.create(
         application=application,
         type='success',
-        text=f'Congratulations! You have been offered admission. Your matriculation number is {matric_number}.',
+        text=text,
         from_name='Admissions Office'
     )
-    
-    return user, profile, matric_number
+
+    return user, profile, university_number
 
 
 @api_view(['POST'])
@@ -497,7 +511,13 @@ def update_application_status(request, application_id):
     old_status = application.status
     application.status = new_status
     application.save()
-    
+
+    # Open a revision window when changes are requested; close it otherwise.
+    if new_status == 'revision_requested' and old_status != 'revision_requested':
+        application.schedule_revision(note=request.data.get('note', ''))
+    elif old_status == 'revision_requested' and new_status != 'revision_requested':
+        application.clear_revision()
+
     # If status changed to accepted, create student record
     matric_number = None
     if new_status == 'accepted' and old_status != 'accepted':
@@ -520,9 +540,10 @@ def update_application_status(request, application_id):
         'status_display': application.get_status_display()
     }
     
+    response_data['matric_number'] = matric_number
+
     if matric_number:
-        response_data['matric_number'] = matric_number
-        response_data['message'] = f'Application accepted! Matriculation number generated: {matric_number}'
+        response_data['message'] = f'Application accepted! University number generated: {matric_number}'
     
     return Response(response_data)
 
@@ -550,7 +571,12 @@ class ApplicationUpdateView(generics.RetrieveUpdateAPIView):
         application = self.get_object()
         if application.applicant != request.user:
             return Response({'error': 'You can only edit your own applications'}, status=status.HTTP_403_FORBIDDEN)
-        if application.status not in ('draft', 'revision_requested'):
+        if not application.is_editable:
+            if application.status == 'revision_requested' and application.revision_expired:
+                return Response(
+                    {'error': 'The revision window has closed. Please contact the admissions office.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             return Response({'error': 'Application can only be edited in draft or revision_requested status'}, status=status.HTTP_400_BAD_REQUEST)
         return self.partial_update(request, *args, **kwargs)
 
@@ -559,6 +585,8 @@ class ApplicationUpdateView(generics.RetrieveUpdateAPIView):
         if application.status == 'revision_requested':
             application.status = 'submitted'
             application.submitted_at = timezone.now()
+            application.revision_due_at = None
+            application.revision_note = ''
             application.save()
 
             from .emails import notify_application_submitted
@@ -574,8 +602,8 @@ def replace_application_document(request, application_id, document_id):
     except Application.DoesNotExist:
         return Response({'error': 'Application not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    if application.status not in ('draft', 'revision_requested'):
-        return Response({'error': 'Documents can only be replaced in draft or revision_requested status'}, status=status.HTTP_400_BAD_REQUEST)
+    if not application.is_editable:
+        return Response({'error': 'Documents can only be replaced in draft or when a revision is open'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         document = ApplicationDocument.objects.get(id=document_id, application=application)

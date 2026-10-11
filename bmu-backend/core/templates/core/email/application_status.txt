@@ -8,11 +8,20 @@ Application ID: {{ application_id }}
 Programme:      {{ program }}
 New status:     {{ status_display }}
 {% if matric_number %}
-Matriculation number: {{ matric_number }}
+University number: {{ matric_number }}
 {% endif %}
 
 {% if next_steps %}
 Next step: {{ next_steps }}
+{% endif %}
+{% if needs_password_setup %}
+Your student portal account has been created. Set a password, then sign in with
+your email address ({{ email }}):
+{{ set_password_url }}
+
+{% else %}
+Sign in to your portal: {{ portal_login_url }}
+
 {% endif %}
 Track your application:
 {% if status_url %}{{ status_url }}{% endif %}
