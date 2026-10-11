@@ -23,11 +23,12 @@ import {
   Edit3,
   Save,
   X,
-  Download
+  Download,
+  CreditCard
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/useAuth';
-import { apiClient, downloadAdmissionDocument, type AdmissionDocumentKind } from '../../services/api';
+import { apiClient, downloadAdmissionDocument, startAdmissionPayment, verifyAdmissionPayment, type AdmissionDocumentKind } from '../../services/api';
 
 interface ApplicationStep {
   name: string;
@@ -409,6 +410,8 @@ const ApplicantDashboard = () => {
   const [saving, setSaving] = useState(false);
   const [downloadingDoc, setDownloadingDoc] = useState<AdmissionDocumentKind | null>(null);
   const [documentError, setDocumentError] = useState('');
+  const [isPaying, setIsPaying] = useState(false);
+  const [payError, setPayError] = useState('');
 
   const application = selectedApplication
     ? applications.find(app => app.id === selectedApplication)
@@ -443,6 +446,26 @@ const ApplicantDashboard = () => {
       setDocumentError(err instanceof Error ? err.message : 'Unable to download this document right now.');
     } finally {
       setDownloadingDoc(null);
+    }
+  };
+
+  const handlePayNow = async () => {
+    if (!application?.publicId) {
+      setPayError('This application cannot be paid online. Please contact the admissions office.');
+      return;
+    }
+    setPayError('');
+    setIsPaying(true);
+    try {
+      const start = await startAdmissionPayment(application.publicId);
+      if (!start.redirected) {
+        await verifyAdmissionPayment(application.publicId, start.reference);
+        window.location.reload();
+        return;
+      }
+    } catch (err) {
+      setPayError(err instanceof Error ? err.message : 'Unable to start the payment. Please try again.');
+      setIsPaying(false);
     }
   };
 
@@ -810,7 +833,7 @@ const ApplicantDashboard = () => {
                         Ref: <span className="font-mono text-gray-900">{application.paymentReference}</span>
                       </span>
                     )}
-                    {application.paymentStatus === 'completed' && (
+                    {application.paymentStatus === 'completed' ? (
                       <button
                         onClick={() => handleDocumentDownload('receipt')}
                         disabled={downloadingDoc !== null}
@@ -819,11 +842,23 @@ const ApplicantDashboard = () => {
                         {downloadingDoc === 'receipt' ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                         Payment Receipt
                       </button>
+                    ) : (
+                      <button
+                        onClick={handlePayNow}
+                        disabled={isPaying}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-ink-900 text-white font-medium hover:bg-primary-600 disabled:opacity-60 transition"
+                      >
+                        {isPaying ? <Clock className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
+                        {isPaying ? 'Starting payment...' : 'Pay Application Fee'}
+                      </button>
                     )}
                   </div>
                 </div>
                 {documentError && (
                   <p className="mt-3 text-sm text-red-600">{documentError}</p>
+                )}
+                {payError && (
+                  <p className="mt-3 text-sm text-red-600">{payError}</p>
                 )}
               </div>
             )}

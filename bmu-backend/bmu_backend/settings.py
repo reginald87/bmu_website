@@ -256,6 +256,18 @@ PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY', '')
 # Demo/simulation mode is an explicit opt-in only. When the secret key is set,
 # payments are ALWAYS verified against the gateway unless this is True.
 PAYSTACK_TEST_MODE = os.getenv('PAYSTACK_TEST_MODE', 'False') == 'True'
+# Application fee used only as a fallback when a programme has no fee set.
+PAYSTACK_APPLICATION_FEE = os.getenv('PAYSTACK_APPLICATION_FEE', '0')
+# Administrative/service fee added on top of the application fee (per currency).
+PAYSTACK_ADMIN_FEE = os.getenv('PAYSTACK_ADMIN_FEE', '0')
+PAYSTACK_ADMIN_FEE_USD = os.getenv('PAYSTACK_ADMIN_FEE_USD', '0')
+# Convenience fee added on top of (application fee + service fee) to cover the
+# gateway's own transaction charge (1.5% by default).
+PAYSTACK_GATEWAY_FEE_RATE = os.getenv('PAYSTACK_GATEWAY_FEE_RATE', '0.015')
+# Paystack split payments: route the service portion to a subaccount. Split
+# codes are NGN-only.
+USE_SPLIT_PAYMENT = os.getenv('USE_SPLIT_PAYMENT', 'False') == 'True'
+PAYSTACK_SPLIT_CODE = os.getenv('PAYSTACK_SPLIT_CODE', '')
 
 # ── Celery ────────────────────────────────────────────────────────────────────
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.conf import settings
+from decimal import Decimal
 
 
 class College(models.Model):
@@ -311,6 +312,20 @@ class Program(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def effective_application_fee_local(self):
+        """Application fee in NGN: the programme's own fee, else its level default."""
+        if self.application_fee_local and self.application_fee_local > 0:
+            return self.application_fee_local
+        fee = ApplicationFee.resolve(self.level)
+        return fee.local_fee if fee else Decimal('0')
+
+    def effective_application_fee_intl(self):
+        """Application fee in USD: the programme's own fee, else its level default."""
+        if self.application_fee_intl and self.application_fee_intl > 0:
+            return self.application_fee_intl
+        fee = ApplicationFee.resolve(self.level)
+        return fee.intl_fee if fee else Decimal('0')
+
     class Meta:
         verbose_name = "Program"
         verbose_name_plural = "Programs"
@@ -318,6 +333,42 @@ class Program(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ApplicationFee(models.Model):
+    """Default application fee per programme level.
+
+    A programme's own ``application_fee_local``/``application_fee_intl`` takes
+    precedence when set; otherwise the fee for its level is used. This lets you
+    charge, e.g., postgraduate applicants a different fee without editing every
+    programme.
+    """
+
+    level = models.CharField(
+        max_length=20, choices=Program.LEVEL_CHOICES, unique=True
+    )
+    local_fee = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0, help_text="Application fee in NGN"
+    )
+    intl_fee = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0, help_text="Application fee in USD"
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Application Fee"
+        verbose_name_plural = "Application Fees"
+        ordering = ['level']
+
+    def __str__(self):
+        return f"{self.get_level_display()}: NGN {self.local_fee} / USD {self.intl_fee}"
+
+    @classmethod
+    def resolve(cls, level):
+        """Return the configured fee row for a level (or ``None``)."""
+        if not level:
+            return None
+        return cls.objects.filter(level=level).first()
 
 
 class ProgramAccreditation(models.Model):

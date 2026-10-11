@@ -327,6 +327,26 @@ export const fetchApplyPrograms = async (): Promise<ApplyProgramApi[]> => {
   }
 };
 
+export interface PaymentFeesApi {
+  service_fee_local: number;
+  service_fee_intl: number;
+  gateway_fee_rate: number;
+}
+
+export const fetchPaymentFees = async (): Promise<PaymentFeesApi> => {
+  try {
+    const response = await apiClient.get('/public/payment-fees');
+    const data = response.data as Partial<PaymentFeesApi> | undefined;
+    return {
+      service_fee_local: Number(data?.service_fee_local) || 0,
+      service_fee_intl: Number(data?.service_fee_intl) || 0,
+      gateway_fee_rate: Number(data?.gateway_fee_rate) || 0,
+    };
+  } catch {
+    return { service_fee_local: 0, service_fee_intl: 0, gateway_fee_rate: 0 };
+  }
+};
+
 interface FetchFacultyParams {
   college?: string;
   department?: string;

@@ -17,7 +17,7 @@ from django.db.models import Count, Q, Sum, Avg
 from django.utils import timezone
 from typing import Any, List, Optional
 from datetime import datetime, date
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from django.conf import settings
 
 User = get_user_model()
@@ -210,6 +210,20 @@ class ApplyProgramSchema(Schema):
     @staticmethod
     def resolve_college_name(obj):
         return obj.college.name if obj.college else None
+
+    @staticmethod
+    def resolve_application_fee_local(obj):
+        return float(obj.effective_application_fee_local())
+
+    @staticmethod
+    def resolve_application_fee_intl(obj):
+        return float(obj.effective_application_fee_intl())
+
+
+class PaymentFeesSchema(Schema):
+    service_fee_local: float
+    service_fee_intl: float
+    gateway_fee_rate: float
 
 
 class ProgramAccreditationSchema(Schema):
@@ -1130,6 +1144,16 @@ def list_apply_programs(request):
         .select_related('college')
         .order_by('display_order', 'title')
     )
+
+
+@public_router.get("/payment-fees", response=PaymentFeesSchema)
+def get_payment_fees(request):
+    """Service fees and gateway rate used to compute the total application fee."""
+    return {
+        'service_fee_local': float(_to_decimal(getattr(settings, 'PAYSTACK_ADMIN_FEE', '0'))),
+        'service_fee_intl': float(_to_decimal(getattr(settings, 'PAYSTACK_ADMIN_FEE_USD', '0'))),
+        'gateway_fee_rate': float(_to_decimal(getattr(settings, 'PAYSTACK_GATEWAY_FEE_RATE', '0.015'))),
+    }
 
 
 @public_router.get("/programs/{slug}", response=ProgramDetailSchema)
@@ -6521,6 +6545,57 @@ def _application_fee(application):
     return program.application_fee_local, 'NGN'
 
 
+def _to_decimal(value):
+    """Best-effort conversion of a settings/DB value to ``Decimal``."""
+    try:
+        return Decimal(str(value if value not in (None, '') else '0'))
+    except (InvalidOperation, ValueError, TypeError):
+        return Decimal('0')
+
+
+def _payment_breakdown(application):
+    """Compute the full amount to charge for an application's fee.
+
+    The applicant pays the programme's application fee, plus an administrative
+    service fee, plus a small convenience fee covering the gateway's own
+    transaction charge. Returns a dict with ``base``, ``service_fee``,
+    ``gateway_fee``, ``total``, ``currency`` and an optional ``split_code``
+    (NGN only, only when split payments are enabled).
+    """
+    program = application.program
+    if application.student_type == 'INTL':
+        base = _to_decimal(program.effective_application_fee_intl())
+        if base <= 0:
+            base = _to_decimal(getattr(settings, 'PAYSTACK_APPLICATION_FEE', '0'))
+        service = _to_decimal(getattr(settings, 'PAYSTACK_ADMIN_FEE_USD', '0'))
+        currency = 'USD'
+    else:
+        base = _to_decimal(program.effective_application_fee_local())
+        if base <= 0:
+            base = _to_decimal(getattr(settings, 'PAYSTACK_APPLICATION_FEE', '0'))
+        service = _to_decimal(getattr(settings, 'PAYSTACK_ADMIN_FEE', '0'))
+        currency = 'NGN'
+
+    subtotal = base + service
+    rate = _to_decimal(getattr(settings, 'PAYSTACK_GATEWAY_FEE_RATE', '0.015'))
+    gateway_fee = (subtotal * rate).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+    total = (subtotal + gateway_fee).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
+    split_code = None
+    if currency == 'NGN' and getattr(settings, 'USE_SPLIT_PAYMENT', False):
+        code = (getattr(settings, 'PAYSTACK_SPLIT_CODE', '') or '').strip()
+        split_code = code or None
+
+    return {
+        'base': base,
+        'service_fee': service,
+        'gateway_fee': gateway_fee,
+        'total': total,
+        'currency': currency,
+        'split_code': split_code,
+    }
+
+
 def _finalize_application_payment(application):
     """Mark an application's fee as paid and run the follow-up side effects."""
     application.payment_status = 'completed'
@@ -6572,7 +6647,7 @@ def submit_application(request, data: ApplicationSubmitSchema):
         state_of_origin=data.state_of_origin or '',
         lga=data.lga or '',
         previous_institution='',
-        payment_currency='NGN',
+        payment_currency='USD' if data.student_type == 'INTL' else 'NGN',
         applicant=_optional_auth_user(request),
     )
 
@@ -6593,7 +6668,7 @@ def submit_application(request, data: ApplicationSubmitSchema):
     from admissions.emails import notify_application_submitted
     notify_application_submitted(app)
 
-    fee, fee_currency = _application_fee(app)
+    breakdown = _payment_breakdown(app)
     return {
         'id': app.id,
         'public_id': str(app.public_id),
@@ -6607,10 +6682,10 @@ def submit_application(request, data: ApplicationSubmitSchema):
         'status_display': app.get_status_display(),
         'progress_percentage': app.progress_percentage,
         'payment_status': 'pending',
-        'payment_amount': float(fee),
-        'payment_currency': fee_currency,
-        'fee': float(fee),
-        'fee_currency': fee_currency,
+        'payment_amount': float(breakdown['total']),
+        'payment_currency': breakdown['currency'],
+        'fee': float(breakdown['base']),
+        'fee_currency': breakdown['currency'],
         'submitted_at': app.submitted_at.isoformat() if app.submitted_at else None,
     }
 
@@ -6642,7 +6717,13 @@ def get_application_status(request, application_id: str):
         raise HttpError(404, 'Application not found')
 
     status_display = dict(Application.STATUS_CHOICES).get(app.status, app.status)
-    fee, fee_currency = _application_fee(app)
+    breakdown = _payment_breakdown(app)
+    if app.payment_amount is not None:
+        display_amount = float(app.payment_amount)
+        display_currency = app.payment_currency or breakdown['currency']
+    else:
+        display_amount = float(breakdown['total'])
+        display_currency = breakdown['currency']
     payload = {
         'id': app.id,
         'public_id': str(app.public_id),
@@ -6652,13 +6733,13 @@ def get_application_status(request, application_id: str):
         'status_display': status_display,
         'progress_percentage': app.progress_percentage,
         'payment_status': app.payment_status,
-        'payment_amount': float(app.payment_amount) if app.payment_amount is not None else None,
-        'payment_currency': app.payment_currency,
+        'payment_amount': display_amount,
+        'payment_currency': display_currency,
         'payment_method': app.payment_method,
         'payment_reference': app.payment_reference,
         'paid_at': app.paid_at.isoformat() if app.paid_at else None,
-        'fee': float(fee),
-        'fee_currency': fee_currency,
+        'fee': float(breakdown['base']),
+        'fee_currency': breakdown['currency'],
         'submitted_at': app.submitted_at.isoformat() if app.submitted_at else None,
     }
     if expose_pii:
@@ -6753,11 +6834,13 @@ def initialize_application_payment(request, application_id: str):
     if app.payment_status == 'completed':
         raise HttpError(400, 'This application has already been paid for.')
 
-    fee, currency = _application_fee(app)
+    breakdown = _payment_breakdown(app)
+    currency = breakdown['currency']
+    total = breakdown['total']
     reference = f'ADM-{app.id}-{int(datetime.now().timestamp())}'
 
     app.payment_method = 'paystack'
-    app.payment_amount = fee
+    app.payment_amount = total
     app.payment_currency = currency
     app.payment_reference = reference
     app.payment_status = 'pending'
@@ -6781,15 +6864,20 @@ def initialize_application_payment(request, application_id: str):
     )
     payload = {
         'email': app.email,
-        'amount': int(Decimal(str(fee)) * 100),
+        'amount': int(total * 100),
         'reference': reference,
         'callback_url': callback_url,
         'currency': currency,
         'metadata': {
             'application_id': app.id,
             'public_id': str(app.public_id),
+            'application_fee': float(breakdown['base']),
+            'service_fee': float(breakdown['service_fee']),
+            'gateway_fee': float(breakdown['gateway_fee']),
         },
     }
+    if breakdown['split_code']:
+        payload['split_code'] = breakdown['split_code']
     headers = {
         'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
         'Content-Type': 'application/json',

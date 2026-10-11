@@ -111,9 +111,10 @@ export const ApplicationStatus = () => {
     statusConfig[status] || defaultStatusStyle;
 
   const isPaid = application?.payment_status === 'paid' || application?.payment_status === 'completed';
-  const feeCurrency = application?.fee_currency || application?.payment_currency || 'NGN';
-  const feeLabel = application?.fee != null
-    ? `${feeCurrency === 'USD' ? '$' : '₦'}${Number(application.fee).toLocaleString()}`
+  const displayAmount = application?.payment_amount ?? application?.fee ?? null;
+  const feeCurrency = application?.payment_currency || application?.fee_currency || 'NGN';
+  const feeLabel = displayAmount != null
+    ? `${feeCurrency === 'USD' ? '$' : '₦'}${Number(displayAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     : '';
 
   return (
@@ -319,7 +320,7 @@ export const ApplicationStatus = () => {
                           Starting payment...
                         </>
                       ) : (
-                        `Pay Application Fee${feeLabel ? ` (${feeLabel})` : ''}`
+                        `Pay ${feeLabel || 'Application Fee'}`
                       )}
                     </button>
                   )}

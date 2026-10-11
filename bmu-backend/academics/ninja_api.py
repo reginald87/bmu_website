@@ -58,6 +58,14 @@ class ProgramDetailSchema(ProgramListSchema):
     application_fee_local: float
     application_fee_international: float
 
+    @staticmethod
+    def resolve_application_fee_local(obj):
+        return float(obj.effective_application_fee_local())
+
+    @staticmethod
+    def resolve_application_fee_international(obj):
+        return float(obj.effective_application_fee_intl())
+
 
 class FacultyListSchema(Schema):
     id: int

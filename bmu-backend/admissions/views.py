@@ -217,9 +217,9 @@ def submit_application_payment(request, application_id):
     method = serializer.validated_data['payment_method']
     reference = serializer.validated_data.get('payment_reference', '')
     expected_amount = (
-        application.program.application_fee_local
+        application.program.effective_application_fee_local()
         if application.student_type == 'LOCAL'
-        else application.program.application_fee_intl
+        else application.program.effective_application_fee_intl()
     )
 
     application.payment_method = method

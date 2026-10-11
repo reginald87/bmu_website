@@ -7,6 +7,7 @@ from .models import (
     ProgramAccreditation, ProgramFacility, ProgramHighlight,
     ProgramCurriculumYear, ProgramCurriculumCourse, ProgramAdmissionRequirement,
     RegistrationPeriod, CourseSchedule,
+    ApplicationFee,
 )
 
 
@@ -166,6 +167,12 @@ class ProgramAdmin(admin.ModelAdmin):
         ProgramAccreditationInline, ProgramFacilityInline, ProgramHighlightInline,
         ProgramCurriculumYearInline, ProgramAdmissionRequirementInline
     ]
+
+
+@admin.register(ApplicationFee)
+class ApplicationFeeAdmin(admin.ModelAdmin):
+    list_display = ['level', 'local_fee', 'intl_fee', 'updated_at']
+    ordering = ['level']
 
 
 @admin.register(Course)

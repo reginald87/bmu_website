@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { validatePersonalInfo, validateAcademicInfo, validateApplicantOrigin, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
 import { NIGERIAN_STATES, getLgas } from '../../data/nigeriaLGAs';
-import { uploadApplicationDocument, fetchApplyPrograms, startAdmissionPayment } from '../../services/api';
+import { uploadApplicationDocument, fetchApplyPrograms, fetchPaymentFees, startAdmissionPayment, type PaymentFeesApi } from '../../services/api';
 import { useAuth } from '../../contexts/useAuth';
 
 // Step configuration
@@ -788,16 +788,24 @@ const ReviewPayStep = ({
   data, 
   onSubmit,
   isSubmitting,
-  submitError
+  submitError,
+  paymentFees
 }: { 
   data: { studentType: string | null, program: ApplyProgram | null, personal: PersonalInfoForm },
   onSubmit: () => void,
   isSubmitting?: boolean,
-  submitError?: string | null
+  submitError?: string | null,
+  paymentFees?: PaymentFeesApi | null
 }) => {
-  const fee = data.studentType === 'INTL' 
-    ? `$${data.program?.feeIntl || 50}` 
-    : `₦${(data.program?.feeLocal || 10000).toLocaleString()}`;
+  const isIntl = data.studentType === 'INTL';
+  const symbol = isIntl ? '$' : '₦';
+  const base = (isIntl ? data.program?.feeIntl : data.program?.feeLocal) ?? (isIntl ? 50 : 10000);
+  const service = (isIntl ? paymentFees?.service_fee_intl : paymentFees?.service_fee_local) ?? 0;
+  const rate = paymentFees?.gateway_fee_rate ?? 0;
+  const subtotal = base + service;
+  const gatewayFee = subtotal * rate;
+  const total = subtotal + gatewayFee;
+  const money = (n: number) => `${symbol}${n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
   return (
     <div className="space-y-6">
@@ -840,9 +848,27 @@ const ReviewPayStep = ({
             </span>
           </div>
         )}
-        <div className="flex justify-between items-center pt-2">
-          <span className="text-lg font-semibold">Application Fee</span>
-          <span className="text-2xl font-bold text-ink-900">{fee}</span>
+        <div className="space-y-2 pt-2 border-t">
+          <div className="flex justify-between items-center text-gray-600">
+            <span>Application Fee</span>
+            <span className="font-medium text-gray-900">{money(base)}</span>
+          </div>
+          {service > 0 && (
+            <div className="flex justify-between items-center text-gray-600">
+              <span>Service Fee</span>
+              <span className="font-medium text-gray-900">{money(service)}</span>
+            </div>
+          )}
+          {rate > 0 && (
+            <div className="flex justify-between items-center text-gray-600">
+              <span>Processing Fee ({(rate * 100).toFixed(1)}%)</span>
+              <span className="font-medium text-gray-900">{money(gatewayFee)}</span>
+            </div>
+          )}
+          <div className="flex justify-between items-center pt-2 border-t">
+            <span className="text-lg font-semibold">Total</span>
+            <span className="text-2xl font-bold text-ink-900">{money(total)}</span>
+          </div>
         </div>
       </div>
 
@@ -878,7 +904,7 @@ const ReviewPayStep = ({
             Submitting...
           </>
         ) : (
-          `Pay ${fee} & Submit Application`
+          `Pay ${money(total)} & Submit Application`
         )}
       </button>
       
@@ -936,6 +962,7 @@ export const ApplicationPortal = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [programs, setPrograms] = useState<ApplyProgram[]>([]);
   const [programsLoading, setProgramsLoading] = useState(true);
+  const [paymentFees, setPaymentFees] = useState<PaymentFeesApi | null>(null);
   const savedDraft = loadDraft();
   const [formData, setFormData] = useState<ApplicationFormData>(() => savedDraft || {
     studentType: null,
@@ -973,6 +1000,9 @@ export const ApplicationPortal = () => {
       .finally(() => {
         if (active) setProgramsLoading(false);
       });
+    fetchPaymentFees().then((fees) => {
+      if (active) setPaymentFees(fees);
+    });
     return () => {
       active = false;
     };
@@ -1267,6 +1297,7 @@ export const ApplicationPortal = () => {
                     onSubmit={handleSubmit}
                     isSubmitting={isSubmitting}
                     submitError={submitError}
+                    paymentFees={paymentFees}
                   />
                 )}
               </motion.div>
