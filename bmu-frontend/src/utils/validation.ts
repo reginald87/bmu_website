@@ -12,6 +12,8 @@ export const validateEmail = (email: string): string | null => {
 
 export const JAMB_REGISTRATION_REGEX = /^\d{12}[A-Z]{2}$/;
 
+export const DE_JAMB_REGISTRATION_REGEX = /^DE\/\d{4}\/\d{6}$/;
+
 export const validateJambRegistrationNumber = (value: string): string | null => {
   const normalized = (value || '').trim().toUpperCase();
   if (!normalized) return 'JAMB registration number is required';
@@ -22,6 +24,20 @@ export const validateJambRegistrationNumber = (value: string): string | null => 
   const maxYear = new Date().getFullYear() + 1;
   if (year < 2010 || year > maxYear) {
     return 'The JAMB registration number has an invalid year';
+  }
+  return null;
+};
+
+export const validateDeJambRegistrationNumber = (value: string): string | null => {
+  const normalized = (value || '').trim().toUpperCase();
+  if (!normalized) return 'JAMB Direct Entry registration number is required';
+  if (!DE_JAMB_REGISTRATION_REGEX.test(normalized)) {
+    return 'Enter a valid JAMB Direct Entry registration number, e.g. DE/2026/123456';
+  }
+  const year = parseInt(normalized.slice(3, 7), 10);
+  const maxYear = new Date().getFullYear() + 1;
+  if (year < 2010 || year > maxYear) {
+    return 'The JAMB Direct Entry registration number has an invalid year';
   }
   return null;
 };

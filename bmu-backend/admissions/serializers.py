@@ -106,9 +106,10 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'date_of_birth', 'gender', 'gender_display', 'address',
             'nationality', 'state_of_origin', 'lga', 'is_indigene',
             'student_type', 'student_type_display',
+            'entry_mode',
             'program', 'program_title', 'program_college', 'program_level',
             'previous_institution',
-            'jamb_registration_number',
+            'jamb_registration_number', 'de_jamb_registration_number',
             'status', 'status_display', 'progress_percentage',
             'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
             'provisional_admission_accepted', 'provisional_admission_accepted_at',
@@ -131,18 +132,23 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'last_name', 'email', 'phone',
             'date_of_birth', 'gender', 'address',
             'nationality', 'state_of_origin', 'lga',
-            'student_type', 'program',
-            'jamb_registration_number',
+            'student_type', 'entry_mode', 'program',
+            'jamb_registration_number', 'de_jamb_registration_number',
             'previous_institution', 'academic_records', 'passport'
         ]
         read_only_fields = ['id']
 
     def validate(self, attrs):
         program = attrs.get('program')
+        entry_mode = attrs.get('entry_mode', 'UTME')
         jamb = (attrs.get('jamb_registration_number') or '').strip().upper() or None
+        de_jamb = (attrs.get('de_jamb_registration_number') or '').strip().upper() or None
+
+        from django.core.exceptions import ValidationError as DjangoValidationError
+        from .validators import validate_jamb_registration_number, validate_de_jamb_registration_number
+
+        # Validate UTME JAMB number
         if jamb:
-            from django.core.exceptions import ValidationError as DjangoValidationError
-            from .validators import validate_jamb_registration_number
             try:
                 jamb = validate_jamb_registration_number(jamb)
             except DjangoValidationError as exc:
@@ -152,12 +158,43 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
                     'jamb_registration_number':
                         'This JAMB registration number is already in use on another application.'
                 })
-        elif program and program.level == 'undergraduate':
-            raise serializers.ValidationError({
-                'jamb_registration_number':
-                    'A JAMB registration number is required for undergraduate applications.'
-            })
+
+        # Validate DE JAMB number
+        if de_jamb:
+            try:
+                de_jamb = validate_de_jamb_registration_number(de_jamb)
+            except DjangoValidationError as exc:
+                raise serializers.ValidationError({'de_jamb_registration_number': exc.messages})
+            if Application.objects.filter(de_jamb_registration_number=de_jamb).exists():
+                raise serializers.ValidationError({
+                    'de_jamb_registration_number':
+                        'This JAMB Direct Entry registration number is already in use on another application.'
+                })
+
+        # Conditional requirements based on entry_mode and program level
+        if program and program.level == 'undergraduate':
+            if entry_mode == 'DE':
+                if not de_jamb:
+                    raise serializers.ValidationError({
+                        'de_jamb_registration_number':
+                            'A JAMB Direct Entry registration number is required for Direct Entry applications.'
+                    })
+            elif entry_mode == 'UTME':
+                if not jamb:
+                    raise serializers.ValidationError({
+                        'jamb_registration_number':
+                            'A JAMB/UTME registration number is required for UTME applications.'
+                    })
+            else:
+                # TRANSFER - at least one JAMB number
+                if not jamb and not de_jamb:
+                    raise serializers.ValidationError({
+                        'jamb_registration_number':
+                            'A JAMB registration number (UTME or DE) is required for undergraduate applications.'
+                    })
+
         attrs['jamb_registration_number'] = jamb
+        attrs['de_jamb_registration_number'] = de_jamb
         return attrs
 
     def validate_program(self, program):
@@ -202,6 +239,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     payment_status_display = serializers.CharField(source='get_payment_status_display', read_only=True)
     is_editable = serializers.BooleanField(read_only=True)
     program_level = serializers.CharField(source='program.level', read_only=True)
+    entry_mode_display = serializers.CharField(source='get_entry_mode_display', read_only=True)
     
     documents = ApplicationDocumentSerializer(many=True, read_only=True)
     steps = ApplicationStepSerializer(many=True, read_only=True)
@@ -215,8 +253,9 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             'date_of_birth', 'gender', 'gender_display', 'address',
             'nationality', 'state_of_origin', 'lga', 'is_indigene',
             'student_type', 'student_type_display',
+            'entry_mode', 'entry_mode_display',
             'program', 'program_title',
-            'jamb_registration_number', 'program_level',
+            'jamb_registration_number', 'de_jamb_registration_number', 'program_level',
             'status', 'status_display', 'progress_percentage',
             'is_editable', 'revision_due_at', 'revision_note',
             'payment_status', 'payment_status_display',
@@ -234,12 +273,11 @@ class ApplicationStatusSerializer(serializers.ModelSerializer):
     revision_expired = serializers.BooleanField(read_only=True)
     steps = ApplicationStepSerializer(many=True, read_only=True)
     
-    class Meta:
+class Meta:
         model = Application
         fields = ['id', 'status', 'status_display', 'progress_percentage',
             'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
             'provisional_admission_accepted', 'provisional_admission_accepted_at',
-                  'provisional_admission_accepted', 'provisional_admission_accepted_at',
             'steps', 'submitted_at']
 
 
@@ -259,7 +297,8 @@ class ApplicationUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'first_name', 'last_name', 'email', 'phone',
             'date_of_birth', 'gender', 'address',
-            'jamb_registration_number',
+            'entry_mode',
+            'jamb_registration_number', 'de_jamb_registration_number',
             'previous_institution', 'academic_records', 'passport'
         ]
 
@@ -282,18 +321,56 @@ class ApplicationUpdateSerializer(serializers.ModelSerializer):
             )
         return normalized
 
+    def validate_de_jamb_registration_number(self, value):
+        normalized = (value or '').strip().upper() or None
+        if not normalized:
+            return None
+        from django.core.exceptions import ValidationError as DjangoValidationError
+        from .validators import validate_de_jamb_registration_number
+        try:
+            normalized = validate_de_jamb_registration_number(normalized)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError(exc.messages)
+        clashes = Application.objects.filter(de_jamb_registration_number=normalized)
+        if self.instance is not None:
+            clashes = clashes.exclude(pk=self.instance.pk)
+        if clashes.exists():
+            raise serializers.ValidationError(
+                'This JAMB Direct Entry registration number is already in use on another application.'
+            )
+        return normalized
+
     def validate(self, attrs):
         instance = self.instance
+        entry_mode = attrs.get('entry_mode', instance.entry_mode if instance else 'UTME')
         jamb = attrs.get(
             'jamb_registration_number',
             instance.jamb_registration_number if instance else None,
         )
-        if (instance and instance.program
-                and instance.program.level == 'undergraduate' and not jamb):
-            raise serializers.ValidationError({
-                'jamb_registration_number':
-                    'A JAMB registration number is required for undergraduate applications.'
-            })
+        de_jamb = attrs.get(
+            'de_jamb_registration_number',
+            instance.de_jamb_registration_number if instance else None,
+        )
+
+        if instance and instance.program and instance.program.level == 'undergraduate':
+            if entry_mode == 'DE':
+                if not de_jamb:
+                    raise serializers.ValidationError({
+                        'de_jamb_registration_number':
+                            'A JAMB Direct Entry registration number is required for Direct Entry applications.'
+                    })
+            elif entry_mode == 'UTME':
+                if not jamb:
+                    raise serializers.ValidationError({
+                        'jamb_registration_number':
+                            'A JAMB/UTME registration number is required for UTME applications.'
+                    })
+            else:
+                if not jamb and not de_jamb:
+                    raise serializers.ValidationError({
+                        'jamb_registration_number':
+                            'A JAMB registration number (UTME or DE) is required for undergraduate applications.'
+                    })
         return attrs
 
     def update(self, instance, validated_data):

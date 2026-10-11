@@ -8,6 +8,8 @@ from django.utils import timezone
 from .validators import (
     normalize_jamb_registration_number,
     validate_jamb_registration_number,
+    normalize_de_jamb_registration_number,
+    validate_de_jamb_registration_number,
 )
 
 
@@ -17,6 +19,12 @@ class Application(models.Model):
     STUDENT_TYPE_CHOICES = [
         ('LOCAL', 'Nigerian Student'),
         ('INTL', 'International Student'),
+    ]
+
+    ENTRY_MODE_CHOICES = [
+        ('UTME', 'UTME (100 Level)'),
+        ('DE', 'Direct Entry (200 Level)'),
+        ('TRANSFER', 'Transfer'),
     ]
     
     STATUS_CHOICES = [
@@ -86,6 +94,12 @@ class Application(models.Model):
     # Application Details
     student_type = models.CharField(max_length=10, choices=STUDENT_TYPE_CHOICES)
     program = models.ForeignKey('academics.Program', on_delete=models.CASCADE)
+    entry_mode = models.CharField(
+        max_length=10,
+        choices=ENTRY_MODE_CHOICES,
+        default='UTME',
+        help_text="UTME for 100 Level, Direct Entry for 200 Level, Transfer for inter-university transfers"
+    )
 
     # JAMB/UTME registration number. Required for undergraduate applicants; kept
     # as the applicant's reference until (and after) matriculation. Unique per
@@ -94,7 +108,15 @@ class Application(models.Model):
     jamb_registration_number = models.CharField(
         max_length=20, blank=True, null=True, unique=True, default=None,
         validators=[validate_jamb_registration_number],
-        help_text="JAMB/UTME registration number, e.g. 202660304236IE (undergraduate applicants)",
+        help_text="JAMB/UTME registration number, e.g. 202660304236IE (UTME applicants)",
+    )
+
+# JAMB Direct Entry registration number. Required for Direct Entry applicants.
+    # Format differs from UTME (e.g. DE/2026/123456); kept NULL when not applicable.
+    de_jamb_registration_number = models.CharField(
+        max_length=25, blank=True, null=True, unique=True, default=None,
+        validators=[validate_de_jamb_registration_number],
+        help_text="JAMB Direct Entry registration number (DE applicants)",
     )
     
     # Applicant's explicit acceptance of the provisional offer.
@@ -207,6 +229,9 @@ class Application(models.Model):
         self.is_indigene = self.is_bayelsa_indigene()
         self.jamb_registration_number = normalize_jamb_registration_number(
             self.jamb_registration_number
+        )
+        self.de_jamb_registration_number = normalize_de_jamb_registration_number(
+            self.de_jamb_registration_number
         )
         if not self.id:
             # Application ID: BMU-YYYY-XXXX (created_at is None until saved)
@@ -338,6 +363,9 @@ class ApplicationDocument(models.Model):
         ('certificate_of_origin', 'Certificate of Origin'),
         ('english_proficiency', 'English Proficiency (INTL)'),
         ('reference_letters', 'Reference Letters'),
+        ('utme_result', 'UTME Result Slip'),
+        ('de_jamb_form', 'JAMB Direct Entry Form'),
+        ('de_qualifications', 'DE Qualifications (JUPEB/HND/OND/BSc/NCE)'),
         ('other', 'Other'),
     ]
     

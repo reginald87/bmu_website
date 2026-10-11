@@ -16,7 +16,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { validatePersonalInfo, validateAcademicInfo, validateApplicantOrigin, validateJambRegistrationNumber, getFieldError, type ValidationError } from '../../utils/validation';
+import { validatePersonalInfo, validateAcademicInfo, validateApplicantOrigin, validateJambRegistrationNumber, validateDeJambRegistrationNumber, getFieldError, type ValidationError } from '../../utils/validation';
 import { useSubmitApplication } from '../../services/apiHooks';
 import { NIGERIAN_STATES, getLgas } from '../../data/nigeriaLGAs';
 import { uploadApplicationDocument, fetchApplyPrograms, fetchPaymentFees, startAdmissionPayment, type PaymentFeesApi } from '../../services/api';
@@ -201,6 +201,13 @@ const ProgramStep = ({
   );
 };
 
+// Entry mode types
+const entryModes = [
+  { id: 'UTME', name: 'UTME (100 Level)', description: 'JAMB UTME for 100 Level admission' },
+  { id: 'DE', name: 'Direct Entry (200 Level)', description: 'JAMB Direct Entry for 200 Level (JUPEB, HND, OND, BSc)' },
+  { id: 'TRANSFER', name: 'Transfer', description: 'Inter-university transfer' },
+];
+
 // Step 3: Personal Info
 interface PersonalInfoForm {
   firstName?: string;
@@ -214,24 +221,30 @@ interface PersonalInfoForm {
   originState?: string;
   lga?: string;
   jambRegistrationNumber?: string;
+  deJambRegistrationNumber?: string;
+  entryMode?: string;
 }
 
 const PersonalInfoStep = ({ 
   data, 
   studentType,
-  showJamb,
+  programLevel,
   onChange,
   errors,
   touched 
 }: { 
   data: PersonalInfoForm, 
   studentType: string | null,
-  showJamb: boolean,
+  programLevel: string | null,
   onChange: (field: string, value: string) => void,
   errors: ValidationError[],
   touched: Record<string, boolean>
 }) => {
   const getError = (field: string) => touched[field] ? getFieldError(errors, field) : null;
+  const isUndergrad = programLevel === 'UG';
+  const entryMode = data.entryMode || 'UTME';
+  const showUtmeJamb = isUndergrad && entryMode === 'UTME';
+  const showDeJamb = isUndergrad && entryMode === 'DE';
   
   return (
     <div className="space-y-6">
@@ -299,9 +312,28 @@ const PersonalInfoStep = ({
             <p id="phone-error" className="mt-1 text-sm text-red-600">{getError('phone')}</p>
           )}
         </div>
-        {showJamb && (
+        {isUndergrad && (
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Entry Mode *</label>
+            <select
+              value={data.entryMode || 'UTME'}
+              onChange={(e) => onChange('entryMode', e.target.value)}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('entryMode') ? 'border-red-500' : '' }`}
+              aria-invalid={!!getError('entryMode')}
+              aria-describedby={getError('entryMode') ? 'entryMode-error' : undefined}
+            >
+              {entryModes.map((mode) => (
+                <option key={mode.id} value={mode.id}>{mode.name}</option>
+              ))}
+            </select>
+            {getError('entryMode') && (
+              <p id="entryMode-error" className="mt-1 text-sm text-red-600">{getError('entryMode')}</p>
+            )}
+          </div>
+        )}
+        {showUtmeJamb && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">JAMB Registration Number *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">JAMB Registration Number (UTME) *</label>
             <input
               type="text"
               value={data.jambRegistrationNumber || ''}
@@ -315,6 +347,25 @@ const PersonalInfoStep = ({
               <p id="jambRegistrationNumber-error" className="mt-1 text-sm text-red-600">{getError('jambRegistrationNumber')}</p>
             ) : (
               <p className="mt-1 text-xs text-gray-500">12 digits followed by 2 letters, as printed on your JAMB result slip.</p>
+            )}
+          </div>
+        )}
+        {showDeJamb && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">JAMB Direct Entry Registration Number *</label>
+            <input
+              type="text"
+              value={data.deJambRegistrationNumber || ''}
+              onChange={(e) => onChange('deJambRegistrationNumber', e.target.value.toUpperCase())}
+              className={`w-full px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-600 ${ getError('deJambRegistrationNumber') ? 'border-red-500' : '' }`}
+              placeholder="e.g. DE/2026/123456"
+              aria-invalid={!!getError('deJambRegistrationNumber')}
+              aria-describedby={getError('deJambRegistrationNumber') ? 'deJambRegistrationNumber-error' : undefined}
+            />
+            {getError('deJambRegistrationNumber') ? (
+              <p id="deJambRegistrationNumber-error" className="mt-1 text-sm text-red-600">{getError('deJambRegistrationNumber')}</p>
+            ) : (
+              <p className="mt-1 text-xs text-gray-500">Format: DE/YYYY/NNNNNN (e.g. DE/2026/123456)</p>
             )}
           </div>
         )}
@@ -1056,18 +1107,31 @@ export const ApplicationPortal = () => {
     let stepErrors: ValidationError[] = [];
     
     switch (step) {
-      case 3:
-        stepErrors = [
-          ...validatePersonalInfo(formData.personal),
-          ...validateApplicantOrigin(formData.personal, formData.studentType),
-        ];
-        if (formData.program?.level === 'UG') {
-          const jambError = validateJambRegistrationNumber(formData.personal.jambRegistrationNumber || '');
-          if (jambError) {
-            stepErrors.push({ field: 'jambRegistrationNumber', message: jambError });
+case 3:
+          stepErrors = [
+            ...validatePersonalInfo(formData.personal),
+            ...validateApplicantOrigin(formData.personal, formData.studentType),
+          ];
+          if (formData.program?.level === 'UG') {
+            // Validate entry mode is provided
+            if (!formData.personal.entryMode) {
+              stepErrors.push({ field: 'entryMode', message: 'Entry mode is required for undergraduate programs' });
+            }
+            // Conditional JAMB validation based on entry mode
+            const entryMode = formData.personal.entryMode || 'UTME';
+            if (entryMode === 'UTME') {
+              const jambError = validateJambRegistrationNumber(formData.personal.jambRegistrationNumber || '');
+              if (jambError) {
+                stepErrors.push({ field: 'jambRegistrationNumber', message: jambError });
+              }
+            } else if (entryMode === 'DE') {
+              const deJambError = validateDeJambRegistrationNumber(formData.personal.deJambRegistrationNumber || '');
+              if (deJambError) {
+                stepErrors.push({ field: 'deJambRegistrationNumber', message: deJambError });
+              }
+            }
           }
-        }
-        break;
+          break;
       case 4:
         stepErrors = validateAcademicInfo(formData.academicRecords);
         break;
@@ -1127,15 +1191,17 @@ export const ApplicationPortal = () => {
         email: formData.personal.email || '',
         phone: formData.personal.phone || '',
         date_of_birth: formData.personal.dob || '',
-        gender: formData.personal.gender || '',
-        address: formData.personal.address || '',
-        nationality: formData.studentType === 'INTL' ? (formData.personal.country || '') : 'Nigeria',
-        state_of_origin: formData.personal.originState || '',
-        lga: formData.personal.lga || '',
-        program_id: formData.program?.id || 0,
-        student_type: formData.studentType || '',
-        jamb_registration_number: formData.personal.jambRegistrationNumber || '',
-        academic_records: academicRecordsPayload,
+gender: formData.personal.gender || '',
+          address: formData.personal.address || '',
+          nationality: formData.studentType === 'INTL' ? (formData.personal.country || '') : 'Nigeria',
+          state_of_origin: formData.personal.originState || '',
+          lga: formData.personal.lga || '',
+          program_id: formData.program?.id || 0,
+          student_type: formData.studentType || '',
+          entry_mode: formData.personal.entryMode || 'UTME',
+          jamb_registration_number: formData.personal.jambRegistrationNumber || '',
+          de_jamb_registration_number: formData.personal.deJambRegistrationNumber || '',
+          academic_records: academicRecordsPayload,
       });
 
       // Upload documents after application is created.
@@ -1173,9 +1239,18 @@ export const ApplicationPortal = () => {
     switch (currentStep) {
       case 1: return !!formData.studentType;
       case 2: return !!formData.program;
-      case 3: return !!(formData.personal.firstName && formData.personal.lastName && formData.personal.email)
-        && !!formData.personal.originState
-        && !!(formData.studentType === 'INTL' ? formData.personal.country : formData.personal.lga);
+case 3: {
+            const p = formData.personal;
+            const hasBasic = !!(p.firstName && p.lastName && p.email && p.originState
+              && (formData.studentType === 'INTL' ? p.country : p.lga));
+            if (!hasBasic) return false;
+            if (formData.program?.level === 'UG') {
+              if (!p.entryMode) return false;
+              if (p.entryMode === 'UTME') return !!p.jambRegistrationNumber;
+              if (p.entryMode === 'DE') return !!p.deJambRegistrationNumber;
+            }
+            return true;
+          }
       case 4: return formData.academicRecords.length > 0 && formData.academicRecords.some(r => r.institution && r.qualification);
       case 5: {
         const requiredDocNames = requiredDocuments.filter(d => d.required).map(d => d.name);
@@ -1263,19 +1338,17 @@ export const ApplicationPortal = () => {
                   />
                 )}
                 
-                {currentStep === 3 && (
-                  <PersonalInfoStep 
-                    data={formData.personal}
-                    studentType={formData.studentType}
-                    showJamb={formData.program?.level === 'UG'}
-                    onChange={(field, value) => {
-                      setFormData(prev => ({
-                        ...prev,
-                        personal: { ...prev.personal, [field]: value },
-                      }));
-                      // Mark field as touched
-                      setTouched(prev => ({ ...prev, [field]: true }));
-                    }}
+{currentStep === 3 && (
+                    <PersonalInfoStep
+                      data={formData.personal}
+                      studentType={formData.studentType}
+                      programLevel={formData.program?.level ?? null}
+                      onChange={(field, value) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          personal: { ...prev.personal, [field]: value },
+                        }));
+                      }}
                     errors={errors}
                     touched={touched}
                   />

@@ -439,22 +439,40 @@ def create_student_record(application):
         user.save()
 
     jamb = application.jamb_registration_number or None
+    de_jamb = application.de_jamb_registration_number or None
+
+    # Determine admission_type from entry_mode
+    if application.entry_mode == 'DE':
+        admission_type = 'de'
+        default_level = 200
+    elif application.entry_mode == 'TRANSFER':
+        admission_type = 'transfer'
+        default_level = 200  # or determine from credits
+    else:
+        admission_type = 'utme'
+        default_level = 100
 
     # Create or update student profile
     profile, profile_created = StudentProfile.objects.get_or_create(
         user=user,
         defaults={
             'admission_date': timezone.now().date(),
-            'admission_type': 'utme',  # default, can be updated later
-            'current_level': 100,
+            'admission_type': admission_type,
+            'current_level': default_level,
             'current_semester': 'first',
             'state_of_origin': application.address.split(',')[-1].strip() if application.address else None,
-            'jamb_registration_number': jamb,
+            'jamb_registration_number': jamb or de_jamb,
         }
     )
 
-    if not profile_created and jamb and not profile.jamb_registration_number:
-        profile.jamb_registration_number = jamb
+    if not profile_created:
+        if (jamb or de_jamb) and not profile.jamb_registration_number:
+            profile.jamb_registration_number = jamb or de_jamb
+        # Update admission_type if not set
+        if not profile.admission_type:
+            profile.admission_type = admission_type
+        if profile.current_level == 100 and default_level != 100:
+            profile.current_level = default_level
 
     # Undergraduate numbers are issued at matriculation, never on acceptance.
     # Postgraduate/certificate numbers are issued now.
@@ -473,6 +491,10 @@ def create_student_record(application):
     if university_number:
         text = (f'Congratulations! You have been offered admission. '
                 f'Your university number is {university_number}.')
+    elif application.entry_mode == 'DE':
+        text = ('Congratulations! You have been offered admission. Your JAMB '
+                'Direct Entry registration number is your reference; your '
+                'matriculation number will be issued when you are matriculated.')
     else:
         text = ('Congratulations! You have been offered admission. Your JAMB '
                 'registration number is your reference; your matriculation '

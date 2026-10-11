@@ -855,20 +855,22 @@ export interface AcademicRecordPayload {
 }
 
 export const submitApplication = async (data: {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  date_of_birth?: string;
-  gender?: string;
-  address?: string;
-  nationality?: string;
-  state_of_origin?: string;
-  lga?: string;
-  program_id: number;
-  student_type: string;
-  jamb_registration_number?: string;
-  academic_records?: AcademicRecordPayload[];
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    date_of_birth?: string;
+    gender?: string;
+    address?: string;
+    nationality?: string;
+    state_of_origin?: string;
+    lga?: string;
+    program_id: number;
+    student_type: string;
+    entry_mode?: string;
+    jamb_registration_number?: string;
+    de_jamb_registration_number?: string;
+    academic_records?: AcademicRecordPayload[];
 }): Promise<ApplicationData> => {
   const response = await apiClient.post('/public/applications', data);
   return response.data;

@@ -28,15 +28,15 @@ class ApplicationMessageInline(admin.TabularInline):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'program', 'student_type', 'is_indigene', 'status', 'payment_status', 'created_at']
-    list_filter = ['status', 'payment_status', 'student_type', 'is_indigene', 'program__level', 'created_at']
-    search_fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'jamb_registration_number']
+    list_display = ['id', 'first_name', 'last_name', 'program_title', 'student_type', 'entry_mode', 'is_indigene', 'status', 'payment_status', 'created_at']
+    list_filter = ['status', 'payment_status', 'student_type', 'entry_mode', 'is_indigene', 'program__level', 'created_at']
+    search_fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'jamb_registration_number', 'de_jamb_registration_number']
     readonly_fields = ['id', 'created_at', 'updated_at', 'submitted_at', 'is_indigene']
     inlines = [AcademicRecordInline, ApplicationDocumentInline, ApplicationStepInline, ApplicationMessageInline]
     actions = ['matriculate_undergraduates', 'request_jamb_details']
     fieldsets = (
         ('Application Info', {
-            'fields': ('id', 'status', 'progress_percentage', 'student_type', 'program', 'jamb_registration_number')
+            'fields': ('id', 'status', 'progress_percentage', 'student_type', 'entry_mode', 'program', 'jamb_registration_number', 'de_jamb_registration_number')
         }),
         ('Revision', {
             'fields': ('revision_due_at', 'revision_note'),
@@ -60,7 +60,9 @@ class ApplicationAdmin(admin.ModelAdmin):
         }),
     )
 
-    @admin.action(description='Request JAMB registration number from selected undergraduate applicants')
+    def program_title(self, obj):
+        return obj.program.title if obj.program else '-'
+    program_title.short_description = 'Program'
     def request_jamb_details(self, request, queryset):
         """Open a revision asking legacy/UG applicants to supply their JAMB number.
 
