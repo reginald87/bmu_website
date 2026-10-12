@@ -2255,7 +2255,7 @@ class PortalDefinitionSchema(Schema):
     icon: str
     color: str
     audience: str
-    features: dict
+    features: List[str] = []
     display_order: int
 
 
