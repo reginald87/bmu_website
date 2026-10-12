@@ -258,6 +258,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             'jamb_registration_number', 'de_jamb_registration_number', 'program_level',
             'status', 'status_display', 'progress_percentage',
             'is_editable', 'revision_due_at', 'revision_note',
+            'provisional_admission_accepted', 'provisional_admission_accepted_at',
             'payment_status', 'payment_status_display',
             'payment_amount', 'payment_currency', 'payment_method',
             'payment_reference', 'paid_at',
