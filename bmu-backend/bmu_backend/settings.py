@@ -317,7 +317,7 @@ JAZZMIN_SETTINGS = {
     "copyright": "Bayelsa Medical University © 2024 ASPIRE Administration",
     "user_avatar": None,
     "show_sidebar": True,
-    "navigation_expanded": True,
+    "navigation_expanded": False,
     "hide_apps": [],
     "hide_models": [],
     "icons": {
@@ -356,11 +356,6 @@ JAZZMIN_SETTINGS = {
         "portals.Announcement": "fas fa-bell",
         "portals.MenuItems": "fas fa-sitemap",
     },
-    "order_with_respect_to": [
-        "accounts", "content", "academics",
-        "admissions", "research", "careers",
-        "library", "portals", "archive",
-    ],
     "language_chooser": False,
     "show_ui_toggle": True,
     "navbar_compact_style": False,
