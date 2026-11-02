@@ -8,12 +8,31 @@ import {
 import { useAuth } from '../../contexts/useAuth';
 import { apiClient } from '../../services/api';
 
+interface FeeStructureItem {
+  fee_type: string;
+  category: string;
+  amount: number;
+}
+
+interface FeeStructure {
+  id: number;
+  session: string;
+  level: number;
+  semester: string;
+  is_indigene: boolean;
+  total_amount: number;
+  max_installments: number;
+  items: FeeStructureItem[];
+}
+
 interface DashboardData {
   total_courses: number;
   current_gpa: number | null;
   current_cgpa: number | null;
   total_fees_paid: number;
   pending_fees: number;
+  amount_due: number;
+  fee_structure: FeeStructure | null;
   upcoming_events: Array<{ id: number; title: string; event_date: string; location: string; event_type: string }>;
   recent_results: Array<{ session: string; semester: string; level: string; gpa: number; cgpa: number; academic_status: string; is_published: boolean }>;
   enrolled_courses: Array<{ id: number; course_code: string; course_title: string; credit_units: number; total_score: number | null; grade: string; attendance_percentage: number | null }>;
@@ -87,6 +106,62 @@ export const StudentPortal = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Fee Balance */}
+      {dashboard && (dashboard.amount_due > 0 || dashboard.fee_structure) && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 bg-white shadow-sm border border-gray-100 rounded p-6 flex flex-col md:flex-row md:items-start justify-between gap-6"
+        >
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl font-bold text-gray-900 mb-1">Fee Balance</h2>
+            <p className="text-sm text-gray-500">
+              <span className="font-medium">Amount Due:</span>{' '}
+              <span className="font-bold text-primary-600">₦{dashboard.amount_due.toLocaleString()}</span>
+            </p>
+            {dashboard.fee_structure ? (
+              <div className="mt-4">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-600">Fee Breakdown</h3>
+                  <span className="text-xs text-gray-400">{dashboard.fee_structure.session}</span>
+                  <span className="inline-block px-2 py-0.5 text-xs font-medium bg-ink-900/10 text-ink-900 rounded">
+                    {dashboard.fee_structure.is_indigene ? 'Indigene' : 'Non-Indigene'}
+                  </span>
+                </div>
+                {dashboard.fee_structure.items.length > 0 ? (
+                  <div className="space-y-1">
+                    {dashboard.fee_structure.items.map((item, index) => (
+                      <div key={index} className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">{item.fee_type}</span>
+                        <span className="font-medium text-gray-900">₦{item.amount.toLocaleString()}</span>
+                      </div>
+                    ))}
+                    <div className="flex items-center justify-between text-sm pt-2 mt-1 border-t">
+                      <span className="font-semibold text-gray-900">Total</span>
+                      <span className="font-bold text-gray-900">₦{dashboard.fee_structure.total_amount.toLocaleString()}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">No fee components published yet.</p>
+                )}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 mt-2">No fee structure available for this session.</p>
+            )}
+          </div>
+          <div className="flex md:flex-col gap-3 md:w-40 flex-shrink-0">
+            <div className="flex-1 p-3 bg-gray-50 rounded">
+              <p className="text-xs font-medium text-gray-600">Paid</p>
+              <p className="text-lg font-bold text-green-700">₦{dashboard.total_fees_paid.toLocaleString()}</p>
+            </div>
+            <div className="flex-1 p-3 bg-gray-50 rounded">
+              <p className="text-xs font-medium text-gray-600">Pending</p>
+              <p className="text-lg font-bold text-primary-600">₦{dashboard.pending_fees.toLocaleString()}</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Quick Access + Events */}

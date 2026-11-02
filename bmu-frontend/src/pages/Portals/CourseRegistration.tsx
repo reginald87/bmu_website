@@ -10,6 +10,7 @@ import {
 import { useAuth } from '../../contexts/useAuth';
 import { registrationApi, type AvailableCourse, type CurrentRegistration } from '../../services/api';
 
+
 const STATUS_COLORS: Record<string, string> = {
   draft: 'bg-gray-100 text-gray-700',
   submitted: 'bg-blue-100 text-blue-700',
@@ -145,6 +146,30 @@ export const CourseRegistration = () => {
       toast.error(e?.response?.data?.detail || 'Failed to submit registration');
     } finally {
       setActionLoading(null);
+    }
+  };
+
+  const handleDownloadEnrollmentForm = async () => {
+    const element = document.getElementById('enrollment-form');
+    if (!element) {
+      toast.error('Form not found');
+      return;
+    }
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf'),
+      ]);
+      const canvas = await html2canvas(element);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      const pdfWidth = 210;
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('enrollment_form_' + new Date().getFullYear() + '.pdf');
+      toast.success('Enrollment form downloaded');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Failed to download form');
     }
   };
 
@@ -415,6 +440,13 @@ export const CourseRegistration = () => {
                         <Send className="w-4 h-4" />
                       )}
                       Submit Registration
+                    </button>
+                    <button
+                      onClick={handleDownloadEnrollmentForm}
+                      disabled={actionLoading === 'submit'}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition disabled:opacity-50 text-sm mt-2"
+                    >
+                      <Download className="w-3.5 h-3.5" /> Download Enrollment Form
                     </button>
                   </div>
                 </motion.div>

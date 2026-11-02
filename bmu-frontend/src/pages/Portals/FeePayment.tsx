@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Navigate } from 'react-router-dom';
 import { CreditCard, DollarSign, CheckCircle, AlertCircle, Loader, Wallet } from 'lucide-react';
 import { useAuth } from '../../contexts/useAuth';
-import { apiClient } from '../../services/api';
+import { apiClient, downloadStudentFeeReceipt } from '../../services/api';
 
 interface FeeStructureItem {
   fee_type: string;
@@ -31,9 +31,12 @@ interface FeeStatus {
 
 interface FeePayment {
   id: number;
+  fee_type: string;
   fee_type_label: string;
+  fee_type_ref_id: number | null;
   session: string;
   semester: string;
+  installment: string;
   amount: number;
   status: string;
   status_display: string;
@@ -68,7 +71,10 @@ export const FeePayment = () => {
         setFeeStatus(fs.data);
         setPayments(pmts.data);
       })
-      .catch(() => {})
+      .catch(() => {
+        setMessage({ type: 'error', text: 'Failed to load fee status' });
+        setFeeStatus(null);
+      })
       .finally(() => setIsLoading(false));
   }, [session, semester, isAuthenticated, user?.role]);
 
@@ -77,7 +83,7 @@ export const FeePayment = () => {
     setMessage(null);
     try {
       const res = await apiClient.post('/auth/student/payment/initialize', {
-        fee_type_id: 1,
+        fee_structure_id: structure?.id,
         session,
         semester,
         gateway,
@@ -105,13 +111,24 @@ export const FeePayment = () => {
 
   const verifyPayment = async (ref: string) => {
     try {
-      await apiClient.post('/auth/student/payment/verify', {
+      const res = await apiClient.post('/auth/student/payment/verify', {
         reference: ref,
-        gateway: 'remita',
+        gateway,
       });
-      setMessage({ type: 'success', text: 'Payment verified successfully!' });
+      const data = res.data;
       const fsRes = await apiClient.get(`/auth/student/fee-status?session=${session}&semester=${semester}`);
       setFeeStatus(fsRes.data);
+      if (data.status === 'completed') {
+        setMessage({ type: 'success', text: 'Payment verified successfully!' });
+        const pmtsRes = await apiClient.get(`/auth/student/fees?session=${session}&semester=${semester}`);
+        setPayments(pmtsRes.data);
+        const payment = pmtsRes.data.find((item: FeePayment) => item.payment_reference === ref);
+        if (payment) {
+          await downloadStudentFeeReceipt(payment.id);
+        }
+      } else {
+        setMessage({ type: 'success', text: 'Payment verified successfully!' });
+      }
     } catch (err) {
       const e = err as { response?: { data?: { error?: string } } };
       setMessage({ type: 'error', text: e.response?.data?.error || 'Verification failed' });
@@ -125,6 +142,9 @@ export const FeePayment = () => {
   const outstanding_total = feeStatus?.outstanding_total ?? 0;
   const is_clear = feeStatus?.is_clear ?? true;
   const structure = feeStatus?.structure;
+  const amountDue = installment === 'full'
+    ? outstanding_total
+    : (feeStatus?.installment_due ?? outstanding_total);
 
   return (
     <>
@@ -161,6 +181,14 @@ export const FeePayment = () => {
                     <div className="text-xs text-gray-500">Max {structure.max_installments} installments</div>
                   </div>
                 )}
+
+                <div className="mb-4 p-4 bg-blue-50 border border-blue-200">
+                  <div className="text-xs text-blue-900 font-medium">Outstanding Amount</div>
+                  <div className="text-2xl font-bold text-blue-900">₦{outstanding_total.toLocaleString()}</div>
+                  <div className="text-xs text-blue-700 mt-1">
+                    {is_clear ? 'All fees cleared for this session.' : `Outstanding balance owed for ${session} ${semester}.`}
+                  </div>
+                </div>
 
                 {is_clear ? (
                   <div className="text-center py-8">
@@ -209,7 +237,7 @@ export const FeePayment = () => {
                     </div>
                     <button onClick={handlePay} disabled={paying} className="w-full py-3 bg-primary-600 text-white font-medium hover:bg-primary-600/90 transition disabled:opacity-50 flex items-center justify-center gap-2">
                       {paying ? <Loader className="w-5 h-5 animate-spin" /> : <CreditCard className="w-5 h-5" />}
-                      {paying ? 'Processing...' : `Pay with ${gateway === 'paystack' ? 'Paystack' : 'Remita'}`}
+                      {paying ? 'Processing...' : `Pay with ${gateway === 'paystack' ? 'Paystack' : 'Remita'} · ₦${amountDue.toLocaleString()}`}
                     </button>
                   </div>
                 )}
@@ -241,6 +269,9 @@ export const FeePayment = () => {
                           <span className={`text-xs px-1.5 py-0.5 ${p.status === 'completed' ? 'bg-green-100 text-green-700' : p.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
                             {p.status_display}
                           </span>
+                          {p.status === 'completed' && (
+                            <button onClick={() => downloadStudentFeeReceipt(p.id)} className="block text-xs text-blue-600 underline mt-1">Download Receipt</button>
+                          )}
                           {p.payment_reference && p.status === 'pending' && p.payment_method === 'remita' && (
                             <button onClick={() => verifyPayment(p.payment_reference)} className="block text-xs text-blue-600 underline mt-1">Verify</button>
                           )}

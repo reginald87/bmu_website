@@ -13,8 +13,8 @@ const KB = 1024
 // Budgets (gzip). Give generous headroom; raise intentionally, never silently.
 const BUDGETS = {
   initialGzip: 300 * KB, // entry + modulepreloaded chunks (first load)
-  chunkGzip: 120 * KB, // any single JS chunk
-  totalGzip: 1000 * KB, // every JS chunk combined
+  chunkGzip: 140 * KB, // any single JS chunk (jspdf ~126 kB gzip, lazy-loaded)
+  totalGzip: 1150 * KB, // every JS chunk combined (incl. on-demand jspdf/html2canvas)
 }
 
 const gzipSize = (p) => gzipSync(readFileSync(p)).length
