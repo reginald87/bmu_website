@@ -11,33 +11,95 @@ import {
   ChevronRight,
   Filter,
   Loader2,
+  GraduationCap,
+  Building2,
+  Crown,
+  Landmark,
+  Network,
+  AlertCircle,
   type LucideIcon
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useSearchResults } from '../../services/apiHooks';
+import type { SearchResultItemData } from '../../services/mockData';
 
 const typeIcons: Record<string, LucideIcon> = {
-  page: FileText,
-  event: Calendar,
+  faculty: Users,
+  leadership: Crown,
+  publication: FileText,
+  program: GraduationCap,
   news: BookOpen,
-  portal: Users
+  event: Calendar,
+  college: Building2,
+  faculty_unit: Landmark,
+  department: Network
 };
 
-const categories = ['All', 'About', 'Academics', 'Admissions', 'Research', 'Events', 'News', 'Portals', 'Contact'];
+const typeLabels: Record<string, string> = {
+  faculty: 'Faculty Member',
+  leadership: 'Leadership',
+  publication: 'Publication',
+  program: 'Program',
+  news: 'News',
+  event: 'Event',
+  college: 'College',
+  faculty_unit: 'Faculty',
+  department: 'Department'
+};
+
+const categories: { label: string; types: string[] }[] = [
+  { label: 'All', types: [] },
+  { label: 'People', types: ['faculty', 'leadership'] },
+  { label: 'Programs', types: ['program'] },
+  { label: 'Publications', types: ['publication'] },
+  { label: 'News', types: ['news'] },
+  { label: 'Events', types: ['event'] },
+  { label: 'Academic Units', types: ['college', 'faculty_unit', 'department'] }
+];
+
+const resolveResultUrl = (result: SearchResultItemData): string => {
+  const type = (result.type || '').toLowerCase();
+  const slug = result.slug;
+
+  switch (type) {
+    case 'faculty':
+      return `/research/faculty/${result.id}`;
+    case 'leadership':
+      return `/about/leadership/${result.id}`;
+    case 'publication':
+      return `/research/publications/${result.id}`;
+    case 'program':
+      return slug ? `/academics/programs/${slug}` : '/academics/programs';
+    case 'news':
+      return slug ? `/news/${slug}` : '/news';
+    case 'event':
+      return slug ? `/events/${slug}` : '/events';
+    case 'college':
+      return slug ? `/colleges/${slug}` : '/colleges';
+    case 'faculty_unit':
+      return slug ? `/faculties/${slug}` : '/faculties';
+    case 'department':
+      return slug ? `/departments/${slug}` : '/academics/departments';
+    default: {
+      const url = (result.url || '').trim();
+      return url && url !== '#' ? url : '/search';
+    }
+  }
+};
 
 export const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const { data: searchData, isLoading } = useSearchResults(searchQuery);
+  const { data: searchData, isLoading, isError } = useSearchResults(searchQuery);
 
   // Update URL params
   useEffect(() => {
     if (searchQuery) {
-      setSearchParams({ q: searchQuery });
+      setSearchParams({ q: searchQuery }, { replace: true });
     } else {
-      setSearchParams({});
+      setSearchParams({}, { replace: true });
     }
   }, [searchQuery, setSearchParams]);
 
@@ -46,9 +108,10 @@ export const Search = () => {
   };
 
   const allResults = searchData?.results ?? [];
-  const results = selectedCategory === 'All'
+  const activeCategory = categories.find(cat => cat.label === selectedCategory) ?? categories[0];
+  const results = activeCategory.types.length === 0
     ? allResults
-    : allResults.filter(item => item.type.toLowerCase() === selectedCategory.toLowerCase());
+    : allResults.filter(item => activeCategory.types.includes(item.type.toLowerCase()));
 
   return (
     <>
@@ -98,15 +161,15 @@ export const Search = () => {
             <Filter className="w-4 h-4 text-gray-400 mr-2" />
             {categories.map(cat => (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                key={cat.label}
+                onClick={() => setSelectedCategory(cat.label)}
                 className={`px-4 py-2 text-sm font-medium transition ${
-                  selectedCategory === cat
+                  selectedCategory === cat.label
                     ? 'bg-ink-900 text-white'
                     : 'bg-white text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                {cat}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -119,7 +182,7 @@ export const Search = () => {
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Searching...
                 </div>
-              ) : (
+              ) : isError ? null : (
                 <span>
                   Found <strong>{results.length}</strong> result{results.length !== 1 ? 's' : ''} for "{searchQuery}"
                 </span>
@@ -175,6 +238,33 @@ export const Search = () => {
                   ))}
                 </div>
               </motion.div>
+            ) : isError && allResults.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-center py-16 max-w-md mx-auto"
+              >
+                <AlertCircle className="w-16 h-16 text-red-200 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Search is unavailable</h3>
+                <p className="text-gray-500 mb-6">
+                  We couldn't complete that search right now. Please try again in a moment.
+                </p>
+                <div className="flex justify-center gap-3">
+                  <button
+                    onClick={clearSearch}
+                    className="px-4 py-2 text-ink-900 font-medium hover:bg-ink-900/10 transition"
+                  >
+                    Clear Search
+                  </button>
+                  <Link
+                    to="/contact"
+                    className="px-4 py-2 bg-ink-900 text-white font-medium hover:bg-ink-900/90 transition"
+                  >
+                    Contact Support
+                  </Link>
+                </div>
+              </motion.div>
             ) : results.length > 0 ? (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -183,16 +273,17 @@ export const Search = () => {
                 className="space-y-4"
               >
                 {results.map((result, index) => {
-                  const Icon = typeIcons[result.type] || FileText;
+                  const Icon = typeIcons[result.type.toLowerCase()] || FileText;
+                  const href = resolveResultUrl(result);
                   return (
                     <motion.div
-                      key={result.id}
+                      key={`${result.type}-${result.id}`}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
                     >
                       <Link
-                        to={result.url}
+                        to={href}
                         className="block p-6 bg-white shadow-sm transition group"
                       >
                         <div className="flex items-start gap-4">
@@ -202,7 +293,7 @@ export const Search = () => {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 uppercase tracking-wide">
-                                {result.type}
+                                {typeLabels[result.type.toLowerCase()] || result.type}
                               </span>
                             </div>
                             <h3 className="font-bold text-lg text-gray-900 group-hover:text-ink-900 transition line-clamp-1">

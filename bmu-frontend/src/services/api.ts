@@ -39,6 +39,7 @@ import type {
   InnovationProgramData,
   UniversityProjectData,
   SearchResponseData,
+  SearchResultItemData,
   ExchangeProgramData,
   StudentSupportServiceData,
   CampusFeatureData,
@@ -682,20 +683,75 @@ export const fetchPublicationById = async (id: string): Promise<PublicationData 
 };
 
 export const fetchSearchResults = async (query: string, limit: number = 20): Promise<SearchResponseData> => {
+  const mock = (): SearchResponseData => {
+    const needle = query.trim().toLowerCase();
+    const matches = (...values: (string | null | undefined)[]) =>
+      values.some((value) => (value || '').toLowerCase().includes(needle));
+
+    const results: SearchResultItemData[] = [];
+
+    mockNews
+      .filter((item) => matches(item.title, item.excerpt, item.category))
+      .forEach((item) => results.push({
+        id: item.id, title: item.title, type: 'news', slug: item.slug,
+        description: item.excerpt, url: `/news/${item.slug}`, image: null, metadata: null,
+      }));
+
+    mockPublications
+      .filter((item) => matches(item.title, item.journal, item.abstract, ...item.authors))
+      .forEach((item) => results.push({
+        id: item.id, title: item.title, type: 'publication', slug: null,
+        description: `${item.authors.join(', ')} (${item.year})`,
+        url: `/research/publications/${item.id}`, image: null,
+        metadata: { year: item.year, journal: item.journal },
+      }));
+
+    mockFaculty
+      .filter((item) => matches(item.firstName, item.lastName, item.position, item.researchInterests))
+      .forEach((item) => results.push({
+        id: item.id, title: `${item.title} ${item.firstName} ${item.lastName}`.trim(),
+        type: 'faculty', slug: null,
+        description: [item.positionDisplay || item.position, item.department].filter(Boolean).join(' · '),
+        url: `/research/faculty/${item.id}`, image: null, metadata: null,
+      }));
+
+    const programs = [
+      ...mockPrograms.undergraduate,
+      ...mockPrograms.masters,
+      ...mockPrograms.phd,
+      ...mockPrograms.certificate,
+    ];
+    programs
+      .filter((item) => matches(item.title, item.requirements, item.department, item.college))
+      .forEach((item) => results.push({
+        id: item.id, title: item.title, type: 'program', slug: item.slug,
+        description: item.department || item.college || item.duration,
+        url: `/academics/programs/${item.slug}`, image: null, metadata: null,
+      }));
+
+    mockColleges
+      .filter((item) => matches(item.name, item.description))
+      .forEach((item) => results.push({
+        id: item.id, title: item.name, type: 'college', slug: item.slug,
+        description: item.description, url: `/colleges/${item.slug}`,
+        image: null, metadata: null,
+      }));
+
+    return {
+      query,
+      total_results: results.length,
+      results: results.slice(0, limit),
+      authors_count: results.filter((item) => item.type === 'faculty' || item.type === 'leadership').length,
+      publications_count: results.filter((item) => item.type === 'publication').length,
+      programs_count: results.filter((item) => item.type === 'program').length,
+      news_count: results.filter((item) => item.type === 'news').length,
+      events_count: results.filter((item) => item.type === 'event').length,
+    };
+  };
+
   return fetchWithFallback(
     `/public/search?q=${encodeURIComponent(query)}&limit=${limit}`,
-    () => ({
-      query,
-      total_results: 4,
-      results: [
-        { id: 1, title: 'Search Result 1', type: 'publication', slug: null, description: 'Example result for: ' + query, url: '#', image: null, metadata: null },
-        { id: 2, title: 'Search Result 2', type: 'program', slug: null, description: 'Another result for: ' + query, url: '#', image: null, metadata: null },
-      ],
-      authors_count: 1,
-      publications_count: 1,
-      programs_count: 1,
-      news_count: 1,
-    }),
+    mock,
     undefined,
     false
   );
@@ -919,6 +975,131 @@ export const startAdmissionPayment = async (
     return { redirected: true, reference: init.reference };
   }
   return { redirected: false, reference: init.reference };
+};
+
+export interface AcceptanceFeeResult {
+  message: string;
+  acceptance_fee_amount: number;
+  acceptance_fee_admin_fee: number;
+  acceptance_fee_gateway_fee: number;
+  acceptance_fee_total: number;
+  acceptance_fee_currency: string;
+  acceptance_fee_session: string;
+  acceptance_fee_status: string;
+}
+
+export const acceptProvisionalAdmission = async (
+  applicationId: string
+): Promise<AcceptanceFeeResult> => {
+  const response = await apiClient.post(
+    `/v1/admissions/applications/${encodeURIComponent(applicationId)}/accept-provisional/`
+  );
+  return response.data;
+};
+
+export const initializeAcceptanceFeePayment = async (
+  applicationId: string
+): Promise<AdmissionPaymentInitResult> => {
+  const response = await apiClient.post(
+    `/public/applications/${encodeURIComponent(applicationId)}/initialize-acceptance-fee`
+  );
+  return response.data;
+};
+
+export const verifyAcceptanceFeePayment = async (
+  applicationId: string,
+  reference: string
+): Promise<AdmissionPaymentVerifyResult> => {
+  const response = await apiClient.get(
+    `/public/applications/${encodeURIComponent(applicationId)}/verify-acceptance-fee`,
+    { params: { reference } }
+  );
+  return response.data;
+};
+
+/**
+ * Initialize an acceptance fee payment. When a real gateway URL is returned the
+ * browser is redirected to Paystack; otherwise (demo/no gateway) the caller
+ * receives the reference so it can verify immediately.
+ */
+export const startAcceptanceFeePayment = async (
+  applicationId: string
+): Promise<AdmissionPaymentStart> => {
+  const init = await initializeAcceptanceFeePayment(applicationId);
+  if (init.authorization_url && /^https?:\/\//i.test(init.authorization_url)) {
+    window.location.assign(init.authorization_url);
+    return { redirected: true, reference: init.reference };
+  }
+  return { redirected: false, reference: init.reference };
+};
+
+export interface StudentFeeStructureItem {
+  fee_type: string;
+  category: string;
+  amount: number;
+}
+
+export interface StudentFeeStructure {
+  id: number;
+  session: string;
+  level: number;
+  semester: string;
+  is_indigene: boolean;
+  total_amount: number;
+  max_installments: number;
+  items: StudentFeeStructureItem[];
+}
+
+export interface StudentFeeStatus {
+  is_clear: boolean;
+  outstanding_total: number;
+  installment_due: number;
+  structure: StudentFeeStructure | null;
+}
+
+export interface StudentFeePayment {
+  id: number;
+  fee_type: string;
+  fee_type_label: string;
+  fee_type_ref_id: number | null;
+  session: string;
+  semester: string;
+  amount: number;
+  status: string;
+  status_display: string;
+  payment_method: string;
+  payment_reference: string;
+  paid_at: string | null;
+  created_at: string;
+}
+
+export const fetchStudentFeeStatus = async (
+  session: string,
+  semester: string
+): Promise<StudentFeeStatus> => {
+  const response = await apiClient.get('/auth/student/fee-status', {
+    params: { session, semester },
+  });
+  return response.data;
+};
+
+export const fetchStudentFees = async (): Promise<StudentFeePayment[]> => {
+  const response = await apiClient.get('/auth/student/fees');
+  return response.data;
+};
+
+export const downloadStudentFeeReceipt = async (paymentId: number): Promise<void> => {
+  const response = await apiClient.get(`/auth/student/fees/${paymentId}/receipt`, {
+    responseType: 'blob',
+  });
+  const url = URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `student_payment_receipt_${paymentId}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };
 
 export const fetchUniversityRankings = async (entryType?: string): Promise<UniversityRankingData[]> => {

@@ -3013,6 +3013,7 @@ export interface SearchResponseData {
   publications_count: number;
   programs_count: number;
   news_count: number;
+  events_count: number;
 }
 
 export const mockSearchResponse: SearchResponseData = {
@@ -3023,6 +3024,7 @@ export const mockSearchResponse: SearchResponseData = {
   publications_count: 0,
   programs_count: 0,
   news_count: 0,
+  events_count: 0,
 };
 
 export interface LibraryServiceData {

@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/useAuth';
-import { apiClient, downloadAdmissionDocument, startAdmissionPayment, verifyAdmissionPayment, type AdmissionDocumentKind } from '../../services/api';
+import { apiClient, acceptProvisionalAdmission, downloadAdmissionDocument, startAcceptanceFeePayment, startAdmissionPayment, verifyAcceptanceFeePayment, verifyAdmissionPayment, type AdmissionDocumentKind } from '../../services/api';
 import { validateJambRegistrationNumber } from '../../utils/validation';
 
 interface ApplicationStep {
@@ -110,6 +110,16 @@ interface Application {
   revisionDueAt?: string | null;
   revisionNote?: string;
   jambRegistrationNumber?: string;
+  provisionalAdmissionAccepted?: boolean;
+  acceptanceFeeAmount?: number | null;
+  acceptanceFeeAdminFee?: number | null;
+  acceptanceFeeGatewayFee?: number | null;
+  acceptanceFeeTotal?: number | null;
+  acceptanceFeeCurrency?: string | null;
+  acceptanceFeeStatus?: string | null;
+  acceptanceFeeReference?: string | null;
+  acceptanceFeeSession?: string | null;
+  acceptanceFeePaidAt?: string | null;
 }
 
 
@@ -426,6 +436,9 @@ const ApplicantDashboard = () => {
   const [documentError, setDocumentError] = useState('');
   const [isPaying, setIsPaying] = useState(false);
   const [payError, setPayError] = useState('');
+  const [isAccepting, setIsAccepting] = useState(false);
+  const [isPayingAcceptance, setIsPayingAcceptance] = useState(false);
+  const [acceptanceError, setAcceptanceError] = useState('');
   const [editError, setEditError] = useState('');
 
   const application = selectedApplication
@@ -485,6 +498,64 @@ const ApplicantDashboard = () => {
     } catch (err) {
       setPayError(err instanceof Error ? err.message : 'Unable to start the payment. Please try again.');
       setIsPaying(false);
+    }
+  };
+
+  const handleAcceptOffer = async () => {
+    if (!application) return;
+    if (!window.confirm(
+      'Accepting this offer confirms you wish to take up your place. '
+      + 'You will then need to pay the acceptance fee to activate your student account.'
+    )) return;
+
+    setAcceptanceError('');
+    setIsAccepting(true);
+    try {
+      const result = await acceptProvisionalAdmission(application.id);
+      setApplications(prev => prev.map(a => (
+        a.id === application.id
+          ? {
+              ...a,
+              provisionalAdmissionAccepted: true,
+              acceptanceFeeAmount: result.acceptance_fee_amount,
+              acceptanceFeeAdminFee: result.acceptance_fee_admin_fee,
+              acceptanceFeeGatewayFee: result.acceptance_fee_gateway_fee,
+              acceptanceFeeTotal: result.acceptance_fee_total,
+              acceptanceFeeCurrency: result.acceptance_fee_currency,
+              acceptanceFeeSession: result.acceptance_fee_session,
+              acceptanceFeeStatus: result.acceptance_fee_status,
+            }
+          : a
+      )));
+    } catch (err) {
+      setAcceptanceError(err instanceof Error ? err.message : 'Unable to accept the offer. Please try again.');
+    } finally {
+      setIsAccepting(false);
+    }
+  };
+
+  const handlePayAcceptanceFee = async () => {
+    if (!application?.publicId) {
+      setAcceptanceError('This application cannot be paid online. Please contact the admissions office.');
+      return;
+    }
+    setAcceptanceError('');
+    setIsPayingAcceptance(true);
+    try {
+      const start = await startAcceptanceFeePayment(application.publicId);
+      if (!start.redirected) {
+        const result = await verifyAcceptanceFeePayment(application.publicId, start.reference);
+        if (result.status === 'success') {
+          window.location.assign('/portals/student');
+          return;
+        }
+        setAcceptanceError(result.message || 'We could not verify the payment. Please try again.');
+        setIsPayingAcceptance(false);
+        return;
+      }
+    } catch (err) {
+      setAcceptanceError(err instanceof Error ? err.message : 'Unable to start the payment. Please try again.');
+      setIsPayingAcceptance(false);
     }
   };
 
@@ -593,6 +664,16 @@ const ApplicantDashboard = () => {
             revisionDueAt: (app.revision_due_at as string) || null,
             revisionNote: (app.revision_note as string) || '',
             jambRegistrationNumber: (app.jamb_registration_number as string) || '',
+            provisionalAdmissionAccepted: (app.provisional_admission_accepted as boolean) ?? false,
+            acceptanceFeeAmount: (app.acceptance_fee_amount as number) ?? null,
+            acceptanceFeeAdminFee: (app.acceptance_fee_admin_fee as number) ?? null,
+            acceptanceFeeGatewayFee: (app.acceptance_fee_gateway_fee as number) ?? null,
+            acceptanceFeeTotal: (app.acceptance_fee_total as number) ?? null,
+            acceptanceFeeCurrency: (app.acceptance_fee_currency as string) || null,
+            acceptanceFeeStatus: (app.acceptance_fee_status as string) || null,
+            acceptanceFeeReference: (app.acceptance_fee_reference as string) || null,
+            acceptanceFeeSession: (app.acceptance_fee_session as string) || null,
+            acceptanceFeePaidAt: (app.acceptance_fee_paid_at as string) || null,
             academicRecords: (app.academic_records as AcademicRecord[]) || [],
             steps: ((app.steps || []) as ApplicationStep[]).map((s: ApplicationStep) => ({
               name: s.name_display || s.name,
@@ -616,6 +697,27 @@ const ApplicantDashboard = () => {
             })),
           }));
           setApplications(apiApps);
+
+          const reference = new URLSearchParams(window.location.search).get('acceptance_reference');
+          if (reference) {
+            const target = apiApps.find((a: Application) => a.acceptanceFeeReference === reference)
+              ?? apiApps.find((a: Application) => a.status === 'accepted' && a.publicId);
+            if (!target?.publicId) {
+              setAcceptanceError('We could not match this payment to your application. Please contact the admissions office.');
+            } else {
+              verifyAcceptanceFeePayment(target.publicId, reference)
+                .then((result) => {
+                  if (result.status === 'success') {
+                    window.location.assign('/portals/student');
+                  } else {
+                    setAcceptanceError(result.message || 'We could not verify the payment. Please try again.');
+                  }
+                })
+                .catch((err) => {
+                  setAcceptanceError(err instanceof Error ? err.message : 'Unable to verify the payment. Please try again.');
+                });
+            }
+          }
         }
         
         // Check if user has a pending application (for "Resume" button)
@@ -850,6 +952,111 @@ const ApplicantDashboard = () => {
                   <Mail className="w-4 h-4" />
                   Request a change
                 </a>
+              </div>
+            )}
+
+            {/* Offer acceptance and acceptance fee */}
+            {application?.status === 'accepted' && (
+              <div className="bg-white shadow-sm border border-gray-100 border-l-4 border-l-amber-500 p-6">
+                <h3 className="font-bold text-gray-900 mb-2">
+                  {application.provisionalAdmissionAccepted
+                    ? 'Acceptance Fee'
+                    : 'Accept your offer of admission'}
+                </h3>
+
+                {!application.provisionalAdmissionAccepted ? (
+                  <>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Your offer is provisional until you accept it and pay the acceptance fee.
+                      Your applicant sign-in becomes your student sign-in — no new account is needed.
+                    </p>
+                    <button
+                      onClick={handleAcceptOffer}
+                      disabled={isAccepting}
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-ink-900 text-white font-medium hover:bg-primary-600 disabled:opacity-60 transition"
+                    >
+                      {isAccepting ? <Clock className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                      {isAccepting ? 'Accepting...' : 'Accept Offer of Admission'}
+                    </button>
+                  </>
+                ) : application.acceptanceFeeStatus === 'completed' || application.acceptanceFeeStatus === 'waived' ? (
+                  <>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Your acceptance fee has been settled and your student account is active.
+                      Sign in to the student portal to continue registration.
+                    </p>
+                    <button
+                      onClick={() => window.location.assign('/portals/student')}
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-ink-900 text-white font-medium hover:bg-primary-600 transition"
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                      Go to Student Portal
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Pay the acceptance fee for your admission session to activate your student account.
+                    </p>
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                      {(application.acceptanceFeeTotal ?? application.acceptanceFeeAmount) != null && (
+                        <div>
+                          <span>
+                            Amount:{' '}
+                            <span className="font-semibold text-gray-900">
+                              {application.acceptanceFeeCurrency === 'USD' ? '$' : '?'}
+                              {Number(
+                                application.acceptanceFeeTotal ?? application.acceptanceFeeAmount
+                              ).toLocaleString()}
+                            </span>
+                          </span>
+                          {((application.acceptanceFeeAdminFee ?? 0) > 0 ||
+                            (application.acceptanceFeeGatewayFee ?? 0) > 0) && (
+                            <p className="mt-1 text-xs text-gray-500">
+                              Includes
+                              {(application.acceptanceFeeAdminFee ?? 0) > 0 && (
+                                <> {application.acceptanceFeeCurrency === 'USD' ? '$' : '?'}
+                                  {Number(application.acceptanceFeeAdminFee).toLocaleString()} admin fee</>
+                              )}
+                              {(application.acceptanceFeeAdminFee ?? 0) > 0 &&
+                                (application.acceptanceFeeGatewayFee ?? 0) > 0 && ' +'}
+                              {(application.acceptanceFeeGatewayFee ?? 0) > 0 && (
+                                <> {application.acceptanceFeeCurrency === 'USD' ? '$' : '?'}
+                                  {Number(application.acceptanceFeeGatewayFee).toLocaleString()} gateway fee</>
+                              )}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      {application.acceptanceFeeSession && (
+                        <span>
+                          Session: <span className="font-semibold text-gray-900">{application.acceptanceFeeSession}</span>
+                        </span>
+                      )}
+                      <span
+                        className={`px-3 py-1 font-medium ${
+                          application.acceptanceFeeStatus === 'failed'
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-yellow-100 text-yellow-700'
+                        }`}
+                      >
+                        {application.acceptanceFeeStatus === 'failed' ? 'Payment Failed' : 'Pending Payment'}
+                      </span>
+                    </div>
+                    <button
+                      onClick={handlePayAcceptanceFee}
+                      disabled={isPayingAcceptance}
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-ink-900 text-white font-medium hover:bg-primary-600 disabled:opacity-60 transition"
+                    >
+                      {isPayingAcceptance ? <Clock className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
+                      {isPayingAcceptance ? 'Starting payment...' : 'Pay Acceptance Fee'}
+                    </button>
+                  </>
+                )}
+
+                {acceptanceError && (
+                  <p className="mt-3 text-sm text-red-600">{acceptanceError}</p>
+                )}
               </div>
             )}
 
