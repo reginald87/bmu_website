@@ -97,7 +97,7 @@ class GalleryImageAdmin(admin.ModelAdmin):
         from django.utils.html import format_html
 
         if not obj.pk:
-            return format_html('<span class="help">Save the image to generate a thumbnail.</span>')
+            return format_html('<span class="help">{}</span>', 'Save the image to generate a thumbnail.')
         url = obj.thumbnail.url if obj.thumbnail else (obj.image.url if obj.image else None)
         if not url:
             return '-'
@@ -662,9 +662,10 @@ class PageSectionAdmin(admin.ModelAdmin):
     def media_library_hint(self, obj):
         return format_html(
             '<p style="padding:10px;background:#f6f6f6;border:1px solid #eee;font-size:12px;">'
-            'Tip: Use the <a href="/admin/content/mediaasset/" target="_blank">Media Library</a> '
+            'Tip: Use the <a href="{}" target="_blank">Media Library</a> '
             'to upload images from your computer and get a URL to paste into the data JSON.'
-            '</p>'
+            '</p>',
+            '/admin/content/mediaasset/',
         )
 
     media_library_hint.short_description = 'Uploading images'
