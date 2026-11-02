@@ -147,7 +147,9 @@ const ApplicantLogin = () => {
   const { login, register } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -162,10 +164,14 @@ const ApplicantLogin = () => {
       if (activeTab === 'login') {
         await login(email, password);
       } else {
+        if (password !== confirmPassword) {
+          setError('Passwords do not match.');
+          return;
+        }
         await register({
           email,
           password,
-          confirm_password: password,
+          confirm_password: confirmPassword,
           first_name: registerData.first_name,
           last_name: registerData.last_name,
           role: 'applicant',
@@ -375,17 +381,55 @@ const ApplicantLogin = () => {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
+                    className="w-full pl-10 pr-12 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
                     placeholder="Create a strong password"
+                    autoComplete="new-password"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
                   Must be at least 8 characters with letters and numbers
                 </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full pl-10 pr-12 py-3 border border-gray-200 focus:ring-2 focus:ring-ink-900 focus:border-transparent"
+                    placeholder="Re-enter your password"
+                    autoComplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+                {confirmPassword && confirmPassword !== password && (
+                  <p className="text-xs text-red-600 mt-1">Passwords do not match</p>
+                )}
               </div>
 
               <div className="flex items-start">
