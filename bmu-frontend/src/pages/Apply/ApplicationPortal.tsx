@@ -76,12 +76,13 @@ const LEVEL_TO_TAB: Record<string, 'UG' | 'PG' | 'PHD' | 'CERT'> = {
   certificate: 'CERT',
 };
 
-// Document requirements
-const requiredDocuments = [
+// Document requirements. A Nigerian "Certificate of Origin" only applies to
+// local applicants, so it is optional for international applicants.
+const getRequiredDocuments = (studentType: string | null) => [
   { name: 'Passport Photograph', required: true },
   { name: 'Birth Certificate', required: true },
   { name: 'Academic Transcripts', required: true },
-  { name: 'Certificate of Origin', required: true },
+  { name: 'Certificate of Origin', required: studentType !== 'INTL' },
   { name: 'English Proficiency (INTL)', required: false },
   { name: 'Reference Letters', required: false }
 ];
@@ -771,12 +772,15 @@ const DOCUMENT_TYPE_MAP: Record<string, string> = {
 // Step 5: Documents
 const DocumentsStep = ({
   files,
+  studentType,
   onFileSelect,
 }: {
   files: Record<string, File>;
+  studentType: string | null;
   onFileSelect: (docName: string, file: File | null) => void;
 }) => {
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const documents = getRequiredDocuments(studentType);
 
   return (
     <div className="space-y-6">
@@ -784,7 +788,7 @@ const DocumentsStep = ({
       <p className="text-gray-600">Upload all required documents for your application</p>
 
       <div className="space-y-3">
-        {requiredDocuments.map((doc) => {
+        {documents.map((doc) => {
           const hasFile = !!files[doc.name];
           return (
             <div
@@ -1113,11 +1117,8 @@ case 3:
             ...validateApplicantOrigin(formData.personal, formData.studentType),
           ];
           if (formData.program?.level === 'UG') {
-            // Validate entry mode is provided
-            if (!formData.personal.entryMode) {
-              stepErrors.push({ field: 'entryMode', message: 'Entry mode is required for undergraduate programs' });
-            }
-            // Conditional JAMB validation based on entry mode
+            // The select defaults to UTME in the UI, so an unset value means
+            // UTME (it should not be reported as a missing field).
             const entryMode = formData.personal.entryMode || 'UTME';
             if (entryMode === 'UTME') {
               const jambError = validateJambRegistrationNumber(formData.personal.jambRegistrationNumber || '');
@@ -1245,15 +1246,17 @@ case 3: {
               && (formData.studentType === 'INTL' ? p.country : p.lga));
             if (!hasBasic) return false;
             if (formData.program?.level === 'UG') {
-              if (!p.entryMode) return false;
-              if (p.entryMode === 'UTME') return !!p.jambRegistrationNumber;
-              if (p.entryMode === 'DE') return !!p.deJambRegistrationNumber;
+              // The select defaults to UTME in the UI, so treat an unset value
+              // as UTME rather than blocking the applicant.
+              const entryMode = p.entryMode || 'UTME';
+              if (entryMode === 'UTME') return !!p.jambRegistrationNumber;
+              if (entryMode === 'DE') return !!p.deJambRegistrationNumber;
             }
             return true;
           }
       case 4: return formData.academicRecords.length > 0 && formData.academicRecords.some(r => r.institution && r.qualification);
       case 5: {
-        const requiredDocNames = requiredDocuments.filter(d => d.required).map(d => d.name);
+        const requiredDocNames = getRequiredDocuments(formData.studentType).filter(d => d.required).map(d => d.name);
         return requiredDocNames.every(name => formData.documents[name] instanceof File);
       }
       default: return true;
@@ -1381,6 +1384,7 @@ case 3: {
                 {currentStep === 5 && (
                   <DocumentsStep 
                     files={formData.documents}
+                    studentType={formData.studentType}
                     onFileSelect={(docName, file) => {
                       setFormData({
                         ...formData,
