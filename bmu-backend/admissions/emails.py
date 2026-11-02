@@ -44,8 +44,9 @@ STATUS_EMAIL_CONTENT = {
         'headline': 'Congratulations — you have been offered admission!',
         'body': ('We are delighted to inform you that your application has been '
                  'accepted. Welcome to ' + UNIVERSITY_NAME + '!'),
-        'next_steps': ('Complete your registration and pay your fees within the '
-                       'stipulated deadline to secure your place.'),
+        'next_steps': ('Sign in to the applicant portal to accept your offer and '
+                       'pay the acceptance fee for your admission session. Your '
+                       'student account is activated as soon as the fee is received.'),
     },
     'rejected': {
         'headline': 'Decision on your application',
@@ -180,6 +181,34 @@ def acceptance_portal_context(application):
         context['needs_password_setup'] = True
 
     return context
+
+
+def notify_acceptance_fee_paid(application):
+    """Confirm that the acceptance fee was received and the student account is live."""
+    if not application.email:
+        return False
+    context = _base_context(application)
+    context.update(acceptance_portal_context(application))
+    context.update({
+        'subject': f'Acceptance confirmed — welcome to {UNIVERSITY_NAME}',
+        'headline': 'Your acceptance is complete',
+        'body': (
+            'We have received your acceptance fee for '
+            f'{application.acceptance_fee_session or "the admission session"}. '
+            'Your student account is now active.'
+        ),
+        'next_steps': (
+            'Sign in to the student portal to complete your registration and '
+            'view your fees.'
+        ),
+        'status_display': 'Acceptance fee paid',
+    })
+    return send_templated_email(
+        subject=context['subject'],
+        template='application_status',
+        context=context,
+        recipient_list=[application.email],
+    )
 
 
 def send_payment_receipt(application):

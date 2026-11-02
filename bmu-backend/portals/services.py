@@ -595,7 +595,7 @@ class FeeService:
         if semester:
             qs = qs.filter(Q(semester=semester) | Q(semester=''))
         if prog:
-            qs = qs.filter(Q(program=prog) | Q(program__isnull=True))
+            qs = qs.filter(program=prog)
         else:
             qs = qs.filter(program__isnull=True)
 
@@ -674,6 +674,12 @@ class FeeService:
         per_installment = total_due / max(installments, 1)
         next_installment = 1 + paid_count if paid_count < installments else installments
         return per_installment if paid_count < installments else 0
+
+    @staticmethod
+    def _latest_active_fee_session() -> str:
+        """Return the session of the most recent active FeeStructure, or a default."""
+        latest = FeeStructure.objects.filter(is_active=True).order_by('-session').first()
+        return latest.session if latest else '2025/2026'
 
     @staticmethod
     def get_defaulter_report(session: str, semester: str = '', level: int | None = None) -> list[dict]:

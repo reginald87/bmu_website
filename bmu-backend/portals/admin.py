@@ -7,6 +7,20 @@ from .models import (
 )
 
 
+class FeeStructureItemInline(admin.TabularInline):
+    """Inline for managing fee structure items (tuition, sports, medical, etc.)"""
+    model = FeeStructureItem
+    raw_id_fields = ['fee_type']
+    extra = 1
+    min_num = 1
+    max_num = 20
+    show_change_link = True
+    fields = ['fee_type', 'amount', 'sort_order']
+    autocomplete_fields = ['fee_type']
+    verbose_name = "Fee Component"
+    verbose_name_plural = "Fee Components"
+
+
 @admin.register(GradingScale)
 class GradingScaleAdmin(admin.ModelAdmin):
     list_display = ['grade', 'min_score', 'max_score', 'grade_point', 'remark', 'level', 'is_active']
@@ -43,6 +57,7 @@ class FeeStructureAdmin(admin.ModelAdmin):
     list_filter = ['session', 'level', 'is_indigene', 'is_active']
     search_fields = ['program__title']
     raw_id_fields = ['program']
+    inlines = [FeeStructureItemInline]
 
 
 @admin.register(FeeStructureItem)
@@ -132,4 +147,6 @@ class HostelAllocationAdmin(admin.ModelAdmin):
     raw_id_fields = ['student']
 
 
-
+admin.site.site_header = "Bmu Web Administration"
+admin.site.site_title = "Bmu Web Admin"
+admin.site.index_title = "Welcome to Bmu Web Administration"

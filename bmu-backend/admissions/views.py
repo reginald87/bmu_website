@@ -420,20 +420,20 @@ def create_student_record(application):
             'first_name': application.first_name,
             'last_name': application.last_name,
             'phone': application.phone,
-            'role': 'student',
-            'student_status': 'active',
+            'role': 'applicant',
+            'student_status': None,
             'program': application.program,
             'is_email_verified': True,
         }
     )
 
     if not created:
-        # Update existing user (preserving their password/credentials)
+        # Update existing user (preserving their password/credentials). The role
+        # is deliberately left untouched: promotion to student happens only
+        # after the acceptance fee is paid.
         user.first_name = application.first_name
         user.last_name = application.last_name
         user.phone = application.phone
-        user.role = 'student'
-        user.student_status = 'active'
         user.program = application.program
         user.is_email_verified = True
         user.save()
@@ -509,6 +509,62 @@ def create_student_record(application):
     )
 
     return user, profile, university_number
+
+
+def activate_student_account(application, reference=''):
+    """Promote an accepted applicant to a student after the acceptance fee.
+
+    ``create_student_record`` is safe to call more than once, so this also
+    repairs accounts that already exist from an earlier acceptance.
+    """
+    from django.utils import timezone
+
+    from accounts.models import User
+    from portals.models import FeeType, StudentFeePayment
+
+    user, _profile, university_number = create_student_record(application)
+    user.role = 'student'
+    user.student_status = 'active'
+    user.save(update_fields=['role', 'student_status'])
+
+    amount = application.acceptance_fee_amount
+    charge_amount = application.acceptance_fee_total or amount
+    if amount is not None and application.acceptance_fee_status == 'completed':
+        fee_type, _ = FeeType.objects.get_or_create(
+            code='ACCEPTANCE',
+            defaults={
+                'name': 'Acceptance Fee',
+                'category': 'acceptance',
+                'description': 'Fee paid by an admitted applicant to accept an offer of admission.',
+            },
+        )
+        StudentFeePayment.objects.update_or_create(
+            student=user,
+            session=application.acceptance_fee_session or '',
+            payment_reference=reference or application.acceptance_fee_reference or '',
+            defaults={
+                'amount': charge_amount,
+                'amount_paid': charge_amount,
+                'status': 'completed',
+                'payment_method': 'paystack',
+                'paid_at': application.acceptance_fee_paid_at or timezone.now(),
+            },
+        )
+
+    ApplicationMessage.objects.create(
+        application=application,
+        type='success',
+        text=(
+            'Acceptance fee received. Your student account is now active - '
+            'sign in to the student portal to continue registration.'
+        ),
+        from_name='Admissions Office',
+    )
+
+    from .emails import notify_acceptance_fee_paid
+    notify_acceptance_fee_paid(application)
+
+    return user, university_number
 
 
 @api_view(['POST'])
@@ -595,21 +651,34 @@ def accept_provisional_admission(request, application_id):
         )
 
     if application.provisional_admission_accepted:
-        return Response({'message': 'Provisional admission already accepted'})
+        from .services import ensure_acceptance_fee
+
+        amount, currency, session = ensure_acceptance_fee(application)
+        return Response({
+            'message': 'Provisional admission already accepted',
+            'acceptance_fee_amount': float(amount or 0),
+            'acceptance_fee_admin_fee': float(
+                application.acceptance_fee_admin_fee or 0
+            ),
+            'acceptance_fee_gateway_fee': float(
+                application.acceptance_fee_gateway_fee or 0
+            ),
+            'acceptance_fee_total': float(
+                application.acceptance_fee_total or amount or 0
+            ),
+            'acceptance_fee_currency': currency,
+            'acceptance_fee_session': session,
+            'acceptance_fee_status': application.acceptance_fee_status,
+        })
 
     application.accept_provisional_offer()
 
-    # Promote user to student if not already
-    user = application.applicant
-    if user and user.role != 'student':
-        user.role = 'student'
-        user.save(update_fields=['role'])
-    if user and hasattr(user, 'student_profile'):
-        profile = user.student_profile
-        if not profile.matriculated_at and not profile.matric_number:
-            # For UG, don't set matric; for PG/Cert it may already be set
-            pass
-        profile.save()
+    # The offer is accepted, but the account stays an applicant account until
+    # the acceptance fee is paid. Freeze the amount now so the applicant sees
+    # exactly what will be charged.
+    from .services import ensure_acceptance_fee
+
+    amount, currency, session = ensure_acceptance_fee(application)
 
     ApplicationMessage.objects.create(
         application=application,
@@ -618,7 +687,22 @@ def accept_provisional_admission(request, application_id):
         from_name='System',
     )
 
-    return Response({'message': 'Provisional admission accepted successfully'})
+    return Response({
+        'message': 'Provisional admission accepted successfully',
+        'acceptance_fee_amount': float(amount or 0),
+        'acceptance_fee_admin_fee': float(
+            application.acceptance_fee_admin_fee or 0
+        ),
+        'acceptance_fee_gateway_fee': float(
+            application.acceptance_fee_gateway_fee or 0
+        ),
+        'acceptance_fee_total': float(
+            application.acceptance_fee_total or amount or 0
+        ),
+        'acceptance_fee_currency': currency,
+        'acceptance_fee_session': session,
+        'acceptance_fee_status': application.acceptance_fee_status,
+    })
 
 
 class ApplicationUpdateView(generics.RetrieveUpdateAPIView):

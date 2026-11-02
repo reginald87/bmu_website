@@ -156,7 +156,7 @@ class StatusChangeEmailTests(TestCase):
         self.assertIn('revision', message.subject.lower())
         self.assertIn(self.application.id, message.body)
 
-    def test_accepting_undergraduate_does_not_assign_matric_number(self):
+    def test_accepting_undergraduate_defers_student_role_until_fee(self):
         response = self._change_status('accepted')
         self.assertEqual(response.status_code, 200)
         self.assertIsNone(response.data['matric_number'])
@@ -166,7 +166,8 @@ class StatusChangeEmailTests(TestCase):
         self.assertEqual(message.to, ['jane@example.com'])
 
         student = User.objects.get(email='jane@example.com')
-        self.assertEqual(student.role, 'student')
+        self.assertEqual(student.role, 'applicant')
+        self.assertIsNone(student.student_status)
         self.assertTrue(student.is_email_verified)
         profile = student.student_profile
         self.assertFalse(profile.matric_number)
@@ -392,16 +393,17 @@ class AdminSaveModelTests(TestCase):
         self._save(self.application, change=True)
         self.assertEqual(len(mail.outbox), 0)
 
-    def test_acceptance_in_admin_creates_student_and_emails(self):
+    def test_acceptance_in_admin_creates_applicant_account_and_emails(self):
         self.application.status = 'accepted'
         self._save(self.application, change=True)
 
         self.assertEqual(len(mail.outbox), 1)
-        student = User.objects.get(email='jane@example.com')
-        self.assertEqual(student.role, 'student')
-        # Undergraduates get no matriculation number on acceptance; they are
-        # pointed at the portal to set a password instead.
-        self.assertFalse(student.student_profile.matric_number)
+        applicant = User.objects.get(email='jane@example.com')
+        # Acceptance is not matriculation: the account stays an applicant
+        # account until the acceptance fee is paid.
+        self.assertEqual(applicant.role, 'applicant')
+        self.assertIsNone(applicant.student_status)
+        self.assertFalse(applicant.student_profile.matric_number)
         self.assertNotIn('UG/', mail.outbox[0].body)
         self.assertIn('/portals/reset-password', mail.outbox[0].body)
 
@@ -411,6 +413,96 @@ class AdminSaveModelTests(TestCase):
         self.assertEqual(len(mail.outbox), 2)
         recipients = sorted(r for m in mail.outbox for r in m.to)
         self.assertEqual(recipients, ['admissions@bmu.edu.ng', 'jane@example.com'])
+
+
+class AcceptanceFeeTests(TestCase):
+    def setUp(self):
+        self.program = make_program()
+        self.application = make_application(self.program, status='accepted')
+        self.user = User.objects.create_user(
+            username='jane', email='jane@example.com', password='pass1234',
+            role='applicant')
+        self.application.applicant = self.user
+        self.application.save()
+
+    def _accept(self):
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        return client.post(
+            reverse('accept-provisional-admission', args=[self.application.id]))
+
+    def test_accepting_offer_freezes_fee_without_promoting(self):
+        response = self._accept()
+
+        self.assertEqual(response.status_code, 200, response.data)
+        self.application.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertTrue(self.application.provisional_admission_accepted)
+        self.assertEqual(self.application.acceptance_fee_amount, 50000)
+        self.assertEqual(self.application.acceptance_fee_currency, 'NGN')
+        self.assertEqual(self.application.acceptance_fee_status, 'pending')
+        self.assertEqual(self.user.role, 'applicant')
+        self.assertFalse(User.objects.filter(email='jane@example.com', role='student').exists())
+
+    def test_acceptance_fee_includes_admin_and_gateway_fees(self):
+        from decimal import Decimal
+
+        with self.settings(
+            PAYSTACK_ADMIN_FEE='250',
+            PAYSTACK_GATEWAY_FEE_RATE='0.015',
+        ):
+            response = self._accept()
+
+        self.assertEqual(response.status_code, 200, response.data)
+        self.application.refresh_from_db()
+        self.assertEqual(self.application.acceptance_fee_amount, 50000)
+        self.assertEqual(
+            self.application.acceptance_fee_admin_fee, Decimal('250.00'))
+        self.assertEqual(
+            self.application.acceptance_fee_gateway_fee, Decimal('753.75'))
+        self.assertEqual(
+            self.application.acceptance_fee_total, Decimal('51003.75'))
+        self.assertEqual(response.data['acceptance_fee_total'], 51003.75)
+
+    def test_paying_acceptance_fee_promotes_to_student(self):
+        from decimal import Decimal
+
+        with self.settings(
+            PAYSTACK_TEST_MODE=True,
+            PAYSTACK_ADMIN_FEE='250',
+            PAYSTACK_GATEWAY_FEE_RATE='0.015',
+        ):
+            self._accept()
+            client = APIClient()
+            init = client.post(
+                f'/api/public/applications/{self.application.public_id}/'
+                'initialize-acceptance-fee')
+            self.assertEqual(init.status_code, 200, init.json())
+            reference = init.json()['reference']
+
+            verify = client.get(
+                f'/api/public/applications/{self.application.public_id}/'
+                f'verify-acceptance-fee?reference={reference}')
+            self.assertEqual(verify.status_code, 200, verify.json())
+            self.assertEqual(verify.json()['status'], 'success')
+
+        self.application.refresh_from_db()
+        self.user.refresh_from_db()
+        self.assertEqual(self.application.acceptance_fee_status, 'completed')
+        self.assertEqual(self.user.role, 'student')
+        self.assertEqual(self.user.student_status, 'active')
+
+        from portals.models import StudentFeePayment
+        payment = StudentFeePayment.objects.get(
+            student=self.user, payment_reference=reference)
+        self.assertEqual(payment.status, 'completed')
+        self.assertEqual(payment.amount, Decimal('51003.75'))
+
+        self.assertTrue(
+            any('student account is now active' in m.body.lower()
+                for m in mail.outbox),
+            [m.body for m in mail.outbox],
+        )
 
 
 class PaymentReceiptTests(TestCase):

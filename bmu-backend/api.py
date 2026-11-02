@@ -3809,7 +3809,8 @@ class RemitaInitSchema(Schema):
 
 
 class PaymentInitRequest(Schema):
-    fee_type_id: int = 1
+    fee_type_id: Optional[int] = None
+    fee_structure_id: Optional[int] = None
     session: str
     semester: str = ''
     gateway: str = 'paystack'
@@ -3902,11 +3903,38 @@ def student_results(request):
 
 
 @auth_router.get("/student/fees", response=List[StudentFeePaymentSchema])
-def student_fees(request):
+def student_fees(request, session: str = '', semester: str = ''):
     """Get student fee payments"""
     if request.user.role != 'student':
         return []
-    return StudentFeePayment.objects.filter(student=request.user)
+    qs = StudentFeePayment.objects.filter(student=request.user)
+    if session:
+        qs = qs.filter(session=session)
+    if semester:
+        qs = qs.filter(semester=semester)
+    return qs.order_by('-created_at')
+
+
+@auth_router.get("/student/fees/{payment_id}/receipt")
+@ratelimit('student_fee_receipt', limit=20, window=60)
+def student_fee_receipt(request, payment_id: int):
+    """Download the official student fee payment receipt (A4 PDF)."""
+    if request.user.role != 'student':
+        from django.http import JsonResponse
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+    from portals.models import StudentFeePayment
+
+    payment = StudentFeePayment.objects.filter(id=payment_id, student=request.user).first()
+    if payment is None:
+        from django.http import JsonResponse
+        return JsonResponse({'error': 'Payment not found'}, status=404)
+    if payment.status != 'completed':
+        from django.http import JsonResponse
+        return JsonResponse({'error': 'The receipt is only available after payment is completed.'}, status=409)
+
+    from admissions import documents
+    return documents.student_fee_receipt_response(request.user, payment)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -3994,9 +4022,13 @@ def student_fee_structure(request, session: str = '2024/2025', semester: str = '
 
 
 @auth_router.get("/student/fee-status")
-def student_fee_status(request, session: str = '2024/2025', semester: str = ''):
-    """Check fee status for the student."""
+def student_fee_status(request, session: str = '', semester: str = ''):
+    """Check fee status for the student – independent of a published result."""
     from portals.services import FeeService
+    if not session:
+        session = FeeService._latest_active_fee_session()
+    if not semester:
+        semester = 'First'
     structure = FeeService.get_student_fee_structure(request.user, session, semester)
     is_clear = FeeService.is_fee_clear(request.user, session, semester)
     total = FeeService.total_outstanding(request.user, session, semester)
@@ -4037,7 +4069,11 @@ def initialize_student_payment(request, data: PaymentInitRequest):
         return JsonResponse({'error': 'No fee structure found for your session/level'}, status=400)
 
     order_id = f"BMU-{request.user.id}-{secrets.token_hex(6).upper()}"
-    amount = Decimal(str(structure['total_amount']))
+    outstanding = Decimal(str(FeeService.total_outstanding(request.user, data.session, data.semester)))
+    installment_due = Decimal(str(FeeService.get_installment_due(request.user, data.session, data.semester)))
+    amount = outstanding if data.installment == 'full' else (
+        installment_due if installment_due < outstanding else outstanding
+    )
 
     payment = StudentFeePayment.objects.create(
         student=request.user,
@@ -4562,6 +4598,15 @@ class SearchResponse(Schema):
     publications_count: int
     programs_count: int
     news_count: int
+    events_count: int
+
+
+def _search_snippet(text, length=150):
+    """Truncate a description for a search result, tolerating None/blank values."""
+    text = (text or "").strip()
+    if not text:
+        return ""
+    return text[:length] + "..." if len(text) > length else text
 
 
 # Site-wide Search Endpoint
@@ -4569,8 +4614,10 @@ class SearchResponse(Schema):
 @ratelimit('site_search', limit=30, window=60)
 def site_search(request, q: str = "", limit: int = 20):
     """
-    Site-wide search across authors, publications, programs, news, events, and more.
-    
+    Site-wide search across people, publications, programs, news, events and academic units.
+
+    Every result carries a `url` that matches a frontend route, so results are directly clickable.
+
     Query parameters:
     - q: Search query string
     - limit: Maximum number of results per category
@@ -4583,55 +4630,94 @@ def site_search(request, q: str = "", limit: int = 20):
             "authors_count": 0,
             "publications_count": 0,
             "programs_count": 0,
-            "news_count": 0
+            "news_count": 0,
+            "events_count": 0
         }
-    
+
     from django.db.models import Q
     results = []
-    
-    # Search Authors (Users with faculty/staff roles)
-    author_qs = get_user_model().objects.filter(
+
+    # Search Faculty members -> /research/faculty/:id
+    faculty_member_qs = Faculty.objects.filter(
         Q(is_active=True) &
-        (Q(first_name__icontains=q) | 
-         Q(last_name__icontains=q) | 
+        (Q(first_name__icontains=q) |
+         Q(last_name__icontains=q) |
          Q(email__icontains=q) |
-         Q(specialization__icontains=q) |
+         Q(research_interests__icontains=q) |
          Q(position__icontains=q))
     ).select_related('department', 'college')[:limit]
-    
-    for user in author_qs:
+
+    for member in faculty_member_qs:
         results.append({
-            "id": user.id,
-            "title": user.full_name,
-            "type": "author",
+            "id": member.id,
+            "title": f"{member.title} {member.first_name} {member.last_name}".strip(),
+            "type": "faculty",
             "slug": None,
-            "description": f"{user.title} {user.position}" if user.position else user.email,
-            "url": f"/leadership/{user.id}",
-            "image": user.profile_image.url if user.profile_image else None,
+            "description": " · ".join(filter(None, [
+                member.get_position_display(),
+                member.department.name if member.department else None,
+                member.college.name if member.college else None,
+            ])),
+            "url": f"/research/faculty/{member.id}",
+            "image": member.profile_image.url if member.profile_image else None,
             "metadata": {
-                "department": user.department.name if user.department else None,
-                "college": user.college.name if user.college else None,
-                "specialization": user.specialization,
-                "publications_count": user.publications_count
+                "department": member.department.name if member.department else None,
+                "college": member.college.name if member.college else None,
+                "position": member.get_position_display(),
+                "citations": member.citations
             }
         })
-    authors_count = len(author_qs)
-    
-    # Search Publications
+
+    # Search University leadership -> /about/leadership/:id
+    leadership_qs = Leadership.objects.filter(
+        Q(is_active=True) &
+        (Q(first_name__icontains=q) |
+         Q(last_name__icontains=q) |
+         Q(position__icontains=q) |
+         Q(specific_title__icontains=q))
+    ).select_related('department', 'college')[:limit]
+
+    for leader in leadership_qs:
+        results.append({
+            "id": leader.id,
+            "title": f"{leader.title} {leader.first_name} {leader.last_name}".strip(),
+            "type": "leadership",
+            "slug": None,
+            "description": leader.specific_title or leader.get_position_display(),
+            "url": f"/about/leadership/{leader.id}",
+            "image": leader.photo.url if leader.photo else None,
+            "metadata": {
+                "position": leader.get_position_display(),
+                "department": leader.department.name if leader.department else None,
+                "college": leader.college.name if leader.college else None
+            }
+        })
+
+    authors_count = len(faculty_member_qs) + len(leadership_qs)
+
+    # Search Publications -> /research/publications/:id
+    # `authors` is a M2M to academics.Faculty, so the lookup must traverse to a concrete field.
     publication_qs = Publication.objects.filter(
         Q(title__icontains=q) |
-        Q(authors__icontains=q) |
+        Q(authors__first_name__icontains=q) |
+        Q(authors__last_name__icontains=q) |
+        Q(authors__email__icontains=q) |
+        Q(external_authors__icontains=q) |
         Q(abstract__icontains=q) |
         Q(journal_name__icontains=q)
-    ).order_by('-year')[:limit]
-    
+    ).distinct().order_by('-year')[:limit]
+
     for pub in publication_qs:
+        author_names = ", ".join(
+            f"{a.title} {a.first_name} {a.last_name}".strip()
+            for a in pub.authors.all()[:5]
+        )
         results.append({
             "id": pub.id,
             "title": pub.title,
             "type": "publication",
             "slug": None,
-            "description": f"{pub.authors} ({pub.year})",
+            "description": f"{author_names} ({pub.year})" if author_names else f"({pub.year})",
             "url": f"/research/publications/{pub.id}",
             "image": None,
             "metadata": {
@@ -4642,8 +4728,8 @@ def site_search(request, q: str = "", limit: int = 20):
             }
         })
     publications_count = len(publication_qs)
-    
-    # Search Programs
+
+    # Search Programs -> /academics/programs/:slug
     program_qs = Program.objects.filter(
         Q(is_active=True) &
         (Q(title__icontains=q) |
@@ -4651,14 +4737,14 @@ def site_search(request, q: str = "", limit: int = 20):
          Q(degree__icontains=q) |
          Q(overview__icontains=q))
     )[:limit]
-    
+
     for prog in program_qs:
         results.append({
             "id": prog.id,
             "title": prog.title,
             "type": "program",
             "slug": prog.slug,
-            "description": prog.description[:150] + "..." if len(prog.description) > 150 else prog.description,
+            "description": _search_snippet(prog.description),
             "url": f"/academics/programs/{prog.slug}",
             "image": None,
             "metadata": {
@@ -4668,22 +4754,22 @@ def site_search(request, q: str = "", limit: int = 20):
             }
         })
     programs_count = len(program_qs)
-    
-    # Search News
+
+    # Search News -> /news/:slug
     news_qs = NewsItem.objects.filter(
         Q(is_published=True) &
         (Q(title__icontains=q) |
          Q(content__icontains=q) |
          Q(excerpt__icontains=q))
     )[:limit]
-    
+
     for news in news_qs:
         results.append({
             "id": news.id,
             "title": news.title,
             "type": "news",
             "slug": news.slug,
-            "description": news.excerpt[:150] + "..." if len(news.excerpt) > 150 else news.excerpt,
+            "description": _search_snippet(news.excerpt),
             "url": f"/news/{news.slug}",
             "image": news.featured_image.url if news.featured_image else None,
             "metadata": {
@@ -4693,22 +4779,47 @@ def site_search(request, q: str = "", limit: int = 20):
             }
         })
     news_count = len(news_qs)
-    
-    # Search Colleges
+
+    # Search Events -> /events/:slug
+    event_qs = Event.objects.filter(
+        Q(is_published=True) &
+        (Q(title__icontains=q) |
+         Q(description__icontains=q) |
+         Q(category__icontains=q))
+    )[:limit]
+
+    for event in event_qs:
+        results.append({
+            "id": event.id,
+            "title": event.title,
+            "type": "event",
+            "slug": event.slug,
+            "description": _search_snippet(event.description),
+            "url": f"/events/{event.slug}",
+            "image": event.featured_image.url if event.featured_image else None,
+            "metadata": {
+                "event_date": event.event_date.isoformat() if event.event_date else None,
+                "location": event.location,
+                "category": event.category
+            }
+        })
+    events_count = len(event_qs)
+
+    # Search Colleges -> /colleges/:slug
     college_qs = College.objects.filter(
         Q(is_active=True) &
         (Q(name__icontains=q) |
          Q(description__icontains=q) |
          Q(overview_content__icontains=q))
     )[:5]
-    
+
     for college in college_qs:
         results.append({
             "id": college.id,
             "title": college.name,
             "type": "college",
             "slug": college.slug,
-            "description": college.description[:150] + "..." if len(college.description) > 150 else college.description,
+            "description": _search_snippet(college.description),
             "url": f"/colleges/{college.slug}",
             "image": college.banner_image.url if college.banner_image else None,
             "metadata": {
@@ -4716,45 +4827,45 @@ def site_search(request, q: str = "", limit: int = 20):
                 "established_year": college.established_year
             }
         })
-    
-    # Search Faculties
-    faculty_qs = FacultyUnit.objects.filter(
+
+    # Search Faculties (academic units) -> /faculties/:slug
+    faculty_unit_qs = FacultyUnit.objects.filter(
         Q(is_active=True) &
         (Q(name__icontains=q) |
          Q(description__icontains=q) |
          Q(code__icontains=q))
     )[:5]
-    
-    for faculty in faculty_qs:
+
+    for faculty_unit in faculty_unit_qs:
         results.append({
-            "id": faculty.id,
-            "title": faculty.name,
-            "type": "faculty",
-            "slug": faculty.slug,
-            "description": faculty.description[:150] + "..." if faculty.description and len(faculty.description) > 150 else faculty.description,
-            "url": f"/faculties/{faculty.slug}",
-            "image": faculty.banner_image.url if faculty.banner_image else None,
+            "id": faculty_unit.id,
+            "title": faculty_unit.name,
+            "type": "faculty_unit",
+            "slug": faculty_unit.slug,
+            "description": _search_snippet(faculty_unit.description),
+            "url": f"/faculties/{faculty_unit.slug}",
+            "image": faculty_unit.banner_image.url if faculty_unit.banner_image else None,
             "metadata": {
-                "dean": faculty.leadership_name,
-                "college": faculty.college.name if faculty.college else None
+                "dean": faculty_unit.leadership_name,
+                "college": faculty_unit.college.name if faculty_unit.college else None
             }
         })
-    
-    # Search Departments
+
+    # Search Departments -> /departments/:slug
     dept_qs = Department.objects.filter(
         Q(is_active=True) &
         (Q(name__icontains=q) |
          Q(description__icontains=q) |
          Q(code__icontains=q))
     )[:5]
-    
+
     for dept in dept_qs:
         results.append({
             "id": dept.id,
             "title": dept.name,
             "type": "department",
             "slug": dept.slug,
-            "description": dept.description[:150] + "..." if dept.description and len(dept.description) > 150 else dept.description,
+            "description": _search_snippet(dept.description),
             "url": f"/departments/{dept.slug}",
             "image": dept.banner_image.url if dept.banner_image else None,
             "metadata": {
@@ -4762,7 +4873,7 @@ def site_search(request, q: str = "", limit: int = 20):
                 "faculty": dept.faculty.name if dept.faculty else None
             }
         })
-    
+
     return {
         "query": q,
         "total_results": len(results),
@@ -4770,7 +4881,8 @@ def site_search(request, q: str = "", limit: int = 20):
         "authors_count": authors_count,
         "publications_count": publications_count,
         "programs_count": programs_count,
-        "news_count": news_count
+        "news_count": news_count,
+        "events_count": events_count
     }
 
 
@@ -4876,6 +4988,8 @@ class StudentDashboardSchema(Schema):
     current_cgpa: Optional[float] = None
     total_fees_paid: float = 0
     pending_fees: float = 0
+    amount_due: float = 0
+    fee_structure: Optional[dict] = None
     upcoming_events: List[dict] = []
     recent_results: List[StudentResultSchema] = []
     enrolled_courses: List[dict] = []
@@ -4896,8 +5010,18 @@ def student_dashboard(request):
     
     # Fees
     payments = StudentFeePayment.objects.filter(student=request.user)
-    total_paid = payments.filter(status='completed').aggregate(total=Sum('amount'))['total'] or 0
-    pending = payments.filter(status='pending').aggregate(total=Sum('amount'))['total'] or 0
+    total_paid = payments.filter(status='completed').aggregate(total=Sum('amount_paid'))['total'] or 0
+    from portals.services import FeeService
+    amount_due = float(FeeService.total_outstanding(
+        request.user,
+        current_result.session if current_result else '2025/2026',
+        current_result.semester if current_result else 'First',
+    ))
+    fee_structure = FeeService.get_student_fee_structure(
+        request.user,
+        current_result.session if current_result else '2025/2026',
+        current_result.semester if current_result else 'First',
+    )
     
     # Enrolled courses
     enrolled = []
@@ -4925,7 +5049,9 @@ def student_dashboard(request):
         'current_gpa': float(current_result.gpa) if current_result else None,
         'current_cgpa': float(current_result.cgpa) if current_result else None,
         'total_fees_paid': float(total_paid),
-        'pending_fees': float(pending),
+        'pending_fees': float(amount_due),
+        'amount_due': float(amount_due),
+        'fee_structure': fee_structure,
         'upcoming_events': [{
             'id': e.id,
             'title': e.title,
@@ -6541,6 +6667,17 @@ class ApplicationStatusSchema(Schema):
     revision_due_at: Optional[str] = None
     revision_note: Optional[str] = None
     revision_expired: bool = False
+    provisional_admission_accepted: bool = False
+    provisional_admission_accepted_at: Optional[str] = None
+    acceptance_fee_amount: Optional[float] = None
+    acceptance_fee_admin_fee: Optional[float] = None
+    acceptance_fee_gateway_fee: Optional[float] = None
+    acceptance_fee_total: Optional[float] = None
+    acceptance_fee_currency: Optional[str] = None
+    acceptance_fee_status: Optional[str] = None
+    acceptance_fee_reference: Optional[str] = None
+    acceptance_fee_session: Optional[str] = None
+    acceptance_fee_paid_at: Optional[str] = None
 
 
 def _application_fee(application):
@@ -6776,6 +6913,35 @@ def get_application_status(request, application_id: str):
         'revision_due_at': app.revision_due_at.isoformat() if app.revision_due_at else None,
         'revision_note': app.revision_note or None,
         'revision_expired': app.revision_expired,
+        'provisional_admission_accepted': app.provisional_admission_accepted,
+        'provisional_admission_accepted_at': (
+            app.provisional_admission_accepted_at.isoformat()
+            if app.provisional_admission_accepted_at else None
+        ),
+        'acceptance_fee_amount': (
+            float(app.acceptance_fee_amount)
+            if app.acceptance_fee_amount is not None else None
+        ),
+        'acceptance_fee_admin_fee': (
+            float(app.acceptance_fee_admin_fee)
+            if app.acceptance_fee_admin_fee is not None else None
+        ),
+        'acceptance_fee_gateway_fee': (
+            float(app.acceptance_fee_gateway_fee)
+            if app.acceptance_fee_gateway_fee is not None else None
+        ),
+        'acceptance_fee_total': (
+            float(app.acceptance_fee_total)
+            if app.acceptance_fee_total is not None else None
+        ),
+        'acceptance_fee_currency': app.acceptance_fee_currency,
+        'acceptance_fee_status': app.acceptance_fee_status,
+        'acceptance_fee_reference': app.acceptance_fee_reference or None,
+        'acceptance_fee_session': app.acceptance_fee_session or None,
+        'acceptance_fee_paid_at': (
+            app.acceptance_fee_paid_at.isoformat()
+            if app.acceptance_fee_paid_at else None
+        ),
     }
     if expose_pii:
         payload.update({
@@ -7018,6 +7184,193 @@ def verify_application_payment(request, application_id: str, reference: str):
         'message': 'Payment verified successfully' if not simulate else 'Payment verified (demo mode)',
         'payment_status': 'completed',
         'paid_at': app.paid_at.isoformat() if app.paid_at else None,
+    }
+
+
+def _finalize_acceptance_fee_payment(app, reference):
+    """Mark the acceptance fee paid and promote the applicant to a student."""
+    from admissions.views import activate_student_account
+
+    app.acceptance_fee_status = 'completed'
+    app.acceptance_fee_reference = reference
+    app.acceptance_fee_paid_at = timezone.now()
+    app.save(update_fields=[
+        'acceptance_fee_status',
+        'acceptance_fee_reference',
+        'acceptance_fee_paid_at',
+    ])
+    return activate_student_account(app, reference=reference)
+
+
+@public_router.post(
+    "/applications/{application_id}/initialize-acceptance-fee",
+    response=ApplicationPaymentInitResponse,
+)
+@ratelimit('application_acceptance_pay_init', limit=10, window=60)
+def initialize_acceptance_fee_payment(request, application_id: str):
+    """Initialize a Paystack payment for an accepted applicant's acceptance fee."""
+    import requests as http_requests
+    from ninja.errors import HttpError
+
+    from admissions.services import ensure_acceptance_fee
+
+    app = _public_application(application_id)
+    if app.status != 'accepted':
+        raise HttpError(409, 'The acceptance fee is only available after an offer of admission.')
+    if not app.provisional_admission_accepted:
+        raise HttpError(409, 'Please accept your offer of admission first.')
+    if app.acceptance_fee_status in ('completed', 'waived'):
+        raise HttpError(400, 'The acceptance fee has already been settled.')
+
+    amount, currency, _session = ensure_acceptance_fee(app)
+    if amount is None or amount <= 0:
+        raise HttpError(409, 'The acceptance fee for this admission session has not been configured.')
+    total = app.acceptance_fee_total or amount
+
+    reference = f'ACF-{app.id}-{int(datetime.now().timestamp())}'
+    app.acceptance_fee_reference = reference
+    app.acceptance_fee_status = 'pending'
+    app.save(update_fields=['acceptance_fee_reference', 'acceptance_fee_status'])
+
+    if settings.PAYSTACK_TEST_MODE or (settings.DEBUG and not settings.PAYSTACK_SECRET_KEY):
+        return {
+            'authorization_url': '',
+            'access_code': 'demo_access_code',
+            'reference': reference,
+        }
+    if not settings.PAYSTACK_SECRET_KEY:
+        raise HttpError(503, 'Payment gateway is not configured.')
+
+    callback_url = (
+        f"{settings.FRONTEND_URL.rstrip('/')}/portals/applicant"
+        f'?acceptance_reference={reference}'
+    )
+    payload = {
+        'email': app.email,
+        'amount': int(total * 100),
+        'reference': reference,
+        'callback_url': callback_url,
+        'currency': currency,
+        'metadata': {
+            'application_id': app.id,
+            'public_id': str(app.public_id),
+            'payment_type': 'acceptance_fee',
+            'acceptance_fee': float(amount),
+            'admin_fee': float(app.acceptance_fee_admin_fee or 0),
+            'gateway_fee': float(app.acceptance_fee_gateway_fee or 0),
+            'total': float(total),
+            'session': app.acceptance_fee_session,
+        },
+    }
+    headers = {
+        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
+        'Content-Type': 'application/json',
+    }
+    try:
+        response = http_requests.post(
+            'https://api.paystack.co/transaction/initialize',
+            json=payload,
+            headers=headers,
+            timeout=30,
+        )
+    except Exception:
+        raise HttpError(502, 'Unable to reach the payment gateway. Please try again.')
+
+    if response.status_code != 200:
+        raise HttpError(502, 'Payment gateway initialization failed')
+    result = response.json()
+    if not result.get('status'):
+        raise HttpError(502, result.get('message', 'Payment initialization failed'))
+
+    data = result['data']
+    return {
+        'authorization_url': data['authorization_url'],
+        'access_code': data['access_code'],
+        'reference': data['reference'],
+    }
+
+
+@public_router.get(
+    "/applications/{application_id}/verify-acceptance-fee",
+    response=ApplicationPaymentVerifyResponse,
+)
+@ratelimit('application_acceptance_pay_verify', limit=30, window=60)
+def verify_acceptance_fee_payment(request, application_id: str, reference: str):
+    """Verify an acceptance-fee payment and activate the student account."""
+    import requests as http_requests
+    from ninja.errors import HttpError
+
+    from admissions.services import ensure_acceptance_fee
+
+    app = _public_application(application_id)
+
+    if app.acceptance_fee_status in ('completed', 'waived'):
+        return {
+            'status': 'success',
+            'message': 'Acceptance fee already verified',
+            'payment_status': app.acceptance_fee_status,
+            'paid_at': (
+                app.acceptance_fee_paid_at.isoformat()
+                if app.acceptance_fee_paid_at else None
+            ),
+        }
+
+    if not app.acceptance_fee_reference or app.acceptance_fee_reference != reference:
+        raise HttpError(400, 'Payment reference does not match this application.')
+
+    ensure_acceptance_fee(app)
+
+    simulate = settings.PAYSTACK_TEST_MODE or (
+        settings.DEBUG and not settings.PAYSTACK_SECRET_KEY
+    )
+    if not simulate:
+        if not settings.PAYSTACK_SECRET_KEY:
+            raise HttpError(503, 'Payment verification unavailable: gateway is not configured.')
+        headers = {'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}'}
+        try:
+            response = http_requests.get(
+                f'https://api.paystack.co/transaction/verify/{reference}',
+                headers=headers,
+                timeout=30,
+            )
+        except Exception:
+            raise HttpError(502, 'Unable to verify payment with the gateway. Please try again.')
+        if response.status_code != 200:
+            raise HttpError(502, 'Payment verification failed')
+        result = response.json()
+        gw = result.get('data') or {}
+        if not result.get('status') or gw.get('status') != 'success':
+            app.acceptance_fee_status = 'failed'
+            app.save(update_fields=['acceptance_fee_status'])
+            return {
+                'status': 'failed',
+                'message': 'Payment verification failed',
+                'payment_status': 'failed',
+                'paid_at': None,
+            }
+
+        expected_kobo = int(Decimal(str(
+            app.acceptance_fee_total or app.acceptance_fee_amount or 0
+        )) * 100)
+        if int(gw.get('amount') or 0) != expected_kobo:
+            app.acceptance_fee_status = 'failed'
+            app.save(update_fields=['acceptance_fee_status'])
+            return {
+                'status': 'failed',
+                'message': 'Payment amount does not match the acceptance fee',
+                'payment_status': 'failed',
+                'paid_at': None,
+            }
+
+    _finalize_acceptance_fee_payment(app, reference)
+    return {
+        'status': 'success',
+        'message': (
+            'Acceptance fee verified successfully'
+            if not simulate else 'Acceptance fee verified (demo mode)'
+        ),
+        'payment_status': 'completed',
+        'paid_at': app.acceptance_fee_paid_at.isoformat() if app.acceptance_fee_paid_at else None,
     }
 
 

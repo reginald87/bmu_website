@@ -113,6 +113,11 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'status', 'status_display', 'progress_percentage',
             'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
             'provisional_admission_accepted', 'provisional_admission_accepted_at',
+            'acceptance_fee_amount', 'acceptance_fee_admin_fee',
+            'acceptance_fee_gateway_fee', 'acceptance_fee_total',
+            'acceptance_fee_currency',
+            'acceptance_fee_status', 'acceptance_fee_reference',
+            'acceptance_fee_session', 'acceptance_fee_paid_at',
             'payment_status', 'payment_status_display',
             'payment_amount', 'payment_currency', 'payment_method', 'paid_at',
             'documents', 'steps', 'messages', 'academic_records',
@@ -259,6 +264,11 @@ class ApplicationListSerializer(serializers.ModelSerializer):
             'status', 'status_display', 'progress_percentage',
             'is_editable', 'revision_due_at', 'revision_note',
             'provisional_admission_accepted', 'provisional_admission_accepted_at',
+            'acceptance_fee_amount', 'acceptance_fee_admin_fee',
+            'acceptance_fee_gateway_fee', 'acceptance_fee_total',
+            'acceptance_fee_currency',
+            'acceptance_fee_status', 'acceptance_fee_reference',
+            'acceptance_fee_session', 'acceptance_fee_paid_at',
             'payment_status', 'payment_status_display',
             'payment_amount', 'payment_currency', 'payment_method',
             'payment_reference', 'paid_at',
@@ -278,9 +288,14 @@ class Meta:
         model = Application
         fields = ['id', 'status', 'status_display', 'progress_percentage',
             'is_editable', 'revision_due_at', 'revision_note', 'revision_expired',
-            'provisional_admission_accepted', 'provisional_admission_accepted_at',
+            'provisional_admission_accepted',
+            'provisional_admission_accepted_at',
+            'acceptance_fee_amount', 'acceptance_fee_admin_fee',
+            'acceptance_fee_gateway_fee', 'acceptance_fee_total',
+            'acceptance_fee_currency',
+            'acceptance_fee_status', 'acceptance_fee_reference',
+            'acceptance_fee_session', 'acceptance_fee_paid_at',
             'steps', 'submitted_at']
-
 
 class ApplicationPaymentSerializer(serializers.Serializer):
     """Serializer for application payment"""

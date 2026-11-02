@@ -260,6 +260,10 @@ PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY', '')
 PAYSTACK_TEST_MODE = os.getenv('PAYSTACK_TEST_MODE', 'False') == 'True'
 # Application fee used only as a fallback when a programme has no fee set.
 PAYSTACK_APPLICATION_FEE = os.getenv('PAYSTACK_APPLICATION_FEE', '0')
+# Fallback acceptance fee charged after an offer is accepted. A matching
+# ``acceptance`` line item in the session's fee structure takes precedence.
+ACCEPTANCE_FEE_LOCAL = os.getenv('ACCEPTANCE_FEE_LOCAL', '50000')
+ACCEPTANCE_FEE_INTL = os.getenv('ACCEPTANCE_FEE_INTL', '100')
 # Administrative/service fee added on top of the application fee (per currency).
 PAYSTACK_ADMIN_FEE = os.getenv('PAYSTACK_ADMIN_FEE', '0')
 PAYSTACK_ADMIN_FEE_USD = os.getenv('PAYSTACK_ADMIN_FEE_USD', '0')

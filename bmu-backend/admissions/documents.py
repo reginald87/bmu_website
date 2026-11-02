@@ -60,6 +60,10 @@ def _passport_data_uri(application):
         return ''
 
 
+def _user_photo_data_uri(user):
+    return _file_to_data_uri(user.profile_image.path if user.profile_image else None)
+
+
 def academic_session(reference=None):
     """Return the session label an application is being admitted into.
 
@@ -158,4 +162,48 @@ def receipt_context(application):
 def receipt_response(application):
     context = receipt_context(application)
     filename = f'payment_receipt_{application.id}.pdf'
+    return _render_pdf('admissions/payment_receipt.html', context, filename)
+
+
+def student_fee_receipt_context(user, payment):
+    """Context for the student fee payment receipt PDF."""
+    issued = timezone.localtime(timezone.now())
+    program = user.program
+    return {
+        'university_name': UNIVERSITY_NAME,
+        'university_address': UNIVERSITY_ADDRESS,
+        'motto': UNIVERSITY_MOTTO,
+        'officer_name': ADMISSION_OFFICER,
+        'officer_title': OFFICER_TITLE,
+        'application': payment,
+        'reference': payment.payment_reference or f'SFEE-{payment.id}',
+        'applicant_name': user.full_name,
+        'applicant_email': user.email,
+        'applicant_phone': user.phone or '',
+        'applicant_address': user.address or '',
+        'program_title': program.title if program else '',
+        'program_degree': program.degree if program else '',
+        'program_duration': program.duration if program else '',
+        'faculty': faculty_label(program),
+        'session': payment.session or academic_session(issued.date()),
+        'student_type': user.get_role_display() or 'Student',
+        'issued_date': issued,
+        'issued_date_long': issued.strftime('%d %B %Y'),
+        'logo_data_uri': _logo_data_uri(),
+        'passport_data_uri': _user_photo_data_uri(user),
+        'generated_date': date.today(),
+        'currency': 'NGN',
+        'amount_display': f'{payment.amount:,.2f}',
+        'payment_method': payment.get_payment_method_display() or 'Bank Deposit',
+        'payment_reference': payment.payment_reference or '-',
+        'payment_status': payment.get_status_display(),
+        'is_paid': payment.status == 'completed',
+        'paid_at': payment.paid_at or issued,
+        'paid_at_long': (payment.paid_at or issued).strftime('%d %B %Y, %H:%M'),
+    }
+
+
+def student_fee_receipt_response(user, payment):
+    context = student_fee_receipt_context(user, payment)
+    filename = f'student_payment_receipt_{payment.id}.pdf'
     return _render_pdf('admissions/payment_receipt.html', context, filename)

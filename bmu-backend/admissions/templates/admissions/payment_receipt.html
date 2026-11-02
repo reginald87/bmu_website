@@ -215,6 +215,14 @@
         <td class="label">Amount Paid</td>
         <td class="amount">{{ currency }} {{ amount_display }}</td>
     </tr>
+    {% if passport_data_uri %}
+    <tr>
+        <td class="label">Photograph</td>
+        <td>
+            <img src="{{ passport_data_uri }}" alt="Passport" style="width:70px;height:90px;object-fit:cover;border:1px solid #cbd2d9;" />
+        </td>
+    </tr>
+    {% endif %}
 </table>
 
 {% if is_paid %}

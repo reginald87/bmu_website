@@ -150,7 +150,40 @@ class Application(models.Model):
     ], blank=True, null=True)
     paid_at = models.DateTimeField(null=True, blank=True)
     payment_reference = models.CharField(max_length=100, blank=True, null=True)
-    
+
+    # Acceptance fee. An accepted applicant keeps the applicant role until this
+    # fee for the admission session has been paid, at which point the account is
+    # promoted to a student account. The amount is resolved server-side from the
+    # session's fee structure (with a settings fallback) and frozen here so the
+    # charge cannot change between initialisation and verification.
+    ACCEPTANCE_FEE_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('waived', 'Waived'),
+    ]
+    acceptance_fee_amount = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True,
+    )
+    acceptance_fee_admin_fee = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True,
+    )
+    acceptance_fee_gateway_fee = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True,
+    )
+    acceptance_fee_total = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True,
+    )
+    acceptance_fee_currency = models.CharField(
+        max_length=3, choices=[('NGN', 'NGN'), ('USD', 'USD')], default='NGN',
+    )
+    acceptance_fee_status = models.CharField(
+        max_length=20, choices=ACCEPTANCE_FEE_STATUS_CHOICES, default='pending',
+    )
+    acceptance_fee_reference = models.CharField(max_length=100, blank=True, default='')
+    acceptance_fee_session = models.CharField(max_length=50, blank=True, default='')
+    acceptance_fee_paid_at = models.DateTimeField(null=True, blank=True)
+
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -195,6 +228,11 @@ class Application(models.Model):
         if self.status == 'revision_requested':
             return not self.revision_expired
         return False
+
+    @property
+    def acceptance_fee_paid(self):
+        """True when the acceptance fee is settled (paid or waived)."""
+        return self.acceptance_fee_status in ('completed', 'waived')
 
     def schedule_revision(self, days=None, note=None):
         """Open a revision window for the applicant (used when status flips)."""
