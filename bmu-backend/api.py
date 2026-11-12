@@ -7189,17 +7189,19 @@ def verify_application_payment(request, application_id: str, reference: str):
 
 def _finalize_acceptance_fee_payment(app, reference):
     """Mark the acceptance fee paid and promote the applicant to a student."""
+    from django.db import transaction
     from admissions.views import activate_student_account
 
-    app.acceptance_fee_status = 'completed'
-    app.acceptance_fee_reference = reference
-    app.acceptance_fee_paid_at = timezone.now()
-    app.save(update_fields=[
-        'acceptance_fee_status',
-        'acceptance_fee_reference',
-        'acceptance_fee_paid_at',
-    ])
-    return activate_student_account(app, reference=reference)
+    with transaction.atomic():
+        app.acceptance_fee_status = 'completed'
+        app.acceptance_fee_reference = reference
+        app.acceptance_fee_paid_at = timezone.now()
+        app.save(update_fields=[
+            'acceptance_fee_status',
+            'acceptance_fee_reference',
+            'acceptance_fee_paid_at',
+        ])
+        return activate_student_account(app, reference=reference)
 
 
 @public_router.post(
@@ -7333,11 +7335,18 @@ def verify_acceptance_fee_payment(request, application_id: str, reference: str):
                 headers=headers,
                 timeout=30,
             )
+        except http_requests.exceptions.Timeout:
+            raise HttpError(504, 'Payment gateway timed out. Please try again.')
+        except http_requests.exceptions.ConnectionError:
+            raise HttpError(502, 'Unable to connect to payment gateway. Please try again.')
         except Exception:
             raise HttpError(502, 'Unable to verify payment with the gateway. Please try again.')
         if response.status_code != 200:
             raise HttpError(502, 'Payment verification failed')
-        result = response.json()
+        try:
+            result = response.json()
+        except ValueError:
+            raise HttpError(502, 'Invalid response from payment gateway.')
         gw = result.get('data') or {}
         if not result.get('status') or gw.get('status') != 'success':
             app.acceptance_fee_status = 'failed'

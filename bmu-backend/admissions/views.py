@@ -406,87 +406,96 @@ def create_student_record(application):
     admission officer. Postgraduate/certificate applicants receive their
     permanent university number (``MSC/BMU/YEAR/0001`` etc.) on acceptance.
     """
+    from django.db import transaction
     from accounts.models import User, StudentProfile
     from django.utils import timezone
     from .services import generate_postgraduate_number
 
     level = getattr(application.program, 'level', None) if application.program else None
 
-    # Check if user already exists for this email
-    user, created = User.objects.get_or_create(
-        email=application.email,
-        defaults={
-            'username': application.email,
-            'first_name': application.first_name,
-            'last_name': application.last_name,
-            'phone': application.phone,
-            'role': 'applicant',
-            'student_status': None,
-            'program': application.program,
-            'is_email_verified': True,
-        }
-    )
+    with transaction.atomic():
+        # Check if user already exists for this email
+        user, created = User.objects.get_or_create(
+            email=application.email,
+            defaults={
+                'username': application.email,
+                'first_name': application.first_name,
+                'last_name': application.last_name,
+                'phone': application.phone,
+                'role': 'applicant',
+                'student_status': None,
+                'program': application.program,
+                'is_email_verified': True,
+            }
+        )
 
-    if not created:
-        # Update existing user (preserving their password/credentials). The role
-        # is deliberately left untouched: promotion to student happens only
-        # after the acceptance fee is paid.
-        user.first_name = application.first_name
-        user.last_name = application.last_name
-        user.phone = application.phone
-        user.program = application.program
-        user.is_email_verified = True
-        user.save()
+        if not created:
+            # Update existing user (preserving their password/credentials). The role
+            # is deliberately left untouched: promotion to student happens only
+            # after the acceptance fee is paid.
+            user.first_name = application.first_name
+            user.last_name = application.last_name
+            user.phone = application.phone
+            user.program = application.program
+            user.is_email_verified = True
+            user.save()
 
-    jamb = application.jamb_registration_number or None
-    de_jamb = application.de_jamb_registration_number or None
+        jamb = application.jamb_registration_number or None
+        de_jamb = application.de_jamb_registration_number or None
 
-    # Determine admission_type from entry_mode
-    if application.entry_mode == 'DE':
-        admission_type = 'de'
-        default_level = 200
-    elif application.entry_mode == 'TRANSFER':
-        admission_type = 'transfer'
-        default_level = 200  # or determine from credits
-    else:
-        admission_type = 'utme'
-        default_level = 100
+        # Determine admission_type from entry_mode
+        if application.entry_mode == 'DE':
+            admission_type = 'de'
+            default_level = 200
+        elif application.entry_mode == 'TRANSFER':
+            admission_type = 'transfer'
+            default_level = 200  # or determine from credits
+        else:
+            admission_type = 'utme'
+            default_level = 100
 
-    # Create or update student profile
-    profile, profile_created = StudentProfile.objects.get_or_create(
-        user=user,
-        defaults={
-            'admission_date': timezone.now().date(),
-            'admission_type': admission_type,
-            'current_level': default_level,
-            'current_semester': 'first',
-            'state_of_origin': application.address.split(',')[-1].strip() if application.address else None,
-            'jamb_registration_number': jamb or de_jamb,
-        }
-    )
+        # Create or update student profile
+        profile, profile_created = StudentProfile.objects.get_or_create(
+            user=user,
+            defaults={
+                'admission_date': timezone.now().date(),
+                'admission_type': admission_type,
+                'current_level': default_level,
+                'current_semester': 'first',
+                'state_of_origin': application.address.split(',')[-1].strip() if application.address else None,
+                'jamb_registration_number': jamb or de_jamb,
+            }
+        )
 
-    if not profile_created:
-        if (jamb or de_jamb) and not profile.jamb_registration_number:
-            profile.jamb_registration_number = jamb or de_jamb
-        # Update admission_type if not set
-        if not profile.admission_type:
-            profile.admission_type = admission_type
-        if profile.current_level == 100 and default_level != 100:
-            profile.current_level = default_level
+        if not profile_created:
+            if (jamb or de_jamb) and not profile.jamb_registration_number:
+                profile.jamb_registration_number = jamb or de_jamb
+            # Update admission_type if not set
+            if not profile.admission_type:
+                profile.admission_type = admission_type
+            if profile.current_level == 100 and default_level != 100:
+                profile.current_level = default_level
 
-    # Undergraduate numbers are issued at matriculation, never on acceptance.
-    # Postgraduate/certificate numbers are issued now.
-    university_number = None
-    if level != 'undergraduate':
-        university_number = generate_postgraduate_number(level)
-        if university_number and not profile.matric_number:
-            profile.matric_number = university_number
+        # Undergraduate numbers are issued at matriculation, never on acceptance.
+        # Postgraduate/certificate numbers are issued now.
+        university_number = None
+        if level != 'undergraduate':
+            university_number = generate_postgraduate_number(level)
+            if university_number and not profile.matric_number:
+                profile.matric_number = university_number
 
-    profile.save()
+        profile.save()
 
-    # Link application to user
-    application.applicant = user
-    application.save(update_fields=['applicant'])
+        # Link application to user
+        application.applicant = user
+        application.save(update_fields=['applicant'])
+
+        # Audit trail: record that a student record was created for this application
+        UserActivity.objects.create(
+            user=user,
+            action='other',
+            description=f'Student record created for application {application.id} (status: accepted)',
+        )
 
     if university_number:
         text = (f'Congratulations! You have been offered admission. '
@@ -517,38 +526,50 @@ def activate_student_account(application, reference=''):
     ``create_student_record`` is safe to call more than once, so this also
     repairs accounts that already exist from an earlier acceptance.
     """
+    from django.db import transaction
     from django.utils import timezone
 
     from accounts.models import User
     from portals.models import FeeType, StudentFeePayment
 
-    user, _profile, university_number = create_student_record(application)
-    user.role = 'student'
-    user.student_status = 'active'
-    user.save(update_fields=['role', 'student_status'])
+    with transaction.atomic():
+        user, _profile, university_number = create_student_record(application)
+        user.role = 'student'
+        user.student_status = 'active'
+        user.save(update_fields=['role', 'student_status'])
 
-    amount = application.acceptance_fee_amount
-    charge_amount = application.acceptance_fee_total or amount
-    if amount is not None and application.acceptance_fee_status == 'completed':
-        fee_type, _ = FeeType.objects.get_or_create(
-            code='ACCEPTANCE',
-            defaults={
-                'name': 'Acceptance Fee',
-                'category': 'acceptance',
-                'description': 'Fee paid by an admitted applicant to accept an offer of admission.',
-            },
-        )
-        StudentFeePayment.objects.update_or_create(
-            student=user,
-            session=application.acceptance_fee_session or '',
-            payment_reference=reference or application.acceptance_fee_reference or '',
-            defaults={
-                'amount': charge_amount,
-                'amount_paid': charge_amount,
-                'status': 'completed',
-                'payment_method': 'paystack',
-                'paid_at': application.acceptance_fee_paid_at or timezone.now(),
-            },
+        amount = application.acceptance_fee_amount
+        charge_amount = application.acceptance_fee_total or amount
+        if amount is not None and application.acceptance_fee_status == 'completed':
+            fee_type, _ = FeeType.objects.get_or_create(
+                code='ACCEPTANCE',
+                defaults={
+                    'name': 'Acceptance Fee',
+                    'category': 'acceptance',
+                    'description': 'Fee paid by an admitted applicant to accept an offer of admission.',
+                },
+            )
+            StudentFeePayment.objects.update_or_create(
+                student=user,
+                session=application.acceptance_fee_session or '',
+                payment_reference=reference or application.acceptance_fee_reference or '',
+                defaults={
+                    'amount': charge_amount,
+                    'amount_paid': charge_amount,
+                    'status': 'completed',
+                    'payment_method': 'paystack',
+                    'paid_at': application.acceptance_fee_paid_at or timezone.now(),
+                },
+            )
+
+        # Audit trail: record the role transition from applicant to student
+        UserActivity.objects.create(
+            user=user,
+            action='other',
+            description=(
+                f'Account promoted from applicant to student for application '
+                f'{application.id} after acceptance fee payment (ref: {reference})'
+            ),
         )
 
     ApplicationMessage.objects.create(
@@ -600,7 +621,7 @@ def update_application_status(request, application_id):
     matric_number = None
     if new_status == 'accepted' and old_status != 'accepted':
         user, profile, matric_number = create_student_record(application)
-    
+
     # Create message for applicant
     ApplicationMessage.objects.create(
         application=application,
@@ -608,7 +629,18 @@ def update_application_status(request, application_id):
         text=f'Application status updated to {application.get_status_display()}',
         from_name='Admissions Office'
     )
-    
+
+    # Audit trail: record the status change
+    if application.applicant:
+        UserActivity.objects.create(
+            user=application.applicant,
+            action='other',
+            description=(
+                f'Application {application.id} status changed from '
+                f'{old_status} to {new_status} by {request.user.email}'
+            ),
+        )
+
     from .emails import notify_application_status_change
     notify_application_status_change(application, old_status, matric_number=matric_number)
     
@@ -685,6 +717,13 @@ def accept_provisional_admission(request, application_id):
         type='info',
         text='Provisional admission offer accepted by applicant.',
         from_name='System',
+    )
+
+    # Audit trail: record that the applicant accepted the provisional offer
+    UserActivity.objects.create(
+        user=request.user,
+        action='other',
+        description=f'Provisional admission offer accepted for application {application.id}',
     )
 
     return Response({
