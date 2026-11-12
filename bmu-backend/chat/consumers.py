@@ -42,11 +42,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         conversation = await self.get_or_create_conversation()
         agent_online = await self.is_any_agent_online()
 
-        await self.send(text_data=json.dumps({
+        await self._safe_send(text_data=json.dumps({
             'type': 'connection_established',
             'session_id': str(self.session_id),
             'agent_online': agent_online,
         }))
+
+    async def _safe_send(self, text_data):
+        try:
+            await self.send(text_data=text_data)
+        except Exception:
+            logger.debug("WebSocket send failed; client likely disconnected")
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -72,7 +78,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         try:
             data = json.loads(text_data)
         except (json.JSONDecodeError, TypeError):
-            await self.send(text_data=json.dumps({
+            await self._safe_send(text_data=json.dumps({
                 'type': 'error',
                 'content': 'Invalid message format.',
             }))
@@ -92,7 +98,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                              "I can help you with information about our programs, admissions, "
                              "campus life, and more. How can I assist you today?")
                 bot_message = await self.save_message(conversation, 'bot', greeting)
-                await self.send(text_data=json.dumps({
+                await self._safe_send(text_data=json.dumps({
                     'type': 'new_message',
                     'id': bot_message.id,
                     'role': 'bot',
@@ -103,7 +109,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         elif msg_type == 'message':
             if self._is_rate_limited():
-                await self.send(text_data=json.dumps({
+                await self._safe_send(text_data=json.dumps({
                     'type': 'error',
                     'content': 'You are sending messages too quickly. Please wait a moment.',
                 }))
@@ -273,10 +279,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }
         if 'sender_name' in event:
             msg['sender_name'] = event['sender_name']
-        await self.send(text_data=json.dumps(msg))
+        await self._safe_send(text_data=json.dumps(msg))
 
     async def typing_indicator(self, event):
-        await self.send(text_data=json.dumps({
+        await self._safe_send(text_data=json.dumps({
             'type': 'typing',
             'role': event['role'],
             'is_typing': event['is_typing'],
@@ -285,31 +291,31 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def agent_notified(self, event):
         user = self.scope.get('user')
         if user and user.is_authenticated and hasattr(user, 'agent_session'):
-            await self.send(text_data=json.dumps({
+            await self._safe_send(text_data=json.dumps({
                 'type': 'new_visitor_message',
                 'content': event['content'],
             }))
 
     async def agent_online_status(self, event):
-        await self.send(text_data=json.dumps({
+        await self._safe_send(text_data=json.dumps({
             'type': 'agent_status',
             'is_online': event['is_online'],
         }))
 
     async def system_message(self, event):
-        await self.send(text_data=json.dumps({
+        await self._safe_send(text_data=json.dumps({
             'type': 'system_message',
             'content': event['content'],
         }))
 
     async def agent_joined(self, event):
-        await self.send(text_data=json.dumps({
+        await self._safe_send(text_data=json.dumps({
             'type': 'agent_joined',
             'agent_name': event['agent_name'],
         }))
 
     async def conversation_ended(self, event):
-        await self.send(text_data=json.dumps({
+        await self._safe_send(text_data=json.dumps({
             'type': 'conversation_ended',
         }))
 
