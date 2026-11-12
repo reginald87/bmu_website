@@ -2,12 +2,13 @@ import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, Loader2, HelpCircle } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useSubmitContactEnquiry, usePageSections } from '../../services/apiHooks';
 import { ALLOW_API_MOCKS } from '../../services/api';
+import { resolveIcon } from '../../lib/icons';
 
 const defaultIcon = L.icon({
  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -74,10 +75,13 @@ export const Contact = () => {
     'Office Hours': Clock,
     'Hours': Clock,
   };
-  const contactInfo: { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; title: string; details: string[] }[] = rawContactInfo.map((item) => ({
-    ...item,
-    icon: item.icon || iconByTitle[item.title] || MapPin,
-  }));
+  const contactInfo: { icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; title: string; details: string[] }[] = rawContactInfo.map((item) => {
+    const resolved = resolveIcon(item.icon);
+    return {
+      ...item,
+      icon: resolved === HelpCircle ? (iconByTitle[item.title] || MapPin) : resolved,
+    };
+  });
 
   const fallbackDepartments = [
     { name: 'Admissions Office', email: 'admissions@bmu.edu.ng', phone: '+234 803 123 4567' },

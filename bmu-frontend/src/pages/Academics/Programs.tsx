@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { usePrograms, usePageSections } from '../../services/apiHooks';
 import { ALLOW_API_MOCKS } from '../../services/api';
+import { resolveIcon } from '../../lib/icons';
 import { type Program as ApiProgram } from '../../services/mockData';
 
 interface ApiProgramSource extends ApiProgram {
@@ -167,7 +168,7 @@ export const Programs = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ {(() => { const StatIcon = resolveIcon(stat.icon); return <StatIcon className="w-8 h-8 text-primary-600 mx-auto mb-2" />; })()}
  <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>

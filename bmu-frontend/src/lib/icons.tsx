@@ -11,7 +11,7 @@ import {
   Printer, Library, Quote, Megaphone, Gavel, Scale, School, UserPlus, Crown, Landmark,
   DollarSign, BarChart3, BadgeCheck, CheckCircle2, Pill, AlertCircle, XCircle, AlertTriangle,
   Loader, Loader2, CreditCard, Wallet, ArrowLeft, ArrowUp, RotateCcw, MessageCircle, Send,
-  CheckCheck, Play, Pause, Filter,
+  CheckCheck, Play, Pause, Filter, Banknote,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -135,8 +135,15 @@ export const iconMap: Record<string, LucideIcon> = {
   Play,
   Pause,
   Filter,
+  Banknote,
 };
 
 export function getLucideIcon(name: string): LucideIcon {
   return iconMap[name] ?? HelpCircle;
+}
+
+export function resolveIcon(icon: unknown): LucideIcon {
+  if (typeof icon === 'string') return getLucideIcon(icon);
+  if (typeof icon === 'function') return icon as LucideIcon;
+  return HelpCircle;
 }

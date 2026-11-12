@@ -12,6 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
 import { ALLOW_API_MOCKS } from '../../services/api';
+import { resolveIcon } from '../../lib/icons';
 
 const fallbackQuickLinks = [
  {
@@ -110,7 +111,7 @@ export const International = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ {(() => { const StatIcon = resolveIcon(stat.icon); return <StatIcon className="w-8 h-8 text-primary-600 mx-auto mb-2" />; })()}
  <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
@@ -148,7 +149,7 @@ export const International = () => {
  className="w-16 h-16 flex items-center justify-center flex-shrink-0"
  style={{ backgroundColor: `${item.color}15` }}
  >
- <item.icon className="w-8 h-8" style={{ color: item.color }} />
+ {(() => { const ItemIcon = resolveIcon(item.icon); return <ItemIcon className="w-8 h-8" style={{ color: item.color }} />; })()}
  </div>
  <div className="flex-1">
  <div className="flex items-center justify-between mb-1">

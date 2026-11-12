@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { usePageSections } from '../../services/apiHooks';
 import { ALLOW_API_MOCKS } from '../../services/api';
+import { resolveIcon } from '../../lib/icons';
 
 interface AcademicUnit {
   name: string;
@@ -145,7 +146,7 @@ export const Academics = () => {
             className="w-14 h-14 flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: `${unit.color}15` }}
           >
-            <unit.icon className="w-7 h-7" style={{ color: unit.color }} />
+            {(() => { const UnitIcon = resolveIcon(unit.icon); return <UnitIcon className="w-7 h-7" style={{ color: unit.color }} />; })()}
           </div>
           <div className="flex-1">
             <h3 className="text-title text-gray-900 mb-1">{unit.name}</h3>
@@ -265,7 +266,7 @@ export const Academics = () => {
  to={link.link}
  className="block h-full bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
  >
- <link.icon className="w-8 h-8 text-primary-600 mb-4" />
+ {(() => { const LinkIcon = resolveIcon(link.icon); return <LinkIcon className="w-8 h-8 text-primary-600 mb-4" />; })()}
  <h3 className="text-title text-gray-900 mb-1">{link.title}</h3>
  <p className="text-body text-gray-600">{link.desc}</p>
  </Link>

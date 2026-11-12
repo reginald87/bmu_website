@@ -13,6 +13,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useInternationalPartners, usePageSections } from '../../services/apiHooks';
 import { ALLOW_API_MOCKS } from '../../services/api';
+import { resolveIcon } from '../../lib/icons';
 
 interface Partner {
   id: string;
@@ -122,7 +123,7 @@ export const Collaborations = () => {
  transition={{ delay: index * 0.1 }}
  className="text-center"
  >
- <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+ {(() => { const StatIcon = resolveIcon(stat.icon); return <StatIcon className="w-8 h-8 text-primary-600 mx-auto mb-2" />; })()}
  <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
  <p className="text-gray-600 text-body">{stat.label}</p>
  </motion.div>
@@ -152,7 +153,7 @@ export const Collaborations = () => {
  className="bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
  >
  <div className="w-14 h-14 bg-ink-900/10 flex items-center justify-center mb-4">
- <benefit.icon className="w-7 h-7 text-ink-900" />
+ {(() => { const BenefitIcon = resolveIcon(benefit.icon); return <BenefitIcon className="w-7 h-7 text-ink-900" />; })()}
  </div>
  <h3 className="text-title text-gray-900 mb-2">{benefit.title}</h3>
  <p className="text-body text-gray-600">{benefit.desc}</p>

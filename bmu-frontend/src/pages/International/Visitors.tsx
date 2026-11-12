@@ -16,6 +16,7 @@ import {
 import { Link } from 'react-router-dom';
 import { usePageSections } from '../../services/apiHooks';
 import { ALLOW_API_MOCKS } from '../../services/api';
+import { resolveIcon } from '../../lib/icons';
 
 const fallbackVisitorTypes = [
  {
@@ -170,7 +171,7 @@ export const Visitors = () => {
  >
  <div className="flex items-start gap-4">
  <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center flex-shrink-0">
- <type.icon className="w-8 h-8 text-ink-900" />
+ {(() => { const TypeIcon = resolveIcon(type.icon); return <TypeIcon className="w-8 h-8 text-ink-900" />; })()}
  </div>
  <div className="flex-1">
  <div className="flex items-center gap-2 mb-2">

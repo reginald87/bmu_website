@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useResearchCenters, useFaculty, useFundedProjects, usePageSections } from '../../services/apiHooks';
 import { ALLOW_API_MOCKS } from '../../services/api';
+import { resolveIcon } from '../../lib/icons';
 
 const areaIconMap: Record<string, React.ElementType> = {
   malaria: Microscope,
@@ -168,7 +169,7 @@ export const Research = () => {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <stat.icon className="w-8 h-8 text-primary-600 mx-auto mb-2" />
+                {(() => { const StatIcon = resolveIcon(stat.icon); return <StatIcon className="w-8 h-8 text-primary-600 mx-auto mb-2" />; })()}
                 <div className="text-stat text-ink-900 mb-1">{stat.value}</div>
                 <p className="text-gray-600 text-body">{stat.label}</p>
               </motion.div>
@@ -254,7 +255,7 @@ export const Research = () => {
                   to={item.link}
                   className="block h-full bg-white p-6 shadow-sm border border-gray-100 transition-shadow"
                 >
-                  <item.icon className="w-8 h-8 text-primary-600 mb-4" />
+                  {(() => { const ItemIcon = resolveIcon(item.icon); return <ItemIcon className="w-8 h-8 text-primary-600 mb-4" />; })()}
                   <h3 className="text-title text-gray-900 mb-1">{item.title}</h3>
                   <p className="text-body text-gray-600">{item.description}</p>
                 </Link>

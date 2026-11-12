@@ -12,10 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useInternationalPartners, usePageSections } from '../../services/apiHooks';
 import { ALLOW_API_MOCKS } from '../../services/api';
-
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  GraduationCap, Microscope, Building, Globe,
-};
+import { resolveIcon } from '../../lib/icons';
 
 const fallbackPartnershipTypes = [
   {
@@ -109,7 +106,7 @@ export const Partnerships = () => {
  className="bg-white p-8 shadow-sm border border-gray-100"
  >
   <div className="w-16 h-16 bg-ink-900/10 flex items-center justify-center mb-6">
-  {(() => { const Icon = iconMap[type.icon] || GraduationCap; return <Icon className="w-8 h-8 text-ink-900" />; })()}
+  {(() => { const Icon = resolveIcon(type.icon); return <Icon className="w-8 h-8 text-ink-900" />; })()}
   </div>
  <h3 className="text-title text-gray-900 mb-3">{type.title}</h3>
  <p className="text-body text-gray-600 mb-6">{type.description}</p>
